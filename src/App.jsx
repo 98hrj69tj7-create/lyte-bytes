@@ -12,17 +12,16 @@ const theme = {
 };
 
 // --- DATA ---
-// NOTE: You can update prices and item names here.
 const MENU_DATA = {
   "Catering": {
-    imageUrl: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&q=80&w=400",
+    imageUrl: "/catering.jpg",
     subcategories: {
       "Meals": [{ name: "Veg Meal", price: 130 }, { name: "Non-Veg Meal", price: 160 }],
       "Biryani": [{ name: "Royal Whiite Mysore Egg", price: 185 }, { name: "Royal White Mysore Chicken", price: 235 }]
     }
   },
   "Bakery": { 
-    imageUrl: "https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&q=80&w=400",
+    imageUrl: "/bakery.jpg",
     subcategories: {
       "Cakes": [{ name: "Rich Plum Cake", price: 1000 }, { name: "Kulkul", price: 800 }, { name: "Rose Cookies", price: 800 }, { name: "Christmas Assorted Box", price: 700 }, { name: "Sponge Cake", price: 950 }, { name: "Banana Cake", price: 900 }],
       "Cookies": [{ name: "Highland Shortbreads", price: 900 }, { name: "Oat Meal", price: 75 }],
@@ -30,7 +29,7 @@ const MENU_DATA = {
     }
   },
   "Finger Foods": {
-    imageUrl: "https://images.unsplash.com/photo-1565557623262-b51c2513a641?auto=format&fit=crop&q=80&w=400",
+    imageUrl: "/finger-foods.jpg",
     subcategories: {
       "Sandwich": [
         { name: "Veg Coleslaw", price: 65 }, { name: "Veg Coleslaw Premium", price: 95 }, 
@@ -43,7 +42,7 @@ const MENU_DATA = {
     }
   },
   "Jams & Spreads": {
-    imageUrl: "https://images.unsplash.com/photo-1627483298136-15f3089d8137?auto=format&fit=crop&q=80&w=400",
+    imageUrl: "/jams.jpg",
     subcategories: {
       "Jams": [
         { name: "Mango Jam (100g)", price: 110 }, { name: "Mango Jam (250g)", price: 230 }
@@ -55,7 +54,7 @@ const MENU_DATA = {
     }
   },
   "Ammis Achar": {
-    imageUrl: "https://images.unsplash.com/photo-1626359052062-8419741f237f?auto=format&fit=crop&q=80&w=400",
+    imageUrl: "/pickle.jpg",
     subcategories: {
       "Pickles": [
         { name: "Mutton (100g)", price: 250 }, { name: "Mutton (250g)", price: 600 },
@@ -71,92 +70,31 @@ const MENU_DATA = {
 
 // --- SHARED STYLES ---
 const navButtonStyle = { 
-  width: '100%',
-  padding: '16px',
-  marginBottom: '12px',
-  backgroundColor: theme.buttonBg,
-  color: theme.bg,
-  border: 'none',
-  borderRadius: theme.radius,
-  fontWeight: '600',
-  fontSize: '18px', 
-  cursor: 'pointer',
-  textAlign: 'center', 
-  display: 'flex',
-  justifyContent: 'center', 
-  alignItems: 'center',
-  gap: '10px'
+  width: '100%', padding: '16px', marginBottom: '12px', backgroundColor: theme.buttonBg, color: theme.bg, border: 'none', borderRadius: theme.radius, fontWeight: '600', fontSize: '18px', cursor: 'pointer', textAlign: 'center', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '10px'
 };
 
 const actionButtonStyle = { 
-  width: '100%',
-  padding: '16px',
-  marginBottom: '12px',
-  backgroundColor: theme.buttonBg,
-  color: theme.bg,
-  border: 'none',
-  borderRadius: theme.radius,
-  fontWeight: '600',
-  fontSize: '18px', 
-  cursor: 'pointer',
-  textAlign: 'center',
-  display: 'flex',
-  justifyContent: 'center', 
-  alignItems: 'center',
-  gap: '10px'
+  width: '100%', padding: '16px', marginBottom: '12px', backgroundColor: theme.buttonBg, color: theme.bg, border: 'none', borderRadius: theme.radius, fontWeight: '600', fontSize: '18px', cursor: 'pointer', textAlign: 'center', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '10px'
 };
 
 const secondaryButtonStyle = {
-  ...actionButtonStyle,
-  backgroundColor: 'transparent',
-  border: `1px solid ${theme.buttonBg}`,
-  color: theme.buttonBg,
+  ...actionButtonStyle, backgroundColor: 'transparent', border: `1px solid ${theme.buttonBg}`, color: theme.buttonBg,
 };
 
 const unifiedTaglineStyle = { 
-  fontSize: '20px', 
-  color: theme.brand, 
-  textAlign: 'center', 
-  margin: '15px 0', 
-  fontWeight: '500',
-  letterSpacing: '0.5px' 
+  fontSize: '20px', color: theme.brand, textAlign: 'center', margin: '15px 0', fontWeight: '500', letterSpacing: '0.5px' 
 };
 
 const backButtonStyle = {
-  display: 'flex', 
-  alignItems: 'center', 
-  gap: '8px', 
-  background: 'none', 
-  border: 'none', 
-  cursor: 'pointer', 
-  marginBottom: '20px', 
-  fontSize: '16px',
-  color: theme.text
+  display: 'flex', alignItems: 'center', gap: '8px', background: 'none', border: 'none', cursor: 'pointer', marginBottom: '20px', fontSize: '16px', color: theme.text
 };
 
 const inputStyle = {
-  width: '100%',
-  padding: '12px',
-  marginBottom: '12px',
-  borderRadius: theme.radius,
-  border: theme.border,
-  fontSize: '16px',
-  boxSizing: 'border-box'
+  width: '100%', padding: '12px', marginBottom: '12px', borderRadius: theme.radius, border: theme.border, fontSize: '16px', boxSizing: 'border-box'
 };
 
 const accordionHeaderStyle = { 
-    display: 'flex', 
-    alignItems: 'center', 
-    justifyContent: 'flex-start',
-    gap: '10px',
-    padding: '12px 15px', 
-    border: theme.border, 
-    borderRadius: theme.radius, 
-    cursor: 'pointer', 
-    color: theme.brand, 
-    fontWeight: 'bold',
-    backgroundColor: 'transparent',
-    marginBottom: '10px'
+    display: 'flex', alignItems: 'center', justifyContent: 'flex-start', gap: '10px', padding: '12px 15px', border: theme.border, borderRadius: theme.radius, cursor: 'pointer', color: theme.brand, fontWeight: 'bold', backgroundColor: 'transparent', marginBottom: '10px'
 };
 
 export default function App() {
@@ -266,7 +204,7 @@ export default function App() {
                     <button onClick={() => setLayout('grid')} style={{ background: layout === 'grid' ? theme.buttonBg : 'transparent', border: theme.border, borderRadius: '6px', padding: '5px', cursor: 'pointer' }}><Grid size={20} color={layout === 'grid' ? 'white' : theme.text}/></button>
                 </div>
             </div>
-            
+             
             <div style={{ 
                 display: layout === 'grid' ? 'grid' : 'block', 
                 gridTemplateColumns: '1fr 1fr', 
@@ -334,7 +272,7 @@ export default function App() {
             <input type="tel" maxLength="10" placeholder="Mobile Number (10 digits required)" style={inputStyle} value={customer.phone} onChange={(e) => setCustomer({...customer, phone: e.target.value.replace(/[^0-9]/g, '')})} />
             <input type="email" placeholder="Email (Optional)" style={inputStyle} value={customer.email} onChange={(e) => setCustomer({...customer, email: e.target.value})} />
             <textarea placeholder="Full postal address" style={{...inputStyle, height: '80px'}} value={customer.address} onChange={(e) => setCustomer({...customer, address: e.target.value})} />
-            
+             
             <button onClick={() => alert("Location detected!")} style={{...secondaryButtonStyle, marginTop: '-5px', marginBottom: '15px'}}>
               <MapPin size={18} /> Drop Pin
             </button>
@@ -351,7 +289,7 @@ export default function App() {
                 </div>
               )}
             </div>
-            
+             
             <button onClick={handleProceedToPayment} style={actionButtonStyle}>Proceed to Payment</button>
             <button onClick={() => setView('home')} style={secondaryButtonStyle}>Continue Shopping</button>
           </div>
@@ -365,18 +303,7 @@ export default function App() {
                 <button 
                     onClick={() => setPayment('COD')} 
                     style={{ 
-                        flex: 1, 
-                        padding: '15px', 
-                        borderRadius: theme.radius, 
-                        border: payment === 'COD' ? `2px solid ${theme.brand}` : theme.border, 
-                        backgroundColor: payment === 'COD' ? theme.buttonBg : 'transparent', 
-                        color: payment === 'COD' ? theme.bg : theme.text,
-                        cursor: 'pointer', 
-                        display: 'flex', 
-                        flexDirection: 'column', 
-                        alignItems: 'center', 
-                        gap: '10px',
-                        fontWeight: '600'
+                        flex: 1, padding: '15px', borderRadius: theme.radius, border: payment === 'COD' ? `2px solid ${theme.brand}` : theme.border, backgroundColor: payment === 'COD' ? theme.buttonBg : 'transparent', color: payment === 'COD' ? theme.bg : theme.text, cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px', fontWeight: '600'
                     }}
                 >
                     <img src="/Cash.png" alt="Cash" style={{ width: '40px', height: '40px', objectFit: 'contain' }} />
@@ -385,18 +312,7 @@ export default function App() {
                 <button 
                     onClick={() => { setPayment('UPI'); handleUPIPayment(); }} 
                     style={{ 
-                        flex: 1, 
-                        padding: '15px', 
-                        borderRadius: theme.radius, 
-                        border: payment === 'UPI' ? `2px solid ${theme.brand}` : theme.border, 
-                        backgroundColor: payment === 'UPI' ? theme.buttonBg : 'transparent', 
-                        color: payment === 'UPI' ? theme.bg : theme.text,
-                        cursor: 'pointer', 
-                        display: 'flex', 
-                        flexDirection: 'column', 
-                        alignItems: 'center', 
-                        gap: '10px',
-                        fontWeight: '600'
+                        flex: 1, padding: '15px', borderRadius: theme.radius, border: payment === 'UPI' ? `2px solid ${theme.brand}` : theme.border, backgroundColor: payment === 'UPI' ? theme.buttonBg : 'transparent', color: payment === 'UPI' ? theme.bg : theme.text, cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px', fontWeight: '600'
                     }}
                 >
                     <img src="/UPI.png" alt="UPI" style={{ width: '40px', height: '40px', objectFit: 'contain' }} />
@@ -412,7 +328,7 @@ export default function App() {
             <div>
                 <button onClick={() => setView('home')} style={backButtonStyle}><ArrowLeft size={20}/> Back</button>
                 <h2 style={{ color: theme.brand }}>Support & Info</h2>
-                
+                 
                 <div style={{ marginBottom: '30px' }}>
                     <a href="https://wa.me/9108286886" style={{ textDecoration: 'none' }}><button style={actionButtonStyle}><MessageSquare size={18}/> Contact Customer Support</button></a>
                     <a href="mailto:lytebytesblr@gmail.com" style={{ textDecoration: 'none' }}><button style={actionButtonStyle}><Mail size={18}/> Raise a Request</button></a>
