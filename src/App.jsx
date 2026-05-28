@@ -65,6 +65,10 @@ export default function App() {
   const [showTC, setShowTC] = useState(false);
   const [showPrivacy, setShowPrivacy] = useState(false);
   const [zoomImage, setZoomImage] = useState(null);
+  const [deliveryDate, setDeliveryDate] = useState('');
+  const [deliveryTime, setDeliveryTime] = useState('');
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [paymentMode, setPaymentMode] = useState(null); // Tracks 'Cash' or 'UPI'
   const categoryImages = {
   "Ammis Achar": "pickle.jpg",
   "Bakery": "bakery.jpg",
@@ -103,19 +107,17 @@ export default function App() {
         transformed[row.Category].subcategories[row.Sub_Category] = [];
       }
 
-      const descParts = row.Description ? row.Description.split('|') : ["", ""];
-
       // 5. Push the item data
       transformed[row.Category].subcategories[row.Sub_Category].push({
-        name: row.Item_Name,
-        price: parseFloat(row.Price) || 0,
-        descLine1: descParts[0] ? descParts[0].trim() : "",
-        descLine2: descParts[1] ? descParts[1].trim() : "",
-        unit: row.Unit || "",
-        imageUrl: row.Img_name
+      name: row.Item_Name,
+      price: parseFloat(row.Price) || 0,
+      description: row.Description || "",    // Now maps directly to your Description column
+      highlights: row.Highlights || "",      // Now maps directly to your new Highlights column
+      unit: row.Unit || "",
+      variation: row.Variation || "",
+      imageUrl: row.Img_name
       });
     });
-
     // 6. Update state once parsing is complete
     setMenuData(transformed);
   }
@@ -262,53 +264,94 @@ export default function App() {
             ))}
           </div>
         )}
+{view === 'items' && (
+  <>
+    {/* 1. Toggle Buttons */}
+    <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end', marginBottom: '15px' }}>
+      <button 
+        onClick={() => setLayout('list')} 
+        style={{ background: layout === 'list' ? theme.buttonBg : 'transparent', border: theme.border, borderRadius: '6px', padding: '5px', cursor: 'pointer' }}
+      >
+        <ListIcon size={20} color={layout === 'list' ? 'white' : theme.text}/>
+      </button>
+      <button 
+        onClick={() => setLayout('grid')} 
+        style={{ background: layout === 'grid' ? theme.buttonBg : 'transparent', border: theme.border, borderRadius: '6px', padding: '5px', cursor: 'pointer' }}
+      >
+        <Grid size={20} color={layout === 'grid' ? 'white' : theme.text}/>
+      </button>
+    </div>
+    {/* 2. Grid/List Container */}
+    <div style={{ 
+      display: layout === 'grid' ? 'grid' : 'flex', 
+      gridTemplateColumns: layout === 'grid' ? 'repeat(2, 1fr)' : 'none',
+      flexDirection: 'column',
+      gap: '16px' 
+    }}>
+      {menuData[activeCat].subcategories[activeSub].map((item, i) => (
+        <div key={i} style={{ 
+          padding: '12px', 
+          border: theme.border, 
+          borderRadius: '16px', 
+          display: 'flex', 
+          flexDirection: layout === 'grid' ? 'column' : 'row',
+          gap: '12px', 
+          backgroundColor: '#FFFFFF',
+          boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
+          position: 'relative' // REQUIRED: Pins the indicator to this card
+        }}>
+          {/* Veg/Non-Veg/Egg Indicator - Positioned relative to the CARD */}
+{item.variation && (
+  <img 
+    src={`/menu-items/${item.variation.trim().toLowerCase() === 'non-veg' ? 'non-veg' : item.variation.trim().toLowerCase()}.png`} 
+    alt={item.variation} 
+    style={{ 
+      position: 'absolute', 
+      top: '10px', 
+      right: '10px', 
+      width: '18px', 
+      height: '18px',
+      zIndex: 10
+    }} 
+  />
+)}
 
-        {view === 'items' && (
-  <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-    {menuData[activeCat].subcategories[activeSub].map((item, i) => (
-      <div key={i} style={{ 
-        padding: '12px', // Tighter padding for reduced height
-        border: theme.border, 
-        borderRadius: '12px', 
-        display: 'flex', 
-        gap: '12px', 
-        backgroundColor: '#FFFFFF',
-        boxShadow: '0 2px 4px rgba(0,0,0,0.05)' 
-      }}>
-        {/* Thumbnail */}
-        <img 
-          src={resolveImagePath(item.imageUrl, 'menu-items')} 
-          alt={item.name} 
-          style={{ width: '85px', height: '85px', objectFit: 'cover', borderRadius: '8px', flexShrink: 0 }} 
-        />
-        
-        {/* Right Content Area */}
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', textAlign: 'left' }}>
-          {/* Header Row: Name and Unit */}
-          <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px', marginBottom: '4px' }}>
-            <div style={{ fontWeight: '800', fontSize: '16px', color: '#4A443A' }}>{item.name}</div>
-            <div style={{ fontSize: '13px', color: '#FF5958', fontWeight: '700', fontStyle: 'italic' }}>{item.unit}</div>
-          </div>
-          
-          {/* Description - limited to one visual block */}
-          <div style={{ fontSize: '12px', color: '#555', lineHeight: '1.3', marginBottom: 'auto' }}>
-            {item.descLine1}
-          </div>
-
-          {/* Footer Row: Price and Add Button - Aligned to thumbnail bottom */}
-          <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: '16px', marginTop: 'auto' }}>
-            <div style={{ color: '#FF5958', fontWeight: '800', fontSize: '17px' }}>₹{item.price}</div>
-            <button 
-              onClick={() => addToCart(item)} 
-              style={{ backgroundColor: '#FF5958', color: '#FFFFFF', border: 'none', padding: '6px 18px', borderRadius: '6px', fontWeight: '600', fontSize: '15px', cursor: 'pointer' }}
-            >
-              Add
-            </button>
+{/* Thumbnail Section */}
+<div onClick={() => setSelectedItem(item)} style={{ cursor: 'pointer', flexShrink: 0 }}>
+  <img 
+    src={resolveImagePath(item.imageUrl, 'menu-items')} 
+    alt={item.name} 
+    style={{ 
+      width: layout === 'grid' ? '100%' : '90px', 
+      height: layout === 'grid' ? '120px' : '90px', 
+      objectFit: 'cover',
+      borderRadius: '12px'
+    }} 
+  />
+</div>
+          {/* Content Area */}
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', textAlign: 'left' }}>
+            <div style={{ fontWeight: '800', fontSize: '15px', color: '#36281E', marginBottom: '2px' }}>{item.name}</div>
+            <div style={{ fontSize: '12px', color: '#FF5958', fontWeight: '700', fontStyle: 'italic', marginBottom: '8px' }}>{item.unit}</div>
+            {item.highlights && (
+              <div style={{ fontSize: '11px', color: '#8B7355', lineHeight: '1.4', fontWeight: '500', marginBottom: 'auto' }}>
+                {item.highlights}
+              </div>
+            )}
+            <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center',gap: '12px', marginTop: '12px' }}>
+              <div style={{ color: '#FF5958', fontWeight: '600', fontSize: '15px' }}>₹{item.price}</div>
+              <button 
+                onClick={() => addToCart(item)} 
+                style={{ backgroundColor: '#FF5958', color: '#FFFFFF', border: 'none', padding: '6px 16px', borderRadius: '8px', fontWeight: '600', fontSize: '14px', cursor: 'pointer' }}
+              >
+                Add
+              </button>
+            </div>
           </div>
         </div>
-      </div>
-    ))}
-  </div>
+      ))}
+    </div>
+  </>
 )}
 
         {view === 'cart' && (
@@ -366,7 +409,34 @@ export default function App() {
             <button onClick={() => alert("Location detected!")} style={{...secondaryButtonStyle, marginTop: '-5px', marginBottom: '15px'}}>
               <MapPin size={18} /> Drop Location Pin
             </button>
+            {/* --- ALIGNED DELIVERY SELECTOR --- */}
+<div style={{ margin: '15px 0' }}>
+  <h2 style={{ color: theme.brand }}>Preferred Delivery (optional)</h2>
+  
+  {/* Date Field with Aligned Label */}
+  <div style={{ marginBottom: '10px' }}>
+    <label style={{ fontSize: '18px', color: '#2B2B2B', marginBottom: '4px', display: 'block' }}>Date</label>
+    <input 
+      type="date" 
+      onChange={(e) => setDeliveryDate(e.target.value)}
+      style={{ ...inputStyle, width: '100%' }} 
+    />
+  </div>
 
+  {/* Time Field with Aligned Label */}
+  <div style={{ marginBottom: '10px' }}>
+    <label style={{ fontSize: '18px', color: '#2B2B2B', marginBottom: '4px', display: 'block' }}>Time</label>
+    <input 
+      type="time" 
+      onChange={(e) => setDeliveryTime(e.target.value)}
+      style={{ ...inputStyle, width: '100%' }} 
+    />
+  </div>
+  
+  <p style={{ fontSize: '15px', color: '#2B2B2B', marginTop: '5px' }}>
+    *Leave blank for earliest delivery.
+  </p>
+</div>
             <div style={{ marginBottom: '20px' }}>
               <div onClick={() => setShowConditions(!showConditions)} style={accordionHeaderStyle}>
                 <Info size={16} /> Delivery Conditions {showConditions ? <ChevronUp size={16}/> : <ChevronDown size={16}/>}
@@ -395,26 +465,29 @@ export default function App() {
             <button onClick={() => setView('delivery')} style={backButtonStyle}><ArrowLeft size={20}/> Back to Details</button>
             <h2 style={{ color: theme.brand }}>Payment Method</h2>
             <div style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
-                <button 
-                    onClick={() => setPayment('COD')} 
-                    style={{ 
-                        flex: 1, padding: '15px', borderRadius: theme.radius, border: payment === 'COD' ? `2px solid ${theme.brand}` : theme.border, backgroundColor: payment === 'COD' ? theme.buttonBg : 'transparent', color: payment === 'COD' ? theme.bg : theme.text, cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px', fontWeight: '600'
-                    }}
-                >
-                    <img src="/Cash.png" alt="Cash" style={{ width: '40px', height: '40px', objectFit: 'contain' }} />
-                    <span>Cash</span>
-                </button>
-                <button 
-                    onClick={() => { setPayment('UPI'); handleUPIPayment(); }} 
-                    style={{ 
-                        flex: 1, padding: '15px', borderRadius: theme.radius, border: payment === 'UPI' ? `2px solid ${theme.brand}` : theme.border, backgroundColor: payment === 'UPI' ? theme.buttonBg : 'transparent', color: payment === 'UPI' ? theme.bg : theme.text, cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px', fontWeight: '600'
-                    }}
-                >
-                    <img src="/UPI.png" alt="UPI" style={{ width: '40px', height: '40px', objectFit: 'contain' }} />
-                    <span>UPI</span>
-                </button>
+                {/* --- CASH BUTTON --- */}
+            <button 
+                onClick={() => setPayment('COD')}
+                style={{ flex: 1, padding: '15px', borderRadius: theme.radius, border: payment === 'COD' ? `2px solid ${theme.brand}` : theme.border, background: 'transparent' }}
+>
+              <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '40px' }}>
+                <span style={{ fontSize: '32px', fontWeight: '700', color: theme.text }}>₹</span>
+              </div>
+              <div style={{ marginTop: '8px', fontSize: '13px', fontWeight: '600' }}>Cash</div>
+            </button>
+                {/* --- UPI BUTTON --- */}
+            <button 
+                onClick={() => { setPayment('UPI'); handleUPIPayment(); }}
+                style={{ flex: 1, padding: '15px', borderRadius: theme.radius, border: payment === 'UPI' ? `2px solid ${theme.brand}` : theme.border, background: 'transparent' }}
+>
+              <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '40px' }}>
+                <span style={{ fontSize: '20px', fontWeight: '800', color: theme.text }}>UPI</span>
+              </div>
+              <div style={{ marginTop: '8px', fontSize: '13px', fontWeight: '600' }}>Payment</div>
+            </button>
             </div>
-            <button onClick={() => setView('track')} style={{ ...actionButtonStyle, marginTop: '30px' }}>Place Order</button>
+            <button onClick={() => {if (!payment) {alert("Please select a payment method (Cash or UPI) to proceed.");return;}setView('track');}} 
+                    style={{ ...actionButtonStyle, marginTop: '30px', opacity: payment ? 1 : 0.6 }}> Place Order</button>
             <button onClick={() => setView('home')} style={secondaryButtonStyle}>Continue Shopping</button>
           </div>
         )}
@@ -510,6 +583,52 @@ export default function App() {
             </div>
         ))}
       </footer>
+      {/* --- OPTIMIZED PREMIUM POPUP MODAL --- */}
+{selectedItem && (
+  <div 
+    onClick={() => setSelectedItem(null)} // Clicking background closes it
+    style={{ 
+      position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', 
+      backgroundColor: 'rgba(0,0,0,0.85)', // Slightly darker for better contrast
+      display: 'flex', alignItems: 'center', 
+      justifyContent: 'center', zIndex: 1000 
+    }}
+  >
+    <div style={{ backgroundColor: 'white', margin: '20px', borderRadius: '16px', overflow: 'hidden', maxWidth: '500px', width: '90%', boxShadow: '0 8px 30px rgba(0,0,0,0.3)' }}>
+      {/* Image Block - now with display:block to remove spacing */}
+      <img src={resolveImagePath(selectedItem.imageUrl, 'menu-items')} alt={selectedItem.name} style={{ width: '100%', display: 'block' }} />
+
+      {/* --- INTEGRATED PREMIUM BEIGE BANNER (Replaces white part) --- */}
+      <div style={{ 
+        backgroundColor: '#F7E7D4', // The warm beige background you requested
+        padding: '24px', // More padding for premium feel
+        textAlign: 'center',
+        borderTop: '4px solid #E6D6C4' // Premium accent border
+      }}>
+        {/* Item Title, integrated here */}
+        <h2 style={{ 
+          margin: '0 0 16px 0', // Spacing before the description
+          fontSize: '22px', 
+          color: '#36281E', // Dark Charcoal Font
+          fontWeight: '700'
+        }}>
+          {selectedItem.name}
+        </h2>
+
+        {/* Catchy Description, shown here (removed middle block) */}
+        <p style={{ 
+          color: '#36281E', // Dark Charcoal Font Color
+          margin: 0, 
+          fontSize: '14px', 
+          lineHeight: '1.6', // Improved readability
+          fontWeight: '500' // Medium weight
+        }}>
+          Slow, soulful, and with a generous hand of love. Every plate celebrates fresh produce, gentle spices and brings the warmth to your table.
+        </p>
+      </div>
+    </div>
+  </div>
+)}
     </div>
   );
 }
