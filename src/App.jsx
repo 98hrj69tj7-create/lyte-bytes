@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { Home, ShoppingBag, Truck, ArrowLeft, Plus, Minus, MapPin, CheckCircle, Info, ChevronDown, ChevronUp, Grid, List as ListIcon, Phone, Mail, MessageSquare } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import Papa from 'papaparse';
+import { Home, ShoppingBag, Truck, ArrowLeft, Plus, Minus, MapPin, CheckCircle, Info, ChevronDown, ChevronUp, Grid, List as ListIcon, Phone, Mail, MessageSquare, X } from 'lucide-react';
 
 // --- THEME ---
 const theme = { 
@@ -11,61 +12,16 @@ const theme = {
   radius: '12px' 
 };
 
-// --- DATA ---
-const MENU_DATA = {
-  "Catering": {
-    imageUrl: "/catering.jpg",
-    subcategories: {
-      "Meals": [{ name: "Veg Meal", price: 130 }, { name: "Non-Veg Meal", price: 160 }],
-      "Biryani": [{ name: "Royal Whiite Mysore Egg", price: 185 }, { name: "Royal White Mysore Chicken", price: 235 }]
-    }
-  },
-  "Bakery": { 
-    imageUrl: "/bakery.jpg",
-    subcategories: {
-      "Cakes": [{ name: "Rich Plum Cake", price: 1000 }, { name: "Kulkul", price: 800 }, { name: "Rose Cookies", price: 800 }, { name: "Christmas Assorted Box", price: 700 }, { name: "Sponge Cake", price: 950 }, { name: "Banana Cake", price: 900 }],
-      "Cookies": [{ name: "Highland Shortbreads", price: 900 }, { name: "Oat Meal", price: 75 }],
-      "Red Wine": [{ name: "Non Alcoholic Grape Wine", price: 950 }]
-    }
-  },
-  "Finger Foods": {
-    imageUrl: "/finger-foods.jpg",
-    subcategories: {
-      "Sandwich": [
-        { name: "Veg Coleslaw", price: 65 }, { name: "Veg Coleslaw Premium", price: 95 }, 
-        { name: "Bombay Masala", price: 65 }, { name: "Bombay Masala Premium", price: 95 },
-        { name: "Paneer Tikka", price: 65 }, { name: "Paneer Tikka Premium", price: 95 },
-        { name: "Besan Chilla", price: 65 }, { name: "Dahi Sandwich", price: 65 },
-        { name: "Samosa Sandwich", price: 70 }, { name: "Corn & Spinach Premium", price: 90 },
-        { name: "Chicken Coleslaw", price: 100 }
-      ]
-    }
-  },
-  "Jams & Spreads": {
-    imageUrl: "/jams.jpg",
-    subcategories: {
-      "Jams": [
-        { name: "Mango Jam (100g)", price: 110 }, { name: "Mango Jam (250g)", price: 230 }
-      ],
-      "Spreads": [
-        { name: "Ripe Mango Chutney (100g)", price: 119 }, { name: "Ripe Mango Chutney (250g)", price: 249 },
-        { name: "Strawberry Chutney (100g)", price: 119 }, { name: "Strawberry Chutney (250g)", price: 249 }
-      ]
-    }
-  },
-  "Ammis Achar": {
-    imageUrl: "/pickle.jpg",
-    subcategories: {
-      "Pickles": [
-        { name: "Mutton (100g)", price: 250 }, { name: "Mutton (250g)", price: 600 },
-        { name: "Chicken (100g)", price: 120 }, { name: "Chicken (250g)", price: 300 },
-        { name: "Prawn (100g)", price: 220 }, { name: "Prawn (250g)", price: 550 },
-        { name: "Fish (100g)", price: 220 }, { name: "Fish (250g)", price: 550 },
-        { name: "Tomato (100g)", price: 90 }, { name: "Tomato (250g)", price: 200 },
-        { name: "Garlic (100g)", price: 110 }, { name: "Garlic (250g)", price: 250 }
-      ]
-    }
-  }
+// --- IMAGE RESOLVER ---
+const resolveImagePath = (path, folder = '') => {
+  if (!path) return "/catering.jpg";
+  if (path.startsWith('http')) return path;
+  
+  // If a folder is specified (like 'menu-items'), prepend it
+  const base = folder ? `/${folder}/` : "/";
+  const cleanPath = path.startsWith('/') ? path.slice(1) : path;
+  
+  return `${base}${cleanPath}`;
 };
 
 // --- SHARED STYLES ---
@@ -108,6 +64,63 @@ export default function App() {
   const [showConditions, setShowConditions] = useState(false);
   const [showTC, setShowTC] = useState(false);
   const [showPrivacy, setShowPrivacy] = useState(false);
+  const [zoomImage, setZoomImage] = useState(null);
+  const categoryImages = {
+  "Ammis Achar": "pickle.jpg",
+  "Bakery": "bakery.jpg",
+  "Catering": "catering.jpg",
+  "Finger Foods": "finger-foods.jpg",
+  "Jams & Spreads": "jams.jpg",  
+};
+
+  // --- GOOGLE SHEET DATA FETCHING ---
+  const [menuData, setMenuData] = useState(null);
+  useEffect(() => {
+    const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vR35Ed3Gcjjj3SLQvZWaLEahaM9QYPmdVvnGoFOefqmA544Jtcr3xR2QVj8Yy1tk-mjh4DVQarYB7Yh/pub?gid=0&single=true&output=csv';
+    
+    Papa.parse(CSV_URL, {
+  download: true,
+  header: true,
+  complete: (results) => {
+    // 1. Initialize 'transformed' here so it exists for the whole function
+    const transformed = {}; 
+
+    results.data.forEach((row) => {
+      // 2. Availability Check
+      if (row.Availability?.toUpperCase() !== 'TRUE') return;
+      if (!row.Category) return;
+
+      // 3. Initialize Category if it doesn't exist
+      if (!transformed[row.Category]) {
+        transformed[row.Category] = { 
+          imageUrl: categoryImages[row.Category] || "/catering.jpg",
+          subcategories: {} 
+        };
+      }
+
+      // 4. Initialize Sub_Category if it doesn't exist
+      if (!transformed[row.Category].subcategories[row.Sub_Category]) {
+        transformed[row.Category].subcategories[row.Sub_Category] = [];
+      }
+
+      const descParts = row.Description ? row.Description.split('|') : ["", ""];
+
+      // 5. Push the item data
+      transformed[row.Category].subcategories[row.Sub_Category].push({
+        name: row.Item_Name,
+        price: parseFloat(row.Price) || 0,
+        descLine1: descParts[0] ? descParts[0].trim() : "",
+        descLine2: descParts[1] ? descParts[1].trim() : "",
+        unit: row.Unit || "",
+        imageUrl: row.Img_name
+      });
+    });
+
+    // 6. Update state once parsing is complete
+    setMenuData(transformed);
+  }
+});
+  }, []);
 
   const addToCart = (item) => {
     setCart(prev => {
@@ -150,12 +163,21 @@ export default function App() {
       window.location.href = upiLink;
   };
 
+  if (!menuData) return <div style={{ padding: '40px', textAlign: 'center' }}>Loading menu...</div>;
+
   const total = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
   const totalQty = cart.reduce((sum, item) => sum + item.qty, 0);
 
   return (
     <div style={{ height: '100vh', display: 'flex', flexDirection: 'column', backgroundColor: theme.bg, color: theme.text, fontFamily: 'system-ui, sans-serif' }}>
         
+      {zoomImage && (
+        <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: 'rgba(0,0,0,0.85)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }} onClick={() => setZoomImage(null)}>
+          <button style={{ position: 'absolute', top: '20px', right: '20px', background: 'white', border: 'none', borderRadius: '50%', padding: '10px', cursor: 'pointer' }}><X size={24}/></button>
+          <img src={zoomImage} alt="Zoomed" style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain', borderRadius: '8px' }} />
+        </div>
+      )}
+
       <header style={{ height: '70px', padding: '0 15px', borderBottom: theme.border, display: 'flex', alignItems: 'center', justifyContent: 'space-between', backgroundColor: theme.bg, flexShrink: 0 }}>
         <div style={{ display: 'flex', alignItems: 'center' }}>
             <img src="/logo.png" alt="Logo" style={{ width: '45px', height: '45px', marginRight: '10px', borderRadius: '8px' }} />
@@ -169,70 +191,94 @@ export default function App() {
 
       <main style={{ flex: 1, padding: '20px', overflowY: 'auto' }}>
         {view === 'home' && (
-          <div>
-            <h1 style={unifiedTaglineStyle}>Freshly crafted for YOU</h1>
-            {Object.keys(MENU_DATA).map(cat => (
-              <div 
-                key={cat} 
-                onClick={() => { setActiveCat(cat); setView('subcat'); }} 
-                style={{ ...navButtonStyle, flexDirection: 'column', height: 'auto', padding: 0, overflow: 'hidden', alignItems: 'stretch' }}
-              >
-                  <img src={MENU_DATA[cat].imageUrl} alt={cat} style={{ width: '100%', height: '150px', objectFit: 'cover' }} />
-                  <div style={{ padding: '15px' }}>{cat}</div>
-              </div>
-            ))}
-          </div>
-        )}
+  <div>
+    <h1 style={unifiedTaglineStyle}>Freshly crafted for YOU</h1>
+    {Object.keys(menuData).map(cat => (
+      <div 
+        key={cat} 
+        onClick={() => { setActiveCat(cat); setView('subcat'); }} 
+        style={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            padding: '12px', 
+            marginBottom: '12px', 
+            backgroundColor: theme.buttonBg, 
+            border: theme.border, 
+            borderRadius: theme.radius, 
+            cursor: 'pointer',
+            boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+        }}
+      >
+        <img 
+          src={resolveImagePath(menuData[cat].imageUrl)} 
+          alt={cat} 
+          style={{ width: '90px', height: '90px', objectFit: 'cover', borderRadius: '8px', marginRight: '16px' }} 
+        />
+        <div style={{ fontSize: '18px', fontWeight: '700', color: '#E8E4D9' }}>
+          {cat}
+        </div>
+      </div>
+    ))}
+  </div>
+)}
 
         {view === 'subcat' && (
           <div>
             <button onClick={() => setView('home')} style={backButtonStyle}><ArrowLeft size={20}/> Back</button>
             <h2 style={{ color: theme.brand }}>{activeCat}</h2>
-            {Object.keys(MENU_DATA[activeCat].subcategories).map(sub => (
+            {Object.keys(menuData[activeCat].subcategories).map(sub => (
               <button key={sub} onClick={() => { setActiveSub(sub); setView('items'); }} style={navButtonStyle}>{sub}</button>
             ))}
           </div>
         )}
 
         {view === 'items' && (
-          <div>
-            <button onClick={() => setView('subcat')} style={backButtonStyle}><ArrowLeft size={20}/> Back</button>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
-                <h2 style={{ color: theme.brand, margin: 0 }}>{activeSub}</h2>
-                <div style={{ display: 'flex', gap: '5px' }}>
-                    <button onClick={() => setLayout('list')} style={{ background: layout === 'list' ? theme.buttonBg : 'transparent', border: theme.border, borderRadius: '6px', padding: '5px', cursor: 'pointer' }}><ListIcon size={20} color={layout === 'list' ? 'white' : theme.text}/></button>
-                    <button onClick={() => setLayout('grid')} style={{ background: layout === 'grid' ? theme.buttonBg : 'transparent', border: theme.border, borderRadius: '6px', padding: '5px', cursor: 'pointer' }}><Grid size={20} color={layout === 'grid' ? 'white' : theme.text}/></button>
-                </div>
-            </div>
-             
-            <div style={{ 
-                display: layout === 'grid' ? 'grid' : 'block', 
-                gridTemplateColumns: '1fr 1fr', 
-                gap: '12px' 
-            }}>
-                {MENU_DATA[activeCat].subcategories[activeSub].map((item, i) => (
-                    <div key={i} style={{ 
-                        padding: '16px', 
-                        marginBottom: layout === 'list' ? '12px' : '0', 
-                        border: theme.border, 
-                        borderRadius: theme.radius, 
-                        display: 'flex', 
-                        flexDirection: layout === 'grid' ? 'column' : 'row',
-                        justifyContent: layout === 'list' ? 'space-between' : 'flex-start', 
-                        alignItems: layout === 'list' ? 'center' : 'flex-start', 
-                        backgroundColor: '#FFFFFF', 
-                        boxShadow: '0 2px 4px rgba(0,0,0,0.05)' 
-                    }}>
-                        <div style={{ fontWeight: 'bold', fontSize: '16px', textAlign: 'left', marginBottom: layout === 'grid' ? '10px' : 0 }}>{item.name}</div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
-                          <div style={{ color: theme.brand, fontWeight: 'bold' }}>₹{item.price}</div>
-                          <button onClick={() => addToCart(item)} style={{ ...actionButtonStyle, width: 'auto', margin: 0, padding: '8px 20px', color: 'green', border: '1px solid green', backgroundColor: 'transparent' }}>Add</button>
-                        </div>
-                    </div>
-                ))}
-            </div>
+  <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+    {menuData[activeCat].subcategories[activeSub].map((item, i) => (
+      <div key={i} style={{ 
+        padding: '12px', // Tighter padding for reduced height
+        border: theme.border, 
+        borderRadius: '12px', 
+        display: 'flex', 
+        gap: '12px', 
+        backgroundColor: '#FFFFFF',
+        boxShadow: '0 2px 4px rgba(0,0,0,0.05)' 
+      }}>
+        {/* Thumbnail */}
+        <img 
+          src={resolveImagePath(item.imageUrl, 'menu-items')} 
+          alt={item.name} 
+          style={{ width: '85px', height: '85px', objectFit: 'cover', borderRadius: '8px', flexShrink: 0 }} 
+        />
+        
+        {/* Right Content Area */}
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', textAlign: 'left' }}>
+          {/* Header Row: Name and Unit */}
+          <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px', marginBottom: '4px' }}>
+            <div style={{ fontWeight: '800', fontSize: '16px', color: '#4A443A' }}>{item.name}</div>
+            <div style={{ fontSize: '13px', color: '#FF5958', fontWeight: '700', fontStyle: 'italic' }}>{item.unit}</div>
           </div>
-        )}
+          
+          {/* Description - limited to one visual block */}
+          <div style={{ fontSize: '12px', color: '#555', lineHeight: '1.3', marginBottom: 'auto' }}>
+            {item.descLine1}
+          </div>
+
+          {/* Footer Row: Price and Add Button - Aligned to thumbnail bottom */}
+          <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: '16px', marginTop: 'auto' }}>
+            <div style={{ color: '#FF5958', fontWeight: '800', fontSize: '17px' }}>₹{item.price}</div>
+            <button 
+              onClick={() => addToCart(item)} 
+              style={{ backgroundColor: '#FF5958', color: '#FFFFFF', border: 'none', padding: '6px 18px', borderRadius: '6px', fontWeight: '600', fontSize: '15px', cursor: 'pointer' }}
+            >
+              Add
+            </button>
+          </div>
+        </div>
+      </div>
+    ))}
+  </div>
+)}
 
         {view === 'cart' && (
           <div>
@@ -246,16 +292,29 @@ export default function App() {
             ) : (
               <>
                 {cart.map(item => (
-                  <div key={item.name} style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', gap: '10px', marginBottom: '15px', padding: '12px', border: theme.border, borderRadius: '8px', backgroundColor: '#FFFFFF' }}>
-                    <div style={{ fontWeight: '500', flex: 2, textAlign: 'left' }}>{item.name}</div>
-                    <div style={{ fontWeight: 'bold', fontSize: '14px', minWidth: '50px' }}>₹{item.price * item.qty}</div>
-                    <div style={{ display: 'flex', alignItems: 'center', border: theme.border, borderRadius: '6px', overflow: 'hidden' }}>
-                      <button onClick={() => removeFromCart(item.name)} style={{ border: 'none', background: '#FDF6E3', padding: '5px 10px', cursor: 'pointer', display: 'flex', alignItems: 'center', color: 'red' }}><Minus size={16}/></button>
-                      <span style={{ padding: '0 10px', fontSize: '14px', fontWeight: 'bold' }}>{item.qty}</span>
-                      <button onClick={() => addToCart(item)} style={{ border: 'none', background: '#FDF6E3', padding: '5px 10px', cursor: 'pointer', display: 'flex', alignItems: 'center', color: 'green' }}><Plus size={16}/></button>
-                    </div>
-                  </div>
-                ))}
+  <div key={item.name} style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', gap: '10px', marginBottom: '15px', padding: '12px', border: theme.border, borderRadius: '6px' }}>
+    
+    {/* Item Name and Unit */}
+    <div style={{ flex: 2, display: 'flex', flexDirection: 'column', textAlign: 'left' }}>
+      <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
+        <div style={{ fontWeight: '800', fontSize: '16px', color: '#4A443A' }}>{item.name}</div>
+        <div style={{ fontSize: '13px', color: '#4A443A', fontWeight: '700', fontStyle: 'italic' }}>{item.unit}</div>
+      </div>
+    </div>
+
+    {/* Price */}
+    <div style={{ fontWeight: 'bold', fontSize: '16px', color: '#FF5958', minWidth: '50px' }}>
+      ₹{item.price * item.qty}
+    </div>
+
+    {/* Quantity Controls */}
+    <div style={{ display: 'flex', alignItems: 'center', border: theme.border, borderRadius: '6px', overflow: 'hidden' }}>
+      <button onClick={() => removeFromCart(item.name)} style={{ border: 'none', background: '#FDF6E3', padding: '5px 10px', cursor: 'pointer', display: 'flex', alignItems: 'center', fontSize: '16px', color: 'red' }}>-</button>
+      <span style={{ padding: '0 10px', fontSize: '15px', fontWeight: 'bold' }}>{item.qty}</span>
+      <button onClick={() => addToCart(item)} style={{ border: 'none', background: '#FDF6E3', padding: '5px 10px', cursor: 'pointer', display: 'flex', alignItems: 'center', fontSize: '16px', color: 'green' }}>+</button>
+    </div>
+  </div>
+))}
                 <div style={{ borderTop: theme.border, marginTop: '20px', paddingTop: '10px', fontWeight: 'bold', fontSize: '18px', marginBottom: '20px' }}>Total: ₹{total}</div>
                 <button onClick={handleProceedToDelivery} style={actionButtonStyle}>Proceed to Delivery</button>
                 <button onClick={() => setView('home')} style={secondaryButtonStyle}>Continue Shopping</button>
@@ -272,9 +331,9 @@ export default function App() {
             <input type="tel" maxLength="10" placeholder="Mobile Number (10 digits required)" style={inputStyle} value={customer.phone} onChange={(e) => setCustomer({...customer, phone: e.target.value.replace(/[^0-9]/g, '')})} />
             <input type="email" placeholder="Email (Optional)" style={inputStyle} value={customer.email} onChange={(e) => setCustomer({...customer, email: e.target.value})} />
             <textarea placeholder="Full postal address" style={{...inputStyle, height: '80px'}} value={customer.address} onChange={(e) => setCustomer({...customer, address: e.target.value})} />
-             
+              
             <button onClick={() => alert("Location detected!")} style={{...secondaryButtonStyle, marginTop: '-5px', marginBottom: '15px'}}>
-              <MapPin size={18} /> Drop Pin
+              <MapPin size={18} /> Drop Location Pin
             </button>
 
             <div style={{ marginBottom: '20px' }}>
@@ -282,14 +341,19 @@ export default function App() {
                 <Info size={16} /> Delivery Conditions {showConditions ? <ChevronUp size={16}/> : <ChevronDown size={16}/>}
               </div>
               {showConditions && (
-                <div style={{ marginTop: '10px', padding: '12px', border: '1px dashed #D8C7A5', borderRadius: '8px', backgroundColor: '#FFFBF2', fontSize: '14px', color: '#666' }}>
+                <div style={{ marginTop: '10px', padding: '12px', border: '1px dashed #D8C7A5', borderRadius: '8px', backgroundColor: '#FFFBF2', fontSize: '14px', textAlign: 'left', color: '#2B2B2B' }}>
+                  <p><strong>Delivery Slots:</strong> We offer morning (8–11am), afternoon (12–2pm), and evening (5–8pm) slots. Please specify your preferred slot in the address field.</p>
+                  <p><strong>Order Tracking:</strong> After placing your order, you can track its status in the 'Track' section.</p>
                   <p><strong>Timelines:</strong> Standard delivery takes 24–48 hours from order confirmation.</p>
                   <p><strong>Areas:</strong> We currently deliver within Bengaluru.</p>
+                  <p><strong>Delivery Partners:</strong> We partner with reliable local delivery services to ensure timely deliveries.</p>
                   <p><strong>Fees:</strong> Delivery charges are calculated at checkout based on location.</p>
+                  <p><strong>Address Accuracy:</strong> Please ensure your delivery address is complete and accurate to avoid delays.</p>
+                  <p><strong>Delivery Delays:</strong> While we strive for timely deliveries, unforeseen circumstances (e.g., traffic, weather) may cause delays.</p>
+                  <p><strong>Customer Support:</strong> For any delivery-related queries, please contact us via WhatsApp at +91 91082 86886 or email us at lytebytesblr@gmail.com</p>               
                 </div>
               )}
             </div>
-             
             <button onClick={handleProceedToPayment} style={actionButtonStyle}>Proceed to Payment</button>
             <button onClick={() => setView('home')} style={secondaryButtonStyle}>Continue Shopping</button>
           </div>
@@ -328,7 +392,7 @@ export default function App() {
             <div>
                 <button onClick={() => setView('home')} style={backButtonStyle}><ArrowLeft size={20}/> Back</button>
                 <h2 style={{ color: theme.brand }}>Support & Info</h2>
-                 
+                  
                 <div style={{ marginBottom: '30px' }}>
                     <a href="https://wa.me/9108286886" style={{ textDecoration: 'none' }}><button style={actionButtonStyle}><MessageSquare size={18}/> Contact Customer Support</button></a>
                     <a href="mailto:lytebytesblr@gmail.com" style={{ textDecoration: 'none' }}><button style={actionButtonStyle}><Mail size={18}/> Raise a Request</button></a>
@@ -340,8 +404,15 @@ export default function App() {
                         Terms & Conditions {showTC ? <ChevronUp size={16}/> : <ChevronDown size={16}/>}
                     </div>
                     {showTC && (
-                        <div style={{ padding: '15px', fontSize: '14px', textAlign: 'left', border: theme.border, borderRadius: theme.radius, background: '#FFFFFF', marginBottom: '10px' }}>
+                        <div style={{ padding: '15px', fontSize: '14px',textAlign: 'left', border: theme.border, borderRadius: theme.radius, background: '#FFFFFF', marginBottom: '10px' }}>
                             <p><strong>Order Acceptance:</strong> All orders are subject to availability. We reserve the right to refuse or cancel orders.</p>
+                            <p><strong>Order Cut-off Time:</strong> orders must be placed a certain time in advance (e.g., 24 hours) to ensure freshness.</p>
+                            <p><strong>FSSAI Registration:</strong> Lyte Bytes hold a valid FSSAI Registration (or License) required for manufacturing, storage, and distribution.</p>
+                            <p><strong>Allergen Warning:</strong> Our food is prepared in a home kitchen that may handle common allergens (e.g., nuts, gluten, dairy).</p>
+                            <p><strong>Liability Limitation:</strong> Lyte Bytes is not responsible for any adverse reactions due to undisclosed allergies.</p>
+                            <p><strong>Hygiene Standards:</strong> Ourfood is prepared in a clean, hygienic home kitchen, adhering to health standards.</p>
+                            <p><strong>No Return Policy:</strong> Due to the perishable nature of food, typically, returns are not accepted.</p>
+                            <p><strong>Refunds & Cancellations:</strong> Due to the perishable nature of our products, we do not accept cancellations or offer refunds once an order is placed.</p>
                             <p><strong>Payments:</strong> Payments must be made in full at the time of order placement.</p>
                             <p><strong>Modifications:</strong> We reserve the right to change prices and availability without notice.</p>
                         </div>
@@ -355,8 +426,15 @@ export default function App() {
                     {showPrivacy && (
                         <div style={{ padding: '15px', fontSize: '14px', textAlign: 'left', border: theme.border, borderRadius: theme.radius, background: '#FFFFFF', marginBottom: '10px' }}>
                             <p><strong>Data Collection:</strong> We collect your name, phone number, and address only to process your orders and facilitate deliveries.</p>
+                            <p><strong>Data Usage:</strong> Your information is used solely for order fulfillment and customer support. We do not use your data for marketing or analytics.</p>
+                            <p><strong>Data Storage:</strong> We retain your data only as long as necessary to fulfill your orders and provide support.</p>
                             <p><strong>Third Parties:</strong> We do not sell your personal data. We only share necessary delivery information with our logistics partners.</p>
                             <p><strong>Security:</strong> We take reasonable precautions to protect your information.</p>
+                            <p><strong>Communication:</strong> We may contact you regarding your orders or support requests.</p>
+                            <p><strong>Cookies:</strong> We do not use cookies or tracking technologies on our application/website.</p>
+                            <p><strong>Children's Privacy:</strong> Our services are not directed to individuals under 18. We do not knowingly collect data from children.</p>
+                            <p><strong>Policy Changes:</strong> We may update our policies occasionally. Continued use of our services constitutes acceptance of those changes.</p>   
+                            <p><strong>Your Rights:</strong> You can request deletion of your data by contacting us at lytebytesblr@gmail.com or via WhatsApp at +91 91082 86886.</p> 
                         </div>
                     )}
                 </div>
