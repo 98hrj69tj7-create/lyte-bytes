@@ -178,16 +178,28 @@ export default function App() {
         </div>
       )}
 
-      <header style={{ height: '70px', padding: '0 15px', borderBottom: theme.border, display: 'flex', alignItems: 'center', justifyContent: 'space-between', backgroundColor: theme.bg, flexShrink: 0 }}>
-        <div style={{ display: 'flex', alignItems: 'center' }}>
-            <img src="/logo.png" alt="Logo" style={{ width: '45px', height: '45px', marginRight: '10px', borderRadius: '8px' }} />
-            <h2 style={{ margin: 0, color: theme.brand, fontWeight: '900', letterSpacing: '-0.5px' }}>LYTE BYTES</h2>
-        </div>
-        <div style={{ fontSize: '10px', textAlign: 'right', display: 'flex', alignItems: 'center', gap: '5px' }}>
-            <img src="/Fssai.png" alt="FSSAI" style={{ width: '25px', height: '25px', objectFit: 'contain' }} />
-            <span style={{ fontWeight: '600', color: theme.text }}>21225008002806 | Halal Compliant</span>
-        </div>
-      </header>
+      <header style={{ 
+        height: '60px', 
+        padding: '0 15px', 
+        borderBottom: theme.border, 
+        display: 'flex', 
+        alignItems: 'center', 
+        justifyContent: 'space-between' 
+        }}>
+        {/* Left: Brand Name - Reduced size */}
+      <h2 style={{ fontSize: '18px', margin: 0, color: theme.brand }}>LYTE BYTES</h2>
+
+        {/* Right: Certifications in one line */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+    <div style={{ display: 'flex', alignItems: 'center', fontSize: '9px', color: theme.text }}>
+      <img src="/Fssai.png" alt="FSSAI" style={{ width: '20px', marginRight: '4px' }} />
+      <span>21225008002806</span>
+    </div>
+      <span style={{ fontSize: '9px', color: theme.text, borderLeft: '1px solid #ccc', paddingLeft: '8px' }}>
+      Halal Compliant
+      </span>
+  </div>
+</header>
 
       <main style={{ flex: 1, padding: '20px', overflowY: 'auto' }}>
         {view === 'home' && (
