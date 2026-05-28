@@ -169,7 +169,7 @@ export default function App() {
   const totalQty = cart.reduce((sum, item) => sum + item.qty, 0);
 
   return (
-    <div style={{ height: '100vh', display: 'flex', flexDirection: 'column', backgroundColor: theme.bg, color: theme.text, fontFamily: 'system-ui, sans-serif' }}>
+    <div style={{ height: '100dvh', display: 'flex', flexDirection: 'column', position:'fixed',top:0, left:0, right:0, bottom:0,backgroundColor: theme.bg, color: theme.text, fontFamily: 'system-ui, sans-serif' }}>
         
       {zoomImage && (
         <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: 'rgba(0,0,0,0.85)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }} onClick={() => setZoomImage(null)}>
@@ -189,22 +189,38 @@ export default function App() {
   {/* Left side: Logo and Brand Name */}
   <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
     <img src="/logo.png" alt="Logo" style={{ width: '40px', height: '40px', borderRadius: '50%' }} />
-    <h2 style={{ fontSize: '18px', margin: 0, color: theme.brand }}>LYTE BYTES</h2>
+    <h2 style={{ fontSize: '20px', margin: 0, color: theme.brand, fontWeight: '800' }}>LYTE BYTES</h2>
   </div>
 
-  {/* Right side: Certifications */}
-  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-    <div style={{ display: 'flex', alignItems: 'center', fontSize: '9px', color: theme.text }}>
-      <img src="/Fssai.png" alt="FSSAI" style={{ width: '20px', marginRight: '4px' }} />
-      <span>21225008002806</span>
-    </div>
-    <span style={{ fontSize: '9px', color: theme.text, borderLeft: '1px solid #ccc', paddingLeft: '8px' }}>
-      Halal Compliant
-    </span>
+{/* Right Side: Vertical Trust Block */}
+<div style={{ 
+  display: 'flex', 
+  flexDirection: 'column', 
+  alignItems: 'flex-end', 
+  justifyContent: 'center',
+  gap: '4px' // Small gap between FSSAI and Halal lines
+}}>
+  
+  {/* FSSAI Row */}
+  <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+    <span style={{ fontSize: '9px', fontWeight: 'bold', color: theme.text }}>{/* Optional: Add FSSAI label here */}</span>
+    <img src="/Fssai.png" alt="FSSAI" style={{ width: '20px', height: '20px', objectFit: 'contain' }} />
+    <span style={{ fontSize: '9px', fontWeight: 'bold', color: theme.text }}>21225008002806</span>
   </div>
+
+  {/* Halal Text Row */}
+  <span style={{ 
+    fontSize: '9px', 
+    fontWeight: 'bold', 
+    color: theme.text,
+    lineHeight: '1' 
+  }}>
+    Halal Compliant
+  </span>
+</div>
 </header>
 
-      <main style={{ flex: 1, padding: '20px', overflowY: 'auto' }}>
+      <main style={{ flex: 1, paddingTop: '5px', paddingLeft: '20px', paddingRight: '20px', overflowY: 'auto' }}>
         {view === 'home' && (
   <div>
     <h1 style={unifiedTaglineStyle}>Freshly crafted for YOU</h1>
@@ -227,7 +243,7 @@ export default function App() {
         <img 
           src={resolveImagePath(menuData[cat].imageUrl)} 
           alt={cat} 
-          style={{ width: '90px', height: '90px', objectFit: 'cover', borderRadius: '8px', marginRight: '16px' }} 
+          style={{ width: '70px', height: '70px', objectFit: 'cover', borderRadius: '8px', marginRight: '15px' }} 
         />
         <div style={{ fontSize: '18px', fontWeight: '700', color: '#E8E4D9' }}>
           {cat}
