@@ -70,11 +70,11 @@ export default function App() {
   const [selectedItem, setSelectedItem] = useState(null);
   const [paymentMode, setPaymentMode] = useState(null); // Tracks 'Cash' or 'UPI'
   const categoryImages = {
-  "Ammis Achar": "pickle.jpg",
-  "Bakery": "bakery.jpg",
-  "Catering": "catering.jpg",
-  "Finger Foods": "finger-foods.jpg",
-  "Jams & Spreads": "jams.jpg",  
+  "Ammis Achar": "pickle.png",
+  "Bakery & Cakes": "bakery.png",
+  "Catering": "catering.png",
+  "Finger Foods": "finger-foods.png",
+  "Jams & Spreads": "jams.png",  
 };
 
   // --- GOOGLE SHEET DATA FETCHING ---
