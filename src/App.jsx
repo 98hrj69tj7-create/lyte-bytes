@@ -178,26 +178,29 @@ export default function App() {
         </div>
       )}
 
-      <header style={{ 
-        height: '60px', 
-        padding: '0 15px', 
-        borderBottom: theme.border, 
-        display: 'flex', 
-        alignItems: 'center', 
-        justifyContent: 'space-between' 
-        }}>
-        {/* Left: Brand Name - Reduced size */}
-      <h2 style={{ fontSize: '18px', margin: 0, color: theme.brand }}>LYTE BYTES</h2>
+     <header style={{ 
+  height: '60px', 
+  padding: '0 15px', 
+  borderBottom: theme.border, 
+  display: 'flex', 
+  alignItems: 'center', 
+  justifyContent: 'space-between' 
+}}>
+  {/* Left side: Logo and Brand Name */}
+  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+    <img src="/logo.png" alt="Logo" style={{ width: '40px', height: '40px', borderRadius: '50%' }} />
+    <h2 style={{ fontSize: '18px', margin: 0, color: theme.brand }}>LYTE BYTES</h2>
+  </div>
 
-        {/* Right: Certifications in one line */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+  {/* Right side: Certifications */}
+  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
     <div style={{ display: 'flex', alignItems: 'center', fontSize: '9px', color: theme.text }}>
       <img src="/Fssai.png" alt="FSSAI" style={{ width: '20px', marginRight: '4px' }} />
       <span>21225008002806</span>
     </div>
-      <span style={{ fontSize: '9px', color: theme.text, borderLeft: '1px solid #ccc', paddingLeft: '8px' }}>
+    <span style={{ fontSize: '9px', color: theme.text, borderLeft: '1px solid #ccc', paddingLeft: '8px' }}>
       Halal Compliant
-      </span>
+    </span>
   </div>
 </header>
 
