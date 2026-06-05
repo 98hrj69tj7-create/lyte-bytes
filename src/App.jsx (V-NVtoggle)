@@ -58,8 +58,7 @@ export default function App() {
   const [activeCat, setActiveCat] = useState(null);
   const [activeSub, setActiveSub] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
-  const [filterType, setFilterType] = useState('All'); // 'All', 'Veg', 'Non-Veg'
-  const [isNonVeg, setIsNonVeg] = useState(false);   // In your state declarations
+  const [isNonVeg, setIsNonVeg] = useState(null);
   const [layout, setLayout] = useState('list');
   const [cart, setCart] = useState([]);
   const [customer, setCustomer] = useState({ name: '', phone: '', email: '', address: '' });
