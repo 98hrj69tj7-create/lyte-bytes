@@ -266,7 +266,7 @@ export default function App() {
         )}
 {view === 'items' && (
   <>
-    {/* 1. Toggle Buttons */}
+    {/* 1. Toggle Buttons Only */}
     <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end', marginBottom: '15px' }}>
       <button 
         onClick={() => setLayout('list')} 
@@ -281,41 +281,8 @@ export default function App() {
         <Grid size={20} color={layout === 'grid' ? 'white' : theme.text}/>
       </button>
     </div>
-    {/* 1.i. Category Quick-Jump Navigation */}
-<div style={{ 
-    display: 'flex', 
-    gap: '10px', 
-    overflowX: 'auto', 
-    padding: '15px 0', 
-    position: 'sticky', 
-    top: '0', 
-    background: '#FDF6E3', // Match your page background
-    zIndex: '1000' 
-}}>
-  {Object.keys(menuData).map((cat) => (
-    <button 
-      key={cat}
-      onClick={() => {
-        setActiveCat(cat); 
-        setActiveSub(Object.keys(menuData[cat].subcategories)[0]);
-      }}
-      style={{
-        padding: '10px 12px',
-        borderRadius: '25px',
-        fontSize: '14px',
-        fontWeight: '600',
-        border: activeCat === cat ? 'none' : '1px solid #E97451',
-        background: activeCat === cat ? '#E97451' : 'transparent',
-        color: activeCat === cat ? 'white' : '#5D4037',
-        cursor: 'pointer',
-        whiteSpace: 'nowrap'
-      }}
-    >
-      {cat}
-    </button>
-  ))}
-</div>
-    {/* 2. Grid/List Container */}
+
+    {/* 2. Grid/List Container (Navigation removed) */}
     <div style={{ 
       display: layout === 'grid' ? 'grid' : 'flex', 
       gridTemplateColumns: layout === 'grid' ? 'repeat(2, 1fr)' : 'none',
@@ -331,48 +298,46 @@ export default function App() {
           flexDirection: layout === 'grid' ? 'column' : 'row',
           gap: '12px', 
           backgroundColor: '#FFFFFF',
-          boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
-          position: 'relative' // REQUIRED: Pins the indicator to this card
+          boxShadow: '0 4px 12px rgba(0,0,0,0.05)'
         }}>
-          {/* Veg/Non-Veg/Egg Indicator - Positioned relative to the CARD */}
-{item.variation && (
-  <img 
-    src={`/menu-items/${item.variation.trim().toLowerCase() === 'non-veg' ? 'non-veg' : item.variation.trim().toLowerCase()}.png`} 
-    alt={item.variation} 
-    style={{ 
-      position: 'absolute', 
-      top: '10px', 
-      right: '10px', 
-      width: '18px', 
-      height: '18px',
-      zIndex: 10
-    }} 
-  />
-)}
+          {/* Thumbnail Section */}
+          <div onClick={() => setSelectedItem(item)} style={{ cursor: 'pointer', flexShrink: 0 }}>
+            <img 
+              src={resolveImagePath(item.imageUrl, 'menu-items')} 
+              alt={item.name} 
+              style={{ 
+                width: layout === 'grid' ? '100%' : '90px', 
+                height: layout === 'grid' ? '120px' : '90px', 
+                objectFit: 'cover',
+                borderRadius: '12px'
+              }} 
+            />
+          </div>
 
-{/* Thumbnail Section */}
-<div onClick={() => setSelectedItem(item)} style={{ cursor: 'pointer', flexShrink: 0 }}>
-  <img 
-    src={resolveImagePath(item.imageUrl, 'menu-items')} 
-    alt={item.name} 
-    style={{ 
-      width: layout === 'grid' ? '100%' : '90px', 
-      height: layout === 'grid' ? '120px' : '90px', 
-      objectFit: 'cover',
-      borderRadius: '12px'
-    }} 
-  />
-</div>
           {/* Content Area */}
           <div style={{ flex: 1, display: 'flex', flexDirection: 'column', textAlign: 'left' }}>
-            <div style={{ fontWeight: '800', fontSize: '15px', color: '#36281E', marginBottom: '2px' }}>{item.name}</div>
+            
+            {/* Title Line: Integrated Icon + Name */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '2px' }}>
+              {item.variation && (
+                <img 
+                  src={`/menu-items/${item.variation.trim().toLowerCase() === 'non-veg' ? 'non-veg' : item.variation.trim().toLowerCase()}.png`} 
+                  alt={item.variation} 
+                  style={{ width: '16px', height: '16px', flexShrink: 0 }} 
+                />
+              )}
+              <div style={{ fontWeight: '800', fontSize: '15px', color: '#36281E' }}>{item.name}</div>
+            </div>
+
             <div style={{ fontSize: '12px', color: '#FF5958', fontWeight: '700', fontStyle: 'italic', marginBottom: '8px' }}>{item.unit}</div>
+            
             {item.highlights && (
               <div style={{ fontSize: '11px', color: '#8B7355', lineHeight: '1.4', fontWeight: '500', marginBottom: 'auto' }}>
                 {item.highlights}
               </div>
             )}
-            <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center',gap: '12px', marginTop: '12px' }}>
+            
+            <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: '12px', marginTop: '12px' }}>
               <div style={{ color: '#FF5958', fontWeight: '600', fontSize: '15px' }}>₹{item.price}</div>
               <button 
                 onClick={() => addToCart(item)} 
@@ -387,7 +352,6 @@ export default function App() {
     </div>
   </>
 )}
-
         {view === 'cart' && (
           <div>
             <button onClick={() => setView('home')} style={backButtonStyle}><ArrowLeft size={20}/> Menu</button>
