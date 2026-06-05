@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Meera_Gopinath_Menon_Resume</title>
+<style>
+    /* 1. PHYSICAL PAGE DEFINTION */
+    @page {
+        size: A4;
+        margin: 20mm 0mm 20mm 0mm; /* Sets clear top/bottom safety print zones */
+    }
+
+    /* 2. BASE RESET */
+    *, *::before, *::after {
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        color: #2d3748;
+        line-height: 1.4;
+        font-size: 10pt;
+        margin: 0 !important;
+        padding: 0 !important;
+        background-color: #ffffff;
+        -webkit-print-color-adjust: exact; /* Forces browser to render backgrounds in PDF */
+        print-color-adjust: exact;
+    }
+
+    /* 3. MODERNISED HEADER (FLEXBOX DESIGN - NO TABLES) */
+    .header-container {
+        width: 100%;
+        background-color: #1a2a3a;
+        color: #ffffff;
+        padding: 30px 20mm;
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-pack: justify;
+        -ms-flex-pack: justify;
+        justify-content: space-between;
+        -webkit-box-align: end;
+        -ms-flex-align: end;
+        align-items: flex-end;
+    }
+
+    .header-left {
+        max-width: 60%;
+    }
+
+    .header-right {
+        max-width: 40%;
+        text-align: right;
+        font-size: 9.5pt;
+        color: #e2e8f0;
+        line-height: 1.5;
+    }
+
+    .candidate-name {
+        font-size: 24pt;
+        font-weight: 700;
+        letter-spacing: -0.5px;
+        color: #ffffff;
+        margin: 0 0 4px 0;
+    }
+
+    .candidate-title {
+        font-size: 11pt;
+        font-weight: 500;
+        color: #63b3ed;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin: 0;
+    }
+
+    /* 4. STRUCTURAL CONTENT WRAPPER */
+    .content-wrapper {
+        padding: 0 20mm;
+        width: 100%;
+    }
+
+    .section-title {
+        font-size: 11pt;
+        font-weight: 700;
+        color: #1a2a3a;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        border-bottom: 2px solid #e2e8f0;
+        padding-bottom: 2px;
+        margin-top: 22px;
+        margin-bottom: 12px;
+        page-break-after: avoid; /* Prevents titles hanging at page bottoms */
+    }
+
+    .summary-text p {
+        margin: 0 0 8px 0;
+        text-align: justify;
+    }
+
+    /* 5. COMPETENCY GRID (FLEXBOX - PREVENTS OVERFLOW) */
+    .skills-grid {
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-pack: justify;
+        -ms-flex-pack: justify;
+        justify-content: space-between;
+        margin-bottom: 15px;
+    }
+
+    .skills-column {
+        width: 31%;
+    }
+
+    .skills-card {
+        background-color: #f7fafc;
+        border-left: 3px solid #4a5568;
+        padding: 10px 12px;
+        height: 100%;
+    }
+
+    .skills-card-title {
+        font-size: 9pt;
+        font-weight: 700;
+        color: #1a2a3a;
+        margin-bottom: 6px;
+        text-transform: uppercase;
+    }
+
+    .skills-list {
+        font-size: 8.5pt;
+        color: #4a5568;
+        margin: 0;
+        padding-left: 12px;
+    }
+
+    .skills-list li {
+        margin-bottom: 3px;
+    }
+
+    /* 6. EXPERIENCES & ROLES */
+    .exp-item {
+        margin-bottom: 18px;
+    }
+
+    /* Flex-based role alignment */
+    .exp-header {
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-pack: justify;
+        -ms-flex-pack: justify;
+        justify-content: space-between;
+        -webkit-box-align: start;
+        -ms-flex-align: start;
+        align-items: flex-start;
+        margin-bottom: 6px;
+        page-break-after: avoid;
+    }
+
+    .exp-title-block {
+        max-width: 70%;
+    }
+
+    .exp-title {
+        font-size: 10.5pt;
+        font-weight: 700;
+        color: #1a2a3a;
+        margin: 0;
+    }
+
+    .exp-company {
+        font-size: 10pt;
+        font-weight: 600;
+        color: #4a5568;
+        margin: 2px 0 0 0;
+    }
+
+    .exp-meta {
+        max-width: 30%;
+        text-align: right;
+        font-size: 9pt;
+        color: #4a5568;
+        line-height: 1.3;
+    }
+
+    .bullet-list {
+        margin: 0;
+        padding-left: 15px;
+        color: #2d3748;
+    }
+
+    .bullet-list li {
+        margin-bottom: 4px;
+        text-align: justify;
+        page-break-inside: avoid; /* Individual bullet points won't tear mid-sentence */
+    }
+
+    /* 7. PROJECT SHOWCASES */
+    .project-item {
+        margin-bottom: 12px;
+        page-break-inside: avoid;
+    }
+
+    .project-title {
+        font-size: 10pt;
+        font-weight: 700;
+        color: #2b6cb0;
+    }
+
+    .tools-badge {
+        font-size: 8.5pt;
+        color: #4a5568;
+        font-style: italic;
+        margin-top: 2px;
+    }
+</style>
+</head>
+<body>
+
+    <div class="header-container">
+        <div class="header-left">
+            <h1 class="candidate-name">Meera Gopinath Menon</h1>
+            <div class="candidate-title">Senior Project Manager</div>
+        </div>
+        <div class="header-right">
+            Email: meeramenon086@gmail.com<br>
+            Phone: +91 99165 87389<br>
+            Location: Bengaluru, India (Open to UK/EU)<br>
+            LinkedIn: linkedin.com/in/meera-gopinath-menon
+        </div>
+    </div>
+
+    <div class="content-wrapper">
+
+        <div class="section-title">Professional Statement</div>
+        <div class="summary-text">
+            <p>Accomplished Project Manager with 15+ years of diverse IT delivery experience, recently enhanced by a Master's degree in Data Science and Applied Analytics from University of Lincoln, UK.</p>
+            <p>Proven track record of spearheading cross-functional agile teams to deliver complex tech initiatives on time and within budgetary targets.</p> 
+            <p>Certified PMP, CSM, and ITIL expert combining deep domain knowledge in enterprise project governance, risk assessment and release management with an advanced analytical mindset to drive data-backed strategic decisions.</p>
+            <p>Passionate about leveraging data science methodologies to optimize project outcomes, enhance stakeholder engagement, and foster continuous improvement in dynamic organizational environments.</p>
+            <p>Seeking to transition into a data-driven project management role within the UK/EU tech industry, where I can apply my unique blend of technical expertise and leadership acumen to drive impactful business results.</p>
+        </div>
+
+        <div class="section-title">Core Competencies</div>
+        <div class="skills-grid">
+            <div class="skills-column">
+                <div class="skills-card">
+                    <div class="skills-card-title">Project Governance</div>
+                    <ul class="skills-list">
+                        <li>Agile/Scrum & ITIL</li>
+                        <li>Budgeting & Cost Control</li>
+                        <li>End-to-End Release Planning</li>
+                        <li>Risk Assessment & Mitigation</li>
+                        <li>Stakeholder Communication</li>
+                        <li>Project Tracking & Reporting</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="skills-column">
+                <div class="skills-card">
+                    <div class="skills-card-title">Data & Analytics</div>
+                    <ul class="skills-list">
+                        <li>Predictive Analytics</li>
+                        <li>Machine & Deep Learning</li>
+                        <li>Statistical Modeling</li>
+                        <li>Data Visualization & NLP</li>
+                        <li>Feature Engineering</li>
+                        <li>Big Data Frameworks</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="skills-column">
+                <div class="skills-card">
+                    <div class="skills-card-title">Service Management</div>
+                    <ul class="skills-list">
+                        <li>IT Infrastructure Management</li>
+                        <li>Incident & Escalation Control</li>
+                        <li>Stakeholder Engagement</li>
+                        <li>Process Optimization</li>
+                        <li>Vendor Coordination</li>
+                        <li>Service Level Agreements</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-title">Education</div>
+        <div class="exp-item">
+            <div class="exp-header">
+                <div class="exp-title-block">
+                    <h3 class="exp-title">MSc in Data Science and Applied Analytics</h3>
+                    <p class="exp-company">University of Lincoln</p>
+                </div>
+                <div class="exp-meta">
+                    <strong>Sept 2024 – Sept 2025</strong><br>
+                    Lincoln, England
+                </div>
+            </div>
+        </div>
+        <div class="exp-item" style="margin-top: -10px;">
+            <div class="exp-header">
+                <div class="exp-title-block">
+                    <h3 class="exp-title">Bachelor of Technology (B.Tech) in Computer Science</h3>
+                    <p class="exp-company">AWH Engineering College</p>
+                </div>
+                <div class="exp-meta">
+                    <strong>Sept 2003 – June 2007</strong><br>
+                    Kerala, India
+                </div>
+            </div>
+        </div>
+
+        <div class="section-title">Technical & Data Science Projects</div>
+        
+        <div class="project-item">
+            <span class="project-title">MSc Research: Identification of Trees from UAV Imagery</span> — Evaluated UAV RGB imagery alongside deep learning models (YOLOv8/11/12, Deep Forest) for tree detection using transfer learning; analyzed precision-recall trade-offs for automated ecological monitoring.
+            <div class="tools-badge">Tools: Python, PyTorch, Ultralytics YOLO, DeepForest, OpenCV, Scikit-learn, Matplotlib, Seaborn, CVAT</div>
+        </div>
+
+        <div class="project-item">
+            <span class="project-title">Predictive Analytics: Restaurant Revenue Forecasting</span> — Developed robust regression and ensemble machine learning models to forecast operational revenue streams; optimized feature selection metrics and improved model accuracy via strict statistical validation.
+            <div class="tools-badge">Tools: Python, Pandas, NumPy, Scikit-learn</div>
+        </div>
+
+        <div class="project-item">
+            <span class="project-title">Big Data Analytics: Scalable Distributed Classification</span> — Applied distributed big data infrastructure frameworks to process and classify massive fruit datasets, enabling high-performance processing pipelines.
+            <div class="tools-badge">Tools: Spark, Hadoop, Python</div>
+        </div>
+
+        <div class="project-item">
+            <span class="project-title">Natural Language Processing: Amazon Review Sentiment Analysis</span> — Implemented NLP pipelines to parse and interpret thousands of consumer product reviews, deploying both traditional ML and deep learning architectures.
+            <div class="tools-badge">Tools: Python (NLTK, Scikit-learn, TensorFlow), SQL</div>
+        </div>
+
+        <div class="section-title">Professional Experience</div>
+
+        <div class="exp-item">
+            <div class="exp-header">
+                <div class="exp-title-block">
+                    <h3 class="exp-title">Project Manager / Release Manager</h3>
+                    <p class="exp-company">Tata Consultancy Services</p>
+                </div>
+                <div class="exp-meta">
+                    <strong>Feb 2026 – Current</strong><br>
+                    <strong>Sept 2022 – Sept 2024</strong><br>
+                    Bengaluru, India
+                </div>
+            </div>
+            <ul class="bullet-list">
+                <li>Instituted modern Agile methodologies across complex deliverables, driving successful, budget-conscious completion for 95% of project timelines.</li>
+                <li>Managed multi-functional project initiatives with financial portfolio budgets ranging from £500,000 to £1 Million, consistently hitting target KPIs.</li>
+                <li>Coordinated end-to-end release planning, managing scheduling, testing dependencies, and production rollouts across global cross-functional streams.</li>
+                <li>Compiled comprehensive project data health reports, transparently presenting risks and actionable mitigation metrics to executive stakeholders.</li>
+                <li>Led cross-functional sprint teams of 12+ engineers, data analysts, QA testers, and UX designers across distributed onshore/offshore models.</li>
+                <li>Led large-scale enterprise infrastructure migrations, including Cloud infrastructure updates (AWS) and legacy data pipeline modernisations.</li>
+                <li>Coordinated end-to-end deployment governance and release schedules, reducing production rollout downtime by implementing automated deployment metrics.</li>
+                <li>Deployed Scaled Agile Framework (SAFe) and Scrum frameworks to synchronise code releases across multi-tiered corporate applications.</li>
+                <li>Instituted data-driven project tracking and reporting mechanisms, increasing delivery transparency for senior stakeholders and global clients.</li>
+            </ul>
+        </div>
+
+        <div class="exp-item">
+            <div class="exp-header">
+                <div class="exp-title-block">
+                    <h3 class="exp-title">Project Manager</h3>
+                    <p class="exp-company">NTT DATA Services</p>
+                </div>
+                <div class="exp-meta">
+                    <strong>May 2018 – Aug 2022</strong><br>
+                    Bengaluru, India
+                </div>
+            </div>
+            <ul class="bullet-list">
+                <li>Spearheaded mid-to-large-scale IT transformation projects, ensuring precise management of project scope, timelines, and financial constraints.</li>
+                <li>Led cross-functional sprint teams across complex IT infrastructure projects, utilising Agile methodologies to identify bottlenecks and reduce project issue resolution time by 15%.</li>
+                <li>Utilised quantitative data analytics and Jira/Confluence velocity metrics to predict delivery bottlenecks, reducing project slippage by 18%.</li>
+                <li>Identified delivery risks early using quantitative metrics, implementing proactive solutions to preserve quality standards across the lifecycle.</li>
+                <li>Facilitated project completion while advocating for process improvement with a constructive approach.</li>
+                <li>Coordinated end-to-end release planning, managing scheduling, testing dependencies, and production rollouts across global business units.</li>
+                <li>Managed project documentation and reporting, ensuring compliance with PMO standards and providing transparent communication to stakeholders.</li>
+            </ul>
+        </div>
+
+        <div class="exp-item">
+            <div class="exp-header">
+                <div class="exp-title-block">
+                    <h3 class="exp-title">PMO Administrator</h3>
+                    <p class="exp-company">Dimension Data</p>
+                </div>
+                <div class="exp-meta">
+                    <strong>June 2016 – April 2018</strong><br>
+                    Bengaluru, India
+                </div>
+            </div>
+            <ul class="bullet-list">
+                <li>Governed project tracking systems, standardizing PMO processes and documentation pipelines across enterprise IT deployment projects.</li>
+                <li>Monitored project performance metrics, identifying trends and providing actionable insights to project managers and senior leadership.</li>
+                <li>Coordinated project documentation and reporting, ensuring compliance with PMO standards and providing transparent communication to stakeholders.</li>
+                <li>Established automated PMO reporting mechanisms and KPI tracking dashboards, increasing delivery transparency for senior stakeholders and global clients.</li>
+                <li>Facilitated project completion while advocating for process improvement with a constructive approach.</li>
+            </ul>
+        </div>
+
+        <div class="exp-item">
+            <div class="exp-header">
+                <div class="exp-title-block">
+                    <h3 class="exp-title">Incident and Escalation Manager</h3>
+                    <p class="exp-company">Hewlett-Packard</p>
+                </div>
+                <div class="exp-meta">
+                    <strong>Aug 2010 – May 2016</strong><br>
+                    Bengaluru, India
+                </div>
+            </div>
+            <ul class="bullet-list">
+                <li>Directed global enterprise incident management operations, coordinating cross-functional teams to resolve high-severity technical issues while maintaining strict SLA adherence.</li>
+                <li>Managed end-to-end incident lifecycle, from initial detection and escalation to resolution and post-incident analysis, ensuring minimal business disruption.</li>
+                <li>Collaborated with technical teams, vendors, and stakeholders to identify root causes and implement preventive measures, reducing incident recurrence by 20%.</li>
+                <li>Implemented data-driven incident tracking and reporting mechanisms, providing actionable insights to senior leadership and improving response times by 15%.</li>
+                <li>Managed high-severity technical infrastructure incidents for global enterprise clients, directing recovery teams to maintain strict SLA commitments.</li>
+            </ul>
+        </div>
+
+        <div class="section-title">Professional Certifications</div>
+        <ul class="bullet-list" style="list-style-type: square; padding-left: 15px; page-break-inside: avoid;">
+            <li><strong>PMP® (Project Management Professional)</strong> — Project Management Institute | License: 1984218</li>
+            <li><strong>Certified Scrum Master (CSM)</strong> — Scrum Alliance | License: 001576114</li>
+            <li><strong>Azure AI Fundamentals (AI-900) & Azure Data Fundamentals (DP-900)</strong> — Microsoft</li>
+            <li><strong>Product Management Executive Programme</strong> — Indian School of Business (ISB)</li>
+            <li><strong>ITIL Foundation V3</strong> — EXIN Excellence in Information</li>
+        </ul>
+
+    </div>
+
+</body>
+</html>

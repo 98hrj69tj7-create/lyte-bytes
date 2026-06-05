@@ -191,7 +191,7 @@ export default function App() {
   {/* Left side: Logo and Brand Name */}
   <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
     <img src="/logo.png" alt="Logo" style={{ width: '40px', height: '40px', borderRadius: '50%' }} />
-    <h2 style={{ fontSize: '20px', margin: 0, color: theme.brand, fontWeight: '800' }}>LYTE BYTES</h2>
+    <h2 style={{ fontSize: '25px', margin: 0, color: theme.brand, fontWeight: '900' }}>LYTE BYTES</h2>
   </div>
 
 {/* Right Side: Vertical Trust Block */}
@@ -206,14 +206,14 @@ export default function App() {
   {/* FSSAI Row */}
   <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
     <span style={{ fontSize: '9px', fontWeight: 'bold', color: theme.text }}>{/* Optional: Add FSSAI label here */}</span>
-    <img src="/Fssai.png" alt="FSSAI" style={{ width: '20px', height: '20px', objectFit: 'contain' }} />
-    <span style={{ fontSize: '9px', fontWeight: 'bold', color: theme.text }}>21225008002806</span>
+    <img src="/Fssai.png" alt="FSSAI" style={{ width: '28px', height: '28px', objectFit: 'contain' }} />
+    <span style={{ fontSize: '11px', fontWeight: '900', color: theme.text }}>21225008002806</span>
   </div>
 
   {/* Halal Text Row */}
   <span style={{ 
-    fontSize: '9px', 
-    fontWeight: 'bold', 
+    fontSize: '11px', 
+    fontWeight: '900', 
     color: theme.text,
     lineHeight: '1' 
   }}>
@@ -281,6 +281,40 @@ export default function App() {
         <Grid size={20} color={layout === 'grid' ? 'white' : theme.text}/>
       </button>
     </div>
+    {/* 1.i. Category Quick-Jump Navigation */}
+<div style={{ 
+    display: 'flex', 
+    gap: '10px', 
+    overflowX: 'auto', 
+    padding: '15px 0', 
+    position: 'sticky', 
+    top: '0', 
+    background: '#FDF6E3', // Match your page background
+    zIndex: '1000' 
+}}>
+  {Object.keys(menuData).map((cat) => (
+    <button 
+      key={cat}
+      onClick={() => {
+        setActiveCat(cat); 
+        setActiveSub(Object.keys(menuData[cat].subcategories)[0]);
+      }}
+      style={{
+        padding: '10px 12px',
+        borderRadius: '25px',
+        fontSize: '14px',
+        fontWeight: '600',
+        border: activeCat === cat ? 'none' : '1px solid #E97451',
+        background: activeCat === cat ? '#E97451' : 'transparent',
+        color: activeCat === cat ? 'white' : '#5D4037',
+        cursor: 'pointer',
+        whiteSpace: 'nowrap'
+      }}
+    >
+      {cat}
+    </button>
+  ))}
+</div>
     {/* 2. Grid/List Container */}
     <div style={{ 
       display: layout === 'grid' ? 'grid' : 'flex', 
