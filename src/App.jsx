@@ -57,6 +57,7 @@ export default function App() {
   const [view, setView] = useState('home');
   const [activeCat, setActiveCat] = useState(null);
   const [activeSub, setActiveSub] = useState(null);
+  const [searchQuery, setSearchQuery] = useState('');
   const [layout, setLayout] = useState('list');
   const [cart, setCart] = useState([]);
   const [customer, setCustomer] = useState({ name: '', phone: '', email: '', address: '' });
@@ -266,58 +267,51 @@ export default function App() {
         )}
 {view === 'items' && (
   <>
-    {/* 1. Toggle Buttons Only */}
+    {/* 1. Global Search Bar */}
+    <div style={{ marginBottom: '15px' }}>
+      <input 
+        type="text" 
+        placeholder="Search all items..." 
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
+        style={{ ...inputStyle, width: '100%' }}
+      />
+    </div>
+
+    {/* 2. Toggle Buttons */}
     <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end', marginBottom: '15px' }}>
-      <button 
-        onClick={() => setLayout('list')} 
-        style={{ background: layout === 'list' ? theme.buttonBg : 'transparent', border: theme.border, borderRadius: '6px', padding: '5px', cursor: 'pointer' }}
-      >
+      <button onClick={() => setLayout('list')} style={{ background: layout === 'list' ? theme.buttonBg : 'transparent', border: theme.border, borderRadius: '6px', padding: '5px', cursor: 'pointer' }}>
         <ListIcon size={20} color={layout === 'list' ? 'white' : theme.text}/>
       </button>
-      <button 
-        onClick={() => setLayout('grid')} 
-        style={{ background: layout === 'grid' ? theme.buttonBg : 'transparent', border: theme.border, borderRadius: '6px', padding: '5px', cursor: 'pointer' }}
-      >
+      <button onClick={() => setLayout('grid')} style={{ background: layout === 'grid' ? theme.buttonBg : 'transparent', border: theme.border, borderRadius: '6px', padding: '5px', cursor: 'pointer' }}>
         <Grid size={20} color={layout === 'grid' ? 'white' : theme.text}/>
       </button>
     </div>
 
-    {/* 2. Grid/List Container (Navigation removed) */}
+    {/* 3. Grid/List Container */}
     <div style={{ 
       display: layout === 'grid' ? 'grid' : 'flex', 
-      gridTemplateColumns: layout === 'grid' ? 'repeat(2, 1fr)' : 'none',
-      flexDirection: 'column',
+      gridTemplateColumns: layout === 'grid' ? 'repeat(2, 1fr)' : 'none', 
+      flexDirection: 'column', 
       gap: '16px' 
     }}>
-      {menuData[activeCat].subcategories[activeSub].map((item, i) => (
-        <div key={i} style={{ 
-          padding: '12px', 
-          border: theme.border, 
-          borderRadius: '16px', 
-          display: 'flex', 
-          flexDirection: layout === 'grid' ? 'column' : 'row',
-          gap: '12px', 
-          backgroundColor: '#FFFFFF',
-          boxShadow: '0 4px 12px rgba(0,0,0,0.05)'
-        }}>
-          {/* Thumbnail Section */}
+      {(searchQuery 
+        ? Object.values(menuData).flatMap(cat => Object.values(cat.subcategories).flat())
+        : menuData[activeCat].subcategories[activeSub]
+      )
+        .filter(item => item.name.toLowerCase().includes(searchQuery.toLowerCase()))
+        .map((item, i) => (
+        <div key={i} style={{ padding: '12px', border: theme.border, borderRadius: '16px', display: 'flex', flexDirection: layout === 'grid' ? 'column' : 'row', gap: '12px', backgroundColor: '#FFFFFF', boxShadow: '0 4px 12px rgba(0,0,0,0.05)' }}>
+          
+          {/* Thumbnail */}
           <div onClick={() => setSelectedItem(item)} style={{ cursor: 'pointer', flexShrink: 0 }}>
-            <img 
-              src={resolveImagePath(item.imageUrl, 'menu-items')} 
-              alt={item.name} 
-              style={{ 
-                width: layout === 'grid' ? '100%' : '90px', 
-                height: layout === 'grid' ? '120px' : '90px', 
-                objectFit: 'cover',
-                borderRadius: '12px'
-              }} 
-            />
+            <img src={resolveImagePath(item.imageUrl, 'menu-items')} alt={item.name} style={{ width: layout === 'grid' ? '100%' : '90px', height: layout === 'grid' ? '120px' : '90px', objectFit: 'cover', borderRadius: '12px' }} />
           </div>
 
-          {/* Content Area */}
+          {/* Content */}
           <div style={{ flex: 1, display: 'flex', flexDirection: 'column', textAlign: 'left' }}>
             
-            {/* Title Line: Integrated Icon + Name */}
+            {/* Title Line: Icon + Name together */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '2px' }}>
               {item.variation && (
                 <img 
@@ -331,20 +325,9 @@ export default function App() {
 
             <div style={{ fontSize: '12px', color: '#FF5958', fontWeight: '700', fontStyle: 'italic', marginBottom: '8px' }}>{item.unit}</div>
             
-            {item.highlights && (
-              <div style={{ fontSize: '11px', color: '#8B7355', lineHeight: '1.4', fontWeight: '500', marginBottom: 'auto' }}>
-                {item.highlights}
-              </div>
-            )}
-            
             <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: '12px', marginTop: '12px' }}>
               <div style={{ color: '#FF5958', fontWeight: '600', fontSize: '15px' }}>₹{item.price}</div>
-              <button 
-                onClick={() => addToCart(item)} 
-                style={{ backgroundColor: '#FF5958', color: '#FFFFFF', border: 'none', padding: '6px 16px', borderRadius: '8px', fontWeight: '600', fontSize: '14px', cursor: 'pointer' }}
-              >
-                Add
-              </button>
+              <button onClick={() => addToCart(item)} style={{ backgroundColor: '#FF5958', color: '#FFFFFF', border: 'none', padding: '6px 16px', borderRadius: '8px', fontWeight: '600', fontSize: '14px', cursor: 'pointer' }}>Add</button>
             </div>
           </div>
         </div>
