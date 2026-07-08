@@ -73,7 +73,7 @@ export default function App() {
   const [selectedItem, setSelectedItem] = useState(null);
   const [paymentMode, setPaymentMode] = useState(null); // Tracks 'Cash' or 'UPI'
   const categoryImages = {
-  "Ammis Achar": "pickle.png",
+  "Ammis Achar": "pickles.png",
   "Bakery & Cakes": "bakery.png",
   "Catering": "catering.png",
   "Finger Foods": "finger-foods.png",
