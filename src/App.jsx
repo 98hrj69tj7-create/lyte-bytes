@@ -625,22 +625,22 @@ useEffect(() => {
         >
           <div 
             onClick={(e) => e.stopPropagation()} 
-            style={{ backgroundColor: 'white', margin: '20px', borderRadius: '16px', overflow: 'hidden', maxWidth: '500px', width: '90%', boxShadow: '0 8px 30px rgba(0,0,0,0.3)' }}
+            style={{ backgroundColor: 'white', margin: '20px', borderRadius: '16px', overflow: 'hidden', maxWidth: '500px', width: '75%', boxShadow: '0 8px 30px rgba(0,0,0,0.3)' }}
           >
             <img src={resolveImagePath(selectedItem.imageUrl, 'menu-items')} alt={selectedItem.name} style={{ width: '100%', display: 'block' }} />
 
             <div style={{ backgroundColor: '#F7E7D4', padding: '24px', textAlign: 'left', borderTop: '4px solid #E6D6C4' }}>
               
               {/* Item Name and Logo Container */}
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start', gap: '8px', marginBottom: '16px' }}>
-                <h2 style={{ margin: 0, fontSize: '22px', color: '#36281E', fontWeight: '700' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start', gap: '7px', marginBottom: '14px' }}>
+                <h2 style={{ margin: 0, fontSize: '20px', color: '#36281E', fontWeight: '700' }}>
                   {selectedItem.name}
                 </h2>
                 {selectedItem.variation && (
                   <img 
                     src={`/menu-items/${selectedItem.variation.toLowerCase()}.png`}
                     alt={selectedItem.variation}
-                    style={{ width: '20px', height: '20px', objectFit: 'contain' }}
+                    style={{ width: '18px', height: '20px', objectFit: 'contain' }}
                   />
                 )}
               </div>
@@ -656,7 +656,7 @@ useEffect(() => {
               )}
               {/* Static Visual Disclaimer */}
               <p style={{ 
-                borderTop: '1px solid rgba(54, 40, 30, 0.1)', 
+                borderTop: '1.5px solid rgba(54, 40, 30, 0.1)', 
                 paddingTop: '3px', margin: 0, fontSize: '11px', 
                 color: 'rgba(54, 40, 30, 0.7)', fontStyle: 'italic' 
               }}>
