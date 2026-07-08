@@ -624,7 +624,7 @@ useEffect(() => {
           }}
         >
           <div 
-            onClick={(e) => e.stopPropagation()} 
+            onClick={() => e.stopPropagation(null)} 
             style={{ backgroundColor: 'white', margin: '20px', borderRadius: '16px', overflow: 'hidden', maxWidth: '500px', width: '75%', boxShadow: '0 8px 30px rgba(0,0,0,0.3)' }}
           >
             <img src={resolveImagePath(selectedItem.imageUrl, 'menu-items')} alt={selectedItem.name} style={{ width: '100%', display: 'block' }} />
