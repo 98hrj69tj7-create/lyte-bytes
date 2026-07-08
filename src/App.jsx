@@ -615,8 +615,8 @@ useEffect(() => {
       {/* --- OPTIMIZED PREMIUM POPUP MODAL --- */}
       {selectedItem && (
         <div 
-          onClick={() => setSelectedItem(null)}
-          style={{ 
+          onClick={() => setSelectedItem(null)} // <-- Change this to the same close function
+          style={{
             position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', 
             backgroundColor: 'rgba(0,0,0,0.85)', 
             display: 'flex', alignItems: 'center', 
@@ -644,23 +644,20 @@ useEffect(() => {
                   />
                 )}
               </div>
-
+               {/* Description (Left Aligned) */}
+              <p style={{ color: '#36281E', margin: '0 0 15px 0', fontSize: '15px', lineHeight: '1.6', fontWeight: '600', textAlign: 'left' }}>
+                {selectedItem.description}
+              </p>
               {/* Highlights (Left Aligned) */}
               {selectedItem.highlights && (
-                <p style={{ color: '#8B4513', margin: '0 0 12px 0', fontSize: '13px', fontStyle: 'italic', fontWeight: '600', textAlign: 'left' }}>
+                <p style={{ color: '#8B4513', margin: '0 0 10px 0', fontSize: '12px', fontStyle: 'italic', fontWeight: '500', textAlign: 'left' }}>
                   {selectedItem.highlights}
                 </p>
               )}
-
-              {/* Description (Left Aligned) */}
-              <p style={{ color: '#36281E', margin: '0 0 20px 0', fontSize: '14px', lineHeight: '1.6', fontWeight: '500', textAlign: 'left' }}>
-                {selectedItem.description}
-              </p>
-
               {/* Static Visual Disclaimer */}
               <p style={{ 
                 borderTop: '1px solid rgba(54, 40, 30, 0.1)', 
-                paddingTop: '12px', margin: 0, fontSize: '11px', 
+                paddingTop: '3px', margin: 0, fontSize: '11px', 
                 color: 'rgba(54, 40, 30, 0.7)', fontStyle: 'italic' 
               }}>
                 * Visuals are for illustration. The final product may vary.
