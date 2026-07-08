@@ -645,22 +645,22 @@ useEffect(() => {
                 )}
               </div>
 
-               {/* Description (Left Aligned) */}
-              <p style={{ color: '#36281E', margin: '0 0 12px 0', fontSize: '14px', lineHeight: '1.6', fontWeight: '500', textAlign: 'left' }}>
-                {selectedItem.description}
-              </p>
-
               {/* Highlights (Left Aligned) */}
               {selectedItem.highlights && (
-                <p style={{ color: '#8B4513', margin: '0 0 10px 0', fontSize: '11px', fontStyle: 'italic', fontWeight: '600', textAlign: 'left' }}>
+                <p style={{ color: '#8B4513', margin: '0 0 12px 0', fontSize: '13px', fontStyle: 'italic', fontWeight: '600', textAlign: 'left' }}>
                   {selectedItem.highlights}
                 </p>
               )}
 
+              {/* Description (Left Aligned) */}
+              <p style={{ color: '#36281E', margin: '0 0 20px 0', fontSize: '14px', lineHeight: '1.6', fontWeight: '500', textAlign: 'left' }}>
+                {selectedItem.description}
+              </p>
+
               {/* Static Visual Disclaimer */}
               <p style={{ 
                 borderTop: '1px solid rgba(54, 40, 30, 0.1)', 
-                paddingTop: '3px', margin: 0, fontSize: '10px', 
+                paddingTop: '12px', margin: 0, fontSize: '11px', 
                 color: 'rgba(54, 40, 30, 0.7)', fontStyle: 'italic' 
               }}>
                 * Visuals are for illustration. The final product may vary.
