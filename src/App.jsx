@@ -59,7 +59,7 @@ export default function App() {
   const [activeSub, setActiveSub] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [filterType, setFilterType] = useState('All'); // 'All', 'Veg', 'Non-Veg'
-  const [isNonVeg, setIsNonVeg] = useState(false);   // In your state declarations
+  const [isNonVeg, setIsNonVeg] = useState(null);   // In your state declarations
   const [layout, setLayout] = useState('list');
   const [cart, setCart] = useState([]);
   const [customer, setCustomer] = useState({ name: '', phone: '', email: '', address: '' });
@@ -269,6 +269,14 @@ export default function App() {
         )}
 {view === 'items' && (
   <>
+  {/* ADD THIS BACK BUTTON */}
+    <button 
+      onClick={() => setView('subcat')} 
+      style={{ ...backButtonStyle, marginBottom: '10px' }}
+    >
+      <ArrowLeft size={20}/> Back
+    </button>
+
     {/* 1. Global Search Bar */}
     <div style={{ marginBottom: '15px' }}>
       <input 
@@ -281,22 +289,32 @@ export default function App() {
     </div>
 
     {/* 2. Premium Slide Toggle Switch */}
-    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '15px', marginBottom: '20px' }}>
-      <span style={{ fontSize: '13px', fontWeight: '700', color: isNonVeg ? '#aaa' : '#2D8A56' }}>VEG</span>
-      <div 
-        onClick={() => setIsNonVeg(!isNonVeg)}
-        style={{ 
-          width: '50px', height: '26px', background: isNonVeg ? '#D32F2F' : '#2D8A56', 
-          borderRadius: '25px', position: 'relative', cursor: 'pointer', transition: '0.4s ease' 
-        }}
-      >
-        <div style={{ 
-          width: '22px', height: '22px', background: 'white', borderRadius: '50%', 
-          position: 'absolute', top: '2px', left: isNonVeg ? '26px' : '2px', transition: '0.4s ease' 
-        }} />
-      </div>
-      <span style={{ fontSize: '13px', fontWeight: '700', color: isNonVeg ? '#D32F2F' : '#aaa' }}>NON-VEG</span>
-    </div>
+   {/* Toggle Switch */}
+<div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '15px', marginBottom: '20px' }}>
+  <span 
+    onClick={() => setIsNonVeg(false)}
+    style={{ fontSize: '13px', fontWeight: '700', color: isNonVeg === false ? '#2D8A56' : '#aaa', cursor: 'pointer' }}
+  >VEG</span>
+  
+  <div 
+    onClick={() => setIsNonVeg(isNonVeg === null ? false : !isNonVeg)}
+    style={{ 
+      width: '50px', height: '26px', 
+      background: isNonVeg === null ? '#ccc' : (isNonVeg ? '#D32F2F' : '#2D8A56'), 
+      borderRadius: '25px', position: 'relative', cursor: 'pointer', transition: '0.4s' 
+    }}
+  >
+    <div style={{ 
+      width: '22px', height: '22px', background: 'white', borderRadius: '50%', 
+      position: 'absolute', top: '2px', left: isNonVeg === null ? '14px' : (isNonVeg ? '26px' : '2px'), transition: '0.4s' 
+    }} />
+  </div>
+  
+  <span 
+    onClick={() => setIsNonVeg(true)}
+    style={{ fontSize: '13px', fontWeight: '700', color: isNonVeg === true ? '#D32F2F' : '#aaa', cursor: 'pointer' }}
+  >NON-VEG</span>
+</div>
 
     {/* 3. Grid/List Layout Toggles */}
     <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end', marginBottom: '15px' }}>
@@ -321,16 +339,20 @@ export default function App() {
       )
         .filter(item => {
           const matchesSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase());
-          const v = item.variation ? item.variation.trim().toLowerCase() : '';
-          
-          if (!isNonVeg) {
+  
+          // If no toggle is selected, show everything
+          if (isNonVeg === null) return matchesSearch;
+
+            const v = item.variation ? item.variation.trim().toLowerCase() : '';
+  
+            if (!isNonVeg) {
             // VEG MODE: Show Veg OR Egg
             return matchesSearch && (v === 'veg' || v === 'egg');
-          } else {
+            } else {
             // NON-VEG MODE: Show Non-Veg OR Egg
             return matchesSearch && (v === 'non-veg' || v === 'egg');
-          }
-        })
+  }
+})
         .map((item, i) => (
         <div key={i} style={{ padding: '12px', border: theme.border, borderRadius: '16px', display: 'flex', flexDirection: layout === 'grid' ? 'column' : 'row', gap: '12px', backgroundColor: '#FFFFFF', boxShadow: '0 4px 12px rgba(0,0,0,0.05)' }}>
           
