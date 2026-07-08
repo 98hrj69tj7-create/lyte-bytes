@@ -79,57 +79,52 @@ export default function App() {
   "Finger Foods": "finger-foods.png",
   "Jams & Spreads": "jams.png",  
 };
+
 // --- GOOGLE SHEET DATA FETCHING ---
 const [menuData, setMenuData] = useState(null);
 
 useEffect(() => {
-  // 1. Generate the cache-busting timestamp
   const timestamp = new Date().getTime();
-  
-  // 2. Build the URL dynamically with the timestamp
+  // Ensure this URL is exactly from your "Publish to web" (CSV format)
   const CSV_URL = `https://docs.google.com/spreadsheets/d/e/2PACX-1vR35Ed3Gcjjj3SLQvZWaLEahaM9QYPmdVvnGoFOefqmA544Jtcr3xR2QVj8Yy1tk-mjh4DVQarYB7Yh/pub?output=csv&t=${timestamp}`;
   
-  // 3. Fetch and parse the data
   Papa.parse(CSV_URL, {
     download: true,
     header: true,
     complete: (results) => {
       const transformed = {};
 
-    results.data.forEach((row) => {
-      // 2. Availability Check
-      if (row.Availability?.toUpperCase() !== 'TRUE') return;
-      if (!row.Category) return;
+      results.data.forEach((row) => {
+        // Availability Check
+        if (row.Availability?.toUpperCase() !== 'TRUE') return;
+        if (!row.Category) return;
 
-      // 3. Initialize Category if it doesn't exist
-      if (!transformed[row.Category]) {
-        transformed[row.Category] = { 
-          imageUrl: categoryImages[row.Category] || "/catering.jpg",
-          subcategories: {} 
-        };
-      }
+        // Initialize Category/Subcategory structures
+        if (!transformed[row.Category]) {
+          transformed[row.Category] = { 
+            imageUrl: categoryImages[row.Category] || "/catering.jpg", 
+            subcategories: {} 
+          };
+        }
+        if (!transformed[row.Category].subcategories[row.Sub_Category]) {
+          transformed[row.Category].subcategories[row.Sub_Category] = [];
+        }
 
-      // 4. Initialize Sub_Category if it doesn't exist
-      if (!transformed[row.Category].subcategories[row.Sub_Category]) {
-        transformed[row.Category].subcategories[row.Sub_Category] = [];
-      }
-
-      // 5. Push the item data
-      transformed[row.Category].subcategories[row.Sub_Category].push({
-      name: row.Item_Name,
-      price: parseFloat(row.Price) || 0,
-      description: row.Description || "",    // Now maps directly to your Description column
-      highlights: row.Highlights || "",      // Now maps directly to your new Highlights column
-      unit: row.Unit || "",
-      variation: row.Variation || "",
-      imageUrl: row.Img_name
+        // Push item data (Mapping column headers EXACTLY)
+        transformed[row.Category].subcategories[row.Sub_Category].push({
+          name: row.Item_Name,
+          price: parseFloat(row.Price) || 0,
+          description: row.Description || "",    // Map to 'Description' header
+          highlights: row.Highlights || "",      // Map to 'Highlights' header
+          unit: row.Unit || "",
+          variation: row.Variation || "",
+          imageUrl: row.Img_name
+        });
       });
-    });
-    // 6. Update state once parsing is complete
-    setMenuData(transformed);
-  }
-});
-  }, []); // Empty array ensures this only runs once on load
+      setMenuData(transformed);
+    }
+  });
+}, []);
 
   const addToCart = (item) => {
     setCart(prev => {
@@ -618,51 +613,62 @@ useEffect(() => {
         ))}
       </footer>
       {/* --- OPTIMIZED PREMIUM POPUP MODAL --- */}
-{selectedItem && (
-  <div 
-    onClick={() => setSelectedItem(null)} // Clicking background closes it
-    style={{ 
-      position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', 
-      backgroundColor: 'rgba(0,0,0,0.85)', // Slightly darker for better contrast
-      display: 'flex', alignItems: 'center', 
-      justifyContent: 'center', zIndex: 1000 
-    }}
-  >
-    <div style={{ backgroundColor: 'white', margin: '20px', borderRadius: '16px', overflow: 'hidden', maxWidth: '500px', width: '90%', boxShadow: '0 8px 30px rgba(0,0,0,0.3)' }}>
-      {/* Image Block - now with display:block to remove spacing */}
-      <img src={resolveImagePath(selectedItem.imageUrl, 'menu-items')} alt={selectedItem.name} style={{ width: '100%', display: 'block' }} />
+      {selectedItem && (
+        <div 
+          onClick={() => setSelectedItem(null)}
+          style={{ 
+            position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', 
+            backgroundColor: 'rgba(0,0,0,0.85)', 
+            display: 'flex', alignItems: 'center', 
+            justifyContent: 'center', zIndex: 1000 
+          }}
+        >
+          <div 
+            onClick={(e) => e.stopPropagation()} 
+            style={{ backgroundColor: 'white', margin: '20px', borderRadius: '16px', overflow: 'hidden', maxWidth: '500px', width: '90%', boxShadow: '0 8px 30px rgba(0,0,0,0.3)' }}
+          >
+            <img src={resolveImagePath(selectedItem.imageUrl, 'menu-items')} alt={selectedItem.name} style={{ width: '100%', display: 'block' }} />
 
-      {/* --- INTEGRATED PREMIUM BEIGE BANNER (Replaces white part) --- */}
-      <div style={{ 
-        backgroundColor: '#F7E7D4', // The warm beige background you requested
-        padding: '24px', // More padding for premium feel
-        textAlign: 'center',
-        borderTop: '4px solid #E6D6C4' // Premium accent border
-      }}>
-        {/* Item Title, integrated here */}
-        <h2 style={{ 
-          margin: '0 0 16px 0', // Spacing before the description
-          fontSize: '22px', 
-          color: '#36281E', // Dark Charcoal Font
-          fontWeight: '700'
-        }}>
-          {selectedItem.name}
-        </h2>
+            <div style={{ backgroundColor: '#F7E7D4', padding: '24px', textAlign: 'left', borderTop: '4px solid #E6D6C4' }}>
+              
+              {/* Item Name and Logo Container */}
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start', gap: '8px', marginBottom: '16px' }}>
+                <h2 style={{ margin: 0, fontSize: '22px', color: '#36281E', fontWeight: '700' }}>
+                  {selectedItem.name}
+                </h2>
+                {selectedItem.variation && (
+                  <img 
+                    src={`/menu-items/${selectedItem.variation.toLowerCase()}.png`}
+                    alt={selectedItem.variation}
+                    style={{ width: '20px', height: '20px', objectFit: 'contain' }}
+                  />
+                )}
+              </div>
 
-        {/* Catchy Description, shown here (removed middle block) */}
-        <p style={{ 
-          color: '#36281E', // Dark Charcoal Font Color
-          margin: 0, 
-          fontSize: '14px', 
-          lineHeight: '1.6', // Improved readability
-          fontWeight: '500' // Medium weight
-        }}>
-          Slow, soulful, and with a generous hand of love. Every plate celebrates fresh produce, gentle spices and brings the warmth to your table.
-        </p>
-      </div>
-    </div>
-  </div>
-)}
+               {/* Description (Left Aligned) */}
+              <p style={{ color: '#36281E', margin: '0 0 12px 0', fontSize: '14px', lineHeight: '1.6', fontWeight: '500', textAlign: 'left' }}>
+                {selectedItem.description}
+              </p>
+
+              {/* Highlights (Left Aligned) */}
+              {selectedItem.highlights && (
+                <p style={{ color: '#8B4513', margin: '0 0 10px 0', fontSize: '11px', fontStyle: 'italic', fontWeight: '600', textAlign: 'left' }}>
+                  {selectedItem.highlights}
+                </p>
+              )}
+
+              {/* Static Visual Disclaimer */}
+              <p style={{ 
+                borderTop: '1px solid rgba(54, 40, 30, 0.1)', 
+                paddingTop: '3px', margin: 0, fontSize: '10px', 
+                color: 'rgba(54, 40, 30, 0.7)', fontStyle: 'italic' 
+              }}>
+                * Visuals are for illustration. The final product may vary.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
