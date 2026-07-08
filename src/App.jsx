@@ -79,18 +79,22 @@ export default function App() {
   "Finger Foods": "finger-foods.png",
   "Jams & Spreads": "jams.png",  
 };
+// --- GOOGLE SHEET DATA FETCHING ---
+const [menuData, setMenuData] = useState(null);
 
-  // --- GOOGLE SHEET DATA FETCHING ---
-  const [menuData, setMenuData] = useState(null);
-  useEffect(() => {
-    const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vR35Ed3Gcjjj3SLQvZWaLEahaM9QYPmdVvnGoFOefqmA544Jtcr3xR2QVj8Yy1tk-mjh4DVQarYB7Yh/pub?gid=0&single=true&output=csv';
-    
-    Papa.parse(CSV_URL, {
-  download: true,
-  header: true,
-  complete: (results) => {
-    // 1. Initialize 'transformed' here so it exists for the whole function
-    const transformed = {}; 
+useEffect(() => {
+  // 1. Generate the cache-busting timestamp
+  const timestamp = new Date().getTime();
+  
+  // 2. Build the URL dynamically with the timestamp
+  const CSV_URL = `https://docs.google.com/spreadsheets/d/e/2PACX-1vR35Ed3Gcjjj3SLQvZWaLEahaM9QYPmdVvnGoFOefqmA544Jtcr3xR2QVj8Yy1tk-mjh4DVQarYB7Yh/pub?output=csv&t=${timestamp}`;
+  
+  // 3. Fetch and parse the data
+  Papa.parse(CSV_URL, {
+    download: true,
+    header: true,
+    complete: (results) => {
+      const transformed = {};
 
     results.data.forEach((row) => {
       // 2. Availability Check
@@ -125,7 +129,7 @@ export default function App() {
     setMenuData(transformed);
   }
 });
-  }, []);
+  }, []); // Empty array ensures this only runs once on load
 
   const addToCart = (item) => {
     setCart(prev => {
