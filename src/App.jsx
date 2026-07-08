@@ -274,9 +274,9 @@ export default function App() {
       onClick={() => setView('subcat')} 
       style={{ ...backButtonStyle, marginBottom: '10px' }}
     >
-      <ArrowLeft size={20}/> Back
+      <ArrowLeft size={20}/> Back to Categories
     </button>
-
+    
     {/* 1. Global Search Bar */}
     <div style={{ marginBottom: '15px' }}>
       <input 
