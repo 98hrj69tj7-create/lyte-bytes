@@ -60,6 +60,9 @@ const accordionHeaderStyle = {
 
 export default function App() {
   const [view, setView] = useState('home');
+  const [activeModal, setActiveModal] = useState({ type: null, data: null }); // Replace your separate states with this one
+  const openModal = (type, data) => setActiveModal({ type, data }); // Helper to open a specific modal
+  const closeModal = () => setActiveModal({ type: null, data: null }); // Helper to open a specific modal
   const [activeCat, setActiveCat] = useState(null);
   const [activeSub, setActiveSub] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
@@ -72,10 +75,8 @@ export default function App() {
   const [showConditions, setShowConditions] = useState(false);
   const [showTC, setShowTC] = useState(false);
   const [showPrivacy, setShowPrivacy] = useState(false);
-  const [zoomImage, setZoomImage] = useState(null);
   const [deliveryDate, setDeliveryDate] = useState('');
   const [deliveryTime, setDeliveryTime] = useState('');
-  const [selectedItem, setSelectedItem] = useState(null);
   const [paymentMode, setPaymentMode] = useState(null); // Tracks 'Cash' or 'UPI'
   const categoryImages = {
   "Ammis Achar": "pickles.png",
@@ -221,15 +222,9 @@ const addToCart = (item) => {
 
   return (
     <div style={{ height: '100dvh', display: 'flex', flexDirection: 'column', position:'fixed',top:0, left:0, right:0, bottom:0,backgroundColor: theme.bg, color: theme.text, fontFamily: 'system-ui, sans-serif' }}>
-        
-      {zoomImage && (
-        <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: 'rgba(0,0,0,0.85)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }} onClick={() => setZoomImage(null)}>
-          <button style={{ position: 'absolute', top: '20px', right: '20px', background: 'white', border: 'none', borderRadius: '50%', padding: '10px', cursor: 'pointer' }}><X size={24}/></button>
-          <img src={zoomImage} alt="Zoomed" style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain', borderRadius: '8px' }} />
-        </div>
-      )}
       <Header theme={theme} />
       <main style={{ flex: 1, paddingTop: '5px', paddingLeft: '20px', paddingRight: '20px', overflowY: 'auto' }}>
+        
         {view === 'home' && (
   <div>
     <h1 style={unifiedTaglineStyle}>Freshly crafted for YOU</h1>
@@ -346,16 +341,16 @@ const addToCart = (item) => {
   const v = item.variation ? item.variation.trim().toLowerCase() : '';
   if (!isNonVeg) return matchesSearch && (v === 'veg' || v === 'egg');
   return matchesSearch && (v === 'non-veg' || v === 'egg');
-})
+        })
         .map((item, i) => (
           <ItemCard 
-            key={i} 
-            item={item} 
-            addToCart={addToCart} 
-            setSelectedItem={setSelectedItem} 
-            layout={layout} 
-            resolveImagePath={resolveImagePath} 
-          />
+          item={item} 
+          openModal={openModal} 
+          addToCart={addToCart} 
+          resolveImagePath={resolveImagePath} 
+          layout={layout}
+          theme={theme}
+        />
         ))
       }
     </div>
@@ -567,18 +562,21 @@ const addToCart = (item) => {
         
       </main>
         <Footer setView={setView} cart={cart} theme={theme} />
-      <ItemModal 
-      selectedItem={selectedItem} 
-      setSelectedItem={setSelectedItem} 
-      addToCart={addToCart} 
-      theme={theme}
-      resolveImagePath={resolveImagePath} 
-/>
-    {/* 2. New Variant Drawer */}
-    {selectedItem && selectedItem.variants && (
-    <VariantDrawer 
-    selectedItem={selectedItem} 
-    setSelectedItem={setSelectedItem} 
+{/* Unified Modal Rendering - Centralized UI Logic */}
+{activeModal.type === 'ZOOM' && (
+  <ItemModal 
+    selectedItem={activeModal.data} 
+    setSelectedItem={closeModal} 
+    addToCart={addToCart}
+    theme={theme}
+    resolveImagePath={resolveImagePath} 
+  />
+)}
+
+{activeModal.type === 'VARIANTS' && (
+  <VariantDrawer 
+    selectedItem={activeModal.data} 
+    setSelectedItem={closeModal} 
     addToCart={addToCart} 
     resolveImagePath={resolveImagePath} 
   />
