@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import ItemCard from './components/ItemCard';
 import ItemModal from './components/ItemModal';
+import VariantDrawer from './components/VariantDrawer';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import Papa from 'papaparse';
@@ -86,6 +87,7 @@ export default function App() {
 
 // --- GOOGLE SHEET DATA FETCHING ---
 const [menuData, setMenuData] = useState(null);
+// 1. UPDATED useEffect (Handles variants/grouping)
 useEffect(() => {
   const timestamp = new Date().getTime();
   const CSV_URL = `https://docs.google.com/spreadsheets/d/e/2PACX-1vR35Ed3Gcjjj3SLQvZWaLEahaM9QYPmdVvnGoFOefqmA544Jtcr3xR2QVj8Yy1tk-mjh4DVQarYB7Yh/pub?output=csv&t=${timestamp}`;
@@ -94,57 +96,89 @@ useEffect(() => {
     download: true,
     header: true,
     complete: (results) => {
-  console.log("Full Data Received:", results.data);
-  const transformed = {};
+      console.log("Full Data Received:", results.data);
+      const transformed = {};
 
-  results.data.forEach((row) => {
-    // 1. Debugging log for "Highland"
-    if (row.Item_Name?.includes("Highland")) {
-      console.log("DEBUGGING HIGHLAND:", { 
-        name: row.Item_Name, 
-        avail: row.Availability, 
-        cat: row.Category, 
-        sub: row.Sub_Category 
-      });
-    }
+      results.data.forEach((row) => {
         // Availability Check
         if (row.Availability?.toString().trim().toUpperCase() !== 'TRUE') return;
         if (!row.Category) return;
 
-        // Initialize Category/Subcategory structures
+        // Initialize structures
         if (!transformed[row.Category]) {
           transformed[row.Category] = { 
             imageUrl: categoryImages[row.Category] || "/catering.jpg", 
             subcategories: {} 
           };
-        }
+        } 
         if (!transformed[row.Category].subcategories[row.Sub_Category]) {
           transformed[row.Category].subcategories[row.Sub_Category] = [];
         }
 
-        // Push item data
-        transformed[row.Category].subcategories[row.Sub_Category].push({
-          name: row.Item_Name,
-          price: parseFloat(row.Price) || 0,
-          description: row.Description || "",
-          highlights: row.Highlights || "",
-          unit: row.Unit || "",
-          variation: row.Variation || "",
-          imageUrl: row.Img_name
-        });
+        const subList = transformed[row.Category].subcategories[row.Sub_Category];
+        const existingItem = subList.find(i => i.name === row.Item_Name);
+
+        if (existingItem) {
+          if (!existingItem.variants) {
+            existingItem.variants = [
+              { label: existingItem.unit, price: existingItem.price },
+              { label: row.Unit, price: parseFloat(row.Price) || 0 }
+            ];
+            delete existingItem.unit;
+            delete existingItem.price;
+          } else {
+            existingItem.variants.push({ label: row.Unit, price: parseFloat(row.Price) || 0 });
+          }
+        } else {
+          subList.push({
+            name: row.Item_Name,
+            price: parseFloat(row.Price) || 0,
+            description: row.Description || "",
+            highlights: row.Highlights || "",
+            unit: row.Unit || "",
+            variation: row.Variation || "",
+            imageUrl: row.Img_name,
+            isCustomisable: row.Customisable?.trim().toLowerCase() === 'yes'
+          });
+        }
       });
 
-      // Update state once processing is done
       setMenuData(transformed);
     }
   });
 }, []);
-  const addToCart = (item) => {
-    setCart(prev => {
-      const exists = prev.find(i => i.name === item.name);
-      return exists ? prev.map(i => i.name === item.name ? {...i, qty: i.qty + 1} : i) : [...prev, {...item, qty: 1}];
-    });
-  };
+
+// 2. UPDATED addToCart (Handles variants)
+const addToCart = (item) => {
+  setCart((prev) => {
+    // 1. Ensure price is a clean number
+    const itemPrice = parseFloat(item.price) || 0;
+    
+    // 2. Identify the item uniquely by its name AND its specific unit/variant
+    // This prevents 500g and 1000g from being merged incorrectly
+    const exists = prev.find(i => i.name === item.name && i.unit === item.unit);
+    
+    if (exists) {
+      // If it exists, just increment the quantity
+      return prev.map((i) =>
+        (i.name === item.name && i.unit === item.unit)
+          ? { ...i, qty: i.qty + 1 }
+          : i
+      );
+    } else {
+      // 3. If new, add to cart with the specific price and unit
+      return [
+        ...prev,
+        {
+          ...item,
+          qty: 1,
+          price: itemPrice, // This is the numeric price passed from the modal/card
+          unit: item.unit || ""
+        }
+      ];
+    }
+  });
+};
 
   const removeFromCart = (name) => {
     setCart(prev => prev.reduce((acc, item) => {
@@ -351,7 +385,7 @@ useEffect(() => {
 
     {/* Price */}
     <div style={{ fontWeight: 'bold', fontSize: '16px', color: '#FF5958', minWidth: '50px' }}>
-      ₹{item.price * item.qty}
+    ₹{(item.price || 0) * item.qty}
     </div>
 
     {/* Quantity Controls */}
@@ -530,15 +564,25 @@ useEffect(() => {
             <button onClick={() => { setCart([]); setView('home'); }} style={actionButtonStyle}>Back to Home</button>
           </div>
         )}
+        
       </main>
         <Footer setView={setView} cart={cart} theme={theme} />
       <ItemModal 
-  selectedItem={selectedItem} 
-  setSelectedItem={setSelectedItem} 
-  addToCart={addToCart} 
-  theme={theme}
-  resolveImagePath={resolveImagePath} 
+      selectedItem={selectedItem} 
+      setSelectedItem={setSelectedItem} 
+      addToCart={addToCart} 
+      theme={theme}
+      resolveImagePath={resolveImagePath} 
 />
+    {/* 2. New Variant Drawer */}
+    {selectedItem && selectedItem.variants && (
+    <VariantDrawer 
+    selectedItem={selectedItem} 
+    setSelectedItem={setSelectedItem} 
+    addToCart={addToCart} 
+    resolveImagePath={resolveImagePath} 
+  />
+)}
     </div>
   );
 }

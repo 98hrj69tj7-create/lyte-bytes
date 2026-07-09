@@ -5,7 +5,8 @@ export default function ItemModal({ selectedItem, setSelectedItem, addToCart, th
 
   return (
     <div 
-      onClick={() => setSelectedItem(null)} 
+      onClick={() => setSelectedItem()} 
+    
       style={{
         position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', 
         backgroundColor: 'rgba(0,0,0,0.85)', 
@@ -14,7 +15,7 @@ export default function ItemModal({ selectedItem, setSelectedItem, addToCart, th
       }}
     >
       <div 
-        onClick={(e) => e.stopPropagation()} 
+        onClick={() => e.stopPropagation(null)} 
         style={{ 
           backgroundColor: 'white', 
           margin: '20px', 
@@ -55,7 +56,7 @@ export default function ItemModal({ selectedItem, setSelectedItem, addToCart, th
 
           {/* Highlights */}
           {selectedItem.highlights && (
-            <p style={{ color: '#8B4513', margin: '0 0 10px 0', fontSize: '12px', fontStyle: 'italic', fontWeight: '500', textAlign: 'left' }}>
+            <p style={{ color: '#FF5958', margin: '0 0 12px 0', fontSize: '14px', fontStyle: 'italic', fontWeight: '500', textAlign: 'left' }}>
               {selectedItem.highlights}
             </p>
           )}
@@ -64,7 +65,7 @@ export default function ItemModal({ selectedItem, setSelectedItem, addToCart, th
           <p style={{ 
             borderTop: '1.5px solid rgba(54, 40, 30, 0.1)', 
             paddingTop: '3px', margin: 0, fontSize: '11px', 
-            color: 'rgba(54, 40, 30, 0.7)', fontStyle: 'italic' 
+            color: '#36281E', fontStyle: 'italic' 
           }}>
             * Visuals are for illustration. The final product may vary.
           </p>
