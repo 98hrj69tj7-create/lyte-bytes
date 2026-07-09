@@ -1,4 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import ItemCard from './components/ItemCard';
+import ItemModal from './components/ItemModal';
+import Header from './components/Header';
+import Footer from './components/Footer';
 import Papa from 'papaparse';
 import { Home, ShoppingBag, Truck, ArrowLeft, Plus, Minus, MapPin, CheckCircle, Info, ChevronDown, ChevronUp, Grid, List as ListIcon, Phone, Mail, MessageSquare, X } from 'lucide-react';
 
@@ -82,21 +86,29 @@ export default function App() {
 
 // --- GOOGLE SHEET DATA FETCHING ---
 const [menuData, setMenuData] = useState(null);
-
 useEffect(() => {
   const timestamp = new Date().getTime();
-  // Ensure this URL is exactly from your "Publish to web" (CSV format)
   const CSV_URL = `https://docs.google.com/spreadsheets/d/e/2PACX-1vR35Ed3Gcjjj3SLQvZWaLEahaM9QYPmdVvnGoFOefqmA544Jtcr3xR2QVj8Yy1tk-mjh4DVQarYB7Yh/pub?output=csv&t=${timestamp}`;
-  
+
   Papa.parse(CSV_URL, {
     download: true,
     header: true,
     complete: (results) => {
-      const transformed = {};
+  console.log("Full Data Received:", results.data);
+  const transformed = {};
 
-      results.data.forEach((row) => {
+  results.data.forEach((row) => {
+    // 1. Debugging log for "Highland"
+    if (row.Item_Name?.includes("Highland")) {
+      console.log("DEBUGGING HIGHLAND:", { 
+        name: row.Item_Name, 
+        avail: row.Availability, 
+        cat: row.Category, 
+        sub: row.Sub_Category 
+      });
+    }
         // Availability Check
-        if (row.Availability?.toUpperCase() !== 'TRUE') return;
+        if (row.Availability?.toString().trim().toUpperCase() !== 'TRUE') return;
         if (!row.Category) return;
 
         // Initialize Category/Subcategory structures
@@ -110,22 +122,23 @@ useEffect(() => {
           transformed[row.Category].subcategories[row.Sub_Category] = [];
         }
 
-        // Push item data (Mapping column headers EXACTLY)
+        // Push item data
         transformed[row.Category].subcategories[row.Sub_Category].push({
           name: row.Item_Name,
           price: parseFloat(row.Price) || 0,
-          description: row.Description || "",    // Map to 'Description' header
-          highlights: row.Highlights || "",      // Map to 'Highlights' header
+          description: row.Description || "",
+          highlights: row.Highlights || "",
           unit: row.Unit || "",
           variation: row.Variation || "",
           imageUrl: row.Img_name
         });
       });
+
+      // Update state once processing is done
       setMenuData(transformed);
     }
   });
 }, []);
-
   const addToCart = (item) => {
     setCart(prev => {
       const exists = prev.find(i => i.name === item.name);
@@ -181,49 +194,7 @@ useEffect(() => {
           <img src={zoomImage} alt="Zoomed" style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain', borderRadius: '8px' }} />
         </div>
       )}
-
-     <header style={{ 
-  height: '60px', 
-  padding: '0 15px', 
-  borderBottom: theme.border, 
-  display: 'flex', 
-  alignItems: 'center', 
-  justifyContent: 'space-between' 
-}}>
-  {/* Left side: Logo and Brand Name */}
-  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-    <img src="/logo.png" alt="Logo" style={{ width: '40px', height: '40px', borderRadius: '50%' }} />
-    <h2 style={{ fontSize: '25px', margin: 0, color: theme.brand, fontWeight: '900' }}>LYTE BYTES</h2>
-  </div>
-
-{/* Right Side: Vertical Trust Block */}
-<div style={{ 
-  display: 'flex', 
-  flexDirection: 'column', 
-  alignItems: 'flex-end', 
-  justifyContent: 'center',
-  gap: '4px' // Small gap between FSSAI and Halal lines
-}}>
-  
-  {/* FSSAI Row */}
-  <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-    <span style={{ fontSize: '9px', fontWeight: 'bold', color: theme.text }}>{/* Optional: Add FSSAI label here */}</span>
-    <img src="/Fssai.png" alt="FSSAI" style={{ width: '28px', height: '28px', objectFit: 'contain' }} />
-    <span style={{ fontSize: '11px', fontWeight: '900', color: theme.text }}>21225008002806</span>
-  </div>
-
-  {/* Halal Text Row */}
-  <span style={{ 
-    fontSize: '11px', 
-    fontWeight: '900', 
-    color: theme.text,
-    lineHeight: '1' 
-  }}>
-    Halal Compliant
-  </span>
-</div>
-</header>
-
+      <Header theme={theme} />
       <main style={{ flex: 1, paddingTop: '5px', paddingLeft: '20px', paddingRight: '20px', overflowY: 'auto' }}>
         {view === 'home' && (
   <div>
@@ -324,8 +295,7 @@ useEffect(() => {
         <Grid size={20} color={layout === 'grid' ? 'white' : theme.text}/>
       </button>
     </div>
-
-    {/* 4. Filtered Item List */}
+      {/* 4. Filtered Item List */}
     <div style={{ 
       display: layout === 'grid' ? 'grid' : 'flex', 
       gridTemplateColumns: layout === 'grid' ? 'repeat(2, 1fr)' : 'none', 
@@ -336,50 +306,24 @@ useEffect(() => {
         ? Object.values(menuData).flatMap(cat => Object.values(cat.subcategories).flat())
         : menuData[activeCat].subcategories[activeSub]
       )
-        .filter(item => {
-          const matchesSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase());
-  
-          // If no toggle is selected, show everything
-          if (isNonVeg === null) return matchesSearch;
-
-            const v = item.variation ? item.variation.trim().toLowerCase() : '';
-  
-            if (!isNonVeg) {
-            // VEG MODE: Show Veg OR Egg
-            return matchesSearch && (v === 'veg' || v === 'egg');
-            } else {
-            // NON-VEG MODE: Show Non-Veg OR Egg
-            return matchesSearch && (v === 'non-veg' || v === 'egg');
-  }
+      .filter(item => {
+  const matchesSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase());
+  if (isNonVeg === null) return matchesSearch;
+  const v = item.variation ? item.variation.trim().toLowerCase() : '';
+  if (!isNonVeg) return matchesSearch && (v === 'veg' || v === 'egg');
+  return matchesSearch && (v === 'non-veg' || v === 'egg');
 })
         .map((item, i) => (
-        <div key={i} style={{ padding: '12px', border: theme.border, borderRadius: '16px', display: 'flex', flexDirection: layout === 'grid' ? 'column' : 'row', gap: '12px', backgroundColor: '#FFFFFF', boxShadow: '0 4px 12px rgba(0,0,0,0.05)' }}>
-          
-          <div onClick={() => setSelectedItem(item)} style={{ cursor: 'pointer', flexShrink: 0 }}>
-            <img src={resolveImagePath(item.imageUrl, 'menu-items')} alt={item.name} style={{ width: layout === 'grid' ? '100%' : '90px', height: layout === 'grid' ? '120px' : '90px', objectFit: 'cover', borderRadius: '12px' }} />
-          </div>
-
-          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', textAlign: 'left' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '2px' }}>
-              {item.variation && (
-                <img 
-                  src={`/menu-items/${item.variation.trim().toLowerCase() === 'non-veg' ? 'non-veg' : item.variation.trim().toLowerCase()}.png`} 
-                  alt={item.variation} 
-                  style={{ width: '16px', height: '16px', flexShrink: 0 }} 
-                />
-              )}
-              <div style={{ fontWeight: '800', fontSize: '15px', color: '#36281E' }}>{item.name}</div>
-            </div>
-
-            <div style={{ fontSize: '12px', color: '#FF5958', fontWeight: '700', fontStyle: 'italic', marginBottom: '8px' }}>{item.unit}</div>
-            
-            <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: '12px', marginTop: '12px' }}>
-              <div style={{ color: '#FF5958', fontWeight: '600', fontSize: '15px' }}>₹{item.price}</div>
-              <button onClick={() => addToCart(item)} style={{ backgroundColor: '#FF5958', color: '#FFFFFF', border: 'none', padding: '6px 16px', borderRadius: '8px', fontWeight: '600', fontSize: '14px', cursor: 'pointer' }}>Add</button>
-            </div>
-          </div>
-        </div>
-      ))}
+          <ItemCard 
+            key={i} 
+            item={item} 
+            addToCart={addToCart} 
+            setSelectedItem={setSelectedItem} 
+            layout={layout} 
+            resolveImagePath={resolveImagePath} 
+          />
+        ))
+      }
     </div>
   </>
 )}
@@ -587,85 +531,14 @@ useEffect(() => {
           </div>
         )}
       </main>
-
-      <footer style={{ height: '70px', borderTop: theme.border, display: 'flex', justifyContent: 'space-around', alignItems: 'center', backgroundColor: theme.bg, flexShrink: 0, boxShadow: '0 -2px 10px rgba(0,0,0,0.05)' }}>
-        {[
-            { id: 'home', icon: Home, label: 'Home' },
-            { id: 'cart', icon: ShoppingBag, label: 'Bag', count: totalQty },
-            { id: 'track', icon: Truck, label: 'Track' },
-            { id: 'info', icon: Info, label: 'Info' }
-        ].map((item) => (
-            <div 
-                key={item.id} 
-                onClick={() => setView(item.id)} 
-                style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', cursor: 'pointer', fontSize: '11px', fontWeight: '600', color: theme.buttonBg, flex: 1 }}
-            >
-                <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <item.icon size={22} style={{ marginBottom: '4px' }}/>
-                    {item.count > 0 && (
-                        <span style={{ position: 'absolute', top: '-8px', right: '-8px', backgroundColor: theme.brand, color: 'white', borderRadius: '50%', width: '16px', height: '16px', fontSize: '9px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold' }}>
-                            {item.count}
-                        </span>
-                    )}
-                </div>
-                {item.label}
-            </div>
-        ))}
-      </footer>
-      {/* --- OPTIMIZED PREMIUM POPUP MODAL --- */}
-      {selectedItem && (
-        <div 
-          onClick={() => setSelectedItem(null)} // <-- Change this to the same close function
-          style={{
-            position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', 
-            backgroundColor: 'rgba(0,0,0,0.85)', 
-            display: 'flex', alignItems: 'center', 
-            justifyContent: 'center', zIndex: 1000 
-          }}
-        >
-          <div 
-            onClick={() => e.stopPropagation(null)} 
-            style={{ backgroundColor: 'white', margin: '20px', borderRadius: '16px', overflow: 'hidden', maxWidth: '500px', width: '90%', boxShadow: '0 8px 30px rgba(0,0,0,0.3)' }}
-          >
-            <img src={resolveImagePath(selectedItem.imageUrl, 'menu-items')} alt={selectedItem.name} style={{ width: '100%', display: 'block' }} />
-
-            <div style={{ backgroundColor: '#F7E7D4', padding: '24px', textAlign: 'left', borderTop: '4px solid #E6D6C4' }}>
-              
-              {/* Item Name and Logo Container */}
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start', gap: '7px', marginBottom: '14px' }}>
-                <h2 style={{ margin: 0, fontSize: '20px', color: '#36281E', fontWeight: '700' }}>
-                  {selectedItem.name}
-                </h2>
-                {selectedItem.variation && (
-                  <img 
-                    src={`/menu-items/${selectedItem.variation.toLowerCase()}.png`}
-                    alt={selectedItem.variation}
-                    style={{ width: '18px', height: '20px', objectFit: 'contain' }}
-                  />
-                )}
-              </div>
-               {/* Description (Left Aligned) */}
-              <p style={{ color: '#36281E', margin: '0 0 15px 0', fontSize: '15px', lineHeight: '1.6', fontWeight: '600', textAlign: 'left' }}>
-                {selectedItem.description}
-              </p>
-              {/* Highlights (Left Aligned) */}
-              {selectedItem.highlights && (
-                <p style={{ color: '#8B4513', margin: '0 0 10px 0', fontSize: '12px', fontStyle: 'italic', fontWeight: '500', textAlign: 'left' }}>
-                  {selectedItem.highlights}
-                </p>
-              )}
-              {/* Static Visual Disclaimer */}
-              <p style={{ 
-                borderTop: '1.5px solid rgba(54, 40, 30, 0.1)', 
-                paddingTop: '3px', margin: 0, fontSize: '11px', 
-                color: 'rgba(54, 40, 30, 0.7)', fontStyle: 'italic' 
-              }}>
-                * Visuals are for illustration. The final product may vary.
-              </p>
-            </div>
-          </div>
-        </div>
-      )}
+        <Footer setView={setView} cart={cart} theme={theme} />
+      <ItemModal 
+  selectedItem={selectedItem} 
+  setSelectedItem={setSelectedItem} 
+  addToCart={addToCart} 
+  theme={theme}
+  resolveImagePath={resolveImagePath} 
+/>
     </div>
   );
 }
