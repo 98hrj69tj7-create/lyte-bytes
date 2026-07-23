@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import ItemCard from './components/ItemCard';
 import ItemModal from './components/ItemModal';
 import MultiVariantDrawer from './components/MultiVariantDrawer';
+import StickyCartBar from './components/StickyCartBar';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import Papa from 'papaparse';
@@ -225,50 +226,181 @@ const addToCart = (item) => {
       <Header theme={theme} />
       <main style={{ flex: 1, paddingTop: '5px', paddingLeft: '20px', paddingRight: '20px', overflowY: 'auto' }}>
         
-        {view === 'home' && (
-  <div>
-    <h1 style={unifiedTaglineStyle}>Freshly crafted for YOU</h1>
-    {Object.keys(menuData).map(cat => (
-      <div 
-        key={cat} 
-        onClick={() => { setActiveCat(cat); setView('subcat'); }} 
-        style={{ 
-            display: 'flex', 
-            alignItems: 'center', 
-            padding: '12px', 
-            marginBottom: '12px', 
-            backgroundColor: theme.buttonBg, 
-            border: theme.border, 
-            borderRadius: theme.radius, 
-            cursor: 'pointer',
-            boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+   {view === 'home' && (
+  <div style={{ paddingBottom: '20px' }}>
+    <h1 style={{ 
+      fontSize: '18px', 
+      color: theme.brand, 
+      textAlign: 'center', 
+      margin: '14px 0 14px 0', 
+      fontWeight: '700', 
+      letterSpacing: '0.5px',
+      textTransform: 'uppercase' 
+    }}>
+      Freshly crafted for YOU
+    </h1>
+
+    {/* Perfectly Aligned Catchy Pulsing Search Bar */}
+    <div style={{ marginBottom: '20px', padding: '0 2px' }}>
+      <input 
+        type="text"
+        placeholder="Search all items..."
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
+        className="catchy-search-input"
+        style={{
+          width: '100%',
+          padding: '14px 18px',
+          border: '2px solid #ff5958',
+          borderRadius: theme.radius,
+          backgroundColor: theme.bg,
+          color: theme.text,
+          fontSize: '15px',
+          fontWeight: '500',
+          outline: 'none',
+          boxSizing: 'border-box'
         }}
-      >
-        <img 
-          src={resolveImagePath(menuData[cat].imageUrl)} 
-          alt={cat} 
-          style={{ width: '70px', height: '70px', objectFit: 'cover', borderRadius: '8px', marginRight: '15px' }} 
-        />
-        <div style={{ fontSize: '18px', fontWeight: '700', color: '#E8E4D9' }}>
-          {cat}
+      />
+    </div>
+
+    {/* If typing in search, show matching items instantly */}
+    {searchQuery.trim() ? (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
+          <span style={{ fontSize: '14px', fontWeight: '700', color: theme.text }}>Search Results</span>
+          <button 
+            onClick={() => setSearchQuery('')} 
+            style={{ background: 'none', border: 'none', color: theme.brand, cursor: 'pointer', fontSize: '13px', fontWeight: 'bold' }}
+          >
+            Clear
+          </button>
+        </div>
+
+        {/* Layout Toggles for Search */}
+        <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end', marginBottom: '4px' }}>
+          <button onClick={() => setLayout('list')} style={{ background: layout === 'list' ? theme.buttonBg : 'transparent', border: theme.border, borderRadius: '6px', padding: '6px', cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
+            <ListIcon size={18} color={layout === 'list' ? theme.bg : theme.text}/>
+          </button>
+          <button onClick={() => setLayout('grid')} style={{ background: layout === 'grid' ? theme.buttonBg : 'transparent', border: theme.border, borderRadius: '6px', padding: '6px', cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
+            <Grid size={18} color={layout === 'grid' ? theme.bg : theme.text}/>
+          </button>
+        </div>
+
+        <div style={{ 
+          display: layout === 'grid' ? 'grid' : 'flex', 
+          gridTemplateColumns: layout === 'grid' ? 'repeat(2, 1fr)' : 'none', 
+          flexDirection: 'column', 
+          gap: '14px' 
+        }}>
+          {Object.values(menuData).flatMap(cat => Object.values(cat.subcategories).flat())
+            .filter(item => item.name.toLowerCase().includes(searchQuery.toLowerCase()))
+            .map((item, i) => (
+              <ItemCard 
+                key={i}
+                item={item} 
+                openModal={openModal} 
+                addToCart={addToCart} 
+                resolveImagePath={resolveImagePath} 
+                layout={layout}
+                theme={theme}
+              />
+            ))}
         </div>
       </div>
-    ))}
+    ) : (
+      /* Polished Category List Cards */
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+        {Object.keys(menuData).map(cat => (
+          <div 
+            key={cat} 
+            onClick={() => { setActiveCat(cat); setView('subcat'); }} 
+            style={{ 
+                display: 'flex', 
+                alignItems: 'center', 
+                padding: '10px 12px', 
+                backgroundColor: theme.buttonBg, 
+                border: theme.border, 
+                borderRadius: theme.radius, 
+                cursor: 'pointer',
+                boxShadow: '0 2px 6px rgba(0,0,0,0.08)',
+                transition: 'transform 0.1s ease'
+            }}
+          >
+            <img 
+              src={resolveImagePath(menuData[cat].imageUrl)} 
+              alt={cat} 
+              style={{ width: '64px', height: '64px', objectFit: 'cover', borderRadius: '8px', marginRight: '14px', flexShrink: 0 }} 
+            />
+            <div style={{ fontSize: '17px', fontWeight: '700', color: '#E8E4D9', letterSpacing: '0.3px' }}>
+              {cat}
+            </div>
+          </div>
+        ))}
+      </div>
+    )}
   </div>
 )}
 
-        {view === 'subcat' && (
-          <div>
-            <button onClick={() => setView('home')} style={backButtonStyle}><ArrowLeft size={20}/> Back</button>
-            <h2 style={{ color: theme.brand }}>{activeCat}</h2>
-            {Object.keys(menuData[activeCat].subcategories).map(sub => (
-              <button key={sub} onClick={() => { setActiveSub(sub); setView('items'); }} style={navButtonStyle}>{sub}</button>
-            ))}
-          </div>
-        )}
+{view === 'subcat' && (
+  <div style={{ paddingBottom: '90px' }}>
+    <button 
+      onClick={() => setView('home')} 
+      style={{ 
+        background: 'none', 
+        border: 'none', 
+        cursor: 'pointer', 
+        display: 'flex', 
+        alignItems: 'center', 
+        gap: '6px', 
+        color: theme.text, 
+        fontSize: '15px',
+        fontWeight: '600',
+        padding: '4px 0',
+        marginBottom: '6px'
+      }}
+    >
+      <ArrowLeft size={18}/> Back
+    </button>
+    <h2 style={{ 
+      fontSize: '18px', 
+      color: theme.brand, 
+      margin: '8px 0 16px 0', 
+      fontWeight: '700', 
+      letterSpacing: '0.5px',
+      textAlign: 'center',
+      textTransform: 'uppercase'
+    }}>
+      {activeCat}
+    </h2>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+      {Object.keys(menuData[activeCat].subcategories).map(sub => (
+        <button 
+          key={sub} 
+          onClick={() => { setActiveSub(sub); setView('items'); }} 
+          style={{ 
+            width: '100%', 
+            padding: '14px 18px', 
+            textAlign: 'left', 
+            fontSize: '15px', 
+            fontWeight: '600', 
+            backgroundColor: theme.buttonBg, 
+            border: theme.border, 
+            borderRadius: theme.radius, 
+            color: '#E8E4D9',
+            boxShadow: '0 2px 6px rgba(0,0,0,0.08)',
+            cursor: 'pointer',
+            transition: 'transform 0.1s ease'
+          }}
+        >
+          {sub}
+        </button>
+      ))}
+    </div>
+  </div>
+)}
+
 {view === 'items' && (
-  <>
-  {/* ADD THIS BACK BUTTON */}
+  <div style={{ paddingBottom: '90px' }}>
     <button 
       onClick={() => setView('subcat')} 
       style={{ ...backButtonStyle, marginBottom: '10px' }}
@@ -276,55 +408,67 @@ const addToCart = (item) => {
       <ArrowLeft size={20}/> Back
     </button>
 
-    {/* 1. Global Search Bar */}
-    <div style={{ marginBottom: '15px' }}>
+    {/* 1. Uniform Global Search Bar */}
+    <div style={{ marginBottom: '18px', padding: '0 2px' }}>
       <input 
-        type="text" 
-        placeholder="Search all items..." 
+        type="text"
+        placeholder="Search all items..."
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
-        style={{ ...inputStyle, width: '100%' }}
+        className="catchy-search-input"
+        style={{
+          width: '100%',
+          padding: '14px 18px',
+          border: '2px solid #ff5958',
+          borderRadius: theme.radius,
+          backgroundColor: theme.bg,
+          color: '#3E3328',
+          fontSize: '15px',
+          fontWeight: '500',
+          outline: 'none',
+          boxSizing: 'border-box'
+        }}
       />
     </div>
 
     {/* 2. Premium Slide Toggle Switch */}
-   {/* Toggle Switch */}
-<div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '15px', marginBottom: '20px' }}>
-  <span 
-    onClick={() => setIsNonVeg(false)}
-    style={{ fontSize: '13px', fontWeight: '700', color: isNonVeg === false ? '#2D8A56' : '#aaa', cursor: 'pointer' }}
-  >VEG</span>
-  
-  <div 
-    onClick={() => setIsNonVeg(isNonVeg === null ? false : !isNonVeg)}
-    style={{ 
-      width: '50px', height: '26px', 
-      background: isNonVeg === null ? '#ccc' : (isNonVeg ? '#D32F2F' : '#2D8A56'), 
-      borderRadius: '25px', position: 'relative', cursor: 'pointer', transition: '0.4s' 
-    }}
-  >
-    <div style={{ 
-      width: '22px', height: '22px', background: 'white', borderRadius: '50%', 
-      position: 'absolute', top: '2px', left: isNonVeg === null ? '14px' : (isNonVeg ? '26px' : '2px'), transition: '0.4s' 
-    }} />
-  </div>
-  
-  <span 
-    onClick={() => setIsNonVeg(true)}
-    style={{ fontSize: '13px', fontWeight: '700', color: isNonVeg === true ? '#D32F2F' : '#aaa', cursor: 'pointer' }}
-  >NON-VEG</span>
-</div>
+    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '15px', marginBottom: '20px' }}>
+      <span 
+        onClick={() => setIsNonVeg(false)}
+        style={{ fontSize: '13px', fontWeight: '700', color: isNonVeg === false ? '#2D8A56' : '#aaa', cursor: 'pointer' }}
+      >VEG</span>
+      
+      <div 
+        onClick={() => setIsNonVeg(isNonVeg === null ? false : !isNonVeg)}
+        style={{ 
+          width: '50px', height: '26px', 
+          background: isNonVeg === null ? '#ccc' : (isNonVeg ? '#D32F2F' : '#2D8A56'), 
+          borderRadius: '25px', position: 'relative', cursor: 'pointer', transition: '0.4s' 
+        }}
+      >
+        <div style={{ 
+          width: '22px', height: '22px', background: 'white', borderRadius: '50%', 
+          position: 'absolute', top: '2px', left: isNonVeg === null ? '14px' : (isNonVeg ? '26px' : '2px'), transition: '0.4s' 
+        }} />
+      </div>
+      
+      <span 
+        onClick={() => setIsNonVeg(true)}
+        style={{ fontSize: '13px', fontWeight: '700', color: isNonVeg === true ? '#D32F2F' : '#aaa', cursor: 'pointer' }}
+      >NON-VEG</span>
+    </div>
 
     {/* 3. Grid/List Layout Toggles */}
     <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end', marginBottom: '15px' }}>
-      <button onClick={() => setLayout('list')} style={{ background: layout === 'list' ? theme.buttonBg : 'transparent', border: theme.border, borderRadius: '6px', padding: '5px', cursor: 'pointer' }}>
-        <ListIcon size={20} color={layout === 'list' ? 'white' : theme.text}/>
+      <button onClick={() => setLayout('list')} style={{ background: layout === 'list' ? theme.buttonBg : 'transparent', border: theme.border, borderRadius: '6px', padding: '5px', cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
+        <ListIcon size={20} color={layout === 'list' ? '#E8E4D9' : theme.text}/>
       </button>
-      <button onClick={() => setLayout('grid')} style={{ background: layout === 'grid' ? theme.buttonBg : 'transparent', border: theme.border, borderRadius: '6px', padding: '5px', cursor: 'pointer' }}>
-        <Grid size={20} color={layout === 'grid' ? 'white' : theme.text}/>
+      <button onClick={() => setLayout('grid')} style={{ background: layout === 'grid' ? theme.buttonBg : 'transparent', border: theme.border, borderRadius: '6px', padding: '5px', cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
+        <Grid size={20} color={layout === 'grid' ? '#E8E4D9' : theme.text}/>
       </button>
     </div>
-      {/* 4. Filtered Item List */}
+
+    {/* 4. Filtered Item List */}
     <div style={{ 
       display: layout === 'grid' ? 'grid' : 'flex', 
       gridTemplateColumns: layout === 'grid' ? 'repeat(2, 1fr)' : 'none', 
@@ -336,14 +480,15 @@ const addToCart = (item) => {
         : menuData[activeCat].subcategories[activeSub]
       )
       .filter(item => {
-  const matchesSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase());
-  if (isNonVeg === null) return matchesSearch;
-  const v = item.variation ? item.variation.trim().toLowerCase() : '';
-  if (!isNonVeg) return matchesSearch && (v === 'veg' || v === 'egg');
-  return matchesSearch && (v === 'non-veg' || v === 'egg');
-        })
-        .map((item, i) => (
-          <ItemCard 
+        const matchesSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase());
+        if (isNonVeg === null) return matchesSearch;
+        const v = item.variation ? item.variation.trim().toLowerCase() : '';
+        if (!isNonVeg) return matchesSearch && (v === 'veg' || v === 'egg');
+        return matchesSearch && (v === 'non-veg' || v === 'egg');
+      })
+      .map((item, i) => (
+        <ItemCard 
+          key={i}
           item={item} 
           openModal={openModal} 
           addToCart={addToCart} 
@@ -351,53 +496,100 @@ const addToCart = (item) => {
           layout={layout}
           theme={theme}
         />
-        ))
-      }
-    </div>
-  </>
-)}
-        {view === 'cart' && (
-          <div>
-            <button onClick={() => setView('home')} style={backButtonStyle}><ArrowLeft size={20}/> Menu</button>
-            <h2 style={{ color: theme.brand }}>Your Bag</h2>
-            {cart.length === 0 ? (
-              <div style={{ textAlign: 'center', marginTop: '20px' }}>
-                <p>Your bag is empty.</p>
-                <button onClick={() => setView('home')} style={actionButtonStyle}>Go to Menu</button>
-              </div>
-            ) : (
-              <>
-                {cart.map(item => (
-  <div key={item.name} style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', gap: '10px', marginBottom: '15px', padding: '12px', border: theme.border, borderRadius: '6px' }}>
-    
-    {/* Item Name and Unit */}
-    <div style={{ flex: 2, display: 'flex', flexDirection: 'column', textAlign: 'left' }}>
-      <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
-        <div style={{ fontWeight: '800', fontSize: '16px', color: '#4A443A' }}>{item.name}</div>
-        <div style={{ fontSize: '13px', color: '#4A443A', fontWeight: '700', fontStyle: 'italic' }}>{item.unit}</div>
-      </div>
-    </div>
-
-    {/* Price */}
-    <div style={{ fontWeight: 'bold', fontSize: '16px', color: '#FF5958', minWidth: '50px' }}>
-    ₹{(item.price || 0) * item.qty}
-    </div>
-
-    {/* Quantity Controls */}
-    <div style={{ display: 'flex', alignItems: 'center', border: theme.border, borderRadius: '6px', overflow: 'hidden' }}>
-      <button onClick={() => removeFromCart(item.name)} style={{ border: 'none', background: '#FDF6E3', padding: '5px 10px', cursor: 'pointer', display: 'flex', alignItems: 'center', fontSize: '16px', color: 'red' }}>-</button>
-      <span style={{ padding: '0 10px', fontSize: '15px', fontWeight: 'bold' }}>{item.qty}</span>
-      <button onClick={() => addToCart(item)} style={{ border: 'none', background: '#FDF6E3', padding: '5px 10px', cursor: 'pointer', display: 'flex', alignItems: 'center', fontSize: '16px', color: 'green' }}>+</button>
+      ))}
     </div>
   </div>
-))}
-                <div style={{ borderTop: theme.border, marginTop: '20px', paddingTop: '10px', fontWeight: 'bold', fontSize: '18px', marginBottom: '20px' }}>Total: ₹{total}</div>
-                <button onClick={handleProceedToDelivery} style={actionButtonStyle}>Proceed to Delivery</button>
-                <button onClick={() => setView('home')} style={secondaryButtonStyle}>Continue Shopping</button>
-              </>
-            )}
+)}
+{view === 'cart' && (
+  <div style={{ paddingBottom: '20px' }}>
+    {/* Header */}
+    <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr auto', alignItems: 'center', marginBottom: '16px' }}>
+      <button onClick={() => setView('home')} style={{ ...backButtonStyle, marginBottom: 0, justifySelf: 'start' }}>
+        <ArrowLeft size={18}/> Menu
+      </button>
+      <h2 style={{ color: theme.brand, margin: 0, fontSize: '20px', textAlign: 'center' }}>Your Bag</h2>
+      <div style={{ width: '75px' }}></div>
+    </div>
+
+    {cart.length === 0 ? (
+      <div style={{ textAlign: 'center', marginTop: '30px', padding: '30px 20px', border: theme.border, borderRadius: theme.radius, background: 'transparent' }}>
+        <ShoppingBag size={40} color={theme.buttonBg} style={{ marginBottom: '10px', opacity: 0.5 }} />
+        <p style={{ fontSize: '16px', color: theme.text, fontWeight: '600', marginBottom: '15px' }}>Your bag is empty</p>
+        <button onClick={() => setView('home')} style={actionButtonStyle}>Go to Menu</button>
+      </div>
+    ) : (
+      <div style={{ border: theme.border, borderRadius: theme.radius, background: 'transparent', padding: '14px' }}>
+        {/* Uniformly Aligned Item List with Theme Colors */}
+        {cart.map((item, index) => (
+          <div key={`${item.name}-${item.unit}`} style={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            justifyContent: 'space-between',
+            padding: '8px 0',
+            borderBottom: index < cart.length - 1 ? `1px dashed ${theme.brand}` : 'none', // Uses your pink brand color for the dashed line
+            gap: '10px'
+          }}>
+            {/* Left: Name & Unit anchored flush left */}
+            <div style={{ display: 'flex', flexDirection: 'column', flex: 1, minWidth: 0, textAlign: 'left' }}>
+              <span style={{ fontWeight: '700', fontSize: '15px', color: theme.text, lineHeight: '1.2' }}>
+                {item.name}
+              </span>
+              <span style={{ fontSize: '12px', color: '#776E62', fontWeight: '600', fontStyle: 'italic', marginTop: '2px' }}>
+                {item.unit}
+              </span>
+            </div>
+
+            {/* Right Group: Quantity Pill Controls, Price, and Delete Button */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexShrink: 0 }}>
+              {/* Quantity Pill Controls */}
+              <div style={{ display: 'flex', alignItems: 'center', border: theme.border, borderRadius: '6px', overflow: 'hidden', background: theme.bg }}>
+                <button onClick={() => removeFromCart(item.name)} style={{ border: 'none', background: 'transparent', padding: '6px 8px', cursor: 'pointer', fontSize: '14px', color: theme.brand, fontWeight: 'bold' }}>-</button>
+                <span style={{ padding: '0 2px', fontSize: '13px', fontWeight: '700', color: theme.text, minWidth: '16px', textAlign: 'center' }}>{item.qty}</span>
+                <button onClick={() => addToCart(item)} style={{ border: 'none', background: 'transparent', padding: '6px 8px', cursor: 'pointer', fontSize: '14px', color: '#2D8A56', fontWeight: 'bold' }}>+</button>
+              </div>
+
+              {/* Price */}
+              <span style={{ fontWeight: '600', fontSize: '15px', color: theme.brand, minWidth: '45px', textAlign: 'right' }}>
+                ₹{(item.price || 0) * item.qty}
+              </span>
+
+              {/* Delete Button - Using charcoal black/theme text color */}
+              <button onClick={() => removeFromCart(item.name)} style={{ background: 'none', border: 'none', color: theme.text, cursor: 'pointer', padding: '2px', display: 'flex', alignItems: 'center', opacity: 0.7 }}>
+                <X size={16} />
+              </button>
+            </div>
           </div>
-        )}
+        ))}
+
+        {/* Bill Summary Section */}
+        <div style={{ borderTop: `1px solid ${theme.brand}`, marginTop: '14px', paddingTop: '10px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '14px', color: '#776E62', fontWeight: '500', marginBottom: '6px' }}>
+            <span>Item Total</span>
+            <span>₹{total}</span>
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '14px', color: '#776E62', fontWeight: '500', marginBottom: '10px' }}>
+            <span>Delivery Fee</span>
+            <span style={{ fontSize: '10px', color: theme.brand, fontWeight: '600', textTransform: 'uppercase' }}>Calculated next</span>
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', paddingTop: '8px', borderTop: `1px dashed ${theme.brand}`, fontSize: '15px', fontWeight: '800', color: theme.text, marginBottom: '16px' }}>
+            <span>Total Amount</span>
+            <span style={{ color: theme.brand }}>₹{total}</span>
+          </div>
+        </div>
+
+        {/* Action Buttons */}
+        <div>
+          <button onClick={handleProceedToDelivery} style={{ ...actionButtonStyle, marginBottom: '8px', padding: '12px', fontSize: '16px' }}>
+            Proceed to Delivery
+          </button>
+          <button onClick={() => setView('home')} style={{ ...secondaryButtonStyle, marginBottom: '4px', padding: '12px', fontSize: '16px' }}>
+            Continue Shopping
+          </button>
+        </div>
+      </div>
+    )}
+  </div>
+)}
 
         {view === 'delivery' && (
           <div>
@@ -561,7 +753,7 @@ const addToCart = (item) => {
         )}
         
       </main>
-        <Footer setView={setView} cart={cart} theme={theme} />
+        <Footer view={view} setView={setView} cart={cart} theme={theme} />
 {/* Unified Modal Rendering - Centralized UI Logic */}
 {activeModal.type === 'ZOOM' && (
   <ItemModal 
@@ -579,6 +771,14 @@ const addToCart = (item) => {
   setSelectedItem={(item) => setActiveModal({ type: item ? 'VARIANTS' : null, data: item })} 
   addToCart={addToCart} 
 />
+)}
+
+{/* Hides the pill when inside Cart, Delivery, Payment, or Tracking views */}
+{!['cart', 'delivery', 'payment', 'track'].includes(view) && (
+  <StickyCartBar 
+    cart={cart} 
+    onViewCart={() => setView('cart')} 
+  />
 )}
     </div>
   );

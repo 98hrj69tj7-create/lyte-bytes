@@ -110,3 +110,51 @@ code {
   padding: 4px 8px;
   background: var(--code-bg);
 }
+@keyframes searchPulse {
+  0% {
+    border-color: #ff5958;
+    box-shadow: 0 0 0 0 rgba(255, 89, 88, 0.4);
+  }
+  70% {
+    border-color: #ff5958;
+    box-shadow: 0 0 0 8px rgba(255, 89, 88, 0);
+  }
+  100% {
+    border-color: #ff5958;
+    box-shadow: 0 0 0 0 rgba(255, 89, 88, 0);
+  }
+}
+
+.catchy-search-input {
+  animation: searchPulse 2.5s infinite;
+  transition: all 0.3s ease;
+}
+
+.catchy-search-input:focus {
+  transform: scale(1.01);
+  box-shadow: 0 0 15px rgba(255, 89, 88, 0.6) !important;
+}
+@keyframes searchPulse {
+  0% {
+    border-color: #ff5958;
+    box-shadow: 0 0 0 0 rgba(255, 89, 88, 0.4);
+  }
+  70% {
+    border-color: #ff5958;
+    box-shadow: 0 0 0 8px rgba(255, 89, 88, 0);
+  }
+  100% {
+    border-color: #ff5958;
+    box-shadow: 0 0 0 0 rgba(255, 89, 88, 0);
+  }
+}
+
+.catchy-search-input {
+  animation: searchPulse 2.5s infinite;
+  transition: all 0.3s ease;
+}
+
+.catchy-search-input:focus {
+  transform: scale(1.01);
+  box-shadow: 0 0 15px rgba(255, 89, 88, 0.6) !important;
+}

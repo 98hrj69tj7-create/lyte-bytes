@@ -116,6 +116,11 @@ body { margin: 0; padding: 0; box-sizing: border-box; }
   .logo {
     height: 18px;
   }
+@keyframes pulseGlow {
+  0% { box-shadow: 0 0 4px rgba(255, 89, 88, 0.3); }
+  50% { box-shadow: 0 0 12px rgba(255, 89, 88, 0.7); }
+  100% { box-shadow: 0 0 4px rgba(255, 89, 88, 0.3); }
+}
 
   a {
     color: var(--text-h);
