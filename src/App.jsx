@@ -135,21 +135,7 @@ function useLocalStorage(key, initialValue) {
 
   return [value, setValue];
 }
-
-// Triggered automatically when the user finishes typing in a field and clicks away
-const handleFieldBlur = (fieldName, value) => {
-  if (fieldName === 'phone' && value && value.length >= 10) {
-    // This logs the abandoned cart details and phone number to your console/storage
-    console.log("Lead captured for WhatsApp follow-up:", {
-      phone: value,
-      customerName: customer.name,
-      cartItems: cart,
-      timestamp: new Date().toLocaleString()
-    });
-  }
 };
-
-
 
 // --- GOOGLE SHEET DATA FETCHING ---
 const [menuData, setMenuData] = useState(null);
