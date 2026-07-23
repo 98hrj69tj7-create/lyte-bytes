@@ -719,13 +719,13 @@ export default function App() {
         onChange={(e) => setCustomer({...customer, name: e.target.value})} 
       />
       
-      <input
-        type="tel"
-        placeholder="Enter WhatsApp / Mobile Number"
-        value={customer.phone}
-        onChange={(e) => setCustomer({ ...customer, phone: e.target.value })}
-        onBlur={(e) => handleFieldBlur('phone', e.target.value)}
-        style={inputStyle}
+      <input 
+        type="tel" 
+        maxLength="10" 
+        placeholder="Mobile Number (10 digits required)" 
+        style={{ ...inputStyle, border: theme.border, background: theme.bg, color: theme.text, boxSizing: 'border-box', width: '100%' }} 
+        value={customer.phone} 
+        onChange={(e) => setCustomer({...customer, phone: e.target.value.replace(/[^0-9]/g, '')})} 
       />
       
       <input 
@@ -791,7 +791,7 @@ export default function App() {
             type="date" 
             value={deliveryDate}
             onChange={(e) => setDeliveryDate(e.target.value)}
-            style={{ ...inputStyle, border: theme.border, width: '90%', background: theme.bg, color: theme.text, boxSizing: 'border-box' }} 
+            style={{ ...inputStyle, border: theme.border, width: '100%', background: theme.bg, color: theme.text, boxSizing: 'border-box' }} 
           />
         </div>
 
@@ -802,7 +802,7 @@ export default function App() {
             type="time" 
             value={deliveryTime}
             onChange={(e) => setDeliveryTime(e.target.value)}
-            style={{ ...inputStyle, border: theme.border, width: '90%', background: theme.bg, color: theme.text, boxSizing: 'border-box' }} 
+            style={{ ...inputStyle, border: theme.border, width: '100%', background: theme.bg, color: theme.text, boxSizing: 'border-box' }} 
           />
         </div>
         
@@ -821,15 +821,15 @@ export default function App() {
         </div>
         {showConditions && (
           <div style={{ marginTop: '8px', padding: '12px', border: theme.border, borderRadius: '8px', backgroundColor: '#FFFBF2', fontSize: '12px', textAlign: 'left', color: '#2B2B2B', display: 'flex', flexDirection: 'column', gap: '8px', lineHeight: '1.4', boxSizing: 'border-box', width: '100%' }}>
-            <p><strong>Delivery Slots:</strong> We offer morning (8–11am), afternoon (12–2pm), and evening (5–8pm) slots. Please specify your preferred slot in the address field.</p>
-            <p><strong>Order Tracking:</strong> After placing your order, you can track its status in the 'Track' section.</p>
-            <p><strong>Timelines:</strong> Standard delivery takes 24–48 hours from order confirmation.</p>
-            <p><strong>Areas:</strong> We currently deliver within Bengaluru.</p>
-            <p><strong>Delivery Partners:</strong> We partner with reliable local delivery services to ensure timely deliveries.</p>
-            <p><strong>Fees:</strong> Delivery charges are calculated at checkout based on location.</p>
-            <p><strong>Address Accuracy:</strong> Please ensure your delivery address is complete and accurate to avoid delays.</p>
-            <p><strong>Delivery Delays:</strong> While we strive for timely deliveries, unforeseen circumstances (e.g., traffic, weather) may cause delays.</p>
-            <p><strong>Customer Support:</strong> For any delivery-related queries, please contact us via WhatsApp at +91 91082 86886 or email us at lytebytesblr@gmail.com</p>               
+            <p style={{ margin: 0 }}><strong>Delivery Slots:</strong> We offer morning (8–11am), afternoon (12–2pm), and evening (5–8pm) slots. Please specify your preferred slot in the address field.</p>
+            <p style={{ margin: 0 }}><strong>Order Tracking:</strong> After placing your order, you can track its status in the 'Track' section.</p>
+            <p style={{ margin: 0 }}><strong>Timelines:</strong> Standard delivery takes 24–48 hours from order confirmation.</p>
+            <p style={{ margin: 0 }}><strong>Areas:</strong> We currently deliver within Bengaluru.</p>
+            <p style={{ margin: 0 }}><strong>Delivery Partners:</strong> We partner with reliable local delivery services to ensure timely deliveries.</p>
+            <p style={{ margin: 0 }}><strong>Fees:</strong> Delivery charges are calculated at checkout based on location.</p>
+            <p style={{ margin: 0 }}><strong>Address Accuracy:</strong> Please ensure your delivery address is complete and accurate to avoid delays.</p>
+            <p style={{ margin: 0 }}><strong>Delivery Delays:</strong> While we strive for timely deliveries, unforeseen circumstances (e.g., traffic, weather) may cause delays.</p>
+            <p style={{ margin: 0 }}><strong>Customer Support:</strong> For any delivery-related queries, please contact us via WhatsApp at +91 91082 86886 or email us at lytebytesblr@gmail.com</p>               
           </div>
         )}
       </div>
@@ -846,7 +846,6 @@ export default function App() {
     </div>
   </div>
 )}
-
         {view === 'payment' && (
   <div style={{ 
     display: 'flex', 
@@ -1388,7 +1387,7 @@ export default function App() {
           </div>
         )}
       {/* --- GLOBAL BOTTOM SEPARATOR & QUICK LINKS --- */}
-  <div style={{ width: '100%', height: '1px', backgroundColor: theme.brand, opacity: 0.3, margin: '8px 0 16px 0'}} />
+  <div style={{ width: '100%', height: '1px', backgroundColor: theme.brand, opacity: 0.3, margin: '8npmpx 0 16px 0'}} />
 <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', alignItems: 'center', gap: '8px 12px', fontSize: '11.5px', color: '#776E62', textAlign: 'center' }}>
   <span>All products are prepared in a facility handling dairy and nuts.© 2026 LYTE BYTES. All rights reserved.</span>
 </div>
