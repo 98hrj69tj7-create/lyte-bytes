@@ -60,59 +60,6 @@ const accordionHeaderStyle = {
     display: 'flex', alignItems: 'center', justifyContent: 'flex-start', gap: '10px', padding: '12px 15px', border: theme.border, borderRadius: theme.radius, cursor: 'pointer', color: theme.brand, fontWeight: 'bold', backgroundColor: 'transparent', marginBottom: '10px'
 };
 
-export default function App() {
-  const [view, setView] = useState('home');
-  const [activeModal, setActiveModal] = useState({ type: null, data: null }); // Replace your separate states with this one
-  const openModal = (type, data) => setActiveModal({ type, data }); // Helper to open a specific modal
-  const closeModal = () => setActiveModal({ type: null, data: null }); // Helper to open a specific modal
-  const [activeCat, setActiveCat] = useState(null);
-  const [activeSub, setActiveSub] = useState(null);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [filterType, setFilterType] = useState('All'); // 'All', 'Veg', 'Non-Veg'
-  const [isNonVeg, setIsNonVeg] = useState(null);   // In your state declarations
-  const [layout, setLayout] = useState('list');
-  const [cart, setCart] = useLocalStorage('app_cart', []);
-  const [customer, setCustomer] = useLocalStorage('app_customer', { name: '', phone: '', email: '', address: '' });
-  const [payment, setPayment] = useState(null);
-  const [showConditions, setShowConditions] = useState(false);
-  const [showTC, setShowTC] = useState(false);
-  const [showPrivacy, setShowPrivacy] = useState(false);
-  const [deliveryDate, setDeliveryDate] = useState('');
-  const [deliveryTime, setDeliveryTime] = useState('');
-  const [paymentMode, setPaymentMode] = useState(null); // Tracks 'Cash' or 'UPI'
-  const [upiApp, setUpiApp] = useState('');
-  const [upiId, setUpiId] = useState('');
-  const UPI_MAPPINGS = {
-  'Google Pay': 'rosemarycloney-3@okicici',
-  'PhonePe': '9108286886',
-  'Paytm': '9108286886@ptaxis'};
-  const [currentStage, setCurrentStage] = useState(2); // Set default active stage (1 to 5)
-  useEffect(() => {
-    if (view === 'track') {
-      const styleTag = document.getElementById('confetti-restart-style') || document.createElement('style');
-      styleTag.id = 'confetti-restart-style';
-      styleTag.innerHTML = `
-        @keyframes fallRandom {
-          0% { transform: translateY(-30px) translateX(0px) rotate(0deg); opacity: 0; }
-          20% { opacity: 0.9; }
-          70% { opacity: 0.9; }
-          100% { transform: translateY(400px) translateX(-8px) rotate(360deg); opacity: 0; }
-        }
-      `;
-      document.head.appendChild(styleTag);
-    }
-  }, [view]);
-  const categoryImages = {
-  "Ammis Achar": "pickles.png",
-  "Bakery & Cakes": "bakery.png",
-  "Catering": "catering.png",
-  "Finger Foods": "finger-foods.png",
-  "Jams & Spreads": "jams.png",  
-};
-const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxuPMBHUCj8co8CfPSr-SmsXsB3cWZEfi0rcViHNjLeFiVXX85X7a_aNiCz57sSp0Qf/exec'// Paste your actual script URL here
-const handleFieldBlur = (fieldName, value) => {
-  trackAbandonedLead(fieldName, value, customer, cart, GOOGLE_SCRIPT_URL);};
-
 // --- HELPER FOR PERSISTENCE ---
 function useLocalStorage(key, initialValue) {
   const [value, setValue] = useState(() => {
@@ -135,7 +82,73 @@ function useLocalStorage(key, initialValue) {
 
   return [value, setValue];
 }
-};
+
+export default function App() {
+  const [view, setView] = useState('home');
+  const [activeModal, setActiveModal] = useState({ type: null, data: null });
+  const openModal = (type, data) => setActiveModal({ type, data });
+  const closeModal = () => setActiveModal({ type: null, data: null });
+  const [activeCat, setActiveCat] = useState(null);
+  const [activeSub, setActiveSub] = useState(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filterType, setFilterType] = useState('All');
+  const [isNonVeg, setIsNonVeg] = useState(null);
+  const [layout, setLayout] = useState('list');
+  const [cart, setCart] = useLocalStorage('app_cart', []);
+  const [customer, setCustomer] = useLocalStorage('app_customer', { name: '', phone: '', email: '', address: '' });
+  const [payment, setPayment] = useState(null);
+  const [showConditions, setShowConditions] = useState(false);
+  const [showTC, setShowTC] = useState(false);
+  const [showPrivacy, setShowPrivacy] = useState(false);
+  const [deliveryDate, setDeliveryDate] = useState('');
+  const [deliveryTime, setDeliveryTime] = useState('');
+  const [paymentMode, setPaymentMode] = useState(null);
+  const [upiApp, setUpiApp] = useState('');
+  const [upiId, setUpiId] = useState('');
+  
+  const UPI_MAPPINGS = {
+    'Google Pay': 'rosemarycloney-3@okicici',
+    'PhonePe': '9108286886',
+    'Paytm': '9108286886@ptaxis'
+  };
+
+  const [currentStage, setCurrentStage] = useState(2);
+
+  useEffect(() => {
+    if (view === 'track') {
+      const styleTag = document.getElementById('confetti-restart-style') || document.createElement('style');
+      styleTag.id = 'confetti-restart-style';
+      styleTag.innerHTML = `
+        @keyframes fallRandom {
+          0% { transform: translateY(-30px) translateX(0px) rotate(0deg); opacity: 0; }
+          20% { opacity: 0.9; }
+          70% { opacity: 0.9; }
+          100% { transform: translateY(400px) translateX(-8px) rotate(360deg); opacity: 0; }
+        }
+      `;
+      document.head.appendChild(styleTag);
+    }
+  }, [view]);
+
+  const categoryImages = {
+    "Ammis Achar": "pickles.png",
+    "Bakery & Cakes": "bakery.png",
+    "Catering": "catering.png",
+    "Finger Foods": "finger-foods.png",
+    "Jams & Spreads": "jams.png",  
+  };
+
+  const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxuPMBHUCj8co8CfPSr-SmsXsB3cWZEfi0rcViHNjLeFiVXX85X7a_aNiCz57sSp0Qf/exec';
+
+  const handleFieldBlur = (fieldName, value) => {
+    trackAbandonedLead(fieldName, value, customer, cart, GOOGLE_SCRIPT_URL);
+  };
+
+  return (
+    <div>
+      {/* Your component JSX goes here */}
+    </div>
+  );}
 
 // --- GOOGLE SHEET DATA FETCHING ---
 const [menuData, setMenuData] = useState(null);
@@ -1292,4 +1305,4 @@ const addToCart = (item) => {
 )}
     </div>
   );
-  
+}
