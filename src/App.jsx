@@ -1292,4 +1292,4 @@ const addToCart = (item) => {
 )}
     </div>
   );
-}
+  
