@@ -1,91 +1,101 @@
 import React from 'react';
 
 export default function ItemCard({ item, openModal, addToCart, resolveImagePath, layout, theme }) {
-  // Safe price parsing
-  const price = parseFloat(item.price);
-  const displayPrice = isNaN(price) ? "" : `₹${price}`;
+  // Pre-calculate variant logic to keep JSX clean
+  const hasVariants = item.variants && item.variants.length > 0;
+  const displayPrice = hasVariants ? item.variants[0].price : (parseFloat(item.price) || 0);
+  const displayUnit = item.unit || (hasVariants ? item.variants[0].label : "");
 
   return (
     <div style={{ 
-      padding: '12px', 
-      border: '1px solid #D8C7A5', 
+      padding: '10px', // Reduced outer padding for a tighter, premium border
+      border: '1px solid #EBE5D9', 
       borderRadius: '16px', 
       display: 'flex', 
       flexDirection: layout === 'grid' ? 'column' : 'row', 
-      gap: '12px', 
+      gap: '12px', // Tighter gap between image and content
       backgroundColor: '#FFFFFF', 
-      boxShadow: '0 4px 12px rgba(0,0,0,0.05)' 
+      boxShadow: '0 2px 10px rgba(0,0,0,0.04)', // Softer, more subtle shadow
+      alignItems: layout === 'grid' ? 'stretch' : 'center'
     }}>
-      {/* Image Container with Zoom trigger */}
+      {/* Image Container */}
       <div onClick={() => openModal('ZOOM', item)} style={{ cursor: 'pointer', flexShrink: 0 }}>
-    <img 
-      src={resolveImagePath(item.imageUrl, 'menu-items')} 
-      alt={item.name} 
-      style={{ 
-      width: layout === 'grid' ? '100%' : '90px', 
-      height: layout === 'grid' ? '120px' : '90px', 
-      objectFit: 'cover', 
-      borderRadius: '12px' 
-      }} 
-      />
+        <img 
+          src={resolveImagePath(item.imageUrl, 'menu-items')} 
+          alt={item.name} 
+          style={{ 
+            width: layout === 'grid' ? '100%' : '105px', 
+            height: layout === 'grid' ? '120px' : '105px', 
+            objectFit: 'cover', 
+            borderRadius: '12px',
+            display: 'block'
+          }} 
+        />
       </div>
 
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', textAlign: 'left' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '2px' }}>
-          {item.variation && (
-            <img 
-              src={`/menu-items/${item.variation.trim().toLowerCase() === 'non-veg' ? 'non-veg' : item.variation.trim().toLowerCase()}.png`} 
-              alt={item.variation} 
-              style={{ width: '16px', height: '16px', flexShrink: 0 }} 
-            />
-          )}
-          <div style={{ fontWeight: '800', fontSize: '15px', color: '#36281E' }}>{item.name}</div>
-        </div>
-        <div style={{ fontSize: '11px', color: '#FF5958', marginTop: '2px', fontStyle: 'italic', fontWeight: '500' }}>
-        {/* Priority: Item unit -> First Variant Label -> "Customisable" */}
-        {item.unit || (item.variants && item.variants.length > 0 ? item.variants[0].label : "Customisable")}
+      {/* Content Container */}
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', textAlign: 'left', minHeight: layout === 'grid' ? 'auto' : '105px', justifyContent: 'space-between' }}>
+        
+        {/* Top Section: Title, Unit, & Customisable */}
+        <div>
+          <div style={{ display: 'flex', alignItems: 'flex-start', gap: '6px', marginBottom: '2px' }}>
+            {item.variation && (
+              <img 
+                src={`/menu-items/${item.variation.trim().toLowerCase() === 'non-veg' ? 'non-veg' : item.variation.trim().toLowerCase()}.png`} 
+                alt={item.variation} 
+                style={{ width: '14px', height: '14px', flexShrink: 0, marginTop: '3px' }} 
+              />
+            )}
+            <div style={{ fontWeight: '700', fontSize: '15px', color: '#3E3328', lineHeight: '1.2' }}>
+              {item.name}
+            </div>
+          </div>
+          
+          {/* Tightly stacked Unit and Customisable text */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1px', marginTop: '2px' }}>
+            <span style={{ fontSize: '12px', color: '#FF5958', fontStyle: 'italic', fontWeight: '500' }}>
+              {displayUnit}
+            </span>
+            {hasVariants && (
+              <span style={{ fontSize: '10px', color: '#3E3328', fontWeight: '400' }}>
+                Customisable
+              </span>
+            )}
+          </div>
         </div>
         
-        {/* PRICE & ADD BUTTON SECTION */}
-        <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: '15px', marginTop: 'auto' }}>
+        {/* Bottom Section: Price & Add Button */}
+        <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', marginTop: '8px' }}>
           
-          {/* Price - This is now to the immediate left of the button */}
-          <div style={{ color: '#FF5958', fontWeight: '600', fontSize: '15px' }}>
-          ₹{item.variants ? item.variants[0].price : (parseFloat(item.price) || 0)}
+          {/* Price & Button Container */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <div style={{ color: '#FF5958', fontWeight: '600', fontSize: '15px' }}>
+              ₹{displayPrice}
+            </div>
+            <button 
+              onClick={() => {
+                if (hasVariants) {
+                  openModal('VARIANTS', item);
+                } else {
+                  addToCart(item);
+                }
+              }}
+              style={{
+                backgroundColor: '#FF5958',
+                color: '#FFFFFF',
+                border: 'none',
+                padding: '6px 18px', // Slightly slimmer button for a modern feel
+                borderRadius: '8px',
+                fontWeight: '600',
+                fontSize: '15px',
+                cursor: 'pointer',
+                boxShadow: '0 2px 6px rgba(255, 89, 88, 0.2)'
+              }}
+            >
+              Add
+            </button>
           </div>
 
-          {/* Button and Customisable Container */}
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-          <button 
-          onClick={() => {
-          // This logic prevents the Zoom modal from ever opening on click
-          if (item.variants && item.variants.length > 0) {
-          openModal('VARIANTS', item);
-          } else {
-          addToCart(item);
-          }
-          }}
-          style={{
-          backgroundColor: '#FF5958',
-          color: '#FFFFFF',
-          border: 'none',
-          padding: '6px 16px',
-          borderRadius: '8px',
-          fontWeight: '600',
-          fontSize: '14px',
-          cursor: 'pointer'
-          }}
-          >
-          Add
-          </button>
-  
-  {/* Customisable text: Only shows if item is marked as customisable */}
-  {String(item.isCustomisable || "").toLowerCase() === 'yes' && (
-  <span style={{ fontSize: '9px', color: '#888', marginTop: '2px', textAlign: 'center' }}>
-    Customisable
-  </span>
-  )}
-</div>
         </div>
       </div>
     </div>

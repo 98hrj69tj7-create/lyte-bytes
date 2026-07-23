@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import ItemCard from './components/ItemCard';
 import ItemModal from './components/ItemModal';
-import VariantDrawer from './components/VariantDrawer';
+import MultiVariantDrawer from './components/MultiVariantDrawer';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import Papa from 'papaparse';
@@ -574,12 +574,11 @@ const addToCart = (item) => {
 )}
 
 {activeModal.type === 'VARIANTS' && (
-  <VariantDrawer 
-    selectedItem={activeModal.data} 
-    setSelectedItem={closeModal} 
-    addToCart={addToCart} 
-    resolveImagePath={resolveImagePath} 
-  />
+<MultiVariantDrawer 
+  selectedItem={activeModal.type === 'VARIANTS' ? activeModal.data : null} 
+  setSelectedItem={(item) => setActiveModal({ type: item ? 'VARIANTS' : null, data: item })} 
+  addToCart={addToCart} 
+/>
 )}
     </div>
   );
