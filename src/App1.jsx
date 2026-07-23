@@ -286,6 +286,10 @@ export default function App() {
       <Header theme={theme} />
       <main style={{ flex: 1, paddingTop: '5px', paddingLeft: '20px', paddingRight: '20px', overflowY: 'auto' }}>
         {/* Main views/content render here */}
+      </main>
+    </div>
+  );
+}
         
 {view === 'home' && (
   <div style={{ paddingBottom: '20px' }}>
@@ -1291,7 +1295,7 @@ export default function App() {
           addToCart={addToCart} 
         />
       )}
-{/* Hides the pill when inside Cart, Delivery, Payment, or Tracking views */}
+
       {!['cart', 'delivery', 'payment', 'track'].includes(view) && (
         <StickyCartBar 
           cart={cart} 
