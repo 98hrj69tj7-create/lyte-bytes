@@ -7,7 +7,7 @@ export default function Footer({ view, setView, cart, theme }) {
   return (
     <footer style={{ 
       position: 'fixed',
-      bottom: '5px',
+      bottom: '10px',
       left: '50%',
       transform: 'translateX(-50%)',
       width: '90%',
