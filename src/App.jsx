@@ -1,8 +1,13 @@
 import React, { useState, useEffect } from 'react';
+import HomeAndSubCategoryView from './components/HomeAndSubCategoryView';
 import ItemCard from './components/ItemCard';
 import ItemModal from './components/ItemModal';
 import MultiVariantDrawer from './components/MultiVariantDrawer';
 import StickyCartBar from './components/StickyCartBar';
+import OffersTab from './components/OffersTab';
+import ItemsView from './components/ItemsView';
+import CartView from './components/CartView';
+import TrackView from './components/TrackView';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import { trackAbandonedLead } from './components/leadTracker';
@@ -88,6 +93,7 @@ export default function App() {
   const [activeModal, setActiveModal] = useState({ type: null, data: null });
   const openModal = (type, data) => setActiveModal({ type, data });
   const closeModal = () => setActiveModal({ type: null, data: null });
+  const [activeTab, setActiveTab] = useState('home');
   const [activeCat, setActiveCat] = useState(null);
   const [activeSub, setActiveSub] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
@@ -112,7 +118,7 @@ export default function App() {
     'Paytm': '9108286886@ptaxis'
   };
 
-  const [currentStage, setCurrentStage] = useState(2);
+  const [currentStage, setCurrentStage] = useState(1);
 
   // --- THEME ---
   const theme = {
@@ -284,400 +290,79 @@ export default function App() {
   return (
     <div style={{ height: '100dvh', display: 'flex', flexDirection: 'column', position:'fixed', top:0, left:0, right:0, bottom:0, backgroundColor: theme.bg, color: theme.text, fontFamily: 'system-ui, sans-serif' }}>
       <Header theme={theme} />
-      <main style={{ flex: 1, paddingTop: '5px', paddingLeft: '20px', paddingRight: '20px', overflowY: 'auto' }}>
-        {/* Main views/content render here */}
-        
-{view === 'home' && (
-  <div style={{ paddingBottom: '20px' }}>
-    <h1 style={{ 
-      fontSize: '17px', 
-      color: theme.brand, 
-      textAlign: 'center', 
-      margin: '10px 0 10px 0', 
-      fontWeight: '600', 
-      letterSpacing: '0.5px',
-      textTransform: 'uppercase' 
-    }}>
-      Freshly crafted for YOU
-    </h1>
+      <main style={{ flex: 1, paddingTop: '5px', paddingLeft: '20px', paddingRight: '20px', paddingBottom: '20px', overflowY: 'auto' }}>
+  {/* Main views/content render here */}
+{/* Render Offers Tab */}
+{view === 'offers' && <OffersTab theme={theme} />}
 
-    {/* Perfectly Aligned Catchy Pulsing Search Bar */}
-    <div style={{ marginBottom: '20px', padding: '0 2px' }}>
-      <input 
-        type="text"
-        placeholder="Search all items..."
-        value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value)}
-        className="catchy-search-input"
-        style={{
-          width: '100%',
-          padding: '14px 18px',
-          border: '2px solid #ff5958',
-          borderRadius: theme.radius,
-          backgroundColor: theme.bg,
-          color: theme.text,
-          fontSize: '15px',
-          fontWeight: '500',
-          outline: 'none',
-          boxSizing: 'border-box'
-        }}
-      />
-    </div>
-
-    {/* If typing in search, show matching items instantly */}
-    {searchQuery.trim() ? (
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
-          <span style={{ fontSize: '14px', fontWeight: '700', color: theme.text }}>Search Results</span>
-          <button 
-            onClick={() => setSearchQuery('')} 
-            style={{ background: 'none', border: 'none', color: theme.brand, cursor: 'pointer', fontSize: '13px', fontWeight: 'bold' }}
-          >
-            Clear
-          </button>
-        </div>
-
-        {/* Layout Toggles for Search */}
-        <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end', marginBottom: '4px' }}>
-          <button onClick={() => setLayout('list')} style={{ background: layout === 'list' ? theme.buttonBg : 'transparent', border: theme.border, borderRadius: '6px', padding: '6px', cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
-            <ListIcon size={18} color={layout === 'list' ? theme.bg : theme.text}/>
-          </button>
-          <button onClick={() => setLayout('grid')} style={{ background: layout === 'grid' ? theme.buttonBg : 'transparent', border: theme.border, borderRadius: '6px', padding: '6px', cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
-            <Grid size={18} color={layout === 'grid' ? theme.bg : theme.text}/>
-          </button>
-        </div>
-
-        <div style={{ 
-          display: layout === 'grid' ? 'grid' : 'flex', 
-          gridTemplateColumns: layout === 'grid' ? 'repeat(2, 1fr)' : 'none', 
-          flexDirection: 'column', 
-          gap: '14px' 
-        }}>
-          {Object.values(menuData).flatMap(cat => Object.values(cat.subcategories).flat())
-            .filter(item => item.name.toLowerCase().includes(searchQuery.toLowerCase()))
-            .map((item, i) => (
-              <ItemCard 
-                key={i}
-                item={item} 
-                openModal={openModal} 
-                addToCart={addToCart} 
-                resolveImagePath={resolveImagePath} 
-                layout={layout}
-                theme={theme}
-              />
-            ))}
-        </div>
-      </div>
-    ) : (
-      /* Polished Category List Cards */
-<div style={{ display: 'flex', flexDirection: 'column', gap: '10px', paddingBottom: '30px' }}>
-  {Object.keys(menuData).map(cat => (
-    <div 
-      key={cat} 
-      onClick={() => { setActiveCat(cat); setActiveSub(null); setView('subcat'); }} 
-      style={{ 
-        display: 'flex', 
-        alignItems: 'center', 
-        padding: '5px 16px', 
-        backgroundColor: theme.buttonBg, 
-        border: theme.border, 
-        borderRadius: theme.radius, 
-        cursor: 'pointer',
-        boxShadow: '0 3px 8px rgba(0,0,0,0.1)',
-        transition: 'transform 0.1s ease'
-      }}
-    >
-      <img 
-        src={resolveImagePath(menuData[cat].imageUrl)} 
-        alt={cat} 
-        style={{ 
-          width: '56px', 
-          height: '56px', 
-          objectFit: 'cover', 
-          borderRadius: '10px', 
-          marginRight: '16px', 
-          flexShrink: 0 
-        }} 
-      />
-      <div style={{ 
-        fontSize: '16px', 
-        fontWeight: '600', 
-        color: '#E8E4D9', 
-        letterSpacing: '0.4px' 
-      }}>
-        {cat}
-      </div>
-    </div>
-  ))}
-</div>
-    )}
-  </div>
-)}
-
-{view === 'subcat' && (
-  <div style={{ paddingBottom: '90px' }}>
-    <button 
-      onClick={() => setView('home')} 
-      style={{ 
-        background: 'none', 
-        border: 'none', 
-        cursor: 'pointer', 
-        display: 'flex', 
-        alignItems: 'center', 
-        gap: '6px', 
-        color: theme.text, 
-        fontSize: '15px',
-        fontWeight: '600',
-        padding: '4px 0',
-        marginBottom: '6px'
-      }}
-    >
-      <ArrowLeft size={18}/> Back
-    </button>
-    <h2 style={{ 
-      fontSize: '18px', 
-      color: theme.brand, 
-      margin: '8px 0 16px 0', 
-      fontWeight: '700', 
-      letterSpacing: '0.5px',
-      textAlign: 'center',
-      textTransform: 'uppercase'
-    }}>
-      {activeCat}
-    </h2>
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-      {activeCat && menuData[activeCat]?.subcategories && Object.keys(menuData[activeCat].subcategories).map(sub => (
-        <button 
-          key={sub} 
-          onClick={() => { setActiveSub(sub); setView('items'); }} 
-          style={{ 
-            width: '100%', 
-            padding: '14px 18px', 
-            textAlign: 'left', 
-            fontSize: '15px', 
-            fontWeight: '600', 
-            backgroundColor: theme.buttonBg, 
-            border: theme.border, 
-            borderRadius: theme.radius, 
-            color: '#E8E4D9',
-            boxShadow: '0 2px 6px rgba(0,0,0,0.08)',
-            cursor: 'pointer',
-            transition: 'transform 0.1s ease'
-          }}
-        >
-          {sub}
-        </button>
-      ))}
-    </div>
-  </div>
+{/* Render Home / Cart / Subcategories when view is 'home' or related sub-views */}
+{(view === 'home' || view === 'subcat' || view === 'items') && (
+  <HomeAndSubCategoryView 
+    view={view}
+    theme={theme}
+    searchQuery={searchQuery}
+    setSearchQuery={setSearchQuery}
+    layout={layout}
+    setLayout={setLayout}
+    menuData={menuData}
+    activeCat={activeCat}
+    setActiveCat={setActiveCat}
+    setActiveSub={setActiveSub}
+    setView={setView}
+    openModal={openModal}
+    addToCart={addToCart}
+    resolveImagePath={resolveImagePath}
+  />
 )}
 
 {view === 'items' && (
-  <div style={{ paddingBottom: '90px' }}>
-    <button 
-      onClick={() => setView('subcat')} 
-      style={{ ...backButtonStyle, marginBottom: '10px' }}
-    >
-      <ArrowLeft size={20}/> Back
-    </button>
-
-    {/* 1. Uniform Global Search Bar */}
-    <div style={{ marginBottom: '18px', padding: '0 2px' }}>
-      <input 
-        type="text"
-        placeholder="Search all items..."
-        value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value)}
-        className="catchy-search-input"
-        style={{
-          width: '100%',
-          padding: '14px 18px',
-          border: '2px solid #ff5958',
-          borderRadius: theme.radius,
-          backgroundColor: theme.bg,
-          color: '#3E3328',
-          fontSize: '15px',
-          fontWeight: '500',
-          outline: 'none',
-          boxSizing: 'border-box'
-        }}
-      />
-    </div>
-
-    {/* 2. Premium Slide Toggle Switch */}
-    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '15px', marginBottom: '20px' }}>
-      <span 
-        onClick={() => setIsNonVeg(false)}
-        style={{ fontSize: '13px', fontWeight: '700', color: isNonVeg === false ? '#2D8A56' : '#aaa', cursor: 'pointer' }}
-      >VEG</span>
-      
-      <div 
-        onClick={() => setIsNonVeg(isNonVeg === null ? false : !isNonVeg)}
-        style={{ 
-          width: '50px', height: '26px', 
-          background: isNonVeg === null ? '#ccc' : (isNonVeg ? '#D32F2F' : '#2D8A56'), 
-          borderRadius: '25px', position: 'relative', cursor: 'pointer', transition: '0.4s' 
-        }}
-      >
-        <div style={{ 
-          width: '22px', height: '22px', background: 'white', borderRadius: '50%', 
-          position: 'absolute', top: '2px', left: isNonVeg === null ? '14px' : (isNonVeg ? '26px' : '2px'), transition: '0.4s' 
-        }} />
-      </div>
-      
-      <span 
-        onClick={() => setIsNonVeg(true)}
-        style={{ fontSize: '13px', fontWeight: '700', color: isNonVeg === true ? '#D32F2F' : '#aaa', cursor: 'pointer' }}
-      >NON-VEG</span>
-    </div>
-
-    {/* 3. Grid/List Layout Toggles */}
-    <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end', marginBottom: '15px' }}>
-      <button onClick={() => setLayout('list')} style={{ background: layout === 'list' ? theme.buttonBg : 'transparent', border: theme.border, borderRadius: '6px', padding: '5px', cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
-        <ListIcon size={20} color={layout === 'list' ? '#E8E4D9' : theme.text}/>
-      </button>
-      <button onClick={() => setLayout('grid')} style={{ background: layout === 'grid' ? theme.buttonBg : 'transparent', border: theme.border, borderRadius: '6px', padding: '5px', cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
-        <Grid size={20} color={layout === 'grid' ? '#E8E4D9' : theme.text}/>
-      </button>
-    </div>
-
-    {/* 4. Filtered Item List */}
-    <div style={{ 
-      display: layout === 'grid' ? 'grid' : 'flex', 
-      gridTemplateColumns: layout === 'grid' ? 'repeat(2, 1fr)' : 'none', 
-      flexDirection: 'column', 
-      gap: '16px' 
-    }}>
-      {(searchQuery 
-        ? Object.values(menuData).flatMap(cat => Object.values(cat.subcategories).flat())
-        : (activeCat && activeSub && menuData[activeCat]?.subcategories[activeSub] ? menuData[activeCat].subcategories[activeSub] : [])
-      )
-      .filter(item => {
-        const matchesSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase());
-        if (isNonVeg === null) return matchesSearch;
-        const v = item.variation ? item.variation.trim().toLowerCase() : '';
-        if (!isNonVeg) return matchesSearch && (v === 'veg' || v === 'egg');
-        return matchesSearch && (v === 'non-veg' || v === 'egg');
-      })
-      .map((item, i) => (
-        <ItemCard 
-          key={i}
-          item={item} 
-          openModal={openModal} 
-          addToCart={addToCart} 
-          resolveImagePath={resolveImagePath} 
-          layout={layout}
-          theme={theme}
-        />
-      ))}
-    </div>
-  </div>
+  <ItemsView 
+    setView={setView}
+    backButtonStyle={backButtonStyle}
+    theme={theme}
+    searchQuery={searchQuery}
+    setSearchQuery={setSearchQuery}
+    isNonVeg={isNonVeg}
+    setIsNonVeg={setIsNonVeg}
+    layout={layout}
+    setLayout={setLayout}
+    menuData={menuData}
+    activeCat={activeCat}
+    activeSub={activeSub}
+    openModal={openModal}
+    addToCart={addToCart}
+    resolveImagePath={resolveImagePath}
+  />
 )}
 
 {view === 'cart' && (
-  <div style={{ 
-    display: 'flex', 
-    flexDirection: 'column', 
-    overflowY: 'auto', 
-    flex: 1, 
-    paddingBottom: '120px', 
-    paddingTop: '5px',
-    boxSizing: 'border-box' 
-  }}>
-    {/* Header */}
-    <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr auto', alignItems: 'center', marginBottom: '16px' }}>
-      <button onClick={() => setView('home')} style={{ ...backButtonStyle, marginBottom: 0, justifySelf: 'start' }}>
-        <ArrowLeft size={18}/> Menu
-      </button>
-      <h2 style={{ color: theme.brand, margin: 0, fontSize: '18px', textAlign: 'center', textTransform: 'uppercase', letterSpacing: '0.5px', fontWeight: '700' }}>Your Bag</h2>
-      <div style={{ width: '75px' }}></div>
-    </div>
-
-    {cart.length === 0 ? (
-      <div style={{ textAlign: 'center', marginTop: '30px', padding: '30px 20px', border: theme.border, borderRadius: theme.radius, background: 'transparent' }}>
-        <ShoppingBag size={40} color={theme.buttonBg} style={{ marginBottom: '10px', opacity: 0.5 }} />
-        <p style={{ fontSize: '16px', color: theme.text, fontWeight: '600', marginBottom: '15px' }}>Your bag is empty</p>
-        <button onClick={() => setView('home')} style={actionButtonStyle}>Go to Menu</button>
-      </div>
-    ) : (
-      <div style={{ 
-        border: theme.border, 
-        borderRadius: theme.radius, 
-        background: '#FFFBF2', 
-        padding: '16px',
-        boxShadow: '0 4px 12px rgba(0,0,0,0.04)'
-      }}>
-        {/* Uniformly Aligned Item List with Theme Colors */}
-        {cart.map((item, index) => (
-          <div key={`${item.name}-${item.unit}`} style={{ 
-            display: 'flex', 
-            alignItems: 'center', 
-            justifyContent: 'space-between',
-            padding: '10px 0',
-            borderBottom: index < cart.length - 1 ? `1px dashed #E5D6B5` : 'none', 
-            gap: '12px'
-          }}>
-            {/* Left: Name & Unit anchored flush left */}
-            <div style={{ display: 'flex', flexDirection: 'column', flex: 1, minWidth: 0, textAlign: 'left' }}>
-              <span style={{ fontWeight: '700', fontSize: '15px', color: theme.text, lineHeight: '1.3' }}>
-                {item.name}
-              </span>
-              <span style={{ fontSize: '12px', color: '#776E62', fontWeight: '600', fontStyle: 'italic', marginTop: '2px' }}>
-                {item.unit}
-              </span>
-            </div>
-
-            {/* Right Group: Quantity Pill Controls, Price, and Delete Button */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexShrink: 0 }}>
-              {/* Quantity Pill Controls */}
-              <div style={{ display: 'flex', alignItems: 'center', border: theme.border, borderRadius: '8px', overflow: 'hidden', background: theme.bg }}>
-                <button onClick={() => removeFromCart(item.name)} style={{ border: 'none', background: 'transparent', padding: '6px 8px', cursor: 'pointer', fontSize: '14px', color: theme.brand, fontWeight: 'bold' }}>-</button>
-                <span style={{ padding: '0 2px', fontSize: '13px', fontWeight: '700', color: theme.text, minWidth: '16px', textAlign: 'center' }}>{item.qty}</span>
-                <button onClick={() => addToCart(item)} style={{ border: 'none', background: 'transparent', padding: '6px 8px', cursor: 'pointer', fontSize: '14px', color: '#2D8A56', fontWeight: 'bold' }}>+</button>
-              </div>
-
-              {/* Price */}
-              <span style={{ fontWeight: '700', fontSize: '15px', color: theme.brand, minWidth: '50px', textAlign: 'right' }}>
-                ₹{(item.price || 0) * item.qty}
-              </span>
-
-              {/* Delete Button */}
-              <button onClick={() => removeFromCart(item.name)} style={{ background: 'none', border: 'none', color: theme.text, cursor: 'pointer', padding: '2px', display: 'flex', alignItems: 'center', opacity: 0.6 }}>
-                <X size={16} />
-              </button>
-            </div>
-          </div>
-        ))}
-
-        {/* Bill Summary Section */}
-        <div style={{ borderTop: `1px solid ${theme.brand}`, marginTop: '16px', paddingTop: '12px' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '14px', color: '#776E62', fontWeight: '500', marginBottom: '8px' }}>
-            <span>Item Total</span>
-            <span>₹{total}</span>
-          </div>
-          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '14px', color: '#776E62', fontWeight: '500', marginBottom: '12px' }}>
-            <span>Delivery Fee</span>
-            <span style={{ fontSize: '11px', color: theme.brand, fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.3px' }}>Calculated next</span>
-          </div>
-          <div style={{ display: 'flex', justifyContent: 'space-between', paddingTop: '10px', borderTop: `1px dashed ${theme.brand}`, fontSize: '16px', fontWeight: '800', color: theme.text, marginBottom: '20px' }}>
-            <span>Total Amount</span>
-            <span style={{ color: theme.brand }}>₹{total}</span>
-          </div>
-        </div>
-
-        {/* Action Buttons */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-          <button onClick={handleProceedToDelivery} style={{ ...actionButtonStyle, marginBottom: 0, padding: '14px', fontSize: '16px', borderRadius: theme.radius }}>
-            Proceed to Delivery
-          </button>
-          <button onClick={() => setView('home')} style={{ ...secondaryButtonStyle, marginBottom: 0, padding: '14px', fontSize: '16px', borderRadius: theme.radius }}>
-            Continue Shopping
-          </button>
-        </div>
-      </div>
-    )}
-  </div>
+  <CartView 
+    setView={setView}
+    backButtonStyle={backButtonStyle}
+    theme={theme}
+    cart={cart}
+    removeFromCart={removeFromCart}
+    addToCart={addToCart}
+    total={total}
+    handleProceedToDelivery={handleProceedToDelivery}
+    actionButtonStyle={actionButtonStyle}
+    secondaryButtonStyle={secondaryButtonStyle}
+  />
 )}
+
+{view === 'track' && (
+  <TrackView 
+    setView={setView}
+    currentStage={currentStage}
+    theme={theme}
+    backButtonStyle={backButtonStyle}
+    actionButtonStyle={actionButtonStyle}
+    secondaryButtonStyle={secondaryButtonStyle}
+    setCart={setCart}
+    cart={cart}
+  />
+)}
+
   {view === 'delivery' && (
   <div style={{ 
     display: 'flex', 
@@ -785,7 +470,7 @@ export default function App() {
         <h2 style={{ color: theme.brand, fontSize: '14px', fontWeight: '700', textTransform: 'uppercase', marginBottom: '10px' }}>Preferred Delivery (optional)</h2>
         
         {/* Date Field */}
-        <div style={{ marginBottom: '10px', boxSizing: 'border-box', width: '100%' }}>
+        <div style={{ marginBottom: '10px', boxSizing: 'border-box', width: '90%' }}>
           <label style={{ fontSize: '12px', fontWeight: '700', color: '#776E62', marginBottom: '4px', display: 'block', textTransform: 'uppercase' }}>Date</label>
           <input 
             type="date" 
@@ -796,7 +481,7 @@ export default function App() {
         </div>
 
         {/* Time Field */}
-        <div style={{ marginBottom: '6px', boxSizing: 'border-box', width: '100%' }}>
+        <div style={{ marginBottom: '6px', boxSizing: 'border-box', width: '90%' }}>
           <label style={{ fontSize: '12px', fontWeight: '700', color: '#776E62', marginBottom: '4px', display: 'block', textTransform: 'uppercase' }}>Time</label>
           <input 
             type="time" 
@@ -1113,287 +798,10 @@ export default function App() {
           </div>
         )}
 
-{view === 'track' && (
-          <div style={{ 
-            display: 'flex', 
-            flexDirection: 'column', 
-            overflowY: 'auto', 
-            flex: 1, 
-            paddingBottom: '139px', 
-            paddingTop: '5px',
-            boxSizing: 'border-box',
-            position: 'relative',
-            overflowX: 'hidden',
-            width: '100%'
-          }}>
-            {/* Stage-Specific Randomized Falling Elements Layer */}
-            <div style={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              right: 0,
-              height: '420px',
-              pointerEvents: 'none',
-              overflow: 'hidden',
-              zIndex: 10,
-              maskImage: `linear-gradient(to bottom, ${theme.brand} 60%, rgba(0,0,0,0) 100%)`,
-              WebkitMaskImage: `linear-gradient(to bottom, ${theme.brand} 60%, rgba(0,0,0,0) 100%)`
-            }}>
-              {/* Stage 1: Papers, Receipts, Kitchen Order Tickets */}
-              {currentStage === 1 && [
-                { icon: '📝', left: '8%', delay: '0s', duration: '2.4s', size: '24px' },
-                { icon: '🧾', left: '22%', delay: '0.8s', duration: '2.9s', size: '22px' },
-                { icon: '📄', left: '38%', delay: '0.3s', duration: '2.1s', size: '26px' },
-                { icon: '📋', left: '55%', delay: '1.2s', duration: '3.2s', size: '23px' },
-                { icon: '📝', left: '70%', delay: '0.5s', duration: '2.6s', size: '25px' },
-                { icon: '🧾', left: '85%', delay: '1.0s', duration: '2.3s', size: '24px' }
-              ].map((item, i) => (
-                <span key={i} style={{
-                  position: 'absolute',
-                  left: item.left,
-                  top: '-40px',
-                  fontSize: item.size,
-                  opacity: 0.9,
-                  filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.15))',
-                  animation: `fallRandom ${item.duration} infinite ease-in-out`,
-                  animationDelay: item.delay
-                }}>{item.icon}</span>
-              ))}
 
-              {/* Stage 2: Chef Hat, Ladle, Rolling Pin, Spoons */}
-              {currentStage === 2 && [
-                { icon: '👨‍🍳', left: '6%', delay: '0.2s', duration: '2.6s', size: '26px' },
-                { icon: '🥄', left: '24%', delay: '0.9s', duration: '2.2s', size: '22px' },
-                { icon: '🥖', left: '40%', delay: '0.4s', duration: '3.0s', size: '24px' },
-                { icon: '🥣', left: '58%', delay: '1.1s', duration: '2.5s', size: '25px' },
-                { icon: '👨‍🍳', left: '75%', delay: '0.7s', duration: '2.8s', size: '23px' },
-                { icon: '🥄', left: '88%', delay: '0.1s', duration: '2.1s', size: '24px' }
-              ].map((item, i) => (
-                <span key={i} style={{
-                  position: 'absolute',
-                  left: item.left,
-                  top: '-40px',
-                  fontSize: item.size,
-                  opacity: 0.9,
-                  filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.15))',
-                  animation: `fallRandom ${item.duration} infinite ease-in-out`,
-                  animationDelay: item.delay
-                }}>{item.icon}</span>
-              ))}
-
-              {/* Stage 3: Carton Boxes Only */}
-              {currentStage === 3 && [
-                { icon: '📦', left: '10%', delay: '0.5s', duration: '2.7s', size: '26px' },
-                { icon: '📦', left: '28%', delay: '0.1s', duration: '2.2s', size: '24px' },
-                { icon: '📦', left: '45%', delay: '0.9s', duration: '3.1s', size: '28px' },
-                { icon: '📦', left: '62%', delay: '0.3s', duration: '2.4s', size: '25px' },
-                { icon: '📦', left: '80%', delay: '1.2s', duration: '2.9s', size: '27px' }
-              ].map((item, i) => (
-                <span key={i} style={{
-                  position: 'absolute',
-                  left: item.left,
-                  top: '-40px',
-                  fontSize: item.size,
-                  opacity: 0.9,
-                  filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.15))',
-                  animation: `fallRandom ${item.duration} infinite ease-in-out`,
-                  animationDelay: item.delay
-                }}>{item.icon}</span>
-              ))}
-
-              {/* Stage 4: Bikes, Location Symbol, Bike Helmet, Riders Gloves */}
-              {currentStage === 4 && [
-                { icon: '🛵', left: '8%', delay: '0.2s', duration: '2.0s', size: '26px' },
-                { icon: '📍', left: '25%', delay: '0.8s', duration: '2.5s', size: '22px' },
-                { icon: '🪖', left: '42%', delay: '0.4s', duration: '2.2s', size: '25px' },
-                { icon: '🧤', left: '60%', delay: '1.0s', duration: '2.8s', size: '23px' },
-                { icon: '🛵', left: '78%', delay: '0.1s', duration: '2.1s', size: '27px' },
-                { icon: '📍', left: '90%', delay: '0.6s', duration: '2.4s', size: '24px' }
-              ].map((item, i) => (
-                <span key={i} style={{
-                  position: 'absolute',
-                  left: item.left,
-                  top: '-40px',
-                  fontSize: item.size,
-                  opacity: 0.9,
-                  filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.15))',
-                  animation: `fallRandom ${item.duration} infinite linear`,
-                  animationDelay: item.delay
-                }}>{item.icon}</span>
-              ))}
-
-              {/* Stage 5: Claps, Smiley, Happy Customer, Hearts Fireworks */}
-              {currentStage === 5 && [
-                { icon: '👏', left: '8%', delay: '0.3s', duration: '2.3s', size: '26px' },
-                { icon: '😊', left: '24%', delay: '0.9s', duration: '2.7s', size: '24px' },
-                { icon: '🥳', left: '40%', delay: '0.1s', duration: '2.1s', size: '28px' },
-                { icon: '💖', left: '58%', delay: '0.6s', duration: '2.5s', size: '25px' },
-                { icon: '🎆', left: '74%', delay: '1.1s', duration: '3.0s', size: '27px' },
-                { icon: '👏', left: '88%', delay: '0.4s', duration: '2.2s', size: '25px' }
-              ].map((item, i) => (
-                <span key={i} style={{
-                  position: 'absolute',
-                  left: item.left,
-                  top: '-40px',
-                  fontSize: item.size,
-                  opacity: 0.9,
-                  filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.15))',
-                  animation: `fallRandom ${item.duration} infinite ease-in`,
-                  animationDelay: item.delay
-                }}>{item.icon}</span>
-              ))}
-            </div>
-
-            {/* Header */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'auto 2fr auto', alignItems: 'center', marginBottom: '16px', gap: '4px', zIndex: 2, position: 'relative' }}>
-              <button onClick={() => setView('home')} style={{ ...backButtonStyle, marginBottom: 0, justifySelf: 'start', whiteSpace: 'nowrap' }}>
-                <ArrowLeft size={18}/> Back to Home
-              </button>
-              <h2 style={{ color: theme.brand, margin: 0, fontSize: '16px', textAlign: 'center', textTransform: 'uppercase', letterSpacing: '0.3px', fontWeight: '700', whiteSpace: 'nowrap' }}>Live Order Track</h2>
-              <div style={{ width: '75px' }}></div>
-            </div>
-
-            {/* Main Container Card */}
-            <div style={{ 
-              border: theme.border, 
-              borderRadius: theme.radius, 
-              background: '#FFFBF2', 
-              padding: '20px 16px',
-              boxShadow: '0 4px 12px rgba(0,0,0,0.06)',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '20px',
-              boxSizing: 'border-box',
-              width: '100%',
-              alignItems: 'center',
-              textAlign: 'center',
-              zIndex: 2,
-              position: 'relative'
-            }}>
-              {/* Animated Pulsing Status Icon */}
-              <div style={{ position: 'relative', display: 'flex', justifyContent: 'center', alignItems: 'center', margin: '10px 0' }}>
-                <div style={{
-                  position: 'absolute',
-                  width: '70px',
-                  height: '70px',
-                  borderRadius: '50%',
-                  background: theme.brand,
-                  opacity: 0.2,
-                  animation: 'pulse 2s infinite'
-                }} />
-                <div style={{
-                  width: '56px',
-                  height: '56px',
-                  borderRadius: '50%',
-                  background: theme.bg,
-                  border: theme.border,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  color: theme.brand,
-                  zIndex: 1,
-                  fontSize: '24px',
-                  animation: 'bounce 1s infinite alternate'
-                }}>
-                  {currentStage === 1 ? '📝' : currentStage === 2 ? '👨‍🍳' : currentStage === 3 ? '📦' : currentStage === 4 ? '🛵' : '🎉'}
-                </div>
-              </div>
-
-              <div>
-                <h3 style={{ color: theme.brand, margin: '0 0 6px 0', fontSize: '18px', fontWeight: '800', textTransform: 'uppercase' }}>
-                  {currentStage === 5 ? 'Order Delivered!' : 'Order Placed Successfully!'}
-                </h3>
-                <p style={{ color: theme.text, fontSize: '13px', margin: 0, lineHeight: '1.4', fontWeight: '500' }}>
-                  Your order is in, and we're crafting it with <span style={{ color: theme.brand, fontWeight: '700' }}>LOVE</span>. Thank you for choosing to SHOP LOCAL and support our small-batch kitchen.
-                </p>
-              </div>
-
-              {/* 5-Stage Emoticon & Animated Visual Timeline */}
-              <div style={{ width: '100%', borderTop: `1px dashed #E5D6B5`, paddingTop: '16px', display: 'flex', flexDirection: 'column', gap: '14px' }}>
-                <span style={{ fontSize: '12px', fontWeight: '700', color: '#776E62', textTransform: 'uppercase', alignSelf: 'flex-start' }}>
-                  Live Status Progression
-                </span>
-
-                {[
-                  { step: 1, icon: '📝', title: 'Order Recieved', desc: 'Written down on a paper slip & queued' },
-                  { step: 2, icon: '👨‍🍳', title: 'Preparing', desc: 'Fresh baking & mixing underway', animate: true },
-                  { step: 3, icon: '📦', title: 'Packing', desc: 'Carton box folding & pristine sealing' },
-                  { step: 4, icon: '🛵', title: 'Out for Delivery', desc: 'Rider on a bike with wind gushing' },
-                  { step: 5, icon: '🎉', title: 'Completed', desc: 'Customer receiving & celebrating!' }
-                ].map((item, index) => {
-                  const isCompleted = item.step < currentStage;
-                  const isCurrent = item.step === currentStage;
-
-                  return (
-                    <div key={item.step} style={{ display: 'flex', alignItems: 'flex-start', gap: '12px', textAlign: 'left' }}>
-                      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                        <div style={{
-                          width: '32px',
-                          height: '32px',
-                          borderRadius: '50%',
-                          background: isCompleted || isCurrent ? theme.bg : '#FFFBF2',
-                          border: theme.border,
-                          fontSize: '15px',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          boxShadow: isCurrent ? '0 0 0 4px rgba(225, 112, 85, 0.15)' : 'none',
-                          animation: (isCurrent && item.animate) ? 'bounce 1s infinite alternate' : 'none'
-                        }}>
-                          {item.icon}
-                        </div>
-                        {index < 4 && (
-                          <div style={{
-                            width: '2px',
-                            height: '28px',
-                            background: item.step < currentStage ? theme.brand : '#E5D6B5',
-                            margin: '2px 0'
-                          }} />
-                        )}
-                      </div>
-                      <div style={{ flex: 1, paddingTop: '4px' }}>
-                        <div style={{ fontSize: '13px', fontWeight: '700', color: isCurrent ? theme.brand : theme.text, display: 'flex', alignItems: 'center', gap: '6px' }}>
-                          {item.title} 
-                          {isCurrent && (
-                            <span style={{ fontSize: '9px', background: '#FFF1EE', color: theme.brand, padding: '2px 6px', borderRadius: '4px', fontWeight: '800' }}>
-                              ACTIVE
-                            </span>
-                          )}
-                        </div>
-                        <div style={{ fontSize: '11px', color: '#776E62', marginTop: '2px' }}>{item.desc}</div>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-
-              {/* Action Buttons */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', boxSizing: 'border-box', width: '100%', marginTop: '10px' }}>
-                <button 
-                  onClick={() => window.open('https://wa.me/9108286886?text=Hi,%20I%20want%20an%20update%20on%20my%20recent%20order!', '_blank')} 
-                  style={{ ...actionButtonStyle, border: theme.border, marginBottom: 0, padding: '14px', fontSize: '15px', borderRadius: theme.radius, width: '100%', boxSizing: 'border-box', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
-                >
-                  <MessageSquare size={18} /> Get WhatsApp Live Update
-                </button>
-                <button 
-                  onClick={() => { setCart([]); setView('home'); }} 
-                  style={{ ...secondaryButtonStyle, border: theme.border, marginBottom: 0, padding: '14px', fontSize: '15px', borderRadius: theme.radius, width: '100%', boxSizing: 'border-box' }}
-                >
-                  Back to Home
-                </button>
-                
-              </div>
-            </div>
-          </div>
-        )}
-      {/* --- GLOBAL BOTTOM SEPARATOR & QUICK LINKS --- */}
-  <div style={{ width: '100%', height: '1px', backgroundColor: theme.brand, opacity: 0.3, margin: '8npmpx 0 16px 0'}} />
-<div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', alignItems: 'center', gap: '8px 12px', fontSize: '11.5px', color: '#776E62', textAlign: 'center' }}>
-  <span>All products are prepared in a facility handling dairy and nuts.© 2026 LYTE BYTES. All rights reserved.</span>
-</div>
 </main>
-
-<Footer view={view} setView={setView} cart={cart} theme={theme} />
+    {/* Floating Interactive Footer Dock */}
+    <Footer view={view} setView={setView} theme={theme} />
       {activeModal.type === 'ZOOM' && (
         <ItemModal 
           selectedItem={activeModal.data} 

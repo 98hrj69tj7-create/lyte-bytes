@@ -1,76 +1,152 @@
 import React from 'react';
 
 export default function StickyCartBar({ cart = [], onViewCart }) {
-  const totalItems = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
-  const totalPrice = cart.reduce((sum, item) => sum + (item.price * (item.quantity || 1)), 0);
+  const totalItems = cart.reduce((sum, item) => sum + (Number(item.qty) || 1), 0);
+  
+  const totalPrice = cart.reduce((sum, item) => {
+    const price = typeof item.price === 'string' 
+      ? parseFloat(item.price.replace(/[^\d.]/g, '')) 
+      : (Number(item.price) || 0);
+    const qty = Number(item.qty) || 1;
+    return sum + (price * qty);
+  }, 0);
 
   if (totalItems === 0) return null;
 
   return (
-    <div 
-      onClick={onViewCart}
-      style={{
-        position: 'fixed',
-        // Perfectly positioned to hover right above the bottom navigation pill
-        bottom: '80px', 
-        left: '50%',
-        transform: 'translateX(-50%)',
-        width: '90%',
-        maxWidth: '440px',
-        
-        // Advanced Glassmorphism Styling
-        backgroundColor: 'rgba(255, 89, 88, 0.88)', // Semi-transparent coral brand color
-        backdropFilter: 'blur(6px)',
-        WebkitBackdropFilter: 'blur(12px)', // Safari support
-        border: '1px solid rgba(255, 255, 255, 0.3)', // Subtle glossy rim highlight
-        
-        color: '#FFFFFF',
-        borderRadius: '20px',
-        padding: '6px 18px',
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        boxShadow: '0 10px 30px rgba(255, 89, 88, 0.3)',
-        zIndex: 950, 
-        cursor: 'pointer',
-        animation: 'slideUpBar 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
-        boxSizing: 'border-box'
-      }}
-    >
-      {/* Left side: Item count and total price */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
-        <span style={{ fontSize: '12px', fontWeight: '600', letterSpacing: '0.8px', color: 'rgba(255, 255, 255, 0.9)' }}>
-          {totalItems} {totalItems === 1 ? 'ITEM' : 'ITEMS'}
-        </span>
-        <span style={{ fontSize: '16px', fontWeight: '600', color: '#FFFFFF', letterSpacing: '0.8px' }}>
-          ₹{totalPrice}
-        </span>
-      </div>
+    <>
+      <div 
+        onClick={onViewCart}
+        style={{
+          position: 'fixed',
+          bottom: '80px', 
+          left: '50%',
+          transform: 'translateX(-50%)',
+          width: '95%',
+          maxWidth: '440px',
+          background: 'linear-gradient(135deg, rgba(255, 90, 88, 0.95) 0%, rgba(215, 45, 60, 0.98) 100%)',
+          backdropFilter: 'blur(16px)',
+          WebkitBackdropFilter: 'blur(16px)',
+          border: '1px solid rgba(255, 255, 255, 0.45)',
+          color: '#FFFFFF',
+          borderRadius: '22px',
+          padding: '10px 16px 10px 18px',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          boxShadow: '0 14px 35px rgba(215, 45, 60, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.45)',
+          zIndex: 950, 
+          cursor: 'pointer',
+          overflow: 'hidden', // Keeps the moving prism sweep cleanly contained
+          animation: 'slideUpAndGlow 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
+          boxSizing: 'border-box'
+        }}
+      >
+        {/* Sleek Prism Glass Sweep Layer (Moving Left to Right) */}
+        <div style={{
+          position: 'absolute',
+          top: 0,
+          left: '-150%',
+          width: '150%',
+          height: '100%',
+          background: 'linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent)',
+          transform: 'skewX(-20deg)',
+          animation: 'prismSweep 3.2s infinite ease-in-out',
+          pointerEvents: 'none'
+        }} />
 
-      {/* Right side: View Bag CTA Pill */}
-      <div style={{ 
-        display: 'flex', 
-        alignItems: 'center', 
-        gap: '6px', 
-        backgroundColor: 'rgba(255, 255, 255, 0.22)', 
-        backdropFilter: 'blur(4px)',
-        padding: '7px 14px', 
-        borderRadius: '14px',
-        fontWeight: '600',
-        fontSize: '14px',
-        letterSpacing: '0.4px',
-        border: '1.5px solid #ffffff', 
-      }}>
-        <span>VIEW BAG</span>
-        <span style={{ fontSize: '16px' }}>→</span>
+        {/* Left Side: Quantity Badge + Total Price */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '14px', zIndex: 1 }}>
+          {/* Animated Glow Counter Badge */}
+          <div style={{
+            position: 'relative',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: '42px',
+            height: '42px',
+            borderRadius: '50%',
+            background: 'rgba(255, 255, 255, 0.25)',
+            border: '1px solid rgba(255, 255, 255, 0.65)',
+            boxShadow: '0 0 0 0 rgba(255, 255, 255, 0.4)',
+            animation: 'badgePulse 2s infinite ease-in-out',
+            fontWeight: '700',
+            fontSize: '15px',
+            color: '#FFFFFF'
+          }}>
+            {totalItems}
+          </div>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1px' }}>
+            <span style={{ fontSize: '11px', fontWeight: '600', letterSpacing: '0.8px', color: 'rgba(255, 255, 255, 0.85)', textTransform: 'uppercase' }}>
+              {totalItems === 1 ? 'Total Item' : 'Total Items'}
+            </span>
+            <span style={{ fontSize: '17px', fontWeight: '700', color: '#FFFFFF', letterSpacing: '0.5px', textShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
+              ₹{totalPrice}
+            </span>
+          </div>
+        </div>
+
+        {/* Right Side: Sleek Call to Action Button */}
+        <div style={{ 
+          display: 'flex', 
+          alignItems: 'center', 
+          gap: '8px', 
+          backgroundColor: '#FFFFFF', 
+          color: '#E03E44',
+          padding: '9px 18px', 
+          borderRadius: '15px',
+          fontWeight: '700',
+          fontSize: '13px',
+          letterSpacing: '0.6px',
+          boxShadow: '0 4px 15px rgba(0, 0, 0, 0.1)',
+          zIndex: 1,
+          transition: 'transform 0.2s ease',
+        }}>
+          <span>VIEW BAG</span>
+          <span style={{ fontSize: '15px', fontWeight: '800' }}>→</span>
+        </div>
       </div>
 
       <style>{`
-        @keyframes slideUpBar {
-          from { transform: translate(-50%, 20px); opacity: 0; }
-          to { transform: translate(-50%, 0); opacity: 1; }
+        @keyframes slideUpAndGlow {
+          0% { 
+            transform: translate(-50%, 25px); 
+            opacity: 0; 
+          }
+          100% { 
+            transform: translate(-50%, 0); 
+            opacity: 1; 
+          }
+        }
+
+        @keyframes badgePulse {
+          0% {
+            transform: scale(1);
+            box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.5);
+          }
+          70% {
+            transform: scale(1.06);
+            box-shadow: 0 0 0 8px rgba(255, 255, 255, 0);
+          }
+          100% {
+            transform: scale(1);
+            box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+          }
+        }
+
+        @keyframes prismSweep {
+          0% {
+            left: '-150%';
+          }
+          35% {
+            left: '150%';
+          }
+          100% {
+            left: '150%';
+          }
         }
       `}</style>
-    </div>
+    </>
   );
 }

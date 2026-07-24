@@ -1,25 +1,39 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 export default function ItemCard({ item, openModal, addToCart, resolveImagePath, layout, theme }) {
-  // Pre-calculate variant logic to keep JSX clean
+  const [isHovered, setIsHovered] = useState(false);
+  const [isImgHovered, setIsImgHovered] = useState(false);
+
   const hasVariants = item.variants && item.variants.length > 0;
   const displayPrice = hasVariants ? item.variants[0].price : (parseFloat(item.price) || 0);
   const displayUnit = item.unit || (hasVariants ? item.variants[0].label : "");
 
   return (
-    <div style={{ 
-      padding: '12px', 
-      border: theme.border, 
-      borderRadius: theme.radius, 
-      display: 'flex', 
-      flexDirection: layout === 'grid' ? 'column' : 'row', 
-      gap: '14px', 
-      backgroundColor: theme.buttonBg, // Matches your theme card background
-      boxShadow: '0 2px 8px rgba(0,0,0,0.06)', 
-      alignItems: layout === 'grid' ? 'stretch' : 'center'
-    }}>
-      {/* Image Container */}
-      <div onClick={() => openModal('ZOOM', item)} style={{ cursor: 'pointer', flexShrink: 0 }}>
+    <div 
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      style={{ 
+        padding: '14px', 
+        border: isHovered ? '1px solid rgba(255, 89, 88, 0.4)' : theme.border, 
+        borderRadius: theme.radius, 
+        display: 'flex', 
+        flexDirection: layout === 'grid' ? 'column' : 'row', 
+        gap: '14px', 
+        backgroundColor: theme.buttonBg, 
+        boxShadow: isHovered ? '0 16px 36px rgba(0,0,0,0.22)' : '0 2px 8px rgba(0,0,0,0.06)', 
+        alignItems: layout === 'grid' ? 'stretch' : 'center',
+        transform: isHovered ? 'translateY(-5px)' : 'translateY(0px)',
+        transition: 'all 0.35s cubic-bezier(0.16, 1, 0.3, 1)',
+        cursor: 'pointer'
+      }}
+    >
+      {/* Image Container with Premium Zoom */}
+      <div 
+        onClick={() => openModal('ZOOM', item)} 
+        onMouseEnter={() => setIsImgHovered(true)}
+        onMouseLeave={() => setIsImgHovered(false)}
+        style={{ cursor: 'pointer', flexShrink: 0, borderRadius: '10px', overflow: 'hidden' }}
+      >
         <img 
           src={resolveImagePath(item.imageUrl, 'menu-items')} 
           alt={item.name} 
@@ -27,16 +41,15 @@ export default function ItemCard({ item, openModal, addToCart, resolveImagePath,
             width: layout === 'grid' ? '100%' : '100px', 
             height: layout === 'grid' ? '120px' : '100px', 
             objectFit: 'cover', 
-            borderRadius: '10px',
-            display: 'block'
+            display: 'block',
+            transform: isImgHovered ? 'scale(1.1)' : 'scale(1)',
+            transition: 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)'
           }} 
         />
       </div>
 
       {/* Content Container */}
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', textAlign: 'left', minHeight: layout === 'grid' ? 'auto' : '100px', justifyContent: 'space-between' }}>
-        
-        {/* Top Section: Title, Unit, & Customisable */}
         <div>
           <div style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', marginBottom: '2px' }}>
             {item.variation && (
@@ -51,7 +64,6 @@ export default function ItemCard({ item, openModal, addToCart, resolveImagePath,
             </div>
           </div>
           
-          {/* Tightly stacked Unit and Customisable text */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1px', marginTop: '2px' }}>
             <span style={{ fontSize: '12px', color: theme.brand, fontStyle: 'italic', fontWeight: '500' }}>
               {displayUnit}
@@ -64,10 +76,7 @@ export default function ItemCard({ item, openModal, addToCart, resolveImagePath,
           </div>
         </div>
         
-        {/* Bottom Section: Price & Add Button */}
         <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', marginTop: '8px' }}>
-          
-          {/* Price & Button Container */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
             <div style={{ color: theme.brand, fontWeight: '700', fontSize: '15px' }}>
               ₹{displayPrice}
@@ -89,13 +98,14 @@ export default function ItemCard({ item, openModal, addToCart, resolveImagePath,
                 fontWeight: '600',
                 fontSize: '15px',
                 cursor: 'pointer',
-                boxShadow: '0 2px 6px rgba(255, 89, 88, 0.25)'
+                boxShadow: '0 4px 12px rgba(255, 89, 88, 0.35)',
+                transition: 'transform 0.2s ease, box-shadow 0.2s ease'
               }}
+              className="active:scale-95"
             >
               Add
             </button>
           </div>
-
         </div>
       </div>
     </div>
