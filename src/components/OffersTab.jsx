@@ -27,12 +27,37 @@ export default function OffersTab({ theme }) {
       paddingLeft: '16px',
       paddingRight: '16px'
     }}>
-      {/* Header */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-        <h2 style={{ color: theme.brand, margin: 0, fontSize: '16px', textTransform: 'uppercase', letterSpacing: '0.5px', fontWeight: '700' }}>
-        Offers & Rewards
+      {/* Header with Centered Title & Badge on Right */}
+      <div style={{ 
+        display: 'grid', 
+        gridTemplateColumns: 'auto 1fr auto', 
+        alignItems: 'center', 
+        marginBottom: '16px' 
+      }}>
+        <div /> {/* Left spacer to perfectly center the title */}
+        <h2 style={{ 
+          color: theme.brand, 
+          margin: 0, 
+          fontSize: '16px', 
+          textTransform: 'uppercase', 
+          letterSpacing: '0.5px', 
+          fontWeight: '700',
+          textAlign: 'center' 
+        }}>
+          Offers & Rewards
         </h2>
-        <span style={{ fontSize: '11px', background: '#F3E8FF', color: '#7E22CE', padding: '4px 8px', borderRadius: '8px', fontWeight: '700', display: 'flex', alignItems: 'center', gap: '4px' }}>
+        <span style={{ 
+          fontSize: '11px', 
+          background: '#F3E8FF', 
+          color: '#7E22CE', 
+          padding: '4px 8px', 
+          borderRadius: '8px', 
+          fontWeight: '700', 
+          display: 'flex', 
+          alignItems: 'center', 
+          gap: '4px',
+          justifySelf: 'end'
+        }}>
           <Sparkles size={12}/> Live Coupons ({offers.length})
         </span>
       </div>

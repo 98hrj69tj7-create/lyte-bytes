@@ -147,7 +147,7 @@ export default function App() {
   }, [view]);
 
   const categoryImages = {
-    "Ammis Achar": "pickles.png",
+    "Ammi's Achar": "pickles.png",
     "Bakery & Cakes": "bakery.png",
     "Catering": "catering.png",
     "Finger Foods": "finger-foods.png",
@@ -428,7 +428,7 @@ export default function App() {
         onChange={(e) => setCustomer({...customer, address: e.target.value})} 
       />
         
-      {/* Google Maps Location Pin Prompt & Launcher */}
+      {/* Interactive Map Pin Selector Trigger */}
       <button 
         onClick={() => {
           if (navigator.geolocation) {
@@ -448,17 +448,19 @@ export default function App() {
           }
         }} 
         style={{ 
-          ...secondaryButtonStyle, 
+          ...inputStyle, 
           marginTop: '0px', 
           marginBottom: '5px', 
           display: 'flex', 
           alignItems: 'center', 
           justifyContent: 'center', 
           gap: '8px',
-          border: `2px dashed ${theme.brand}`,
+          border: `1.5px dashed ${theme.brand}`,
           color: theme.brand,
-          background: 'transparent',
-          boxSizing: 'border-box',
+          background: 'rgba(210, 40, 55, 0.03)',
+          cursor: 'pointer',
+          fontWeight: '600',
+          boxSizing: 'border-box', 
           width: '100%'
         }}
       >
@@ -469,8 +471,8 @@ export default function App() {
       <div style={{ margin: '5px 0', borderTop: `1px dashed #E5D6B5`, paddingTop: '12px', boxSizing: 'border-box', width: '100%' }}>
         <h2 style={{ color: theme.brand, fontSize: '14px', fontWeight: '700', textTransform: 'uppercase', marginBottom: '10px' }}>Preferred Delivery (optional)</h2>
         
-        {/* Date Field */}
-        <div style={{ marginBottom: '10px', boxSizing: 'border-box', width: '90%' }}>
+        {/* Date Field - Uniform Width & Alignment */}
+        <div style={{ marginBottom: '10px', boxSizing: 'border-box', width: '100%' }}>
           <label style={{ fontSize: '12px', fontWeight: '700', color: '#776E62', marginBottom: '4px', display: 'block', textTransform: 'uppercase' }}>Date</label>
           <input 
             type="date" 
@@ -480,8 +482,8 @@ export default function App() {
           />
         </div>
 
-        {/* Time Field */}
-        <div style={{ marginBottom: '6px', boxSizing: 'border-box', width: '90%' }}>
+        {/* Time Field - Uniform Width & Alignment */}
+        <div style={{ marginBottom: '6px', boxSizing: 'border-box', width: '100%' }}>
           <label style={{ fontSize: '12px', fontWeight: '700', color: '#776E62', marginBottom: '4px', display: 'block', textTransform: 'uppercase' }}>Time</label>
           <input 
             type="time" 
