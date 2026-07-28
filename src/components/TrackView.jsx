@@ -25,7 +25,7 @@ export default function TrackView({
       }}>
         <div style={{ padding: '16px' }}>
           <button onClick={() => setView('home')} style={{ ...backButtonStyle, marginBottom: 0 }}>
-            <ArrowLeft size={18}/> Back to Home
+            <ArrowLeft size={18}/> Back
           </button>
         </div>
       </div>
