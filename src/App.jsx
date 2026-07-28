@@ -9,7 +9,6 @@ import ItemsView from './components/ItemsView';
 import CartView from './components/CartView';
 import TrackView from './components/TrackView';
 import Header from './components/Header';
-import LimitedOfferModal from './components/LimitedOfferModal';
 import Footer from './components/Footer';
 import { trackAbandonedLead } from './components/leadTracker';
 import Papa from 'papaparse';
@@ -90,8 +89,6 @@ function useLocalStorage(key, initialValue) {
 }
 
 export default function App() {
-  const theme = { brand: '#FF5958', border: '1px solid rgba(255,255,255,0.1)', text: '#E8E4D9', buttonBg: '#222' };
-  const [isScrolled, setIsScrolled] = useState(false);
   const [view, setView] = useState('home');
   const [activeModal, setActiveModal] = useState({ type: null, data: null });
   const openModal = (type, data) => setActiveModal({ type, data });
