@@ -9,6 +9,7 @@ import ItemsView from './components/ItemsView';
 import CartView from './components/CartView';
 import TrackView from './components/TrackView';
 import Header from './components/Header';
+import LimitedOfferModal from './components/LimitedOfferModal';
 import Footer from './components/Footer';
 import { trackAbandonedLead } from './components/leadTracker';
 import Papa from 'papaparse';
@@ -89,6 +90,8 @@ function useLocalStorage(key, initialValue) {
 }
 
 export default function App() {
+  const theme = { brand: '#FF5958', border: '1px solid rgba(255,255,255,0.1)', text: '#E8E4D9', buttonBg: '#222' };
+  const [isScrolled, setIsScrolled] = useState(false);
   const [view, setView] = useState('home');
   const [activeModal, setActiveModal] = useState({ type: null, data: null });
   const openModal = (type, data) => setActiveModal({ type, data });
@@ -111,6 +114,13 @@ export default function App() {
   const [paymentMode, setPaymentMode] = useState(null);
   const [upiApp, setUpiApp] = useState('');
   const [upiId, setUpiId] = useState('');
+  
+  // Haptic Micro-Feedback State & Helper Style
+  const [pressedBtn, setPressedBtn] = useState(null);
+  const getPressStyle = (id) => ({
+    transform: pressedBtn === id ? 'scale(0.96)' : 'scale(1)',
+    transition: 'transform 0.1s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.1s ease',
+  });
   
   const UPI_MAPPINGS = {
     'Google Pay': 'rosemarycloney-3@okicici',
@@ -521,12 +531,46 @@ export default function App() {
         )}
       </div>
 
-      {/* Action Buttons */}
+      {/* Action Buttons with Haptic Press Feedback */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', boxSizing: 'border-box', width: '100%' }}>
-        <button onClick={handleProceedToPayment} style={{ ...actionButtonStyle, border: theme.border, marginBottom: 0, padding: '14px', fontSize: '15px', borderRadius: theme.radius, width: '100%', boxSizing: 'border-box' }}>
+        <button 
+          onClick={handleProceedToPayment} 
+          onMouseDown={() => setPressedBtn('payment')}
+          onMouseUp={() => setPressedBtn(null)}
+          onTouchStart={() => setPressedBtn('payment')}
+          onTouchEnd={() => setPressedBtn(null)}
+          style={{ 
+            ...actionButtonStyle, 
+            ...getPressStyle('payment'), 
+            border: theme.border, 
+            marginBottom: 0, 
+            padding: '14px', 
+            fontSize: '15px', 
+            borderRadius: theme.radius, 
+            width: '100%', 
+            boxSizing: 'border-box' 
+          }}
+        >
           Proceed to Payment
         </button>
-        <button onClick={() => setView('home')} style={{ ...secondaryButtonStyle, border: theme.border, marginBottom: 0, padding: '14px', fontSize: '15px', borderRadius: theme.radius, width: '100%', boxSizing: 'border-box' }}>
+        <button 
+          onClick={() => setView('home')} 
+          onMouseDown={() => setPressedBtn('continue-del')}
+          onMouseUp={() => setPressedBtn(null)}
+          onTouchStart={() => setPressedBtn('continue-del')}
+          onTouchEnd={() => setPressedBtn(null)}
+          style={{ 
+            ...secondaryButtonStyle, 
+            ...getPressStyle('continue-del'), 
+            border: theme.border, 
+            marginBottom: 0, 
+            padding: '14px', 
+            fontSize: '15px', 
+            borderRadius: theme.radius, 
+            width: '100%', 
+            boxSizing: 'border-box' 
+          }}
+        >
           Continue Shopping
         </button>
       </div>
@@ -665,17 +709,46 @@ export default function App() {
         </div>
       )}
 
-      {/* Action Buttons */}
+      {/* Action Buttons with Haptic Press Feedback */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', boxSizing: 'border-box', width: '100%', marginTop: '10px' }}>
         <button 
           onClick={() => { if (!payment) { alert("Please select a payment method (Cash or UPI) to proceed."); return; } setView('track'); }} 
-          style={{ ...actionButtonStyle, border: theme.border, marginBottom: 0, padding: '14px', fontSize: '15px', borderRadius: theme.radius, width: '100%', boxSizing: 'border-box', opacity: payment ? 1 : 0.6 }}
+          onMouseDown={() => setPressedBtn('place-order')}
+          onMouseUp={() => setPressedBtn(null)}
+          onTouchStart={() => setPressedBtn('place-order')}
+          onTouchEnd={() => setPressedBtn(null)}
+          style={{ 
+            ...actionButtonStyle, 
+            ...getPressStyle('place-order'), 
+            border: theme.border, 
+            marginBottom: 0, 
+            padding: '14px', 
+            fontSize: '15px', 
+            borderRadius: theme.radius, 
+            width: '100%', 
+            boxSizing: 'border-box', 
+            opacity: payment ? 1 : 0.6 
+          }}
         >
           Place Order
         </button>
         <button 
           onClick={() => setView('home')} 
-          style={{ ...secondaryButtonStyle, border: theme.border, marginBottom: 0, padding: '14px', fontSize: '15px', borderRadius: theme.radius, width: '100%', boxSizing: 'border-box' }}
+          onMouseDown={() => setPressedBtn('continue-pay')}
+          onMouseUp={() => setPressedBtn(null)}
+          onTouchStart={() => setPressedBtn('continue-pay')}
+          onTouchEnd={() => setPressedBtn(null)}
+          style={{ 
+            ...secondaryButtonStyle, 
+            ...getPressStyle('continue-pay'), 
+            border: theme.border, 
+            marginBottom: 0, 
+            padding: '14px', 
+            fontSize: '15px', 
+            borderRadius: theme.radius, 
+            width: '100%', 
+            boxSizing: 'border-box' 
+          }}
         >
           Continue Shopping
         </button>

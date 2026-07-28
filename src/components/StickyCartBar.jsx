@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 export default function StickyCartBar({ cart = [], onViewCart }) {
   const totalItems = cart.reduce((sum, item) => sum + (Number(item.qty) || 1), 0);
@@ -11,6 +11,17 @@ export default function StickyCartBar({ cart = [], onViewCart }) {
     return sum + (price * qty);
   }, 0);
 
+  // State to trigger the spring pulse on item change
+  const [isPulseActive, setIsPulseActive] = useState(false);
+
+  useEffect(() => {
+    if (totalItems > 0) {
+      setIsPulseActive(true);
+      const timer = setTimeout(() => setIsPulseActive(false), 350);
+      return () => clearTimeout(timer);
+    }
+  }, [totalItems]);
+
   if (totalItems === 0) return null;
 
   return (
@@ -21,7 +32,7 @@ export default function StickyCartBar({ cart = [], onViewCart }) {
           position: 'fixed',
           bottom: '80px', 
           left: '50%',
-          transform: 'translateX(-50%)',
+          transform: isPulseActive ? 'translateX(-50%) scale(1.03)' : 'translateX(-50%) scale(1)',
           width: '95%',
           maxWidth: '440px',
           background: 'linear-gradient(135deg, rgba(255, 90, 88, 0.95) 0%, rgba(215, 45, 60, 0.98) 100%)',
@@ -34,15 +45,17 @@ export default function StickyCartBar({ cart = [], onViewCart }) {
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
-          boxShadow: '0 14px 35px rgba(215, 45, 60, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.45)',
+          boxShadow: isPulseActive 
+            ? '0 20px 45px rgba(215, 45, 60, 0.6), inset 0 1px 2px rgba(255, 255, 255, 0.8)' 
+            : '0 14px 35px rgba(215, 45, 60, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.45)',
           zIndex: 950, 
           cursor: 'pointer',
-          overflow: 'hidden', // Keeps the moving prism sweep cleanly contained
-          animation: 'slideUpAndGlow 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
+          overflow: 'hidden',
+          transition: 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease',
           boxSizing: 'border-box'
         }}
       >
-        {/* Sleek Prism Glass Sweep Layer (Moving Left to Right) */}
+        {/* Sleek Prism Glass Sweep Layer */}
         <div style={{
           position: 'absolute',
           top: 0,
@@ -72,7 +85,9 @@ export default function StickyCartBar({ cart = [], onViewCart }) {
             animation: 'badgePulse 2s infinite ease-in-out',
             fontWeight: '700',
             fontSize: '15px',
-            color: '#FFFFFF'
+            color: '#FFFFFF',
+            transform: isPulseActive ? 'scale(1.15)' : 'scale(1)',
+            transition: 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)'
           }}>
             {totalItems}
           </div>
@@ -109,17 +124,6 @@ export default function StickyCartBar({ cart = [], onViewCart }) {
       </div>
 
       <style>{`
-        @keyframes slideUpAndGlow {
-          0% { 
-            transform: translate(-50%, 25px); 
-            opacity: 0; 
-          }
-          100% { 
-            transform: translate(-50%, 0); 
-            opacity: 1; 
-          }
-        }
-
         @keyframes badgePulse {
           0% {
             transform: scale(1);

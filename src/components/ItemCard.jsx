@@ -3,10 +3,30 @@ import React, { useState } from 'react';
 export default function ItemCard({ item, openModal, addToCart, resolveImagePath, layout, theme }) {
   const [isHovered, setIsHovered] = useState(false);
   const [isImgHovered, setIsImgHovered] = useState(false);
+  const [isPressed, setIsPressed] = useState(false);
+  
+  // State for the success morph animation
+  const [isAddedRecently, setIsAddedRecently] = useState(false);
 
   const hasVariants = item.variants && item.variants.length > 0;
   const displayPrice = hasVariants ? item.variants[0].price : (parseFloat(item.price) || 0);
   const displayUnit = item.unit || (hasVariants ? item.variants[0].label : "");
+
+  const handleAddClick = (e) => {
+    e.stopPropagation();
+
+    if (hasVariants) {
+      openModal('VARIANTS', item);
+    } else {
+      addToCart(item);
+      
+      // Trigger success morph state for 1 second
+      setIsAddedRecently(true);
+      setTimeout(() => {
+        setIsAddedRecently(false);
+      }, 1000);
+    }
+  };
 
   return (
     <div 
@@ -81,16 +101,16 @@ export default function ItemCard({ item, openModal, addToCart, resolveImagePath,
             <div style={{ color: theme.brand, fontWeight: '700', fontSize: '15px' }}>
               ₹{displayPrice}
             </div>
+
+            {/* Morphing Add Button */}
             <button 
-              onClick={() => {
-                if (hasVariants) {
-                  openModal('VARIANTS', item);
-                } else {
-                  addToCart(item);
-                }
-              }}
+              onClick={handleAddClick}
+              onMouseDown={() => setIsPressed(true)}
+              onMouseUp={() => setIsPressed(false)}
+              onTouchStart={() => setIsPressed(true)}
+              onTouchEnd={() => setIsPressed(false)}
               style={{
-                backgroundColor: theme.brand,
+                backgroundColor: isAddedRecently ? '#10B981' : theme.brand, // Turns success green when added
                 color: '#FFFFFF',
                 border: 'none',
                 padding: '6px 18px', 
@@ -98,12 +118,14 @@ export default function ItemCard({ item, openModal, addToCart, resolveImagePath,
                 fontWeight: '600',
                 fontSize: '15px',
                 cursor: 'pointer',
-                boxShadow: '0 4px 12px rgba(255, 89, 88, 0.35)',
-                transition: 'transform 0.2s ease, box-shadow 0.2s ease'
+                boxShadow: isAddedRecently ? '0 4px 16px rgba(16, 185, 129, 0.4)' : '0 4px 12px rgba(255, 89, 88, 0.35)',
+                transform: isPressed ? 'scale(0.92)' : (isAddedRecently ? 'scale(1.05)' : 'scale(1)'),
+                transition: 'all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1)', // Spring bounce effect
+                minWidth: '70px',
+                textAlign: 'center'
               }}
-              className="active:scale-95"
             >
-              Add
+              {isAddedRecently ? '✓ Added' : 'Add'}
             </button>
           </div>
         </div>
