@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { ArrowLeft, ShoppingBag, X } from 'lucide-react';
+import PolicyModal from './PolicyModal';
 
 export default function CartView({
   setView = () => {},
@@ -13,6 +14,8 @@ export default function CartView({
   actionButtonStyle = {},
   secondaryButtonStyle = {}
 }) {
+  const [isPolicyOpen, setIsPolicyOpen] = useState(false);
+
   const activeTheme = {
     brand: theme?.brand || '#E53935',
     text: theme?.text || '#2C221E',
@@ -39,7 +42,7 @@ export default function CartView({
         <button onClick={() => setView('home')} style={{ ...backButtonStyle, marginBottom: 0, justifySelf: 'start' }}>
           <ArrowLeft size={18}/> Menu
         </button>
-        <h2 style={{ color: activeTheme.brand, margin: 0, fontSize: '18px', textAlign: 'center', textTransform: 'uppercase', letterSpacing: '0.5px', fontWeight: '700' }}>Your Bag</h2>
+        <h2 style={{ color: activeTheme.brand, margin: 0, fontSize: '17px', textAlign: 'center', textTransform: 'uppercase', letterSpacing: '0.5px', fontWeight: '600' }}>Your Bag</h2>
         <div style={{ width: '75px' }}></div>
       </div>
 
@@ -102,9 +105,27 @@ export default function CartView({
               <span>Delivery Fee</span>
               <span style={{ fontSize: '11px', color: activeTheme.brand, fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.3px' }}>Calculated next</span>
             </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', paddingTop: '10px', borderTop: `1px dashed ${activeTheme.brand}`, fontSize: '16px', fontWeight: '800', color: activeTheme.text, marginBottom: '20px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', paddingTop: '10px', borderTop: `1px dashed ${activeTheme.brand}`, fontSize: '16px', fontWeight: '800', color: activeTheme.text, marginBottom: '16px' }}>
               <span>Total Amount</span>
               <span style={{ color: activeTheme.brand }}>₹{total}</span>
+            </div>
+
+            {/* Terms and Conditions Notice Link */}
+            <div style={{ textAlign: 'center', marginBottom: '16px' }}>
+              <span style={{ fontSize: '11.5px', color: '#776E62' }}>
+                By proceeding, you agree to our{' '}
+                <span 
+                  onClick={() => setIsPolicyOpen(true)}
+                  style={{ 
+                    color: activeTheme.brand, 
+                    cursor: 'pointer', 
+                    fontWeight: '700',
+                    textDecoration: 'underline' 
+                  }}
+                >
+                  Order Conditions
+                </span>
+              </span>
             </div>
           </div>
 
@@ -118,6 +139,20 @@ export default function CartView({
           </div>
         </div>
       )}
+
+      {/* Policy Bottom Sheet Modal */}
+      <PolicyModal 
+        isOpen={isPolicyOpen} 
+        onClose={() => setIsPolicyOpen(false)} 
+        title="Order & Checkout Terms" 
+        theme={activeTheme}
+      >
+        <p><strong>Advance Ordering & Cut-Off:</strong> All items are freshly prepared; orders must be placed in advance to ensure quality and availability.</p>
+        <p><strong>Payment Terms:</strong> Full payment is required at checkout to confirm your order placement.</p>
+        <p><strong>Cancellations & Refunds:</strong> Due to the perishable and fresh nature of our food, orders are non-cancellable and non-refundable once confirmed.</p>
+        <p><strong>Modifications & Substitutions:</strong> Orders can be modified prior to dispatch. In rare cases of fresh ingredient shortages, minor substitutions or immediate item refunds may apply.</p>
+        <p><strong>Fair Usage:</strong> We reserve the right to cancel or block accounts associated with fraudulent, unverified, or repeated fake bookings.</p>
+      </PolicyModal>
     </div>
   );
 }

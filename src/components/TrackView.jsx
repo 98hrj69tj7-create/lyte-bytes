@@ -182,7 +182,7 @@ export default function TrackView({
         <button onClick={() => setView('home')} style={{ ...backButtonStyle, marginBottom: 0, justifySelf: 'start', whiteSpace: 'nowrap' }}>
           <ArrowLeft size={18}/> Back
         </button>
-        <h2 style={{ color: theme.brand, margin: 0, fontSize: '15px', textAlign: 'center', textTransform: 'uppercase', letterSpacing: '0.5px', fontWeight: '700', whiteSpace: 'nowrap' }}>Live Order Track</h2>
+        <h2 style={{ color: theme.brand, margin: 0, fontSize: '17px', textAlign: 'center', textTransform: 'uppercase', letterSpacing: '0.5px', fontWeight: '600', whiteSpace: 'nowrap' }}>Live Order Track</h2>
         <div style={{ width: '75px' }}></div>
       </div>
 

@@ -135,7 +135,7 @@ export default function PaymentView({
         <button onClick={() => setView('delivery')} style={{ ...backButtonStyle, marginBottom: 0, justifySelf: 'start', whiteSpace: 'nowrap' }}>
           <ArrowLeft size={18}/> Back
         </button>
-        <h2 style={{ color: theme.brand, margin: 0, fontSize: '15px', textAlign: 'center', textTransform: 'uppercase', letterSpacing: '0.6px', fontWeight: '800', whiteSpace: 'nowrap' }}>
+        <h2 style={{ color: theme.brand, margin: 0, fontSize: '17px', textAlign: 'center', textTransform: 'uppercase', letterSpacing: '0.6px', fontWeight: '600', whiteSpace: 'nowrap' }}>
           Payment Method
         </h2>
         <div style={{ width: '75px' }}></div>

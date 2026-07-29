@@ -76,7 +76,7 @@ export default function ItemCard({ item, openModal, addToCart, resolveImagePath,
               <img 
                 src={`/menu-items/${item.variation.trim().toLowerCase() === 'non-veg' ? 'non-veg' : item.variation.trim().toLowerCase()}.png`} 
                 alt={item.variation} 
-                style={{ width: '14px', height: '14px', flexShrink: 0, marginTop: '3px' }} 
+                style={{ width: '14px', height: '14px', flexShrink: '0', marginTop: '3px' }} 
               />
             )}
             <div style={{ fontWeight: '700', fontSize: '15px', color: '#E8E4D9', lineHeight: '1.2' }}>
@@ -110,7 +110,7 @@ export default function ItemCard({ item, openModal, addToCart, resolveImagePath,
               onTouchStart={() => setIsPressed(true)}
               onTouchEnd={() => setIsPressed(false)}
               style={{
-                backgroundColor: isAddedRecently ? '#10B981' : theme.brand, // Turns success green when added
+                backgroundColor: isAddedRecently ? '#10B981' : theme.brand,
                 color: '#FFFFFF',
                 border: 'none',
                 padding: '6px 18px', 
@@ -120,7 +120,7 @@ export default function ItemCard({ item, openModal, addToCart, resolveImagePath,
                 cursor: 'pointer',
                 boxShadow: isAddedRecently ? '0 4px 16px rgba(16, 185, 129, 0.4)' : '0 4px 12px rgba(255, 89, 88, 0.35)',
                 transform: isPressed ? 'scale(0.92)' : (isAddedRecently ? 'scale(1.05)' : 'scale(1)'),
-                transition: 'all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1)', // Spring bounce effect
+                transition: 'all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1)',
                 minWidth: '70px',
                 textAlign: 'center'
               }}

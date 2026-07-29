@@ -4,6 +4,7 @@ import {
   ShoppingBag, Calendar, Clock, 
   Bike, Navigation, CheckCircle2, AlertCircle, MessageCircle
 } from 'lucide-react';
+import PolicyModal from './PolicyModal';
 
 const KITCHEN_LAT = 13.0232;
 const KITCHEN_LNG = 77.6492;
@@ -117,6 +118,8 @@ export default function DeliveryView({
   actionButtonStyle,
   secondaryButtonStyle
 }) {
+  const [isDeliveryPolicyOpen, setIsDeliveryPolicyOpen] = useState(false);
+  const [isPrivacyPolicyOpen, setIsPrivacyPolicyOpen] = useState(false);
   const currentMode = customer.fulfillmentType || 'DELIVERY';
 
   // Synchronous calculation: recalculated immediately on every render/keystroke
@@ -171,6 +174,15 @@ export default function DeliveryView({
     transition: 'border-color 0.2s ease, box-shadow 0.2s ease'
   };
 
+  const activeTheme = {
+    brand: theme?.brand || '#E53935',
+    text: theme?.text || '#2C221E',
+    border: theme?.border || '1px solid #E0D3C1',
+    bg: theme?.bg || '#FFFFFF',
+    radius: theme?.radius || '12px',
+    buttonBg: theme?.buttonBg || '#E53935'
+  };
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', overflowY: 'auto', flex: 1, paddingBottom: '90px', paddingTop: '4px', boxSizing: 'border-box' }}>
       {/* Header */}
@@ -178,7 +190,7 @@ export default function DeliveryView({
         <button onClick={() => setView('cart')} style={{ ...backButtonStyle, marginBottom: 0, justifySelf: 'start', whiteSpace: 'nowrap' }}>
           <ArrowLeft size={18}/> Back
         </button>
-        <h2 style={{ color: '#E53935', margin: 0, fontSize: '15px', textAlign: 'center', textTransform: 'uppercase', letterSpacing: '0.8px', fontWeight: '800', whiteSpace: 'nowrap' }}>
+        <h2 style={{ color: '#E53935', margin: 0, fontSize: '17px', textAlign: 'center', textTransform: 'uppercase', letterSpacing: '0.8px', fontWeight: '600', whiteSpace: 'nowrap' }}>
           Order & Delivery
         </h2>
         <div style={{ width: '75px' }}></div>
@@ -200,8 +212,16 @@ export default function DeliveryView({
 
         {/* Contact Info */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', textAlign: 'left' }}>
-          <div style={{ fontSize: '11px', fontWeight: '800', color: '#8C7A6B', textTransform: 'uppercase', letterSpacing: '0.8px' }}>
-            1. Contact Info <span style={{ color: '#E53935' }}>*</span>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div style={{ fontSize: '11px', fontWeight: '800', color: '#8C7A6B', textTransform: 'uppercase', letterSpacing: '0.8px' }}>
+              1. Contact Info <span style={{ color: '#E53935' }}>*</span>
+            </div>
+            <span 
+              onClick={() => setIsPrivacyPolicyOpen(true)}
+              style={{ fontSize: '10.5px', color: activeTheme.brand, fontWeight: '700', cursor: 'pointer', textDecoration: 'underline' }}
+            >
+              Privacy & Compliance
+            </span>
           </div>
 
           <input 
@@ -230,8 +250,16 @@ export default function DeliveryView({
 
         {/* Delivery Mode Switcher */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', textAlign: 'left' }}>
-          <div style={{ fontSize: '11px', fontWeight: '800', color: '#8C7A6B', textTransform: 'uppercase', letterSpacing: '0.8px' }}>
-            2. Delivery Mode
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div style={{ fontSize: '11px', fontWeight: '800', color: '#8C7A6B', textTransform: 'uppercase', letterSpacing: '0.8px' }}>
+              2. Delivery Mode
+            </div>
+            <span 
+              onClick={() => setIsDeliveryPolicyOpen(true)}
+              style={{ fontSize: '10.5px', color: activeTheme.brand, fontWeight: '700', cursor: 'pointer', textDecoration: 'underline' }}
+            >
+              Delivery Conditions
+            </span>
           </div>
 
           <div style={{ display: 'flex', background: '#EFE7DA', padding: '4px', borderRadius: '12px', gap: '4px', border: '1px solid #E53935', boxSizing: 'border-box' }}>
@@ -297,9 +325,11 @@ export default function DeliveryView({
           </div>
 
           {currentMode === 'DELIVERY' && (
-            <div style={{ fontSize: '10.5px', color: '#6E5D4F', fontStyle: 'italic', display: 'flex', alignItems: 'center', gap: '4px', paddingLeft: '2px' }}>
-              <Navigation size={11} color="#E53935" />
-              Bengaluru deliveries only (Up to 30 km via distance model).
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingLeft: '2px', paddingRight: '2px' }}>
+              <div style={{ fontSize: '10.5px', color: '#6E5D4F', fontStyle: 'italic', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                <Navigation size={11} color="#E53935" />
+                Bengaluru deliveries only (Up to 30 km).
+              </div>
             </div>
           )}
         </div>
@@ -493,6 +523,33 @@ export default function DeliveryView({
         </div>
 
       </div>
+
+      {/* Delivery Conditions Modal */}
+      <PolicyModal 
+        isOpen={isDeliveryPolicyOpen} 
+        onClose={() => setIsDeliveryPolicyOpen(false)} 
+        title="Delivery Conditions" 
+        theme={activeTheme}
+      >
+        <p><strong>Service Radius:</strong> We currently deliver exclusively within Bengaluru.</p>
+        <p><strong>Delivery Slots & Timelines:</strong> Standard delivery takes 24–48 hours. Preferred slots (Morning: 8–11 AM, Afternoon: 12–2 PM, Evening: 5–8 PM) can be selected at checkout.</p>
+        <p><strong>Fees & Tracking:</strong> Delivery charges are calculated dynamically at checkout. Real-time status tracking is available in the app.</p>
+        <p><strong>Address Accuracy & Handover:</strong> Please provide precise address details. Due to product perishability, our delivery partners can wait a maximum of 10 minutes at the drop location; uncontactable orders cannot be refunded.</p>
+        <p><strong>External Delays:</strong> While we prioritize punctuality, unforeseen local conditions (severe weather, heavy traffic blockades) may occasionally impact delivery windows.</p>
+      </PolicyModal>
+
+      {/* Privacy & Compliance Modal */}
+      <PolicyModal 
+        isOpen={isPrivacyPolicyOpen} 
+        onClose={() => setIsPrivacyPolicyOpen(false)} 
+        title="Privacy & Compliance" 
+        theme={activeTheme}
+      >
+        <p><strong>Data Collection:</strong> We collect essential details (name, phone number, address) strictly for order fulfillment, logistics coordination, and customer support.</p>
+        <p><strong>Data Sharing & Security:</strong> Your information is never sold. Data is shared exclusively with trusted local logistics partners. We do not use tracking cookies.</p>
+        <p><strong>User Rights:</strong> You retain full control over your data and may request profile or data deletion anytime via WhatsApp or email.</p>
+        <p><strong>FSSAI & Food Safety:</strong> Lyte Bytes operates as a certified FSSAI-registered kitchen adhering to strict hygiene standards. <strong>Allergy Notice:</strong> Prepared in a home kitchen that handles common allergens including nuts, dairy, and gluten.</p>
+      </PolicyModal>
     </div>
   );
 }

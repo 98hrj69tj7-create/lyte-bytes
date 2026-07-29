@@ -26,7 +26,7 @@ export default function SupportInfoView({
         <button onClick={() => setView('home')} style={{ ...backButtonStyle, marginBottom: 0, justifySelf: 'start' }}>
           <ArrowLeft size={18}/> Menu
         </button>
-        <h2 style={{ color: theme.brand, margin: 0, fontSize: '18px', textAlign: 'center', textTransform: 'uppercase', letterSpacing: '0.5px', fontWeight: '700' }}>Support & Info</h2>
+        <h2 style={{ color: theme.brand, margin: 0, fontSize: '17px', textAlign: 'center', textTransform: 'uppercase', letterSpacing: '0.5px', fontWeight: '600' }}>Support & Info</h2>
         <div style={{ width: '75px' }}></div>
       </div>
 
@@ -75,62 +75,6 @@ export default function SupportInfoView({
             </div>
           </div>
         </a>
-
-      </div>
-
-      {/* Legal & Policies Header */}
-      <h3 style={{ color: theme.text, fontSize: '15px', fontWeight: '700', marginBottom: '10px', paddingLeft: '4px', textTransform: 'uppercase', letterSpacing: '0.5px', textAlign: 'left' }}>Legal & Policies</h3>
-      
-      {/* Accordions Container */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-        
-        {/* T&C Accordion */}
-        <div>
-          <div onClick={() => setShowTC(!showTC)} style={{ ...accordionHeaderStyle, backgroundColor: '#FFFFFF', padding: '16px 20px', marginBottom: 0, justifyContent: 'space-between', color: theme.text, boxShadow: '0 1px 4px rgba(0,0,0,0.02)', zIndex: 2, position: 'relative', borderRadius: theme.radius, border: theme.border }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <Info size={18} color={theme.buttonBg} /> 
-              <span style={{ fontSize: '14.5px', fontWeight: '600' }}>Terms & Conditions</span>
-            </div>
-            {showTC ? <ChevronUp size={18} color={theme.brand}/> : <ChevronDown size={18} color={theme.brand}/>}
-          </div>
-          {showTC && (
-            <div style={{ padding: '20px', fontSize: '13px', lineHeight: '1.6', color: '#4A4A4A', border: theme.border, borderTop: 'none', borderRadius: `0 0 ${theme.radius} ${theme.radius}`, background: '#FAFAFA', marginTop: '-6px' }}>
-              <ul style={{ paddingLeft: '20px', margin: 0, display: 'flex', flexDirection: 'column', gap: '8px', textAlign: 'left' }}>
-                <li><strong>Order Acceptance:</strong> All orders are subject to availability. We reserve the right to refuse or cancel orders.</li>
-                <li><strong>Order Modification:</strong> Orders can be modified before dispatch, subject to availability.</li>
-                <li><strong>Order Cut-off Time:</strong> Orders must be placed in advance to ensure freshness.</li>
-                <li><strong>Offer Coupons:</strong> Offer coupons are valid for a limited time and cannot be combined with other promotions.</li>
-                <li><strong>FSSAI Registration:</strong> Lyte Bytes holds a valid FSSAI Registration for manufacturing, storage, and distribution.</li>
-                <li><strong>Allergen Warning:</strong> Prepared in a home kitchen that may handle common allergens (nuts, gluten, dairy).</li>
-                <li><strong>Hygiene Standards:</strong> Prepared in a clean, hygienic home kitchen adhering to strict health standards.</li>
-                <li><strong>Refunds & Cancellations:</strong> Due to perishable food nature, returns, cancellations, and refunds are not accepted once placed.</li>
-                <li><strong>Payments:</strong> Payments must be made in full at the time of order placement.</li>
-              </ul>
-            </div>
-          )}
-        </div>
-
-        {/* Privacy Policy Accordion */}
-        <div>
-          <div onClick={() => setShowPrivacy(!showPrivacy)} style={{ ...accordionHeaderStyle, backgroundColor: '#FFFFFF', padding: '16px 20px', marginBottom: 0, justifyContent: 'space-between', color: theme.text, boxShadow: '0 1px 4px rgba(0,0,0,0.02)', zIndex: 2, position: 'relative', borderRadius: theme.radius, border: theme.border }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <CheckCircle size={18} color={theme.buttonBg} /> 
-              <span style={{ fontSize: '14.5px', fontWeight: '600' }}>Privacy Policy</span>
-            </div>
-            {showPrivacy ? <ChevronUp size={18} color={theme.brand}/> : <ChevronDown size={18} color={theme.brand}/>}
-          </div>
-          {showPrivacy && (
-            <div style={{ padding: '20px', fontSize: '13px', lineHeight: '1.6', color: '#4A4A4A', border: theme.border, borderTop: 'none', borderRadius: `0 0 ${theme.radius} ${theme.radius}`, background: '#FAFAFA', marginTop: '-6px' }}>
-              <ul style={{ paddingLeft: '20px', margin: 0, display: 'flex', flexDirection: 'column', gap: '8px', textAlign: 'left' }}>
-                <li><strong>Data Collection:</strong> We collect your name, phone number, and address strictly to fulfill your orders and deliveries.</li>
-                <li><strong>Third Parties:</strong> We do not sell your personal data; delivery info is shared only with logistics partners.</li>
-                <li><strong>Security:</strong> We take all reasonable precautions to secure your data and retain it only as long as necessary.</li>
-                <li><strong>Cookies:</strong> We do not use tracking cookies on our application.</li>
-                <li><strong>Your Rights:</strong> Request deletion of your data anytime via WhatsApp or email.</li>
-              </ul>
-            </div>
-          )}
-        </div>
 
       </div>
     </div>

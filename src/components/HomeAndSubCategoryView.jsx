@@ -176,16 +176,17 @@ export default function HomeAndSubCategoryView({
 
       {view === 'subcat' && (
         <div style={{ paddingBottom: '90px' }}>
-          <button 
-            onClick={() => setView('home')} 
-            style={{ background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px', color: theme.text, fontSize: '15px', fontWeight: '600', padding: '4px 0', marginBottom: '6px' }}
-          >
-            <ArrowLeft size={18}/> Back
-          </button>
-          
-          <h2 style={{ fontSize: '18px', color: theme.brand, margin: '8px 0 16px 0', fontWeight: '700', letterSpacing: '0.5px', textAlign: 'center', textTransform: 'uppercase' }}>
-            {activeCat}
-          </h2>
+          <div style={{ display: 'flex', alignItems: 'center', position: 'relative', marginBottom: '16px', padding: '4px 0' }}>
+            <button 
+              onClick={() => setView('home')} 
+              style={{ background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px', color: theme.text, fontSize: '15px', fontWeight: '600', padding: '0', zIndex: 1 }}
+            >
+              <ArrowLeft size={18}/> Back
+            </button>
+            <h2 style={{ position: 'absolute', left: 0, right: 0, textAlign: 'center', fontSize: '17px', color: theme.brand, margin: 0, fontWeight: '600', letterSpacing: '0.5px', textTransform: 'uppercase', pointerEvents: 'none' }}>
+              {activeCat}
+            </h2>
+          </div>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
             {activeCat && menuData[activeCat]?.subcategories && Object.keys(menuData[activeCat].subcategories).map(sub => (

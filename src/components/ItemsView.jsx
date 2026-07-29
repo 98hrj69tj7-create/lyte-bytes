@@ -1,6 +1,6 @@
 import React from 'react';
 import { ArrowLeft, List as ListIcon, Grid } from 'lucide-react';
-import ItemCard from './ItemCard'; // Adjust path if needed depending on your folder structure
+import ItemCard from './ItemCard';
 
 export default function ItemsView({
   setView,
@@ -23,9 +23,15 @@ export default function ItemsView({
     <div style={{ paddingBottom: '90px' }}>
       <button 
         onClick={() => setView('subcat')} 
-        style={{ ...backButtonStyle, marginBottom: '10px' }}
+        style={{ 
+          ...backButtonStyle, 
+          display: 'flex', 
+          alignItems: 'center', 
+          gap: '6px', 
+          marginBottom: '10px' 
+        }}
       >
-        <ArrowLeft size={20}/> Back
+        <ArrowLeft size={18}/> Back
       </button>
 
       {/* Uniform Global Search Bar */}

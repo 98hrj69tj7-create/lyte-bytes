@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Sparkles, X, Copy, Check, Tag, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Sparkles, Copy, Check, Tag, ChevronLeft, ChevronRight } from 'lucide-react';
 import { getAllOffers } from '../utils/offersEngine';
 
 export default function LimitedOfferModal({ theme }) {
@@ -75,38 +75,45 @@ export default function LimitedOfferModal({ theme }) {
   const currentOffer = allOffers[currentIndex] || allOffers[0];
 
   return (
-    <div style={{
-      position: 'fixed',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      backgroundColor: 'rgba(0, 0, 0, 0.65)',
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-      zIndex: 1000,
-      padding: '16px',
-      backdropFilter: 'blur(5px)'
-    }}>
-      <div style={{
-        background: theme.bg,
-        borderRadius: theme.radius,
-        border: theme.border,
-        width: '100%',
-        maxWidth: '400px',
+    <div 
+      onClick={() => setIsOpen(false)}
+      style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundColor: 'rgba(0, 0, 0, 0.65)',
         display: 'flex',
-        flexDirection: 'column',
-        boxShadow: '0 15px 35px rgba(0,0,0,0.25)',
-        overflow: 'hidden',
-        position: 'relative',
-        animation: 'scaleUp 0.3s cubic-bezier(0.16, 1, 0.3, 1)'
-      }}>
+        justifyContent: 'center',
+        alignItems: 'center',
+        zIndex: 1000,
+        padding: '16px',
+        backdropFilter: 'blur(5px)',
+        cursor: 'pointer'
+      }}
+    >
+      <div 
+        onClick={() => setIsOpen(false)}
+        style={{
+          background: theme.bg,
+          borderRadius: theme.radius,
+          border: theme.border,
+          width: '100%',
+          maxWidth: '400px',
+          display: 'flex',
+          flexDirection: 'column',
+          boxShadow: '0 15px 35px rgba(0,0,0,0.25)',
+          overflow: 'hidden',
+          position: 'relative',
+          animation: 'scaleUp 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
+          cursor: 'pointer'
+        }}
+      >
         
         {/* Modal Header - Streamlined padding */}
         <div style={{
           display: 'flex',
-          justifyContent: 'space-between',
           alignItems: 'center',
           padding: '12px 16px',
           borderBottom: theme.border,
@@ -118,22 +125,6 @@ export default function LimitedOfferModal({ theme }) {
               Special Live Offers
             </span>
           </div>
-          <button 
-            onClick={() => setIsOpen(false)}
-            style={{
-              background: 'none',
-              border: 'none',
-              cursor: 'pointer',
-              color: theme.text,
-              display: 'flex',
-              alignItems: 'center',
-              padding: '4px',
-              borderRadius: '50%',
-              transition: 'background 0.2s'
-            }}
-          >
-            <X size={18} />
-          </button>
         </div>
 
         {/* Single-Coupon Notice Banner - Sleek compact spacing */}
@@ -247,7 +238,10 @@ export default function LimitedOfferModal({ theme }) {
                 <div style={{ fontSize: '14px', fontWeight: '700', letterSpacing: '0.8px', lineHeight: '1.1' }}>{currentOffer.code}</div>
               </div>
               <button 
-                onClick={() => handleCopy(currentOffer.code)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleCopy(currentOffer.code);
+                }}
                 style={{
                   background: '#FFFFFF',
                   color: currentOffer.themeColor,
@@ -273,7 +267,10 @@ export default function LimitedOfferModal({ theme }) {
           {allOffers.length > 1 && (
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '10px' }}>
               <button 
-                onClick={handlePrev}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handlePrev();
+                }}
                 style={{
                   background: 'rgba(0,0,0,0.04)',
                   border: theme.border,
@@ -295,7 +292,10 @@ export default function LimitedOfferModal({ theme }) {
                 {allOffers.map((_, idx) => (
                   <div 
                     key={idx}
-                    onClick={() => setCurrentIndex(idx)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setCurrentIndex(idx);
+                    }}
                     style={{
                       width: currentIndex === idx ? '16px' : '5px',
                       height: '5px',
@@ -309,7 +309,10 @@ export default function LimitedOfferModal({ theme }) {
               </div>
 
               <button 
-                onClick={handleNext}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleNext();
+                }}
                 style={{
                   background: 'rgba(0,0,0,0.04)',
                   border: theme.border,
@@ -341,8 +344,8 @@ export default function LimitedOfferModal({ theme }) {
             style={{
               width: '100%',
               padding: '10px',
-              backgroundColor: theme.buttonBg,
-              color: theme.bg,
+              backgroundColor: '#FF5A5F',
+              color: '#FFFFFF',
               border: 'none',
               borderRadius: '8px',
               fontWeight: '600',
