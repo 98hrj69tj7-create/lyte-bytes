@@ -391,11 +391,14 @@ export default function App() {
           />
         )}
 
-        {/* Render Payment Method Selection */}
-        {view === 'payment' && (
+      {/* Render Payment Method Selection */}
+     {view === 'payment' && (
           <PaymentView 
             theme={theme}
             setView={setView}
+            cart={cart}
+            total={total}
+            customer={customer}
             payment={payment}
             setPayment={setPayment}
             upiApp={upiApp}

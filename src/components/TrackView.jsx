@@ -42,8 +42,8 @@ export default function TrackView({
       flex: 1, 
       paddingBottom: '20px', 
       paddingTop: '8px',
-      paddingLeft: '12px',
-      paddingRight: '12px',
+      paddingLeft: '10px',
+      paddingRight: '10px',
       boxSizing: 'border-box',
       position: 'relative',
       overflowX: 'hidden',
@@ -180,29 +180,35 @@ export default function TrackView({
       {/* Header */}
       <div style={{ display: 'grid', gridTemplateColumns: 'auto 2fr auto', alignItems: 'center', marginBottom: '14px', gap: '4px', zIndex: 2, position: 'relative' }}>
         <button onClick={() => setView('home')} style={{ ...backButtonStyle, marginBottom: 0, justifySelf: 'start', whiteSpace: 'nowrap' }}>
-          <ArrowLeft size={18}/> Back to Home
+          <ArrowLeft size={18}/> Back
         </button>
         <h2 style={{ color: theme.brand, margin: 0, fontSize: '15px', textAlign: 'center', textTransform: 'uppercase', letterSpacing: '0.5px', fontWeight: '700', whiteSpace: 'nowrap' }}>Live Order Track</h2>
         <div style={{ width: '75px' }}></div>
       </div>
 
       {/* Main Container Card */}
-      <div style={{ 
-        border: theme.border, 
-        borderRadius: theme.radius, 
-        background: '#FFFBF2', 
-        padding: '16px 18px',
-        boxShadow: '0 8px 24px rgba(0,0,0,0.06)',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '18px',
-        boxSizing: 'border-box',
-        width: '100%',
-        alignItems: 'center',
-        textAlign: 'center',
-        zIndex: 2,
-        position: 'relative'
-      }}>
+<div style={{ 
+  border: theme.border, 
+  borderRadius: theme.radius, 
+  background: '#FFFBF2', 
+  padding: '16px 18px',
+  boxShadow: '0 8px 24px rgba(0,0,0,0.06)',
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '18px',
+  boxSizing: 'border-box',
+  
+  /* --- ADJUSTED FOR WIDER SCREEN EDGE-TO-EDGE FIT --- */
+  width: 'calc(100% + 20px)',  // Expands 10px wider on each side
+  marginLeft: '-10px',         // Pulls card left
+  marginRight: '-10px',        // Pulls card right
+  /* ------------------------------------------------ */
+
+  alignItems: 'center',
+  textAlign: 'center',
+  zIndex: 2,
+  position: 'relative'
+}}>
         {/* Animated Pulsing Status Icon Header */}
         <div style={{ position: 'relative', display: 'flex', justifyContent: 'center', alignItems: 'center', margin: '4px 0 0 0' }}>
           <div style={{

@@ -40,7 +40,7 @@ export default function SupportInfoView({
         {/* WhatsApp Support */}
         <a href="https://wa.me/9108286886" style={{ textDecoration: 'none' }}>
           <div style={{ display: 'flex', alignItems: 'center', padding: '14px 20px', backgroundColor: '#FFFFFF', border: theme.border, borderRadius: theme.radius, boxShadow: '0 2px 8px rgba(0,0,0,0.03)' }}>
-            <div style={{ backgroundColor: '#E8F5E9', width: '44px', height: '44px', borderRadius: '50%', marginRight: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+            <div style={{ backgroundColor: '#E8F5E9', width: '40px', height: '30px', borderRadius: '50%', marginRight: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
               <MessageSquare size={22} color="#2D8A56" />
             </div>
             <div style={{ textAlign: 'left', flex: 1 }}>
@@ -53,7 +53,7 @@ export default function SupportInfoView({
         {/* Give Feedback */}
         <a href="https://g.page/r/CRodKxCU6unDEBM/review" style={{ textDecoration: 'none' }}>
           <div style={{ display: 'flex', alignItems: 'center', padding: '14px 20px', backgroundColor: '#FFFFFF', border: theme.border, borderRadius: theme.radius, boxShadow: '0 2px 8px rgba(0,0,0,0.03)' }}>
-            <div style={{ backgroundColor: '#FFFBF2', width: '44px', height: '44px', borderRadius: '50%', marginRight: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+            <div style={{ backgroundColor: '#FFFBF2', width: '40px', height: '30px', borderRadius: '50%', marginRight: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
               <CheckCircle size={22} color="#F5B041" />
             </div>
             <div style={{ textAlign: 'left', flex: 1 }}>
@@ -66,7 +66,7 @@ export default function SupportInfoView({
         {/* Email Us */}
         <a href="mailto:lytebytesblr@gmail.com" style={{ textDecoration: 'none' }}>
           <div style={{ display: 'flex', alignItems: 'center', padding: '14px 20px', backgroundColor: '#FFFFFF', border: theme.border, borderRadius: theme.radius, boxShadow: '0 2px 8px rgba(0,0,0,0.03)' }}>
-            <div style={{ backgroundColor: '#FFF0F0', width: '44px', height: '44px', borderRadius: '50%', marginRight: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+            <div style={{ backgroundColor: '#FFF0F0', width: '40px', height: '30px', borderRadius: '50%', marginRight: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
               <Mail size={22} color={theme.brand} />
             </div>
             <div style={{ textAlign: 'left', flex: 1 }}>
@@ -79,10 +79,10 @@ export default function SupportInfoView({
       </div>
 
       {/* Legal & Policies Header */}
-      <h3 style={{ color: theme.text, fontSize: '15px', fontWeight: '700', marginBottom: '12px', paddingLeft: '4px', textTransform: 'uppercase', letterSpacing: '0.5px', textAlign: 'left' }}>Legal & Policies</h3>
+      <h3 style={{ color: theme.text, fontSize: '15px', fontWeight: '700', marginBottom: '10px', paddingLeft: '4px', textTransform: 'uppercase', letterSpacing: '0.5px', textAlign: 'left' }}>Legal & Policies</h3>
       
       {/* Accordions Container */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
         
         {/* T&C Accordion */}
         <div>
@@ -97,7 +97,9 @@ export default function SupportInfoView({
             <div style={{ padding: '20px', fontSize: '13px', lineHeight: '1.6', color: '#4A4A4A', border: theme.border, borderTop: 'none', borderRadius: `0 0 ${theme.radius} ${theme.radius}`, background: '#FAFAFA', marginTop: '-6px' }}>
               <ul style={{ paddingLeft: '20px', margin: 0, display: 'flex', flexDirection: 'column', gap: '8px', textAlign: 'left' }}>
                 <li><strong>Order Acceptance:</strong> All orders are subject to availability. We reserve the right to refuse or cancel orders.</li>
+                <li><strong>Order Modification:</strong> Orders can be modified before dispatch, subject to availability.</li>
                 <li><strong>Order Cut-off Time:</strong> Orders must be placed in advance to ensure freshness.</li>
+                <li><strong>Offer Coupons:</strong> Offer coupons are valid for a limited time and cannot be combined with other promotions.</li>
                 <li><strong>FSSAI Registration:</strong> Lyte Bytes holds a valid FSSAI Registration for manufacturing, storage, and distribution.</li>
                 <li><strong>Allergen Warning:</strong> Prepared in a home kitchen that may handle common allergens (nuts, gluten, dairy).</li>
                 <li><strong>Hygiene Standards:</strong> Prepared in a clean, hygienic home kitchen adhering to strict health standards.</li>
