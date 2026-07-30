@@ -65,31 +65,57 @@ export default function CartView({
               display: 'flex', 
               alignItems: 'center', 
               justifyContent: 'space-between',
-              padding: '10px 0',
-              borderBottom: index < safeCart.length - 1 ? `1px dashed #E5D6B5` : 'none', 
+              padding: '12px 0',
+              borderBottom: index < safeCart.length - 1 ? `1px solid rgba(0,0,0,0.06)` : 'none', 
               gap: '12px'
             }}>
+              {/* Left: Name & Unit */}
               <div style={{ display: 'flex', flexDirection: 'column', flex: 1, minWidth: 0, textAlign: 'left' }}>
-                <span style={{ fontWeight: '700', fontSize: '15px', color: activeTheme.text, lineHeight: '1.3' }}>
+                <span style={{ fontWeight: '600', fontSize: '15px', color: activeTheme.text, lineHeight: '1.3' }}>
                   {item.name}
                 </span>
-                <span style={{ fontSize: '12px', color: '#776E62', fontWeight: '600', fontStyle: 'italic', marginTop: '2px' }}>
+                <span style={{ fontSize: '12px', color: '#776E62', fontWeight: '500', fontStyle: 'italic', marginTop: '2px' }}>
                   {item.unit}
                 </span>
               </div>
 
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexShrink: 0 }}>
-                <div style={{ display: 'flex', alignItems: 'center', border: activeTheme.border, borderRadius: '8px', overflow: 'hidden', background: activeTheme.bg }}>
-                  <button onClick={() => removeFromCart(item.name, item.unit)} style={{ border: 'none', background: 'transparent', padding: '6px 8px', cursor: 'pointer', fontSize: '14px', color: activeTheme.brand, fontWeight: 'bold' }}>-</button>
-                  <span style={{ padding: '0 2px', fontSize: '13px', fontWeight: '700', color: activeTheme.text, minWidth: '16px', textAlign: 'center' }}>{item.qty}</span>
-                  <button onClick={() => addToCart(item)} style={{ border: 'none', background: 'transparent', padding: '6px 8px', cursor: 'pointer', fontSize: '14px', color: '#2D8A56', fontWeight: 'bold' }}>+</button>
+              {/* Right Group: Instagram-style Pill Counter Controls */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexShrink: 0 }}>
+                <div style={{ 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  backgroundColor: '#EFECE6', 
+                  borderRadius: '20px', 
+                  padding: '4px 10px',
+                  border: '1px solid rgba(0,0,0,0.04)'
+                }}>
+                  <button 
+                    onClick={() => removeFromCart(item.name, item.unit)} 
+                    style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '15px', color: activeTheme.text, fontWeight: '600', padding: '0 4px' }}
+                  >
+                    -
+                  </button>
+                  <span style={{ padding: '0 8px', fontSize: '13px', fontWeight: '700', color: activeTheme.text, minWidth: '16px', textAlign: 'center' }}>
+                    {item.qty}
+                  </span>
+                  <button 
+                    onClick={() => addToCart(item)} 
+                    style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '15px', color: activeTheme.brand, fontWeight: '600', padding: '0 4px' }}
+                  >
+                    +
+                  </button>
                 </div>
 
-                <span style={{ fontWeight: '700', fontSize: '15px', color: activeTheme.brand, minWidth: '50px', textAlign: 'right' }}>
+                {/* Price */}
+                <span style={{ fontWeight: '700', fontSize: '15px', color: activeTheme.brand, minWidth: '55px', textAlign: 'right' }}>
                   ₹{(Number(item.price) || 0) * (Number(item.qty) || 1)}
                 </span>
 
-                <button onClick={() => removeFromCart(item.name, item.unit)} style={{ background: 'none', border: 'none', color: activeTheme.text, cursor: 'pointer', padding: '2px', display: 'flex', alignItems: 'center', opacity: 0.6 }}>
+                {/* Delete Icon Button */}
+                <button 
+                  onClick={() => removeFromCart(item.name, item.unit)} 
+                  style={{ background: 'none', border: 'none', color: activeTheme.text, cursor: 'pointer', padding: '4px', display: 'flex', alignItems: 'center', opacity: 0.5 }}
+                >
                   <X size={16} />
                 </button>
               </div>

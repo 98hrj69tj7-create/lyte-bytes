@@ -102,7 +102,7 @@ export default function ItemCard({ item, openModal, addToCart, resolveImagePath,
               ₹{displayPrice}
             </div>
 
-            {/* Morphing Add Button */}
+            {/* Instagram-style Pill Add Button */}
             <button 
               onClick={handleAddClick}
               onMouseDown={() => setIsPressed(true)}
@@ -113,14 +113,14 @@ export default function ItemCard({ item, openModal, addToCart, resolveImagePath,
                 backgroundColor: isAddedRecently ? '#10B981' : theme.brand,
                 color: '#FFFFFF',
                 border: 'none',
-                padding: '6px 18px', 
-                borderRadius: '8px',
+                padding: '8px 20px', 
+                borderRadius: '20px',
                 fontWeight: '600',
-                fontSize: '15px',
+                fontSize: '14px',
                 cursor: 'pointer',
-                boxShadow: isAddedRecently ? '0 4px 16px rgba(16, 185, 129, 0.4)' : '0 4px 12px rgba(255, 89, 88, 0.35)',
+                boxShadow: isAddedRecently ? '0 4px 16px rgba(16, 185, 129, 0.4)' : '0 4px 12px rgba(255, 89, 88, 0.25)',
                 transform: isPressed ? 'scale(0.92)' : (isAddedRecently ? 'scale(1.05)' : 'scale(1)'),
-                transition: 'all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1)',
+                transition: 'transform 0.1s ease, opacity 0.2s ease',
                 minWidth: '70px',
                 textAlign: 'center'
               }}

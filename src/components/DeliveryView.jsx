@@ -27,7 +27,7 @@ const getDrivingDistanceKm = (lat2, lon2) => {
   return parseFloat((R * c * 1.25).toFixed(1));
 };
 
-// Expanded Area Keyword Lookup with Bengaluru Restriction & 3-25+ km Bands
+// Expanded Area Keyword Lookup with Bengaluru Restriction & Granular 3-28+ km Bands & Synonyms
 const estimateFeeByAreaName = (text) => {
   const addr = (text || '').toLowerCase().trim();
   if (!addr) return { fee: 50, km: 'Enter area for estimate', zone: 'Standard', invalid: false };
@@ -49,51 +49,188 @@ const estimateFeeByAreaName = (text) => {
     return { fee: 0, km: 'Out of Coverage', zone: 'Out of Coverage', invalid: true };
   }
 
-  // 3-5 km range
+  // 3–5 km range
   if (
-    addr.includes('babusahibpalya') || addr.includes('prakruti') || addr.includes('horamavu') || 
-    addr.includes('kalyan nagar') || addr.includes('kammanahalli') || addr.includes('ramamurthy nagar') || 
-    addr.includes('banaswadi') || addr.includes('hennur')
+    addr.includes('horamavu') ||
+    addr.includes('babusabipalya') ||
+    addr.includes('babusahibpalya') ||
+    addr.includes('prakruthi') ||
+    addr.includes('prakruti') ||
+    addr.includes('kalyan nagar') ||
+    addr.includes('kalyannagar') ||
+    addr.includes('kammanahalli') ||
+    addr.includes('kammana halli') ||
+    addr.includes('ramamurthy nagar') ||
+    addr.includes('rm nagar') ||
+    addr.includes('banaswadi') ||
+    addr.includes('banas wadi') ||
+    addr.includes('hennur') ||
+    addr.includes('hennur cross') ||
+    addr.includes('hennur main road') ||
+    addr.includes('hrbr layout') ||
+    addr.includes('hrbr') ||
+    addr.includes('geddalahalli')
   ) {
     return { fee: calculateDeliveryFare(4), km: '3-5 km', zone: 'Local', invalid: false };
   }
 
-  // 6-8 km range
+  // 6–8 km range
   if (
-    addr.includes('hebbal') || addr.includes('ulsoor') || addr.includes('manyata') || 
-    addr.includes('rt nagar') || addr.includes('frazer town') || addr.includes('cox town') || 
-    addr.includes('richards town') || addr.includes('cooke town') || addr.includes('cv raman nagar') ||
-    addr.includes('nagavara') || addr.includes('kr puram') || addr.includes('TC Palya')
+    addr.includes('hebbal') ||
+    addr.includes('nagavara') ||
+    addr.includes('manyata') ||
+    addr.includes('manyata tech park') ||
+    addr.includes('rt nagar') ||
+    addr.includes('r t nagar') ||
+    addr.includes('frazer town') ||
+    addr.includes('cox town') ||
+    addr.includes('richards town') ||
+    addr.includes('cooke town') ||
+    addr.includes('ulsoor') ||
+    addr.includes('halasuru') ||
+    addr.includes('cv raman nagar') ||
+    addr.includes('kr puram') ||
+    addr.includes('krpuram') ||
+    addr.includes('k r puram') ||
+    addr.includes('tc palya') ||
+    addr.includes('t c palya') ||
+    addr.includes('kasturi nagar')
   ) {
     return { fee: calculateDeliveryFare(7), km: '6-8 km', zone: 'Central Inner', invalid: false };
   }
 
-  // 9-11 km range
+  // 9–11 km range
   if (
-    addr.includes('indiranagar') || addr.includes('mg road') || addr.includes('shivajinagar') || 
-    addr.includes('domlur') || addr.includes('sadashivanagar') || addr.includes('malleshwaram') || addr.includes('kasturi nagar') ||
-    addr.includes('tin factory') || addr.includes('HAL 2nd Stage') || addr.includes('HAL 3rd Stage') || addr.includes('HAL 4th Stage')
+    addr.includes('indiranagar') ||
+    addr.includes('domlur') ||
+    addr.includes('marathahalli') ||
+    addr.includes('whitefield') ||
+    addr.includes('bellandur') ||
+    addr.includes('old airport road') ||
+    addr.includes('old airport rd') ||
+    addr.includes('sahakar nagar') ||
+    addr.includes('sahakara nagar') ||
+    addr.includes('yelahanka') ||
+    addr.includes('hebbal kempapura') ||
+    addr.includes('kempapura') ||
+    addr.includes('thanisandra') ||
+    addr.includes('bagmane tech park') ||
+    addr.includes('rmz infinity') ||
+    addr.includes('thippasandra') ||
+    addr.includes('mg road') ||
+    addr.includes('shivajinagar') ||
+    addr.includes('jeevanbhima Nagar') ||
+    addr.includes('ngef') ||
+    addr.includes('tin factory') ||
+    addr.includes('hal 2nd stage') ||
+    addr.includes('hal 3rd stage') ||
+    addr.includes('hal 4th stage') ||
+    addr.includes('kadugodi')
   ) {
     return { fee: calculateDeliveryFare(10), km: '9-11 km', zone: 'Central Extended', invalid: false };
   }
 
-  // 12-14 km range
+  // 12–14 km range
   if (
-    addr.includes('koramangala') || addr.includes('btm') || addr.includes('jayanagar') || 
-    addr.includes('jp nagar') || addr.includes('jaya prakash nagar') || addr.includes('basavanagudi') || 
-    addr.includes('rajajinagar') || addr.includes('vijayanagar') || addr.includes('thanisandra') || addr.includes('yeshwanthpur')
+    addr.includes('brigade road') ||
+    addr.includes('commercial street') ||
+    addr.includes('comm street') ||
+    addr.includes('majestic') ||
+    addr.includes('richmond town') ||
+    addr.includes('koramangala') ||
+    addr.includes('kormangala') ||
+    addr.includes('kormanagala') ||
+    addr.includes('hsr layout') ||
+    addr.includes('hsr') ||
+    addr.includes('outer ring road') ||
+    addr.includes('yelahanka new town') ||
+    addr.includes('yelahanka nt') ||
+    addr.includes('jakkur') ||
+    addr.includes('btm') ||
+    addr.includes('jayanagar') ||
+    addr.includes('jaya nagar') ||
+    addr.includes('sadashivanagar') ||
+    addr.includes('malleshwaram') ||
+    addr.includes('jp nagar') ||
+    addr.includes('j p nagar') ||
+    addr.includes('basavanagudi') ||
+    addr.includes('rajajinagar') ||
+    addr.includes('vijayanagar') ||
+    addr.includes('yemlur') ||
+    addr.includes('bel road') ||
+    addr.includes('hmt') ||
+    addr.includes('ganganagar')
   ) {
     return { fee: calculateDeliveryFare(13), km: '12-14 km', zone: 'Extended Zone', invalid: false };
   }
 
-  // 15-25 km range (Outer Area)
+  // 15–17 km range
   if (
-    addr.includes('whitefield') || addr.includes('electronic city') || addr.includes('yelahanka') || 
-    addr.includes('sarjapur') || addr.includes('marathahalli') || addr.includes ('yemlur')|| addr.includes('bellandur') || 
-    addr.includes('bannerghatta') || addr.includes('peenya') || addr.includes('kengeri') || 
-    addr.includes('hoskote') || addr.includes('devanahalli') || addr.includes('airport') || addr.includes('HSR layout')
+    addr.includes('electronic city') ||
+    addr.includes('e city') ||
+    addr.includes('ecity') ||
+    addr.includes('bommanahalli') ||
+    addr.includes('begur') ||
+    addr.includes('sarjapur road') ||
+    addr.includes('sarjapur rd') ||
+    addr.includes('kadubeesanahalli') ||
+    addr.includes('varthur') ||
+    addr.includes('yeshwanthpur')
   ) {
-    return { fee: calculateDeliveryFare(20), km: '15-25 km', zone: 'Outer Area', invalid: false };
+    return { fee: calculateDeliveryFare(16), km: '15-17 km', zone: 'Outer Area', invalid: false };
+  }
+
+  // 18–20 km range
+  if (
+    addr.includes('bannerghatta') ||
+    addr.includes('bannerghatta road') ||
+    addr.includes('arekere') ||
+    addr.includes('hulimavu') ||
+    addr.includes('hoodi') ||
+    addr.includes('hoodi circle') ||
+    addr.includes('whitefield hope farm') ||
+    addr.includes('hope farm') ||
+    addr.includes('attibele') ||
+    addr.includes('ecoworld')
+  ) {
+    return { fee: calculateDeliveryFare(19), km: '18-20 km', zone: 'Outer Area', invalid: false };
+  }
+
+  // 21–23 km range
+  if (
+    addr.includes('devanahalli') ||
+    addr.includes('nelamangala') ||
+    addr.includes('hennagara') ||
+    addr.includes('bommasandra') ||
+    addr.includes('chandapura')
+  ) {
+    return { fee: calculateDeliveryFare(22), km: '21-23 km', zone: 'Outer Periphery', invalid: false };
+  }
+
+  // 23–25 km range
+  if (
+    addr.includes('kempegowda airport') ||
+    addr.includes('airport road') ||
+    addr.includes('yelahanka air force base') ||
+    addr.includes('sarjapur town') ||
+    addr.includes('malur') ||
+    addr.includes('airport')
+  ) {
+    return { fee: calculateDeliveryFare(24), km: '23-25 km', zone: 'Outer Periphery', invalid: false };
+  }
+
+  // 26–28 km range
+  if (
+    addr.includes('hoskote') ||
+    addr.includes('hosakote') ||
+    addr.includes('doddaballapur') ||
+    addr.includes('anekal') ||
+    addr.includes('anikal') ||
+    addr.includes('vijayapura') ||
+    addr.includes('kanakapura') ||
+    addr.includes('kanakapura road')
+  ) {
+    return { fee: calculateDeliveryFare(27), km: '26-28 km', zone: 'Extended Periphery', invalid: false };
   }
 
   // Default fallback for unmatched Bengaluru locations (~5-8 km est)

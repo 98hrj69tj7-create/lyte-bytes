@@ -3,7 +3,7 @@ import HomeAndSubCategoryView from './components/HomeAndSubCategoryView';
 import ItemCard from './components/ItemCard';
 import ItemModal from './components/ItemModal';
 import MultiVariantDrawer from './components/MultiVariantDrawer';
-import StickyCartBar from './components/StickyCartBar';
+// import StickyCartBar from './components/StickyCartBar';
 import OffersTab from './components/OffersTab';
 import ItemsView from './components/ItemsView';
 import CartView from './components/CartView';
@@ -248,11 +248,14 @@ export default function App() {
     });
   };
 
-  const removeFromCart = (name) => {
+  // --- UPDATED removeFromCart supporting both name and unit ---
+  const removeFromCart = (name, unit) => {
     setCart(prev => prev.reduce((acc, item) => {
-      if (item.name === name) {
+      if (item.name === name && item.unit === unit) {
         if (item.qty > 1) acc.push({...item, qty: item.qty - 1});
-      } else acc.push(item);
+      } else {
+        acc.push(item);
+      }
       return acc;
     }, []));
   };
@@ -431,7 +434,7 @@ export default function App() {
       </main>
 
       {/* Floating Interactive Footer Dock */}
-      <Footer view={view} setView={setView} theme={theme} />
+      <Footer view={view} setView={setView} theme={theme} cart={cart} />
 
       {/* Item Image Zoom Modal */}
       {activeModal.type === 'ZOOM' && (
@@ -450,14 +453,6 @@ export default function App() {
           selectedItem={activeModal.type === 'VARIANTS' ? activeModal.data : null} 
           setSelectedItem={(item) => setActiveModal({ type: item ? 'VARIANTS' : null, data: item })} 
           addToCart={addToCart} 
-        />
-      )}
-
-      {/* Sticky Floating Cart Pill (Hidden inside Checkout views) */}
-      {!['cart', 'delivery', 'payment', 'track'].includes(view) && (
-        <StickyCartBar 
-          cart={cart} 
-          onViewCart={() => setView('cart')} 
         />
       )}
     </div>

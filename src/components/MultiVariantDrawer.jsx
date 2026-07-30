@@ -46,7 +46,6 @@ export default function MultiVariantDrawer({ selectedItem, setSelectedItem, addT
         display: 'flex', 
         alignItems: 'flex-end', 
         justifyContent: 'center',
-        // Provides safe clearance at the bottom so it floats cleanly above your sticky cart bar and bottom navigation pill
         paddingBottom: '85px',
         boxSizing: 'border-box'
       }}
@@ -54,7 +53,6 @@ export default function MultiVariantDrawer({ selectedItem, setSelectedItem, addT
       <div 
         onClick={(e) => e.stopPropagation()} 
         style={{ 
-          // Fluid design scaling dynamically to any screen size
           width: '81%', 
           maxWidth: '440px', 
           backgroundColor: theme?.bg || '#FDFCF0', 
@@ -84,7 +82,7 @@ export default function MultiVariantDrawer({ selectedItem, setSelectedItem, addT
         </div>
         
         {/* Variant List */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '08px', marginBottom: '20px' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '20px' }}>
           {selectedItem.variants.map((v, index) => {
             const qty = quantities[index];
             const isSelected = qty > 0;
@@ -94,7 +92,7 @@ export default function MultiVariantDrawer({ selectedItem, setSelectedItem, addT
                 key={index}
                 style={{
                   display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-                  padding: '10px 8px', 
+                  padding: '10px 12px', 
                   border: isSelected ? '1.5px solid #FF5958' : (theme?.border || '1px solid #EBE5D9'), 
                   borderRadius: '14px',
                   background: isSelected ? '#FFF5F5' : (theme?.buttonBg || '#423B32'),
@@ -103,7 +101,7 @@ export default function MultiVariantDrawer({ selectedItem, setSelectedItem, addT
                 }}
               >
                 <div style={{ display: 'flex', flexDirection: 'column' }}>
-                  <span style={{ fontWeight: '400', fontSize: '15px', color: isSelected ? '#3E3328' : '#E8E4D9' }}>
+                  <span style={{ fontWeight: '500', fontSize: '15px', color: isSelected ? '#3E3328' : '#E8E4D9' }}>
                     {v.label || "N/A"}
                   </span>
                   <span style={{ color: '#FF5958', fontWeight: '600', fontSize: '15px', marginTop: '1px' }}>
@@ -111,20 +109,29 @@ export default function MultiVariantDrawer({ selectedItem, setSelectedItem, addT
                   </span>
                 </div>
         
-                {/* Compact Inline Counter */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', backgroundColor: '#FF5958', color: '#FFF', padding: '6px 14px', borderRadius: '10px' }}>
+                {/* Instagram-Style Pill Counter */}
+                <div style={{ 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  gap: '12px', 
+                  backgroundColor: isSelected ? '#FF5958' : '#EFECE6', 
+                  color: isSelected ? '#FFF' : (theme?.text || '#2B2B2B'), 
+                  padding: '6px 14px', 
+                  borderRadius: '20px',
+                  border: '1px solid rgba(0,0,0,0.04)'
+                }}>
                   <button 
                     onClick={() => handleDecrement(index)}
-                    style={{ background: 'none', border: 'none', color: '#FFF', fontSize: '15px', fontWeight: '500', cursor: 'pointer', padding: '0 2px' }}
+                    style={{ background: 'none', border: 'none', color: isSelected ? '#FFF' : (theme?.text || '#2B2B2B'), fontSize: '15px', fontWeight: '600', cursor: 'pointer', padding: '0 2px' }}
                   >
                     -
                   </button>
-                  <span style={{ fontWeight: '700', fontSize: '15px', minWidth: '12px', textAlign: 'center' }}>
+                  <span style={{ fontWeight: '700', fontSize: '14px', minWidth: '14px', textAlign: 'center' }}>
                     {qty}
                   </span>
                   <button 
                     onClick={() => handleIncrement(index)}
-                    style={{ background: 'none', border: 'none', color: '#ffffff', fontSize: '15px', fontWeight: '500', cursor: 'pointer', padding: '0 2px' }}
+                    style={{ background: 'none', border: 'none', color: isSelected ? '#FFF' : '#FF5958', fontSize: '15px', fontWeight: '600', cursor: 'pointer', padding: '0 2px' }}
                   >
                     +
                   </button>
@@ -143,7 +150,7 @@ export default function MultiVariantDrawer({ selectedItem, setSelectedItem, addT
             backgroundColor: totalSelectedCount === 0 ? '#EAE5DE' : '#FF5958',
             color: totalSelectedCount === 0 ? '#A39688' : '#FFFFFF',
             border: 'none',
-            padding: '8px',
+            padding: '12px',
             borderRadius: '14px',
             fontWeight: '600',
             fontSize: '15px',
