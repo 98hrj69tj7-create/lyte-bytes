@@ -196,7 +196,7 @@ export default function PaymentView({
           </div>
           
           {/* Uniform UPI App Grid */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px' }}>
             {Object.keys(APP_CONFIG).map((app) => (
               <button
                 key={app}
@@ -260,7 +260,7 @@ export default function PaymentView({
               marginBottom: 0, 
               padding: '14px', 
               fontSize: '15px', 
-              fontWeight: '800',
+              fontWeight: '600',
               borderRadius: theme.radius, 
               width: '100%', 
               boxSizing: 'border-box', 
@@ -282,7 +282,7 @@ export default function PaymentView({
               background: '#FFFBF2',
               marginBottom: 0, 
               padding: '13px', 
-              fontSize: '14px', 
+              fontSize: '15px', 
               fontWeight: '600',
               borderRadius: theme.radius, 
               width: '100%', 

@@ -4,7 +4,8 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   server: {
-    host: true, // Listens on all local IP addresses
+    host: true,
+    allowedHosts: true, // Allows external tunnel connections like LocalTunnel
     port: 5173
   }
 })
