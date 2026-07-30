@@ -31,7 +31,7 @@ export default function SupportInfoView({
       </div>
 
       <div style={{ textAlign: 'left', marginBottom: '20px', padding: '0 4px' }}>
-        <p style={{ color: '#776E62', fontSize: '13.5px', margin: 0, lineHeight: '1.4' }}>We're here to help. Reach out to us or review our policies below.</p>
+        <p style={{ color: '#776E62', fontSize: '14px', fontWeight: '400', margin: 0, lineHeight: '1.4' }}>We're here to help. Reach out to us or share your feedback</p>
       </div>
 
       {/* Aligned Contact Cards Container */}

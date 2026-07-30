@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowLeft, MessageSquare } from 'lucide-react';
+import { ArrowLeft, MessageSquare, Clock } from 'lucide-react';
 
 export default function TrackView({
   setView,
@@ -18,15 +18,70 @@ export default function TrackView({
       <div style={{ 
         display: 'flex', 
         flexDirection: 'column', 
+        overflowY: 'auto', 
         flex: 1, 
-        backgroundColor: theme.bg,
-        width: '100%',
-        minHeight: '100vh'
+        paddingBottom: '20px', 
+        paddingTop: '8px',
+        paddingLeft: '10px',
+        paddingRight: '10px',
+        boxSizing: 'border-box',
+        position: 'relative',
+        overflowX: 'hidden',
+        width: '100%'
       }}>
-        <div style={{ padding: '16px' }}>
-          <button onClick={() => setView('home')} style={{ ...backButtonStyle, marginBottom: 0 }}>
+        {/* Header */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'auto 2fr auto', alignItems: 'center', marginBottom: '14px', gap: '4px', zIndex: 2, position: 'relative' }}>
+          <button onClick={() => setView('home')} style={{ ...backButtonStyle, marginBottom: 0, justifySelf: 'start', whiteSpace: 'nowrap' }}>
             <ArrowLeft size={18}/> Back
           </button>
+          <h2 style={{ color: theme.brand, margin: 0, fontSize: '17px', textAlign: 'center', textTransform: 'uppercase', letterSpacing: '0.5px', fontWeight: '600', whiteSpace: 'nowrap' }}>Live Order Track</h2>
+          <div style={{ width: '75px' }}></div>
+        </div>
+
+        {/* Empty State Card */}
+        <div style={{ 
+          border: theme.border, 
+          borderRadius: theme.radius, 
+          background: '#FFFBF2', 
+          padding: '28px 18px',
+          boxShadow: '0 8px 24px rgba(0,0,0,0.06)',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '16px',
+          boxSizing: 'border-box',
+          width: 'calc(100% + 20px)',  
+          marginLeft: '-10px',         
+          marginRight: '-10px',        
+          alignItems: 'center',
+          textAlign: 'center',
+          zIndex: 2,
+          position: 'relative'
+        }}>
+          <div style={{
+            width: '56px',
+            height: '56px',
+            borderRadius: '50%',
+            background: theme.bg,
+            border: theme.border,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: theme.brand,
+            boxShadow: '0 4px 12px rgba(225, 112, 85, 0.1)',
+          }}>
+            <Clock size={28} color={theme.brand} />
+          </div>
+
+          <div>
+            <h3 style={{ color: theme.brand, margin: '0 0 6px 0', fontSize: '17px', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.3px' }}>
+              No Active Orders 
+            </h3>
+            <p style={{ color: theme.text, fontSize: '14px', margin: 0, lineHeight: '1.5', fontWeight: '400' }}>
+              Your tracking details will be available once the order is placed after a payment.
+            </p>
+          </div>
+
+          <button onClick={() => setView('home')} style={actionButtonStyle}>Explore our Menu</button>
         </div>
       </div>
     );
@@ -187,28 +242,24 @@ export default function TrackView({
       </div>
 
       {/* Main Container Card */}
-<div style={{ 
-  border: theme.border, 
-  borderRadius: theme.radius, 
-  background: '#FFFBF2', 
-  padding: '16px 18px',
-  boxShadow: '0 8px 24px rgba(0,0,0,0.06)',
-  display: 'flex',
-  flexDirection: 'column',
-  gap: '18px',
-  boxSizing: 'border-box',
-  
-  /* --- ADJUSTED FOR WIDER SCREEN EDGE-TO-EDGE FIT --- */
-  width: 'calc(100% + 20px)',  // Expands 10px wider on each side
-  marginLeft: '-10px',         // Pulls card left
-  marginRight: '-10px',        // Pulls card right
-  /* ------------------------------------------------ */
-
-  alignItems: 'center',
-  textAlign: 'center',
-  zIndex: 2,
-  position: 'relative'
-}}>
+      <div style={{ 
+        border: theme.border, 
+        borderRadius: theme.radius, 
+        background: '#FFFBF2', 
+        padding: '16px 18px',
+        boxShadow: '0 8px 24px rgba(0,0,0,0.06)',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '18px',
+        boxSizing: 'border-box',
+        width: 'calc(100% + 20px)',  
+        marginLeft: '-10px',         
+        marginRight: '-10px',        
+        alignItems: 'center',
+        textAlign: 'center',
+        zIndex: 2,
+        position: 'relative'
+      }}>
         {/* Animated Pulsing Status Icon Header */}
         <div style={{ position: 'relative', display: 'flex', justifyContent: 'center', alignItems: 'center', margin: '4px 0 0 0' }}>
           <div style={{
@@ -231,7 +282,10 @@ export default function TrackView({
             justifyContent: 'center',
             color: theme.brand,
             zIndex: 1,
-            fontSize: '24px',
+            // ----------------------------------------------------
+            // 💡 TOP PULSING HEADER ICON SIZE: Change value below
+            // ----------------------------------------------------
+            fontSize: '28px', 
             boxShadow: '0 4px 12px rgba(225, 112, 85, 0.2)',
             animation: 'bounce 1s infinite alternate'
           }}>
@@ -240,17 +294,17 @@ export default function TrackView({
         </div>
 
         <div>
-          <h3 style={{ color: theme.brand, margin: '0 0 6px 0', fontSize: '17px', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.3px' }}>
+          <h3 style={{ color: theme.brand, margin: '0 0 6px 0', fontSize: '17px', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.3px' }}>
             {activeStage === 5 ? 'Order Delivered!' : 'Order Placed Successfully!'}
           </h3>
-          <p style={{ color: theme.text, fontSize: '13px', margin: 0, lineHeight: '1.45', fontWeight: '500' }}>
-            Your order is in, and we're crafting it with <span style={{ color: theme.brand, fontWeight: '700' }}>LOVE</span>. Thank you for choosing to SHOP LOCAL and support our small-batch kitchen.
+          <p style={{ color: theme.text, fontSize: '14px', margin: 0, lineHeight: '1.45', fontWeight: '400' }}>
+            Your order is in, and we're crafting it with <span style={{ color: theme.brand, fontWeight: '700' }}>LOVE</span>. <p> Thank you for choosing to SHOP LOCAL and support our small-batch kitchen.</p>
           </p>
         </div>
 
         {/* 5-Stage Emoticon & Animated Visual Timeline */}
         <div style={{ width: '100%', borderTop: `1px dashed #E5D6B5`, paddingTop: '16px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
-          <span style={{ fontSize: '11px', fontWeight: '700', color: '#776E62', textTransform: 'uppercase', alignSelf: 'flex-start', letterSpacing: '0.5px' }}>
+          <span style={{ fontSize: '12px', fontWeight: '600', color: '#776E62', textTransform: 'uppercase', alignSelf: 'flex-start', letterSpacing: '0.5px' }}>
             Live Status Progression
           </span>
 
@@ -268,16 +322,19 @@ export default function TrackView({
               <div key={item.step} style={{ display: 'flex', alignItems: 'flex-start', gap: '14px', textAlign: 'left' }}>
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                   <div style={{
-                    width: '40px',
-                    height: '40px',
+                    width: '48px',
+                    height: '48px',
                     borderRadius: '50%',
                     background: isCompleted || isCurrent ? theme.bg : '#FFFBF2',
                     border: theme.border,
-                    fontSize: '16px',
+                    // ----------------------------------------------------
+                    // 💡 TIMELINE STAGE ICON SIZES: Change value below
+                    // (Remember to adjust width/height above if making it larger)
+                    // ----------------------------------------------------
+                    fontSize: '28px', 
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    // Sleek glowing ring animation when active, subtle standard look otherwise
                     boxShadow: isCurrent ? undefined : '0 2px 6px rgba(0,0,0,0.04)',
                     animation: isCurrent 
                       ? 'premiumGlow 2s infinite ease-in-out' 
@@ -299,7 +356,7 @@ export default function TrackView({
                   <div style={{ fontSize: '13px', fontWeight: '700', color: isCurrent ? theme.brand : theme.text, display: 'flex', alignItems: 'center', gap: '8px' }}>
                     {item.title} 
                     {isCurrent && (
-                      <span style={{ fontSize: '9px', background: '#FFF1EE', color: theme.brand, padding: '2px 6px', borderRadius: '4px', fontWeight: '800', letterSpacing: '0.4px', border: '1px solid rgba(225, 112, 85, 0.2)' }}>
+                      <span style={{ fontSize: '10px', background: '#FFF1EE', color: theme.brand, padding: '1px 6px', borderRadius: '4px', fontWeight: '600', letterSpacing: '0.4px', border: '1px solid rgba(225, 112, 85, 0.2)' }}>
                         ACTIVE
                       </span>
                     )}
@@ -315,13 +372,13 @@ export default function TrackView({
         <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', boxSizing: 'border-box', width: '100%', marginTop: '6px' }}>
           <button 
             onClick={() => window.open('https://wa.me/9108286886?text=Hi,%20I%20want%20an%20update%20on%20my%20recent%20order!', '_blank')} 
-            style={{ ...actionButtonStyle, border: theme.border, marginBottom: 0, padding: '13px', fontSize: '14px', borderRadius: theme.radius, width: '100%', boxSizing: 'border-box', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', fontWeight: '700', boxShadow: '0 4px 12px rgba(225, 112, 85, 0.2)' }}
+            style={{ ...actionButtonStyle, border: theme.border, marginBottom: 0, padding: '13px', fontSize: '15px', borderRadius: theme.radius, width: '100%', boxSizing: 'border-box', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', fontWeight: '600', boxShadow: '0 4px 12px rgba(225, 112, 85, 0.2)' }}
           >
             <MessageSquare size={18} /> Get WhatsApp Live Update
           </button>
           <button 
             onClick={() => { setCart([]); setView('home'); }} 
-            style={{ ...secondaryButtonStyle, border: theme.border, marginBottom: 0, padding: '13px', fontSize: '14px', borderRadius: theme.radius, width: '100%', boxSizing: 'border-box', fontWeight: '700' }}
+            style={{ ...secondaryButtonStyle, border: theme.border, marginBottom: 0, padding: '13px', fontSize: '15px', borderRadius: theme.radius, width: '100%', boxSizing: 'border-box', fontWeight: '600' }}
           >
             Back to Home
           </button>

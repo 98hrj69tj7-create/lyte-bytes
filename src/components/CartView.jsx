@@ -49,7 +49,7 @@ export default function CartView({
       {safeCart.length === 0 ? (
         <div style={{ textAlign: 'center', marginTop: '30px', padding: '30px 20px', border: '1px solid #E53935', borderRadius: activeTheme.radius, background: 'transparent' }}>
           <ShoppingBag size={40} color={activeTheme.buttonBg} style={{ marginBottom: '10px', opacity: 0.5 }} />
-          <p style={{ fontSize: '16px', color: activeTheme.text, fontWeight: '600', marginBottom: '15px' }}>Your bag is empty</p>
+          <p style={{ fontSize: '14px', color: activeTheme.text, fontWeight: '400', marginBottom: '15px' }}>Your bag is empty</p>
           <button onClick={() => setView('home')} style={actionButtonStyle}>Go to Menu</button>
         </div>
       ) : (
