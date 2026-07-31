@@ -35,7 +35,7 @@ export default function ItemsView({
       </button>
 
       {/* Uniform Global Search Bar */}
-      <div style={{ marginBottom: '18px', padding: '0 2px' }}>
+      <div style={{ marginBottom: '16px', padding: '0 2px' }}>
         <input 
           type="text"
           placeholder="Search all items..."
@@ -44,7 +44,7 @@ export default function ItemsView({
           className="catchy-search-input"
           style={{
             width: '100%',
-            padding: '14px 18px',
+            padding: '12px 14px',
             border: '2px solid #ff5958',
             borderRadius: theme.radius,
             backgroundColor: theme.bg,
@@ -57,41 +57,86 @@ export default function ItemsView({
         />
       </div>
 
-      {/* Premium Slide Toggle Switch */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '15px', marginBottom: '20px' }}>
-        <span 
-          onClick={() => setIsNonVeg(false)}
-          style={{ fontSize: '13px', fontWeight: '700', color: isNonVeg === false ? '#2D8A56' : '#aaa', cursor: 'pointer' }}
-        >VEG</span>
-        
-        <div 
-          onClick={() => setIsNonVeg(isNonVeg === null ? false : !isNonVeg)}
-          style={{ 
-            width: '50px', height: '26px', 
-            background: isNonVeg === null ? '#ccc' : (isNonVeg ? '#D32F2F' : '#2D8A56'), 
-            borderRadius: '25px', position: 'relative', cursor: 'pointer', transition: '0.4s' 
-          }}
-        >
-          <div style={{ 
-            width: '22px', height: '22px', background: 'white', borderRadius: '50%', 
-            position: 'absolute', top: '2px', left: isNonVeg === null ? '14px' : (isNonVeg ? '26px' : '2px'), transition: '0.4s' 
-          }} />
+      {/* ========================================================== */}
+      {/* TRANSPARENT CONTROLS BAR: Veg/Non-Veg (Left) & Grid/List (Right) */}
+      {/* ========================================================== */}
+      <div style={{ 
+        display: 'flex', 
+        alignItems: 'center', 
+        justifyContent: 'space-between', 
+        marginBottom: '16px', 
+        padding: '4px 2px',
+        backgroundColor: 'transparent', // Completely transparent background
+        border: 'none'                     // No outer border box
+      }}>
+        {/* Left Side: Slide Toggle Switch for Veg / Non-Veg */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <span 
+            onClick={() => setIsNonVeg(false)}
+            style={{ fontSize: '12px', fontWeight: '800', color: isNonVeg === false ? '#2D8A56' : '#2D8A56', cursor: 'pointer', letterSpacing: '0.5px' }}
+          >
+            VEG
+          </span>
+          
+          <div 
+            onClick={() => setIsNonVeg(isNonVeg === null ? false : !isNonVeg)}
+            style={{ 
+              width: '44px', height: '24px', 
+              background: isNonVeg === null ? '#ccc' : (isNonVeg ? '#D32F2F' : '#2D8A56'), 
+              borderRadius: '24px', position: 'relative', cursor: 'pointer', transition: 'all 0.3s ease' 
+            }}
+          >
+            <div style={{ 
+              width: '20px', height: '20px', background: '#FFFFFF', borderRadius: '50%', 
+              position: 'absolute', top: '2px', left: isNonVeg === null ? '12px' : (isNonVeg ? '22px' : '2px'), transition: 'all 0.3s ease',
+              boxShadow: '0 2px 4px rgba(0,0,0,0.15)'
+            }} />
+          </div>
+          
+          <span 
+            onClick={() => setIsNonVeg(true)}
+            style={{ fontSize: '12px', fontWeight: '700', color: isNonVeg === true ? '#D32F2F' : '#D32F2F', cursor: 'pointer', letterSpacing: '0.5px' }}
+          >
+            NON-VEG
+          </span>
         </div>
-        
-        <span 
-          onClick={() => setIsNonVeg(true)}
-          style={{ fontSize: '13px', fontWeight: '700', color: isNonVeg === true ? '#D32F2F' : '#aaa', cursor: 'pointer' }}
-        >NON-VEG</span>
-      </div>
 
-      {/* Grid/List Layout Toggles */}
-      <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end', marginBottom: '15px' }}>
-        <button onClick={() => setLayout('list')} style={{ background: layout === 'list' ? theme.buttonBg : 'transparent', border: theme.border, borderRadius: '6px', padding: '5px', cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
-          <ListIcon size={20} color={layout === 'list' ? '#E8E4D9' : theme.text}/>
-        </button>
-        <button onClick={() => setLayout('grid')} style={{ background: layout === 'grid' ? theme.buttonBg : 'transparent', border: theme.border, borderRadius: '6px', padding: '5px', cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
-          <Grid size={20} color={layout === 'grid' ? '#E8E4D9' : theme.text}/>
-        </button>
+        {/* Right Side: Grid & List Layout Toggle Buttons */}
+        <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
+          <button 
+            onClick={() => setLayout('list')} 
+            style={{ 
+              background: layout === 'list' ? theme.brand : 'transparent', 
+              border: layout === 'list' ? 'none' : theme.border, 
+              borderRadius: '8px', 
+              padding: '6px 8px', 
+              cursor: 'pointer', 
+              display: 'flex', 
+              alignItems: 'center',
+              transition: 'all 0.2s ease'
+            }}
+            title="List View"
+          >
+            <ListIcon size={16} color={layout === 'list' ? '#FFFFFF' : theme.text}/>
+          </button>
+          
+          <button 
+            onClick={() => setLayout('grid')} 
+            style={{ 
+              background: layout === 'grid' ? theme.brand : 'transparent', 
+              border: layout === 'grid' ? 'none' : theme.border, 
+              borderRadius: '8px', 
+              padding: '6px 8px', 
+              cursor: 'pointer', 
+              display: 'flex', 
+              alignItems: 'center',
+              transition: 'all 0.2s ease'
+            }}
+            title="Grid View"
+          >
+            <Grid size={16} color={layout === 'grid' ? '#FFFFFF' : theme.text}/>
+          </button>
+        </div>
       </div>
 
       {/* Filtered Item List */}

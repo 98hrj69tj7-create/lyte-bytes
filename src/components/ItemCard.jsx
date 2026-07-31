@@ -59,7 +59,7 @@ export default function ItemCard({ item, openModal, addToCart, resolveImagePath,
           alt={item.name} 
           style={{ 
             width: layout === 'grid' ? '100%' : '100px', 
-            height: layout === 'grid' ? '120px' : '100px', 
+            height: layout === 'grid' ? '100px' : '100px', 
             objectFit: 'cover', 
             display: 'block',
             transform: isImgHovered ? 'scale(1.1)' : 'scale(1)',
@@ -71,15 +71,15 @@ export default function ItemCard({ item, openModal, addToCart, resolveImagePath,
       {/* Content Container */}
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', textAlign: 'left', minHeight: layout === 'grid' ? 'auto' : '100px', justifyContent: 'space-between' }}>
         <div>
-          <div style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', marginBottom: '2px' }}>
+          <div style={{ display: 'flex', alignItems: 'flex-start', gap: '6px', marginBottom: '1px' }}>
             {item.variation && (
               <img 
                 src={`/menu-items/${item.variation.trim().toLowerCase() === 'non-veg' ? 'non-veg' : item.variation.trim().toLowerCase()}.png`} 
                 alt={item.variation} 
-                style={{ width: '14px', height: '14px', flexShrink: '0', marginTop: '3px' }} 
+                style={{ width: '14px', height: '14px', flexShrink: '0', marginTop: '2px' }} 
               />
             )}
-            <div style={{ fontWeight: '700', fontSize: '15px', color: '#E8E4D9', lineHeight: '1.2' }}>
+            <div style={{ fontWeight: '600', fontSize: '15px', color: '#ffffff', lineHeight: '1.2' }}>
               {item.name}
             </div>
           </div>
@@ -98,7 +98,7 @@ export default function ItemCard({ item, openModal, addToCart, resolveImagePath,
         
         <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', marginTop: '8px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-            <div style={{ color: theme.brand, fontWeight: '700', fontSize: '15px' }}>
+            <div style={{ color: theme.brand, fontWeight: '600', fontSize: '15px' }}>
               ₹{displayPrice}
             </div>
 
@@ -113,7 +113,7 @@ export default function ItemCard({ item, openModal, addToCart, resolveImagePath,
                 backgroundColor: isAddedRecently ? '#10B981' : theme.brand,
                 color: '#FFFFFF',
                 border: 'none',
-                padding: '8px 20px', 
+                padding: '6px 22px', 
                 borderRadius: '20px',
                 fontWeight: '600',
                 fontSize: '14px',

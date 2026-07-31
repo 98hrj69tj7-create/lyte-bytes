@@ -39,14 +39,14 @@ export default function Footer({ view, setView, theme, cart = [] }) {
   return (
     <div style={{
       position: 'fixed',
-      bottom: '12px',         // 👈 CUSTOMIZE: Distance of the floating dock from the bottom of the screen
+      bottom: '14px',         // 👈 CUSTOMIZE: Distance of the floating dock from the bottom of the screen
       left: '50%',
       transform: `translateX(-50%) translateY(${isVisible ? '0' : '100px'})`, // Smart scroll slide hide effect
       width: 'calc(100% - 32px)', // 👈 CUSTOMIZE: Dock width span across mobile screens
       maxWidth: '350px',      // 👈 CUSTOMIZE: Maximum width limit for desktop/tablet viewports
       
       // --- GLASSMORPHISM, BACKGROUND & OPACITY ---
-      backgroundColor: 'rgba(24, 24, 27, 0.88)', // 👈 CUSTOMIZE: Charcoal background & Opacity
+      backgroundColor: 'rgba(24, 18, 17, 0.88)', // 👈 CUSTOMIZE: Charcoal background & Opacity
       backdropFilter: 'blur(24px)',              // 👈 CUSTOMIZE: iOS background glass blur intensity
       WebkitBackdropFilter: 'blur(24px)',        // Safari blur support
       border: '1px solid rgba(255, 255, 255, 0.15)', // 👈 CUSTOMIZE: Outer rim border & highlight opacity
@@ -55,7 +55,7 @@ export default function Footer({ view, setView, theme, cart = [] }) {
       display: 'flex',
       justifyContent: 'space-around',
       alignItems: 'center',
-      padding: '6px 8px',        // 👈 CUSTOMIZE: Slim vertical & horizontal height padding of the dock
+      padding: '6px 2px',        // 👈 CUSTOMIZE: Slim vertical & horizontal height padding of the dock
       zIndex: 1000,
       boxShadow: '0 16px 40px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.2)',
       
@@ -81,7 +81,7 @@ export default function Footer({ view, setView, theme, cart = [] }) {
               alignItems: 'center',
               justifyContent: 'center',
               position: 'relative',
-              padding: '6px 12px',      // 👈 CUSTOMIZE: Inner spacing/padding around individual buttons
+              padding: '4px 12px',      // 👈 CUSTOMIZE: Inner spacing/padding around individual buttons
               borderRadius: '20px',     
               outline: 'none',
               WebkitTapHighlightColor: 'transparent',
@@ -138,11 +138,11 @@ export default function Footer({ view, setView, theme, cart = [] }) {
             </div>
 
             <span style={{
-              fontSize: '9.5px',      // 👈 CUSTOMIZE: Navigation label text font size
-              marginTop: '4px',       // 👈 CUSTOMIZE: Spacing gap between icon and label text
-              fontWeight: isActive ? '600' : '500',
+              fontSize: '12px',      // 👈 CUSTOMIZE: Navigation label text font size
+              marginTop: '6px',       // 👈 CUSTOMIZE: Spacing gap between icon and label text
+              fontWeight: isActive ? '500' : '400',
               color: isActive ? '#FF5958' : '#A1A1AA',
-              letterSpacing: '0.3px',
+              letterSpacing: '0.5px',
               transition: 'all 0.2s ease',
             }}>
               {item.label}
