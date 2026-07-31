@@ -3,7 +3,7 @@ import HomeAndSubCategoryView from './components/HomeAndSubCategoryView';
 import ItemCard from './components/ItemCard';
 import ItemModal from './components/ItemModal';
 import MultiVariantDrawer from './components/MultiVariantDrawer';
-// import StickyCartBar from './components/StickyCartBar';
+import StickyCartBar from './components/StickyCartBar';
 import OffersTab from './components/OffersTab';
 import ItemsView from './components/ItemsView';
 import CartView from './components/CartView';
@@ -394,8 +394,8 @@ export default function App() {
           />
         )}
 
-      {/* Render Payment Method Selection */}
-     {view === 'payment' && (
+        {/* Render Payment Method Selection */}
+        {view === 'payment' && (
           <PaymentView 
             theme={theme}
             setView={setView}
@@ -432,6 +432,14 @@ export default function App() {
           />
         )}
       </main>
+
+      {/* Floating Interactive Sticky Cart Bar */}
+      {!['cart', 'delivery', 'payment', 'track'].includes(view) && (
+        <StickyCartBar 
+          cart={cart} 
+          onViewCart={() => setView('cart')} 
+        />
+      )}
 
       {/* Floating Interactive Footer Dock */}
       <Footer view={view} setView={setView} theme={theme} cart={cart} />
