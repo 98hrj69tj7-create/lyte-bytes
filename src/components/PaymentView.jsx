@@ -1,5 +1,5 @@
-import React, { useLayoutEffect, useRef } from 'react';
-import { ArrowLeft, ShieldCheck, ExternalLink, QrCode } from 'lucide-react';
+import React, { useLayoutEffect, useEffect, useRef } from 'react';
+import { ArrowLeft, ShieldCheck, ExternalLink } from 'lucide-react';
 
 // --- CENTRALIZED APP CONFIGURATION (LOCAL PUBLIC PATHS) ---
 const APP_CONFIG = {
@@ -21,30 +21,41 @@ const APP_CONFIG = {
 };
 
 export default function PaymentView({
-  theme,
+  theme = { brand: '#FF5958', border: '1px solid #D8C7A5', radius: '12px' },
   setView,
   payment = 'UPI',
   setPayment = () => {},
   upiApp,
-  setUpiApp,
+  setUpiApp = () => {},
   upiId,
-  setUpiId,
-  setPressedBtn,
-  getPressStyle,
-  backButtonStyle,
-  actionButtonStyle,
-  secondaryButtonStyle,
+  setUpiId = () => {},
+  setPressedBtn = () => {},
+  getPressStyle = () => ({}),
+  backButtonStyle = {},
+  actionButtonStyle = {},
+  secondaryButtonStyle = {},
   orderTotal = 0,
   cartTotal = 0,
   deliveryFee = 0,
   cart = [],
   total = 0,
-  customer = {}
+  customer = {},
+  onPlaceOrder
 }) {
   const containerRef = useRef(null);
   const topAnchorRef = useRef(null);
 
-  // Absolute scroll wipe to force view to start at the very top
+  // Default selection to Google Pay on mount if none selected
+  useEffect(() => {
+    if (!upiApp) {
+      setUpiApp('Google Pay');
+      if (APP_CONFIG['Google Pay']) {
+        setUpiId(APP_CONFIG['Google Pay'].vpa);
+      }
+    }
+  }, [upiApp, setUpiApp, setUpiId]);
+
+  // Absolute scroll wipe to force view to start at the top
   useLayoutEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
     if (containerRef.current) {
@@ -53,7 +64,6 @@ export default function PaymentView({
     if (topAnchorRef.current) {
       topAnchorRef.current.scrollIntoView({ block: 'start', behavior: 'instant' });
     }
-    // Backup timer to override late browser scroll restorations
     const t = setTimeout(() => {
       window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
       if (containerRef.current) {
@@ -63,7 +73,7 @@ export default function PaymentView({
     return () => clearTimeout(t);
   }, []);
 
-  // Robust calculations: accurately picking up delivery fee from props or customer object
+  // Calculation logic for cart items and delivery
   const calculatedItemsTotal = cartTotal || total || (Array.isArray(cart) ? cart.reduce((acc, item) => acc + (Number(item.price) || 0) * (Number(item.qty) || 1), 0) : 0);
   
   const calculatedDeliveryFee = (() => {
@@ -83,10 +93,11 @@ export default function PaymentView({
     ? orderTotal 
     : (Number(calculatedItemsTotal) + Number(calculatedDeliveryFee));
 
-  // Function to handle opening the specific native UPI app directly
+  // Function to handle launching native UPI apps directly
   const handleAppLaunch = (app) => {
-    setUpiApp(app);
-    const appData = APP_CONFIG[app];
+    const targetApp = app || 'Google Pay';
+    setUpiApp(targetApp);
+    const appData = APP_CONFIG[targetApp];
     if (!appData) return;
 
     setUpiId(appData.vpa);
@@ -113,6 +124,27 @@ export default function PaymentView({
     window.addEventListener('pagehide', () => clearTimeout(fallbackTimer), { once: true });
   };
 
+  // Triggers deep link + places order + opens track view
+  const handlePaymentSubmit = () => {
+    const selectedApp = upiApp || 'Google Pay';
+    
+    // 1. Set UPI Payment state
+    setPayment('UPI');
+
+    // 2. Execute Order Placement callback if available
+    if (typeof onPlaceOrder === 'function') {
+      onPlaceOrder();
+    }
+
+    // 3. Launch selected UPI App (Google Pay by default)
+    handleAppLaunch(selectedApp);
+
+    // 4. Navigate to live tracking
+    setView('track');
+  };
+
+  const currentSelectedApp = upiApp || 'Google Pay';
+
   return (
     <div 
       ref={containerRef}
@@ -127,7 +159,6 @@ export default function PaymentView({
         width: '100%'
       }}
     >
-      {/* Invisible anchor at absolute top to force scroll alignment */}
       <div ref={topAnchorRef} style={{ height: 0, width: 0, overflow: 'hidden' }} />
 
       {/* Header */}
@@ -138,7 +169,7 @@ export default function PaymentView({
         <h2 style={{ color: theme.brand, margin: 0, fontSize: '17px', textAlign: 'center', textTransform: 'uppercase', letterSpacing: '0.6px', fontWeight: '600', whiteSpace: 'nowrap' }}>
           Payment Method
         </h2>
-        <div style={{ width: '75px' }}></div>
+        <div style={{ width: '75px' }} />
       </div>
 
       {/* Main Container Card */}
@@ -155,7 +186,7 @@ export default function PaymentView({
         width: '100%'
       }}>
 
-        {/* Quick Order Summary Breakdown */}
+        {/* Bill Summary */}
         <div style={{ background: '#FFF5F5', border: '1px dashed #E53935', borderRadius: '12px', padding: '12px 14px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
           <div style={{ fontSize: '11px', fontWeight: '800', color: '#E53935', textTransform: 'uppercase', letterSpacing: '0.8px', marginBottom: '2px' }}>
             Bill Summary
@@ -174,7 +205,7 @@ export default function PaymentView({
           </div>
         </div>
 
-        {/* Expanded UPI Apps & VPA Section */}
+        {/* UPI App Selection */}
         <div style={{ 
           border: '1px solid rgba(0,0,0,0.08)', 
           borderRadius: '14px', 
@@ -188,51 +219,52 @@ export default function PaymentView({
         }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <span style={{ fontSize: '11px', fontWeight: '800', color: '#E53935', textTransform: 'uppercase', letterSpacing: '0.6px' }}>
-              Tap to Launch & Pay
+              Tap to Select UPI App
             </span>
             <span style={{ color: '#137333', fontSize: '10px', background: '#E6F4EA', padding: '2px 6px', borderRadius: '6px', fontWeight: '700' }}>
               Auto-fills ₹{Number(calculatedGrandTotal).toFixed(2)}
             </span>
           </div>
           
-          {/* Uniform UPI App Grid */}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px' }}>
-            {Object.keys(APP_CONFIG).map((app) => (
-              <button
-                key={app}
-                onClick={() => handleAppLaunch(app)}
-                style={{
-                  height: '78px',
-                  borderRadius: '12px',
-                  border: upiApp === app ? `2px solid ${theme.brand}` : '1px solid rgba(0,0,0,0.08)',
-                  background: upiApp === app ? '#FFF5F5' : '#FFFBF2',
-                  boxShadow: upiApp === app ? '0 3px 8px rgba(0,0,0,0.06)' : 'none',
-                  cursor: 'pointer',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  padding: '6px 4px',
-                  gap: '4px',
-                  transition: 'all 0.18s ease'
-                }}
-              >
-                <div style={{ height: '32px', width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <img 
-                    src={APP_CONFIG[app].logo} 
-                    alt={app} 
-                    style={{ 
-                      maxHeight: '36px', 
-                      maxWidth: '80%', 
-                      objectFit: 'contain' 
-                    }} 
-                  />
-                </div>
-                <span style={{ fontSize: '11px', fontWeight: '700', color: '#332E2B', whiteSpace: 'nowrap', display: 'flex', alignItems: 'center', gap: '2px' }}>
-                  {app} <ExternalLink size={9} color={theme.brand} />
-                </span>
-              </button>
-            ))}
+            {Object.keys(APP_CONFIG).map((app) => {
+              const isSelected = currentSelectedApp === app;
+              return (
+                <button
+                  key={app}
+                  onClick={() => {
+                    setUpiApp(app);
+                    setUpiId(APP_CONFIG[app].vpa);
+                  }}
+                  style={{
+                    height: '78px',
+                    borderRadius: '12px',
+                    border: isSelected ? `2px solid ${theme.brand}` : '1px solid rgba(0,0,0,0.08)',
+                    background: isSelected ? '#FFF5F5' : '#FFFBF2',
+                    boxShadow: isSelected ? '0 3px 8px rgba(229, 57, 53, 0.15)' : 'none',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    padding: '6px 4px',
+                    gap: '4px',
+                    transition: 'all 0.18s ease'
+                  }}
+                >
+                  <div style={{ height: '32px', width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <img 
+                      src={APP_CONFIG[app].logo} 
+                      alt={app} 
+                      style={{ maxHeight: '36px', maxWidth: '80%', objectFit: 'contain' }} 
+                    />
+                  </div>
+                  <span style={{ fontSize: '11px', fontWeight: '700', color: isSelected ? theme.brand : '#332E2B', whiteSpace: 'nowrap', display: 'flex', alignItems: 'center', gap: '2px' }}>
+                    {app} <ExternalLink size={9} color={isSelected ? theme.brand : '#776E62'} />
+                  </span>
+                </button>
+              );
+            })}
           </div>
         </div>
 
@@ -242,20 +274,17 @@ export default function PaymentView({
           <span>Direct bank settlement</span>
         </div>
 
-        {/* Main Action Buttons */}
+        {/* Action Buttons */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', width: '100%', marginTop: '2px' }}>
           <button 
-            onClick={() => { 
-              setPayment('UPI');
-              setView('track'); 
-            }} 
+            onClick={handlePaymentSubmit} 
             onMouseDown={() => setPressedBtn('place-order')}
             onMouseUp={() => setPressedBtn(null)}
             onTouchStart={() => setPressedBtn('place-order')}
             onTouchEnd={() => setPressedBtn(null)}
             style={{ 
               ...actionButtonStyle, 
-              ...getPressStyle('place-order'), 
+              ...(getPressStyle ? getPressStyle('place-order') : {}), 
               border: theme.border, 
               marginBottom: 0, 
               padding: '14px', 
@@ -267,7 +296,7 @@ export default function PaymentView({
               boxShadow: '0 4px 14px rgba(229, 57, 53, 0.25)'
             }}
           >
-            Pay ₹{Number(calculatedGrandTotal).toFixed(2)} via UPI App
+            Pay ₹{Number(calculatedGrandTotal).toFixed(2)} via {currentSelectedApp}
           </button>
           <button 
             onClick={() => setView('home')} 
@@ -277,7 +306,7 @@ export default function PaymentView({
             onTouchEnd={() => setPressedBtn(null)}
             style={{ 
               ...secondaryButtonStyle, 
-              ...getPressStyle('continue-pay'), 
+              ...(getPressStyle ? getPressStyle('continue-pay') : {}), 
               border: '1px solid rgba(0,0,0,0.12)', 
               background: '#FFFBF2',
               marginBottom: 0, 

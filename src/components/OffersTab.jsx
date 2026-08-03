@@ -1,18 +1,19 @@
-import React, { useState } from 'react';
-import { Sparkles, Copy, Check, Tag } from 'lucide-react';
+import React from 'react';
+import { Sparkles, Tag, ShoppingBag, CheckCircle2 } from 'lucide-react';
 import { getAllOffers } from '../utils/offersEngine';
 
-export default function OffersTab({ theme }) {
+export default function OffersTab({ theme = {} }) {
   // Get current order count from localStorage (defaults to 1)
   const currentCount = parseInt(localStorage.getItem('store_order_count') || '1', 10);
   const offers = getAllOffers(currentCount);
-  
-  const [copiedCode, setCopiedCode] = useState('');
 
-  const handleCopy = (code) => {
-    navigator.clipboard.writeText(code);
-    setCopiedCode(code);
-    setTimeout(() => setCopiedCode(''), 2000);
+  // Fallback Theme values
+  const activeTheme = {
+    brand: theme?.brand || '#E53935',
+    text: theme?.text || '#2C221E',
+    border: theme?.border || '1px solid #E0D3C1',
+    bg: theme?.bg || '#FFFFFF',
+    radius: theme?.radius || '12px',
   };
 
   return (
@@ -36,7 +37,7 @@ export default function OffersTab({ theme }) {
       }}>
         <div /> {/* Left spacer to perfectly center the title */}
         <h2 style={{ 
-          color: theme.brand, 
+          color: activeTheme.brand, 
           margin: 0, 
           fontSize: '16px', 
           textTransform: 'uppercase', 
@@ -58,18 +59,35 @@ export default function OffersTab({ theme }) {
           gap: '4px',
           justifySelf: 'end'
         }}>
-          <Sparkles size={12}/> Live Coupons ({offers.length})
         </span>
       </div>
 
+      {/* Info Banner */}
+      <div style={{
+        background: '#FEF3C7',
+        border: '1px solid #FDE68A',
+        borderRadius: '10px',
+        padding: '10px 14px',
+        marginBottom: '14px',
+        fontSize: '12px',
+        color: '#92400E',
+        fontWeight: '600',
+        display: 'flex',
+        alignItems: 'center',
+        gap: '8px'
+      }}>
+        <CheckCircle2 size={16} color="#D97706" style={{ flexShrink: 0 }} />
+        <span>All active rewards below are available directly inside your Bag during checkout!</span>
+      </div>
+
       {/* Render All Active Offers in a List */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
         {offers.map((offer) => (
           <div 
             key={offer.id}
             style={{
-              background: `linear-gradient(135deg, ${offer.themeColor}, #2C2416)`,
-              borderRadius: theme.radius,
+              background: `linear-gradient(135deg, ${offer.themeColor || activeTheme.brand}, #2C2416)`,
+              borderRadius: activeTheme.radius,
               padding: '16px',
               color: '#FFFFFF',
               boxShadow: '0 6px 20px rgba(0,0,0,0.1)',
@@ -93,15 +111,15 @@ export default function OffersTab({ theme }) {
               }}>
                 {offer.tag}
               </span>
-              <span style={{ fontSize: '14px', fontWeight: '700', background: 'rgba(0,0,0,0.2)', padding: '2px 8px', borderRadius: '6px' }}>
+              <span style={{ fontSize: '14px', fontWeight: '700', background: 'rgba(0,0,0,0.25)', padding: '2px 8px', borderRadius: '6px' }}>
                 {offer.discount}
               </span>
             </div>
 
-            <h3 style={{ fontSize: '20px', fontWeight: '700', margin: '8px 0 4px 0' }}>
+            <h3 style={{ fontSize: '18px', fontWeight: '700', margin: '8px 0 4px 0' }}>
               {offer.title}
             </h3>
-            <p style={{ fontSize: '13px', opacity: 0.9, margin: '0 0 10px 0', lineHeight: '1.4' }}>
+            <p style={{ fontSize: '12.5px', opacity: 0.9, margin: '0 0 10px 0', lineHeight: '1.4' }}>
               {offer.description}
             </p>
 
@@ -110,39 +128,22 @@ export default function OffersTab({ theme }) {
               <Tag size={12} /> {offer.condition}
             </div>
 
-            {/* Coupon Code & Copy Button */}
+            {/* Checkout Availability Bar */}
             <div style={{ 
               display: 'flex', 
-              justifyContent: 'space-between', 
               alignItems: 'center', 
-              background: 'rgba(255,255,255,0.15)', 
+              justifyContent: 'center',
+              gap: '6px',
+              background: 'rgba(255,255,255,0.18)', 
               backdropFilter: 'blur(4px)',
-              padding: '6px 12px', 
-              borderRadius: '10px',
-              border: '1px dashed rgba(255,255,255,0.4)'
+              padding: '8px 12px', 
+              borderRadius: '8px',
+              border: '1px dashed rgba(255,255,255,0.4)',
+              fontSize: '12px',
+              fontWeight: '700'
             }}>
-              <div>
-                <div style={{ fontSize: '9px', textTransform: 'uppercase', opacity: 0.8 }}>Use Code</div>
-                <div style={{ fontSize: '15px', fontWeight: '700', letterSpacing: '1px' }}>{offer.code}</div>
-              </div>
-              <button 
-                onClick={() => handleCopy(offer.code)}
-                style={{
-                  background: '#FFFFFF',
-                  color: offer.themeColor,
-                  border: 'none',
-                  padding: '6px 12px',
-                  borderRadius: '8px',
-                  fontWeight: '700',
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '4px',
-                  fontSize: '12px'
-                }}
-              >
-                {copiedCode === offer.code ? <><Check size={14}/> Copied</> : <><Copy size={14}/> Copy</>}
-              </button>
+              <ShoppingBag size={14} />
+              <span>Available in Bag at Checkout</span>
             </div>
           </div>
         ))}

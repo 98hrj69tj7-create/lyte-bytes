@@ -282,9 +282,6 @@ export default function TrackView({
             justifyContent: 'center',
             color: theme.brand,
             zIndex: 1,
-            // ----------------------------------------------------
-            // 💡 TOP PULSING HEADER ICON SIZE: Change value below
-            // ----------------------------------------------------
             fontSize: '28px', 
             boxShadow: '0 4px 12px rgba(225, 112, 85, 0.2)',
             animation: 'bounce 1s infinite alternate'
@@ -297,9 +294,14 @@ export default function TrackView({
           <h3 style={{ color: theme.brand, margin: '0 0 6px 0', fontSize: '17px', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.3px' }}>
             {activeStage === 5 ? 'Order Delivered!' : 'Order Placed Successfully!'}
           </h3>
-          <p style={{ color: theme.text, fontSize: '14px', margin: 0, lineHeight: '1.45', fontWeight: '400' }}>
-            Your order is in, and we're crafting it with <span style={{ color: theme.brand, fontWeight: '700' }}>LOVE</span>. <p> Thank you for choosing to SHOP LOCAL and support our small-batch kitchen.</p>
-          </p>
+          <div style={{ color: theme.text, fontSize: '14px', margin: 0, lineHeight: '1.45', fontWeight: '400' }}>
+            <p style={{ margin: '0 0 4px 0' }}>
+              Your order is in, and we're crafting it with <span style={{ color: theme.brand, fontWeight: '700' }}>LOVE</span>.
+            </p>
+            <p style={{ margin: 0 }}>
+              Thank you for choosing to <strong>SHOP LOCAL</strong> and support our small-batch kitchen.
+            </p>
+          </div>
         </div>
 
         {/* 5-Stage Emoticon & Animated Visual Timeline */}
@@ -309,8 +311,8 @@ export default function TrackView({
           </span>
 
           {[
-            { step: 1, icon: '📝', title: 'Order Recieved', desc: 'Your order is received and being processed' },
-            { step: 2, icon: '👨‍🍳', title: 'Preparing', desc: 'Your order is being prepared with love', animate: true },
+            { step: 1, icon: '📝', title: 'Order Received', desc: 'Your order is received and being processed' },
+            { step: 2, icon: '👨‍🍳', title: 'Preparing', desc: 'Your order is being prepared with love' },
             { step: 3, icon: '📦', title: 'Packing', desc: 'We are carefully packing your order' },
             { step: 4, icon: '🛵', title: 'Out for Delivery', desc: 'Your order is on its way to you' },
             { step: 5, icon: '🎉', title: 'Completed', desc: 'Thank you for your order!' }
@@ -327,10 +329,6 @@ export default function TrackView({
                     borderRadius: '50%',
                     background: isCompleted || isCurrent ? theme.bg : '#FFFBF2',
                     border: theme.border,
-                    // ----------------------------------------------------
-                    // 💡 TIMELINE STAGE ICON SIZES: Change value below
-                    // (Remember to adjust width/height above if making it larger)
-                    // ----------------------------------------------------
                     fontSize: '28px', 
                     display: 'flex',
                     alignItems: 'center',

@@ -1,21 +1,29 @@
 import React, { useState, useEffect } from 'react';
-import { Sparkles, Copy, Check, Tag, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Sparkles, Tag, ChevronLeft, ChevronRight, ShoppingBag } from 'lucide-react';
 import { getAllOffers } from '../utils/offersEngine';
 
-export default function LimitedOfferModal({ theme }) {
+export default function LimitedOfferModal({ theme = {}, setView }) {
   const [isOpen, setIsOpen] = useState(false);
-  const [copiedCode, setCopiedCode] = useState('');
   const [currentIndex, setCurrentIndex] = useState(0);
 
   // Live Countdown Timer state for urgent flash deals
   const [timeLeft, setTimeLeft] = useState({ hours: 0, minutes: 0, seconds: 0 });
+
+  // Fallback Theme values
+  const activeTheme = {
+    brand: theme?.brand || '#E53935',
+    text: theme?.text || '#2C221E',
+    border: theme?.border || '1px solid #E0D3C1',
+    bg: theme?.bg || '#FFFFFF',
+    radius: theme?.radius || '12px',
+  };
 
   // Get current order count to filter dynamic offers using your offers engine
   const currentCount = parseInt(localStorage.getItem('store_order_count') || '1', 10);
   const allOffers = getAllOffers(currentCount);
 
   useEffect(() => {
-    // Pop-up appears automatically 400ms after load on every reload/refresh
+    // Pop-up appears automatically 400ms after load
     const timer = setTimeout(() => {
       setIsOpen(true);
     }, 400); 
@@ -56,18 +64,17 @@ export default function LimitedOfferModal({ theme }) {
     return () => clearInterval(interval);
   }, [isOpen, allOffers.length]);
 
-  const handleCopy = (code) => {
-    navigator.clipboard.writeText(code);
-    setCopiedCode(code);
-    setTimeout(() => setCopiedCode(''), 2000);
-  };
-
   const handlePrev = () => {
     setCurrentIndex((prevIndex) => (prevIndex === 0 ? allOffers.length - 1 : prevIndex - 1));
   };
 
   const handleNext = () => {
     setCurrentIndex((prevIndex) => (prevIndex + 1) % allOffers.length);
+  };
+
+  const handleClaim = () => {
+    setIsOpen(false);
+    if (setView) setView('home');
   };
 
   if (!isOpen) return null;
@@ -87,18 +94,19 @@ export default function LimitedOfferModal({ theme }) {
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        zIndex: 1000,
+        zIndex: 99999, // Ensure it's explicitly above all app layouts
         padding: '16px',
         backdropFilter: 'blur(5px)',
-        cursor: 'pointer'
+        cursor: 'pointer',
+        pointerEvents: 'auto'
       }}
     >
       <div 
-        onClick={() => setIsOpen(false)}
+        onClick={() => e.stopPropagation()}
         style={{
-          background: theme.bg,
-          borderRadius: theme.radius,
-          border: theme.border,
+          background: activeTheme.bg,
+          borderRadius: activeTheme.radius,
+          border: activeTheme.border,
           width: '100%',
           maxWidth: '400px',
           display: 'flex',
@@ -107,27 +115,29 @@ export default function LimitedOfferModal({ theme }) {
           overflow: 'hidden',
           position: 'relative',
           animation: 'scaleUp 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
-          cursor: 'pointer'
+          cursor: 'default',
+          pointerEvents: 'auto'
         }}
       >
         
-        {/* Modal Header - Streamlined padding */}
+        {/* Modal Header */}
         <div style={{
           display: 'flex',
           alignItems: 'center',
+          justifyContent: 'space-between',
           padding: '12px 16px',
-          borderBottom: theme.border,
+          borderBottom: activeTheme.border,
           backgroundColor: '#FFFBF2'
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <Sparkles size={16} color={theme.brand} />
-            <span style={{ fontSize: '14px', fontWeight: '700', color: theme.text, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+            <Sparkles size={16} color={activeTheme.brand} />
+            <span style={{ fontSize: '14px', fontWeight: '700', color: activeTheme.text, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
               Special Live Offers
             </span>
           </div>
         </div>
 
-        {/* Single-Coupon Notice Banner - Sleek compact spacing */}
+        {/* Dynamic Notice Banner */}
         <div style={{
           background: '#FEF3C7',
           padding: '6px 14px',
@@ -137,27 +147,26 @@ export default function LimitedOfferModal({ theme }) {
           fontWeight: '600',
           borderBottom: '1px solid #FDE68A'
         }}>
-          💡 Note: Multiple offers cannot be clubbed.
+          💡 Available to apply directly in your bag at checkout!
         </div>
 
-        {/* Carousel Container - Reduced outer padding */}
+        {/* Carousel Container */}
         <div style={{ padding: '14px 16px', position: 'relative' }}>
-          {/* Active Carousel Card - Sleek compact height and tight internal padding */}
+          {/* Active Carousel Card */}
           <div 
             style={{
-              background: `linear-gradient(135deg, ${currentOffer.themeColor}, #2C2416)`,
+              background: `linear-gradient(135deg, ${currentOffer.themeColor || activeTheme.brand}, #2C2416)`,
               borderRadius: '12px',
-              padding: '14px 16px',
+              padding: '16px',
               color: '#FFFFFF',
               boxShadow: '0 6px 16px rgba(0,0,0,0.15)',
               position: 'relative',
               overflow: 'hidden',
-              height: '185px',
+              height: '175px',
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'space-between',
-              boxSizing: 'border-box',
-              animation: 'staggerFadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards'
+              boxSizing: 'border-box'
             }}
           >
             <div style={{ position: 'absolute', right: '-15px', bottom: '-15px', opacity: 0.1 }}>
@@ -165,7 +174,7 @@ export default function LimitedOfferModal({ theme }) {
             </div>
 
             <div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
                 <span style={{ 
                   background: 'rgba(255,255,255,0.2)', 
                   padding: '3px 8px', 
@@ -208,72 +217,47 @@ export default function LimitedOfferModal({ theme }) {
                 </div>
               </div>
 
-              <h3 style={{ fontSize: '15px', fontWeight: '700', margin: '2px 0 1px 0', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+              <h3 style={{ fontSize: '16px', fontWeight: '700', margin: '4px 0 2px 0', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                 {currentOffer.title}
               </h3>
-              <p style={{ fontSize: '11px', opacity: 0.9, margin: '0 0 3px 0', lineHeight: '1.2', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+              <p style={{ fontSize: '11.5px', opacity: 0.9, margin: '0 0 6px 0', lineHeight: '1.3', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
                 {currentOffer.description}
               </p>
 
               {/* Condition Badge */}
-              <div style={{ fontSize: '9.5px', opacity: '0.85', display: 'flex', alignItems: 'center', gap: '3px' }}>
-                <Tag size={9} /> {currentOffer.condition}
+              <div style={{ fontSize: '10px', opacity: '0.9', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                <Tag size={10} /> {currentOffer.condition}
               </div>
             </div>
 
-            {/* Coupon Code & Copy Action - Compact and streamlined */}
+            {/* In-Cart Availability Badge */}
             <div style={{ 
               display: 'flex', 
-              justifyContent: 'space-between', 
-              alignItems: 'center', 
-              background: 'rgba(255,255,255,0.15)', 
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '6px',
+              background: 'rgba(255,255,255,0.18)', 
               backdropFilter: 'blur(4px)',
-              padding: '4px 12px', 
+              padding: '6px 12px', 
               borderRadius: '8px',
               border: '1px dashed rgba(255,255,255,0.4)',
-              marginTop: 'auto'
+              marginTop: 'auto',
+              fontSize: '11px',
+              fontWeight: '600'
             }}>
-              <div>
-                <div style={{ fontSize: '8.5px', textTransform: 'uppercase', opacity: 0.8, letterSpacing: '0.5px' }}>Promo Code</div>
-                <div style={{ fontSize: '14px', fontWeight: '700', letterSpacing: '0.8px', lineHeight: '1.1' }}>{currentOffer.code}</div>
-              </div>
-              <button 
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleCopy(currentOffer.code);
-                }}
-                style={{
-                  background: '#FFFFFF',
-                  color: currentOffer.themeColor,
-                  border: 'none',
-                  padding: '5px 10px', 
-                  borderRadius: '6px',
-                  fontWeight: '700',
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '4px',
-                  fontSize: '11px',
-                  boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-                  whiteSpace: 'nowrap'
-                }}
-              >
-                {copiedCode === currentOffer.code ? <><Check size={12}/> Copied</> : <><Copy size={12}/> Copy Code</>}
-              </button>
+              <ShoppingBag size={13} />
+              <span>Select in your bag at checkout</span>
             </div>
           </div>
 
-          {/* Carousel Controls & Indicators - Compact top margin */}
+          {/* Carousel Controls & Indicators */}
           {allOffers.length > 1 && (
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '10px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '12px' }}>
               <button 
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handlePrev();
-                }}
+                onClick={handlePrev}
                 style={{
                   background: 'rgba(0,0,0,0.04)',
-                  border: theme.border,
+                  border: activeTheme.border,
                   borderRadius: '50%',
                   width: '28px',
                   height: '28px',
@@ -281,7 +265,7 @@ export default function LimitedOfferModal({ theme }) {
                   alignItems: 'center',
                   justifyContent: 'center',
                   cursor: 'pointer',
-                  color: theme.text
+                  color: activeTheme.text
                 }}
               >
                 <ChevronLeft size={16} />
@@ -292,15 +276,12 @@ export default function LimitedOfferModal({ theme }) {
                 {allOffers.map((_, idx) => (
                   <div 
                     key={idx}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setCurrentIndex(idx);
-                    }}
+                    onClick={() => setCurrentIndex(idx)}
                     style={{
                       width: currentIndex === idx ? '16px' : '5px',
                       height: '5px',
                       borderRadius: '2.5px',
-                      backgroundColor: currentIndex === idx ? theme.brand : '#D1D5DB',
+                      backgroundColor: currentIndex === idx ? activeTheme.brand : '#D1D5DB',
                       cursor: 'pointer',
                       transition: 'all 0.3s ease'
                     }}
@@ -309,13 +290,10 @@ export default function LimitedOfferModal({ theme }) {
               </div>
 
               <button 
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleNext();
-                }}
+                onClick={handleNext}
                 style={{
                   background: 'rgba(0,0,0,0.04)',
-                  border: theme.border,
+                  border: activeTheme.border,
                   borderRadius: '50%',
                   width: '28px',
                   height: '28px',
@@ -323,7 +301,7 @@ export default function LimitedOfferModal({ theme }) {
                   alignItems: 'center',
                   justifyContent: 'center',
                   cursor: 'pointer',
-                  color: theme.text
+                  color: activeTheme.text
                 }}
               >
                 <ChevronRight size={16} />
@@ -332,29 +310,29 @@ export default function LimitedOfferModal({ theme }) {
           )}
         </div>
 
-        {/* Footer Close Control - Sleek padding */}
+        {/* Footer CTA Control */}
         <div style={{
           padding: '10px 16px',
-          borderTop: theme.border,
+          borderTop: activeTheme.border,
           backgroundColor: '#FFFBF2',
           textAlign: 'center'
         }}>
           <button
-            onClick={() => setIsOpen(false)}
+            onClick={handleClaim}
             style={{
               width: '100%',
-              padding: '10px',
-              backgroundColor: '#FF5A5F',
+              padding: '11px',
+              backgroundColor: activeTheme.brand,
               color: '#FFFFFF',
               border: 'none',
               borderRadius: '8px',
-              fontWeight: '600',
-              fontSize: '13.5px',
+              fontWeight: '700',
+              fontSize: '14px',
               cursor: 'pointer',
               boxShadow: '0 4px 10px rgba(0,0,0,0.1)'
             }}
           >
-            Claim your Offer!
+            Explore Menu
           </button>
         </div>
 

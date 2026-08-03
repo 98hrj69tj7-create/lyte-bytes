@@ -9,8 +9,10 @@ import ItemsView from './components/ItemsView';
 import CartView from './components/CartView';
 import DeliveryView from './components/DeliveryView';
 import PaymentView from './components/PaymentView';
+import PaymentVerificationView from './components/PaymentVerificationView'; // 💡 New Verification View
 import TrackView from './components/TrackView';
 import SupportInfoView from './components/SupportInfoView';
+import CustomerView from './components/CustomerView'; 
 import Header from './components/Header';
 import Footer from './components/Footer';
 import LimitedOfferModal from './components/LimitedOfferModal';
@@ -248,7 +250,6 @@ export default function App() {
     });
   };
 
-  // --- UPDATED removeFromCart supporting both name and unit ---
   const removeFromCart = (name, unit) => {
     setCart(prev => prev.reduce((acc, item) => {
       if (item.name === name && item.unit === unit) {
@@ -280,6 +281,10 @@ export default function App() {
     setView('payment');
   };
 
+  const handlePaymentComplete = () => {
+    setView('verifying');
+  };
+
   const handleUPIPayment = () => {
     const upiLink = "upi://pay?pa=rosemarycloney-3@okicici&pn=LyteBytes&cu=INR";
     window.location.href = upiLink;
@@ -291,14 +296,13 @@ export default function App() {
 
   return (
     <div style={{ height: '100dvh', display: 'flex', flexDirection: 'column', position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: theme.bg, color: theme.text, fontFamily: 'system-ui, sans-serif' }}>
-      <LimitedOfferModal theme={theme} />
-      <Header theme={theme} />
+      <LimitedOfferModal theme={theme} setView={setView} />
       
-      <main style={{ flex: 1, paddingTop: '5px', paddingLeft: '20px', paddingRight: '20px', paddingBottom: '20px', overflowY: 'auto' }}>
-        {/* Render Offers Tab */}
+      <Header theme={theme} setView={setView} />
+      
+      <main style={{ flex: 1, paddingTop: '5px', paddingLeft: '20px', paddingRight: '20px', paddingBottom: '80px', overflowY: 'auto' }}>
         {view === 'offers' && <OffersTab theme={theme} />}
 
-        {/* Render Category List & Grid */}
         {(view === 'home' || view === 'subcat') && (
           <HomeAndSubCategoryView 
             view={view}
@@ -318,7 +322,6 @@ export default function App() {
           />
         )}
 
-        {/* Render Individual Subcategory Items */}
         {view === 'items' && (
           <ItemsView 
             setView={setView}
@@ -339,7 +342,6 @@ export default function App() {
           />
         )}
 
-        {/* Render Bag / Cart View */}
         {view === 'cart' && (
           <CartView 
             setView={setView}
@@ -355,7 +357,13 @@ export default function App() {
           />
         )}
 
-        {/* Render Order Status / Tracking */}
+        {view === 'verifying' && (
+          <PaymentVerificationView 
+            theme={theme}
+            onVerificationComplete={() => setView('track')}
+          />
+        )}
+
         {view === 'track' && (
           <TrackView 
             setView={setView}
@@ -369,7 +377,6 @@ export default function App() {
           />
         )}
 
-        {/* Render Delivery Details Form */}
         {view === 'delivery' && (
           <DeliveryView 
             theme={theme}
@@ -394,7 +401,6 @@ export default function App() {
           />
         )}
 
-        {/* Render Payment Method Selection */}
         {view === 'payment' && (
           <PaymentView 
             theme={theme}
@@ -410,6 +416,7 @@ export default function App() {
             setUpiId={setUpiId}
             upiMappings={UPI_MAPPINGS}
             handleUPIPayment={handleUPIPayment}
+            handlePaymentComplete={handlePaymentComplete}
             setPressedBtn={setPressedBtn}
             getPressStyle={getPressStyle}
             backButtonStyle={backButtonStyle}
@@ -418,7 +425,6 @@ export default function App() {
           />
         )}
 
-        {/* Render Support & Info / T&C / Privacy */}
         {view?.toLowerCase() === 'info' && (
           <SupportInfoView 
             theme={theme}
@@ -431,20 +437,24 @@ export default function App() {
             accordionHeaderStyle={accordionHeaderStyle}
           />
         )}
+
+        {(view === 'account' || view === 'profile') && (
+          <CustomerView 
+            onBack={() => setView('home')} 
+            customer={customer}
+          />
+        )}
       </main>
 
-      {/* Floating Interactive Sticky Cart Bar */}
-      {!['cart', 'delivery', 'payment', 'track'].includes(view) && (
+      {!['cart', 'delivery', 'payment', 'verifying', 'track', 'profile', 'account'].includes(view) && (
         <StickyCartBar 
           cart={cart} 
           onViewCart={() => setView('cart')} 
         />
       )}
 
-      {/* Floating Interactive Footer Dock */}
       <Footer view={view} setView={setView} theme={theme} cart={cart} />
 
-      {/* Item Image Zoom Modal */}
       {activeModal.type === 'ZOOM' && (
         <ItemModal 
           selectedItem={activeModal.data} 
@@ -455,7 +465,6 @@ export default function App() {
         />
       )}
 
-      {/* Multi-Variant Selection Drawer */}
       {activeModal.type === 'VARIANTS' && (
         <MultiVariantDrawer 
           selectedItem={activeModal.type === 'VARIANTS' ? activeModal.data : null} 
