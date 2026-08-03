@@ -28,7 +28,7 @@ const PALETTES = {
 // ============================================================================
 const SPACING = {
   // 1. 🛸 FLOATING DOCK CONTAINER
-  dockBottom: '85px',          // Height above screen bottom (clears footer nav)
+  dockBottom: '82px',          // Height above screen bottom (clears footer nav)
   dockMaxWidth: '325px',        // Maximum width of the sticky bar
   dockPadding: '10px 16px',     // Internal padding [Top/Bottom Left/Right]
   dockBorderRadius: '50px',     // Outer capsule pill rounding

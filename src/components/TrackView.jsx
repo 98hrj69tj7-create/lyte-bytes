@@ -4,14 +4,23 @@ import { ArrowLeft, MessageSquare, Clock } from 'lucide-react';
 export default function TrackView({
   setView,
   currentStage,
-  theme,
+  theme = {},
   backButtonStyle,
   actionButtonStyle,
   secondaryButtonStyle,
   setCart,
-  cart
+  cart,
+  orderPlaced
 }) {
-  const hasActiveOrder = cart && cart.length > 0;
+  const activeTheme = {
+    brand: theme?.brand || '#FF5958',
+    text: theme?.text || '#2C221E',
+    border: theme?.border || '1px solid rgba(216, 199, 165, 0.4)',
+    bg: theme?.bg || '#FFFFFF',
+    radius: theme?.radius || '16px'
+  };
+
+  const hasActiveOrder = orderPlaced && cart && cart.length > 0;
 
   if (!hasActiveOrder) {
     return (
@@ -20,68 +29,110 @@ export default function TrackView({
         flexDirection: 'column', 
         overflowY: 'auto', 
         flex: 1, 
-        paddingBottom: '20px', 
-        paddingTop: '8px',
-        paddingLeft: '10px',
-        paddingRight: '10px',
+        paddingBottom: '140px', 
+        paddingTop: '6px',
         boxSizing: 'border-box',
-        position: 'relative',
-        overflowX: 'hidden',
         width: '100%'
       }}>
-        {/* Header */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'auto 2fr auto', alignItems: 'center', marginBottom: '14px', gap: '4px', zIndex: 2, position: 'relative' }}>
-          <button onClick={() => setView('home')} style={{ ...backButtonStyle, marginBottom: 0, justifySelf: 'start', whiteSpace: 'nowrap' }}>
-            <ArrowLeft size={18}/> Back
+        {/* ================= UNIFORM HEADER SECTION ================= */}
+        <div style={{ display: 'flex', alignItems: 'center', position: 'relative', marginBottom: '20px', padding: '6px 0' }}>
+          <button 
+            onClick={() => setView('home')} 
+            style={{ 
+              background: 'none', 
+              border: 'none', 
+              cursor: 'pointer', 
+              display: 'flex', 
+              alignItems: 'center', 
+              gap: '6px', 
+              color: activeTheme.text, 
+              fontSize: '14px', 
+              fontWeight: '700', 
+              padding: '4px 8px', 
+              borderRadius: '8px', 
+              backgroundColor: 'rgba(0,0,0,0.04)', 
+              zIndex: 1 
+            }}
+          >
+            <ArrowLeft size={16}/> Home
           </button>
-          <h2 style={{ color: theme.brand, margin: 0, fontSize: '17px', textAlign: 'center', textTransform: 'uppercase', letterSpacing: '0.5px', fontWeight: '600', whiteSpace: 'nowrap' }}>Live Order Track</h2>
-          <div style={{ width: '75px' }}></div>
+          <h2 style={{ 
+            position: 'absolute', 
+            left: 0, 
+            right: 0, 
+            textAlign: 'center', 
+            fontSize: '16px', 
+            color: activeTheme.brand, 
+            margin: 0, 
+            fontWeight: '700', 
+            letterSpacing: '0.5px', 
+            textTransform: 'uppercase', 
+            pointerEvents: 'none' 
+          }}>
+            Live Order Track
+          </h2>
         </div>
 
         {/* Empty State Card */}
         <div style={{ 
-          border: theme.border, 
-          borderRadius: theme.radius, 
+          border: `1px solid ${activeTheme.brand}`, 
+          borderRadius: activeTheme.radius, 
           background: '#FFFBF2', 
-          padding: '28px 18px',
-          boxShadow: '0 8px 24px rgba(0,0,0,0.06)',
+          padding: '24px 16px',
+          boxShadow: '0 4px 12px rgba(0,0,0,0.04)',
           display: 'flex',
           flexDirection: 'column',
           gap: '16px',
           boxSizing: 'border-box',
-          width: 'calc(100% + 20px)',  
-          marginLeft: '-10px',         
-          marginRight: '-10px',        
+          width: '100%',
           alignItems: 'center',
-          textAlign: 'center',
-          zIndex: 2,
-          position: 'relative'
+          textAlign: 'center'
         }}>
           <div style={{
             width: '56px',
             height: '56px',
             borderRadius: '50%',
-            background: theme.bg,
-            border: theme.border,
+            background: activeTheme.bg,
+            border: activeTheme.border,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            color: theme.brand,
-            boxShadow: '0 4px 12px rgba(225, 112, 85, 0.1)',
+            color: activeTheme.brand,
+            boxShadow: '0 4px 12px rgba(255, 89, 88, 0.1)',
           }}>
-            <Clock size={28} color={theme.brand} />
+            <Clock size={28} color={activeTheme.brand} />
           </div>
 
           <div>
-            <h3 style={{ color: theme.brand, margin: '0 0 6px 0', fontSize: '17px', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.3px' }}>
+            <h3 style={{ color: activeTheme.brand, margin: '0 0 6px 0', fontSize: '17px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.3px' }}>
               No Active Orders 
             </h3>
-            <p style={{ color: theme.text, fontSize: '14px', margin: 0, lineHeight: '1.5', fontWeight: '400' }}>
+            <p style={{ color: activeTheme.text, fontSize: '14px', margin: 0, lineHeight: '1.5', fontWeight: '400' }}>
               Your tracking details will be available once the order is placed after a payment.
             </p>
           </div>
 
-          <button onClick={() => setView('home')} style={actionButtonStyle}>Explore our Menu</button>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', width: '100%', marginTop: '4px' }}>
+            <button 
+              type="button"
+              onClick={() => setView('home')} 
+              style={{ 
+                background: '#EFECE6',
+                color: activeTheme.text,
+                border: '1.5px solid #D8C7A5',
+                marginBottom: 0, 
+                padding: '16px', 
+                fontSize: '16px', 
+                fontWeight: '700',
+                borderRadius: activeTheme.radius, 
+                width: '100%', 
+                boxSizing: 'border-box',
+                cursor: 'pointer'
+              }}
+            >
+              Continue Shopping
+            </button>
+          </div>
         </div>
       </div>
     );
@@ -95,26 +146,24 @@ export default function TrackView({
       flexDirection: 'column', 
       overflowY: 'auto', 
       flex: 1, 
-      paddingBottom: '20px', 
-      paddingTop: '8px',
-      paddingLeft: '10px',
-      paddingRight: '10px',
+      paddingBottom: '140px', 
+      paddingTop: '6px',
       boxSizing: 'border-box',
+      width: '100%',
       position: 'relative',
-      overflowX: 'hidden',
-      width: '100%'
+      overflowX: 'hidden'
     }}>
       {/* Sleek Keyframe Glow Injection for Premium Effect */}
       <style>{`
         @keyframes premiumGlow {
           0% {
-            box-shadow: 0 0 0 0 rgba(225, 112, 85, 0.4), 0 0 12px rgba(225, 112, 85, 0.2);
+            box-shadow: 0 0 0 0 rgba(255, 89, 88, 0.4), 0 0 12px rgba(255, 89, 88, 0.2);
           }
           70% {
-            box-shadow: 0 0 0 10px rgba(225, 112, 85, 0), 0 0 20px rgba(225, 112, 85, 0.35);
+            box-shadow: 0 0 0 10px rgba(255, 89, 88, 0), 0 0 20px rgba(255, 89, 88, 0.35);
           }
           100% {
-            box-shadow: 0 0 0 0 rgba(225, 112, 85, 0), 0 0 12px rgba(225, 112, 85, 0.2);
+            box-shadow: 0 0 0 0 rgba(255, 89, 88, 0), 0 0 12px rgba(255, 89, 88, 0.2);
           }
         }
       `}</style>
@@ -129,8 +178,8 @@ export default function TrackView({
         pointerEvents: 'none',
         overflow: 'hidden',
         zIndex: 10,
-        maskImage: `linear-gradient(to bottom, ${theme.brand} 60%, rgba(0,0,0,0) 100%)`,
-        WebkitMaskImage: `linear-gradient(to bottom, ${theme.brand} 60%, rgba(0,0,0,0) 100%)`
+        maskImage: `linear-gradient(to bottom, ${activeTheme.brand} 60%, rgba(0,0,0,0) 100%)`,
+        WebkitMaskImage: `linear-gradient(to bottom, ${activeTheme.brand} 60%, rgba(0,0,0,0) 100%)`
       }}>
         {activeStage === 1 && [
           { icon: '📝', left: '8%', delay: '0s', duration: '2.4s', size: '24px' },
@@ -232,29 +281,57 @@ export default function TrackView({
         ))}
       </div>
 
-      {/* Header */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'auto 2fr auto', alignItems: 'center', marginBottom: '14px', gap: '4px', zIndex: 2, position: 'relative' }}>
-        <button onClick={() => setView('home')} style={{ ...backButtonStyle, marginBottom: 0, justifySelf: 'start', whiteSpace: 'nowrap' }}>
-          <ArrowLeft size={18}/> Back
+      {/* ================= UNIFORM HEADER SECTION ================= */}
+      <div style={{ display: 'flex', alignItems: 'center', position: 'relative', marginBottom: '20px', padding: '6px 0' }}>
+        <button 
+          onClick={() => setView('home')} 
+          style={{ 
+            background: 'none', 
+            border: 'none', 
+            cursor: 'pointer', 
+            display: 'flex', 
+            alignItems: 'center', 
+            gap: '6px', 
+            color: activeTheme.text, 
+            fontSize: '14px', 
+            fontWeight: '700', 
+            padding: '4px 8px', 
+            borderRadius: '8px', 
+            backgroundColor: 'rgba(0,0,0,0.04)', 
+            zIndex: 1 
+          }}
+        >
+          <ArrowLeft size={16}/> Home
         </button>
-        <h2 style={{ color: theme.brand, margin: 0, fontSize: '17px', textAlign: 'center', textTransform: 'uppercase', letterSpacing: '0.5px', fontWeight: '600', whiteSpace: 'nowrap' }}>Live Order Track</h2>
-        <div style={{ width: '75px' }}></div>
+        <h2 style={{ 
+          position: 'absolute', 
+          left: 0, 
+          right: 0, 
+          textAlign: 'center', 
+          fontSize: '16px', 
+          color: activeTheme.brand, 
+          margin: 0, 
+          fontWeight: '700', 
+          letterSpacing: '0.5px', 
+          textTransform: 'uppercase', 
+          pointerEvents: 'none' 
+        }}>
+          Live Order Track
+        </h2>
       </div>
 
       {/* Main Container Card */}
       <div style={{ 
-        border: theme.border, 
-        borderRadius: theme.radius, 
+        border: `1px solid ${activeTheme.brand}`, 
+        borderRadius: activeTheme.radius, 
         background: '#FFFBF2', 
-        padding: '16px 18px',
-        boxShadow: '0 8px 24px rgba(0,0,0,0.06)',
+        padding: '16px',
+        boxShadow: '0 4px 12px rgba(0,0,0,0.04)',
         display: 'flex',
         flexDirection: 'column',
         gap: '18px',
         boxSizing: 'border-box',
-        width: 'calc(100% + 20px)',  
-        marginLeft: '-10px',         
-        marginRight: '-10px',        
+        width: '100%',
         alignItems: 'center',
         textAlign: 'center',
         zIndex: 2,
@@ -267,7 +344,7 @@ export default function TrackView({
             width: '72px',
             height: '72px',
             borderRadius: '50%',
-            background: theme.brand,
+            background: activeTheme.brand,
             opacity: 0.18,
             animation: 'pulse 2.2s infinite ease-in-out'
           }} />
@@ -275,15 +352,15 @@ export default function TrackView({
             width: '56px',
             height: '56px',
             borderRadius: '50%',
-            background: theme.bg,
-            border: theme.border,
+            background: activeTheme.bg,
+            border: activeTheme.border,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            color: theme.brand,
+            color: activeTheme.brand,
             zIndex: 1,
             fontSize: '28px', 
-            boxShadow: '0 4px 12px rgba(225, 112, 85, 0.2)',
+            boxShadow: '0 4px 12px rgba(255, 89, 88, 0.2)',
             animation: 'bounce 1s infinite alternate'
           }}>
             {activeStage === 1 ? '📝' : activeStage === 2 ? '👨‍🍳' : activeStage === 3 ? '📦' : activeStage === 4 ? '🛵' : '🎉'}
@@ -291,12 +368,12 @@ export default function TrackView({
         </div>
 
         <div>
-          <h3 style={{ color: theme.brand, margin: '0 0 6px 0', fontSize: '17px', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.3px' }}>
+          <h3 style={{ color: activeTheme.brand, margin: '0 0 6px 0', fontSize: '17px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.3px' }}>
             {activeStage === 5 ? 'Order Delivered!' : 'Order Placed Successfully!'}
           </h3>
-          <div style={{ color: theme.text, fontSize: '14px', margin: 0, lineHeight: '1.45', fontWeight: '400' }}>
+          <div style={{ color: activeTheme.text, fontSize: '14px', margin: 0, lineHeight: '1.45', fontWeight: '400' }}>
             <p style={{ margin: '0 0 4px 0' }}>
-              Your order is in, and we're crafting it with <span style={{ color: theme.brand, fontWeight: '700' }}>LOVE</span>.
+              Your order is in, and we're crafting it with <span style={{ color: activeTheme.brand, fontWeight: '700' }}>LOVE</span>.
             </p>
             <p style={{ margin: 0 }}>
               Thank you for choosing to <strong>SHOP LOCAL</strong> and support our small-batch kitchen.
@@ -306,7 +383,7 @@ export default function TrackView({
 
         {/* 5-Stage Emoticon & Animated Visual Timeline */}
         <div style={{ width: '100%', borderTop: `1px dashed #E5D6B5`, paddingTop: '16px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
-          <span style={{ fontSize: '12px', fontWeight: '600', color: '#776E62', textTransform: 'uppercase', alignSelf: 'flex-start', letterSpacing: '0.5px' }}>
+          <span style={{ fontSize: '12px', fontWeight: '800', color: '#776E62', textTransform: 'uppercase', alignSelf: 'flex-start', letterSpacing: '0.6px' }}>
             Live Status Progression
           </span>
 
@@ -327,8 +404,8 @@ export default function TrackView({
                     width: '48px',
                     height: '48px',
                     borderRadius: '50%',
-                    background: isCompleted || isCurrent ? theme.bg : '#FFFBF2',
-                    border: theme.border,
+                    background: isCompleted || isCurrent ? activeTheme.bg : '#FFFBF2',
+                    border: activeTheme.border,
                     fontSize: '28px', 
                     display: 'flex',
                     alignItems: 'center',
@@ -344,17 +421,17 @@ export default function TrackView({
                     <div style={{
                       width: '2px',
                       height: '30px',
-                      background: item.step < activeStage ? theme.brand : '#E5D6B5',
+                      background: item.step < activeStage ? activeTheme.brand : '#E5D6B5',
                       margin: '2px 0',
                       transition: 'background 0.3s ease'
                     }} />
                   )}
                 </div>
                 <div style={{ flex: 1, paddingTop: '3px' }}>
-                  <div style={{ fontSize: '13px', fontWeight: '700', color: isCurrent ? theme.brand : theme.text, display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <div style={{ fontSize: '13px', fontWeight: '700', color: isCurrent ? activeTheme.brand : activeTheme.text, display: 'flex', alignItems: 'center', gap: '8px' }}>
                     {item.title} 
                     {isCurrent && (
-                      <span style={{ fontSize: '10px', background: '#FFF1EE', color: theme.brand, padding: '1px 6px', borderRadius: '4px', fontWeight: '600', letterSpacing: '0.4px', border: '1px solid rgba(225, 112, 85, 0.2)' }}>
+                      <span style={{ fontSize: '10px', background: '#FFF1EE', color: activeTheme.brand, padding: '1px 6px', borderRadius: '4px', fontWeight: '800', letterSpacing: '0.4px', border: '1px solid rgba(255, 89, 88, 0.2)' }}>
                         ACTIVE
                       </span>
                     )}
@@ -367,18 +444,50 @@ export default function TrackView({
         </div>
 
         {/* Action Buttons */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', boxSizing: 'border-box', width: '100%', marginTop: '6px' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', boxSizing: 'border-box', width: '100%', marginTop: '4px' }}>
           <button 
+            type="button"
             onClick={() => window.open('https://wa.me/9108286886?text=Hi,%20I%20want%20an%20update%20on%20my%20recent%20order!', '_blank')} 
-            style={{ ...actionButtonStyle, border: theme.border, marginBottom: 0, padding: '13px', fontSize: '15px', borderRadius: theme.radius, width: '100%', boxSizing: 'border-box', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', fontWeight: '600', boxShadow: '0 4px 12px rgba(225, 112, 85, 0.2)' }}
+            style={{ 
+              border: 'none', 
+              background: activeTheme.brand,
+              color: '#FFFFFF',
+              marginBottom: 0, 
+              padding: '16px', 
+              fontSize: '16px', 
+              fontWeight: '700',
+              borderRadius: activeTheme.radius, 
+              width: '100%', 
+              boxSizing: 'border-box', 
+              display: 'flex', 
+              alignItems: 'center', 
+              justifyContent: 'center', 
+              gap: '8px', 
+              boxShadow: '0 4px 14px rgba(255, 89, 88, 0.25)',
+              cursor: 'pointer'
+            }}
           >
             <MessageSquare size={18} /> Get WhatsApp Live Update
           </button>
+          
           <button 
+            type="button"
             onClick={() => { setCart([]); setView('home'); }} 
-            style={{ ...secondaryButtonStyle, border: theme.border, marginBottom: 0, padding: '13px', fontSize: '15px', borderRadius: theme.radius, width: '100%', boxSizing: 'border-box', fontWeight: '600' }}
+            style={{ 
+              background: '#EFECE6',
+              color: activeTheme.text,
+              border: '1.5px solid #D8C7A5',
+              marginBottom: 0, 
+              padding: '16px', 
+              fontSize: '16px', 
+              fontWeight: '700',
+              borderRadius: activeTheme.radius, 
+              width: '100%', 
+              boxSizing: 'border-box',
+              cursor: 'pointer'
+            }}
           >
-            Back to Home
+            Continue Shopping
           </button>
         </div>
       </div>

@@ -62,12 +62,12 @@ export default function CartView({
   };
 
   const activeTheme = {
-    brand: theme?.brand || '#E53935',
+    brand: theme?.brand || '#FF5958',
     text: theme?.text || '#2C221E',
-    border: theme?.border || '1px solid #E0D3C1',
+    border: theme?.border || '1px solid rgba(216, 199, 165, 0.4)',
     bg: theme?.bg || '#FFFFFF',
-    radius: theme?.radius || '12px',
-    buttonBg: theme?.buttonBg || '#E53935'
+    radius: theme?.radius || '16px',
+    buttonBg: theme?.buttonBg || '#FF5958'
   };
 
   const safeCart = Array.isArray(cart) ? cart : [];
@@ -85,22 +85,52 @@ export default function CartView({
       flexDirection: 'column', 
       overflowY: 'auto', 
       flex: 1, 
-      paddingBottom: '120px', 
-      paddingTop: '5px',
+      paddingBottom: '140px', 
+      paddingTop: '6px',
       boxSizing: 'border-box' 
     }}>
-      {/* ================= HEADER SECTION ================= */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr auto', alignItems: 'center', marginBottom: '16px' }}>
-        <button onClick={() => setView('home')} style={{ ...backButtonStyle, marginBottom: 0, justifySelf: 'start' }}>
-          <ArrowLeft size={18}/> Menu
+      {/* ================= UNIFORM HEADER SECTION ================= */}
+      <div style={{ display: 'flex', alignItems: 'center', position: 'relative', marginBottom: '20px', padding: '6px 0' }}>
+        <button 
+          onClick={() => setView('home')} 
+          style={{ 
+            background: 'none', 
+            border: 'none', 
+            cursor: 'pointer', 
+            display: 'flex', 
+            alignItems: 'center', 
+            gap: '6px', 
+            color: activeTheme.text, 
+            fontSize: '14px', 
+            fontWeight: '700', 
+            padding: '4px 8px', 
+            borderRadius: '8px', 
+            backgroundColor: 'rgba(0,0,0,0.04)', 
+            zIndex: 1 
+          }}
+        >
+          <ArrowLeft size={16}/> Menu
         </button>
-        <h2 style={{ color: activeTheme.brand, margin: 0, fontSize: '17px', textAlign: 'center', textTransform: 'uppercase', letterSpacing: '0.5px', fontWeight: '600' }}>Your Bag</h2>
-        <div style={{ width: '75px' }}></div>
+        <h2 style={{ 
+          position: 'absolute', 
+          left: 0, 
+          right: 0, 
+          textAlign: 'center', 
+          fontSize: '16px', 
+          color: '#FF5958', 
+          margin: 0, 
+          fontWeight: '700', 
+          letterSpacing: '0.5px', 
+          textTransform: 'uppercase', 
+          pointerEvents: 'none' 
+        }}>
+          Your Bag
+        </h2>
       </div>
 
       {/* ================= EMPTY CART STATE ================= */}
       {safeCart.length === 0 ? (
-        <div style={{ textAlign: 'center', marginTop: '30px', padding: '30px 20px', border: '1px solid #E53935', borderRadius: activeTheme.radius, background: 'transparent' }}>
+        <div style={{ textAlign: 'center', marginTop: '30px', padding: '30px 20px', border: '1px solid #FF5958', borderRadius: activeTheme.radius, background: 'transparent' }}>
           <ShoppingBag size={40} color={activeTheme.buttonBg} style={{ marginBottom: '10px', opacity: 0.5 }} />
           <p style={{ fontSize: '14px', color: activeTheme.text, fontWeight: '400', marginBottom: '15px' }}>Your bag is empty</p>
           <button onClick={() => setView('home')} style={actionButtonStyle}>Go to Menu</button>
@@ -108,7 +138,7 @@ export default function CartView({
       ) : (
         /* ================= POPULATED CART CONTAINER ================= */
         <div style={{ 
-          border: '1px solid #E53935', 
+          border: '1px solid #FF5958', 
           borderRadius: activeTheme.radius, 
           background: '#FFFBF2', 
           padding: '16px',
@@ -118,59 +148,60 @@ export default function CartView({
           {safeCart.map((item, index) => (
             <div key={`${item.name}-${item.unit || 'default'}`} style={{ 
               display: 'flex', 
-              alignItems: 'flex-start',
+              alignItems: 'center',
               justifyContent: 'space-between',
-              padding: '6px 0',
+              padding: '10px 0',
               borderBottom: index < safeCart.length - 1 ? `1px solid rgba(0,0,0,0.06)` : 'none', 
-              gap: '12px'
+              gap: '10px'
             }}>
               {/* Left Side: Item Name & Unit Info */}
-              <div style={{ display: 'flex', flexDirection: 'column', flex: 1, minWidth: 0, textAlign: 'left', padding: '2px' }}>
-                <span style={{ fontWeight: '600', fontSize: '15px', color: activeTheme.text, lineHeight: '1.3' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', flex: 1, minWidth: 0, textAlign: 'left' }}>
+                <span style={{ fontWeight: '700', fontSize: '15px', color: activeTheme.text, lineHeight: '1.3' }}>
                   {item.name}
                 </span>
-                <span style={{ fontSize: '12px', color: '#776E62', fontWeight: '500', fontStyle: 'italic', marginTop: '1px' }}>
+                <span style={{ fontSize: '12px', color: '#776E62', fontWeight: '500', fontStyle: 'italic', marginTop: '2px' }}>
                   {item.unit}
                 </span>
               </div>
 
               {/* Right Side Group: Counter, Price, and Delete Controls */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexShrink: 0, paddingTop: '2px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
+                {/* Quantity Controller Pill */}
                 <div style={{ 
                   display: 'flex', 
                   alignItems: 'center', 
                   backgroundColor: '#EFECE6', 
                   borderRadius: '20px', 
-                  gap: '3px',
-                  padding: '1px 14px',
+                  padding: '2px 8px',
                   border: '1px solid rgba(0,0,0,0.04)',
-                  marginLeft: '14px',
-                  marginRight: '-22px'
+                  gap: '4px'
                 }}>
                   <button 
                     onClick={() => removeFromCart(item.name, item.unit)} 
-                    style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '15px', color: activeTheme.text, fontWeight: '600', padding: '0 2px' }}
+                    style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '14px', color: activeTheme.text, fontWeight: '600', padding: '0 4px' }}
                   >
                     -
                   </button>
-                  <span style={{ padding: '0 6px', fontSize: '13px', fontWeight: '600', color: activeTheme.text, minWidth: '14px', textAlign: 'center' }}>
+                  <span style={{ fontSize: '13px', fontWeight: '600', color: activeTheme.text, minWidth: '16px', textAlign: 'center' }}>
                     {item.qty}
                   </span>
                   <button 
                     onClick={() => addToCart(item)} 
-                    style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '15px', color: activeTheme.brand, fontWeight: '600', padding: '0 2px' }}
+                    style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '14px', color: activeTheme.brand, fontWeight: '600', padding: '0 4px' }}
                   >
                     +
                   </button>
                 </div>
 
-                <span style={{ fontWeight: '600', fontSize: '15px', color: activeTheme.brand, minWidth: '55px', textAlign: 'right', marginRight: '-10px', padding: '2px'}}>
+                {/* Item Total Price */}
+                <span style={{ fontWeight: '700', fontSize: '15px', color: activeTheme.brand, minWidth: '50px', textAlign: 'right' }}>
                   ₹{(Number(item.price) || 0) * (Number(item.qty) || 1)}
                 </span>
 
+                {/* Remove Item Icon */}
                 <button 
                   onClick={() => removeFromCart(item.name, item.unit)} 
-                  style={{ background: 'none', border: 'none', color: activeTheme.brand, cursor: 'pointer', padding: '4px', display: 'flex', alignItems: 'center', marginRight: '-9px' }}
+                  style={{ background: 'none', border: 'none', color: activeTheme.brand, cursor: 'pointer', padding: '2px', display: 'flex', alignItems: 'center' }}
                 >
                   <X size={16} />
                 </button>
@@ -181,7 +212,6 @@ export default function CartView({
           {/* ================= LIVE COUPONS SECTION ================= */}
           <div style={{ marginTop: '16px', marginBottom: '12px' }}>
             {!activeAppliedCoupon ? (
-              /* Trigger Button / Card to view coupons */
               <button 
                 onClick={() => setIsCouponDrawerOpen(true)}
                 style={{
@@ -191,7 +221,7 @@ export default function CartView({
                   justifyContent: 'space-between',
                   padding: '12px 14px',
                   borderRadius: '10px',
-                  border: '1px dashed #E53935',
+                  border: '1px dashed #FF5958',
                   backgroundColor: '#FFF5F5',
                   cursor: 'pointer',
                   boxSizing: 'border-box'
@@ -216,11 +246,10 @@ export default function CartView({
                 <ChevronRight size={18} color={activeTheme.brand} />
               </button>
             ) : (
-              /* Applied Coupon Banner */
               <div style={{
                 display: 'flex',
                 alignItems: 'center',
-                justify: 'space-between',
+                justifyContent: 'space-between',
                 padding: '10px 12px',
                 borderRadius: '10px',
                 border: '1px solid #059669',
@@ -270,13 +299,11 @@ export default function CartView({
           {/* ================= BILL SUMMARY SUB-SECTION ================= */}
           <div style={{ borderTop: `1px solid ${activeTheme.brand}`, paddingTop: '10px' }}>
             
-            {/* Items Subtotal */}
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '14px', color: '#776E62', fontWeight: '500', marginBottom: '6px' }}>
               <span>Item Total</span>
               <span>₹{total}</span>
             </div>
 
-            {/* Discount Row (Shown if coupon applied) */}
             {activeAppliedCoupon && (
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '14px', color: '#059669', fontWeight: '600', marginBottom: '6px' }}>
                 <span>Coupon Discount ({activeAppliedCoupon.discountPercent}%)</span>
@@ -284,19 +311,16 @@ export default function CartView({
               </div>
             )}
 
-            {/* Delivery Fee Notice */}
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '14px', color: '#776E62', fontWeight: '500', marginBottom: '6px' }}>
               <span>Delivery Fee</span>
-              <span style={{ fontSize: '12px', color: activeTheme.brand, fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.3px' }}>Calculated next</span>
+              <span style={{ fontSize: '12px', color: activeTheme.brand, fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.3px' }}>Calculated next</span>
             </div>
 
-            {/* Grand Total Amount */}
             <div style={{ display: 'flex', justifyContent: 'space-between', paddingTop: '8px', borderTop: `1px dashed ${activeTheme.brand}`, fontSize: '16px', fontWeight: '700', color: activeTheme.text, marginBottom: '16px' }}>
               <span>Total Amount</span>
               <span style={{ color: activeTheme.brand }}>₹{grandTotal}</span>
             </div>
 
-            {/* Terms and Conditions Notice Link Trigger */}
             <div style={{ textAlign: 'center', marginBottom: '10px' }}>
               <span style={{ fontSize: '12px', color: '#776E62' }}>
                 By proceeding, you agree to our{' '}
@@ -347,7 +371,6 @@ export default function CartView({
             boxSizing: 'border-box',
             overflowY: 'auto'
           }}>
-            {/* Header */}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                 <Sparkles size={18} color={activeTheme.brand} />
@@ -361,7 +384,6 @@ export default function CartView({
               </button>
             </div>
 
-            {/* Coupons List */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
               {coupons.map((coupon) => {
                 const isSelected = activeAppliedCoupon?.code === coupon.code;

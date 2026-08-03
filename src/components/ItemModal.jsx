@@ -177,10 +177,6 @@ export default function ItemModal({ selectedItem, setSelectedItem, addToCart, th
                 />
               )}
             </div>
-            
-            <div style={{ fontSize: '16px', fontWeight: '600', color: '#FF5958' }}>
-              ₹{selectedItem.price || '0.00'}
-            </div>
           </div>
 
           {/* DESCRIPTION TEXT */}

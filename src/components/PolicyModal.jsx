@@ -1,7 +1,16 @@
 import React from 'react';
+import { X } from 'lucide-react';
 
-export default function PolicyModal({ isOpen, onClose, title, children, theme }) {
+export default function PolicyModal({ isOpen, onClose, title, children, theme = {} }) {
   if (!isOpen) return null;
+
+  const activeTheme = {
+    brand: theme?.brand || '#FF5958',
+    text: theme?.text || '#2C221E',
+    border: theme?.border || '1px solid rgba(216, 199, 165, 0.4)',
+    bg: theme?.bg || '#FFFFFF',
+    radius: theme?.radius || '16px'
+  };
 
   return (
     <div 
@@ -29,17 +38,18 @@ export default function PolicyModal({ isOpen, onClose, title, children, theme })
           width: '100%',
           maxWidth: '460px',
           margin: 'auto',
-          background: 'rgba(42, 38, 33, 0.85)',
-          backdropFilter: 'blur(12px)',
-          WebkitBackdropFilter: 'blur(12px)',
-          color: '#E8E4D9',
-          borderRadius: '16px',
+          background: '#FFFBF2',
+          color: activeTheme.text,
+          borderRadius: activeTheme.radius,
           padding: '24px 20px',
           maxHeight: '75vh',
           overflowY: 'auto',
-          boxShadow: '0 12px 40px rgba(0, 0, 0, 0.35)',
-          border: `1px solid rgba(255, 255, 255, 0.12)`,
-          boxSizing: 'border-box'
+          boxShadow: '0 12px 40px rgba(0, 0, 0, 0.2)',
+          border: activeTheme.border,
+          boxSizing: 'border-box',
+          display: 'flex',
+          flexDirection: 'column',
+          position: 'relative'
         }}
       >
         {/* Modal Header */}
@@ -48,13 +58,14 @@ export default function PolicyModal({ isOpen, onClose, title, children, theme })
           justifyContent: 'center', 
           alignItems: 'center', 
           marginBottom: '16px', 
-          borderBottom: `1px solid ${theme?.brand || '#ff5958'}`, 
-          paddingBottom: '12px' 
+          borderBottom: '1px dashed #E5D6B5', 
+          paddingBottom: '12px',
+          position: 'relative'
         }}>
           <h3 style={{ 
             margin: 0, 
-            fontSize: '15px', 
-            color: theme?.brand || '#ff5958', 
+            fontSize: '16px', 
+            color: activeTheme.brand, 
             fontWeight: '700', 
             textTransform: 'uppercase', 
             letterSpacing: '0.5px',
@@ -62,13 +73,32 @@ export default function PolicyModal({ isOpen, onClose, title, children, theme })
           }}>
             {title}
           </h3>
+          <button
+            onClick={onClose}
+            style={{
+              position: 'absolute',
+              right: 0,
+              background: 'rgba(0,0,0,0.04)',
+              border: 'none',
+              cursor: 'pointer',
+              borderRadius: '50%',
+              width: '28px',
+              height: '28px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: activeTheme.text
+            }}
+          >
+            <X size={16} />
+          </button>
         </div>
 
         {/* Modal Body Content */}
         <div style={{ 
-          fontSize: '13px', 
+          fontSize: '13.5px', 
           lineHeight: '1.6', 
-          color: '#D1CBC1', 
+          color: '#776E62', 
           display: 'flex', 
           flexDirection: 'column', 
           gap: '12px',

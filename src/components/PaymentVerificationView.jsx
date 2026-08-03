@@ -6,11 +6,11 @@ export default function PaymentVerificationView({
   onVerificationComplete = () => {} 
 }) {
   const activeTheme = {
-    brand: theme?.brand || '#E53935',
+    brand: theme?.brand || '#FF5958',
     text: theme?.text || '#2C221E',
-    border: theme?.border || '1px solid #E0D3C1',
+    border: theme?.border || '1px solid rgba(216, 199, 165, 0.4)',
     bg: theme?.bg || '#FFFFFF',
-    radius: theme?.radius || '12px',
+    radius: theme?.radius || '16px',
   };
 
   useEffect(() => {
@@ -32,7 +32,8 @@ export default function PaymentVerificationView({
       padding: '30px 20px',
       textAlign: 'center',
       boxSizing: 'border-box',
-      minHeight: '400px'
+      minHeight: '400px',
+      width: '100%'
     }}>
       {/* Secure Card Container */}
       <div style={{
@@ -46,7 +47,8 @@ export default function PaymentVerificationView({
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        gap: '20px'
+        gap: '20px',
+        boxSizing: 'border-box'
       }}>
         
         {/* Animated Spinner with Brand Accent */}

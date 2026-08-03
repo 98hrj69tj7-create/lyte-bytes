@@ -8,7 +8,7 @@ import PolicyModal from './PolicyModal';
 
 const KITCHEN_LAT = 13.0232;
 const KITCHEN_LNG = 77.6492;
-const GOOGLE_MAPS_API_KEY = 'AIzaSyB4OBzhmYFyGxikNk6ROGQk1pLBrP28QD8'; // Replace with your key
+const GOOGLE_MAPS_API_KEY = 'AIzaSyB4OBzhmYFyGxikNk6ROGQk1pLBrP28QD8';
 
 const calculateDeliveryFare = (distKm) => {
   if (distKm <= 5) return 50;
@@ -28,7 +28,6 @@ const getDrivingDistanceKm = (lat2, lon2) => {
   return parseFloat((R * c * 1.25).toFixed(1));
 };
 
-// Expanded Area Keyword Lookup with Bengaluru Restriction & Granular 3-28+ km Bands & Synonyms
 const estimateFeeByAreaName = (text) => {
   const addr = (text || '').toLowerCase().trim();
   if (!addr) return { fee: 50, km: 'Enter area for estimate', zone: 'Standard', invalid: false };
@@ -49,7 +48,6 @@ const estimateFeeByAreaName = (text) => {
     return { fee: 0, km: 'Out of Coverage', zone: 'Out of Coverage', invalid: true };
   }
 
-  // 3–5 km range
   if (
     addr.includes('horamavu') || addr.includes('babusabipalya') || addr.includes('babusahibpalya') ||
     addr.includes('prakruthi') || addr.includes('prakruti') || addr.includes('kalyan nagar') ||
@@ -62,7 +60,6 @@ const estimateFeeByAreaName = (text) => {
     return { fee: calculateDeliveryFare(4), km: '3-5 km', zone: 'Local', invalid: false };
   }
 
-  // 6–8 km range
   if (
     addr.includes('hebbal') || addr.includes('nagavara') || addr.includes('manyata') ||
     addr.includes('manyata tech park') || addr.includes('rt nagar') || addr.includes('r t nagar') ||
@@ -75,7 +72,6 @@ const estimateFeeByAreaName = (text) => {
     return { fee: calculateDeliveryFare(7), km: '6-8 km', zone: 'Central Inner', invalid: false };
   }
 
-  // 9–11 km range
   if (
     addr.includes('indiranagar') || addr.includes('domlur') || addr.includes('marathahalli') ||
     addr.includes('whitefield') || addr.includes('bellandur') || addr.includes('old airport road') ||
@@ -90,7 +86,6 @@ const estimateFeeByAreaName = (text) => {
     return { fee: calculateDeliveryFare(10), km: '9-11 km', zone: 'Central Extended', invalid: false };
   }
 
-  // 12–14 km range
   if (
     addr.includes('brigade road') || addr.includes('commercial street') || addr.includes('comm street') ||
     addr.includes('majestic') || addr.includes('richmond town') || addr.includes('koramangala') ||
@@ -106,7 +101,6 @@ const estimateFeeByAreaName = (text) => {
     return { fee: calculateDeliveryFare(13), km: '12-14 km', zone: 'Extended Zone', invalid: false };
   }
 
-  // 15–17 km range
   if (
     addr.includes('electronic city') || addr.includes('e city') || addr.includes('ecity') ||
     addr.includes('bommanahalli') || addr.includes('begur') || addr.includes('sarjapur road') ||
@@ -116,7 +110,6 @@ const estimateFeeByAreaName = (text) => {
     return { fee: calculateDeliveryFare(16), km: '15-17 km', zone: 'Outer Area', invalid: false };
   }
 
-  // 18–20 km range
   if (
     addr.includes('bannerghatta') || addr.includes('bannerghatta road') || addr.includes('arekere') ||
     addr.includes('hulimavu') || addr.includes('hoodi') || addr.includes('hoodi circle') ||
@@ -126,7 +119,6 @@ const estimateFeeByAreaName = (text) => {
     return { fee: calculateDeliveryFare(19), km: '18-20 km', zone: 'Outer Area', invalid: false };
   }
 
-  // 21–23 km range
   if (
     addr.includes('devanahalli') || addr.includes('nelamangala') || addr.includes('hennagara') ||
     addr.includes('bommasandra') || addr.includes('chandapura')
@@ -134,7 +126,6 @@ const estimateFeeByAreaName = (text) => {
     return { fee: calculateDeliveryFare(22), km: '21-23 km', zone: 'Outer Periphery', invalid: false };
   }
 
-  // 23–25 km range
   if (
     addr.includes('kempegowda airport') || addr.includes('airport road') || addr.includes('yelahanka air force base') ||
     addr.includes('sarjapur town') || addr.includes('malur') || addr.includes('airport')
@@ -142,7 +133,6 @@ const estimateFeeByAreaName = (text) => {
     return { fee: calculateDeliveryFare(24), km: '23-25 km', zone: 'Outer Periphery', invalid: false };
   }
 
-  // 26–28 km range
   if (
     addr.includes('hoskote') || addr.includes('hosakote') || addr.includes('doddaballapur') ||
     addr.includes('anekal') || addr.includes('anikal') || addr.includes('vijayapura') ||
@@ -155,27 +145,22 @@ const estimateFeeByAreaName = (text) => {
 };
 
 export default function DeliveryView({
-  theme,
-  setView,
-  customer,
-  setCustomer,
-  deliveryDate,
-  setDeliveryDate,
-  deliveryTime,
-  setDeliveryTime,
-  showConditions,
-  setShowConditions,
-  handleProceedToPayment,
-  setPressedBtn,
-  getPressStyle,
-  backButtonStyle,
-  actionButtonStyle,
-  secondaryButtonStyle
+  theme = {},
+  setView = () => {},
+  customer = {},
+  setCustomer = () => {},
+  deliveryDate = '',
+  setDeliveryDate = () => {},
+  deliveryTime = '',
+  setDeliveryTime = () => {},
+  handleProceedToPayment = () => {},
+  actionButtonStyle = {},
+  secondaryButtonStyle = {},
+  backButtonStyle = {}
 }) {
   const [isDeliveryPolicyOpen, setIsDeliveryPolicyOpen] = useState(false);
   const [isPrivacyPolicyOpen, setIsPrivacyPolicyOpen] = useState(false);
   
-  // Map Modal States
   const [isMapModalOpen, setIsMapModalOpen] = useState(false);
   const [mapLoaded, setMapLoaded] = useState(false);
   const [tempAddress, setTempAddress] = useState('');
@@ -190,19 +175,28 @@ export default function DeliveryView({
 
   const currentMode = customer.fulfillmentType || 'DELIVERY';
 
+  const activeTheme = {
+    brand: theme?.brand || '#FF5958',
+    text: theme?.text || '#2C221E',
+    border: theme?.border || '1px solid rgba(216, 199, 165, 0.4)',
+    bg: theme?.bg || '#FFFFFF',
+    radius: theme?.radius || '16px',
+    buttonBg: theme?.buttonBg || '#FF5958'
+  };
+
   const distanceInfo = useMemo(() => {
     if (currentMode === 'PICKUP') {
       return { km: '0 km', fee: 0, source: 'pickup', invalid: false };
     }
     if (customer.detectedKm) {
       const calculatedFee = calculateDeliveryFare(customer.detectedKm);
-      return { km: `${customer.detectedKm} km`, fee: calculatedFee, source: 'gps', invalid: false };
+      const isOutOfBounds = customer.detectedKm > 30;
+      return { km: `${customer.detectedKm} km`, fee: calculatedFee, source: 'gps', invalid: isOutOfBounds };
     }
     const areaEst = estimateFeeByAreaName(customer.address);
     return { km: areaEst.km, fee: areaEst.fee, source: 'area', invalid: areaEst.invalid };
   }, [customer.address, currentMode, customer.detectedKm]);
 
-  // Dynamically load Google Maps Script on demand (Zero Initial Lag)
   useEffect(() => {
     if (window.google && window.google.maps) {
       setMapLoaded(true);
@@ -219,7 +213,6 @@ export default function DeliveryView({
     document.head.appendChild(script);
   }, []);
 
-  // Initialize Map inside Modal when opened
   useEffect(() => {
     if (!isMapModalOpen || !mapLoaded || !mapRef.current) return;
 
@@ -244,15 +237,11 @@ export default function DeliveryView({
     });
     markerRef.current = marker;
 
-    // Reverse geocode & update coordinates on marker drag
     marker.addListener('dragend', () => {
       const pos = marker.getPosition();
-      const lat = pos.lat();
-      const lng = pos.lng();
-      updateLocationData(lat, lng);
+      updateLocationData(pos.lat(), pos.lng());
     });
 
-    // Click map to reposition pin
     map.addListener('click', (e) => {
       const lat = e.latLng.lat();
       const lng = e.latLng.lng();
@@ -260,7 +249,6 @@ export default function DeliveryView({
       updateLocationData(lat, lng);
     });
 
-    // Setup Places Autocomplete Search Bar
     if (searchInputRef.current) {
       const autocomplete = new window.google.maps.places.Autocomplete(searchInputRef.current, {
         componentRestrictions: { country: 'in' },
@@ -279,35 +267,35 @@ export default function DeliveryView({
     }
   }, [isMapModalOpen, mapLoaded]);
 
-  // Helper to calculate distance, fee, and reverse geocode address
   const updateLocationData = (lat, lng, explicitAddress = null) => {
     setTempLat(lat);
     setTempLng(lng);
 
     const distKm = getDrivingDistanceKm(lat, lng);
     const estFee = calculateDeliveryFare(distKm);
+    const isOutOfBounds = distKm > 30;
 
     if (explicitAddress) {
       const areaEst = estimateFeeByAreaName(explicitAddress);
       setTempAddress(explicitAddress);
-      setTempDistanceInfo({ km: `${distKm} km`, fee: estFee, invalid: areaEst.invalid });
+      setTempDistanceInfo({ km: `${distKm} km`, fee: estFee, invalid: areaEst.invalid || isOutOfBounds });
     } else {
       const geocoder = new window.google.maps.Geocoder();
       geocoder.geocode({ location: { lat, lng } }, (results, status) => {
         if (status === 'OK' && results[0]) {
           const formatted = results[0].formatted_address;
           const areaEst = estimateFeeByAreaName(formatted);
+          const nonBglrCheck = areaEst.invalid || isOutOfBounds;
           setTempAddress(formatted);
-          setTempDistanceInfo({ km: `${distKm} km`, fee: estFee, invalid: areaEst.invalid });
+          setTempDistanceInfo({ km: `${distKm} km`, fee: estFee, invalid: nonBglrCheck });
         } else {
           setTempAddress(`Lat: ${lat.toFixed(4)}, Lng: ${lng.toFixed(4)}`);
-          setTempDistanceInfo({ km: `${distKm} km`, fee: estFee, invalid: false });
+          setTempDistanceInfo({ km: `${distKm} km`, fee: estFee, invalid: isOutOfBounds });
         }
       });
     }
   };
 
-  // Trigger browser GPS inside modal
   const handleUseCurrentLocation = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
@@ -333,7 +321,8 @@ export default function DeliveryView({
     setCustomer(prev => ({
       ...prev,
       address: newAddress,
-      deliveryFee: currentMode === 'PICKUP' ? 0 : est.fee
+      deliveryFee: currentMode === 'PICKUP' ? 0 : est.fee,
+      detectedKm: null
     }));
   };
 
@@ -354,9 +343,9 @@ export default function DeliveryView({
     width: '100%',
     padding: '12px 14px',
     borderRadius: '10px',
-    border: '1px solid #E53935',
+    border: '1px solid #FF5958',
     background: '#FFFBF2',
-    color: (theme && theme.text) || '#2C221E',
+    color: activeTheme.text,
     fontSize: '13px',
     fontWeight: '500',
     outline: 'none',
@@ -364,35 +353,62 @@ export default function DeliveryView({
     transition: 'border-color 0.2s ease, box-shadow 0.2s ease'
   };
 
-  const activeTheme = {
-    brand: theme?.brand || '#E53935',
-    text: theme?.text || '#2C221E',
-    border: theme?.border || '1px solid #E0D3C1',
-    bg: theme?.bg || '#FFFFFF',
-    radius: theme?.radius || '12px',
-    buttonBg: theme?.buttonBg || '#E53935'
-  };
-
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', overflowY: 'auto', flex: 1, paddingBottom: '90px', paddingTop: '4px', boxSizing: 'border-box' }}>
-      {/* Header */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'auto 2fr auto', alignItems: 'center', marginBottom: '14px', gap: '4px' }}>
-        <button onClick={() => setView('cart')} style={{ ...backButtonStyle, marginBottom: 0, justifySelf: 'start', whiteSpace: 'nowrap' }}>
-          <ArrowLeft size={18}/> Back
+    <div style={{ 
+      display: 'flex', 
+      flexDirection: 'column', 
+      overflowY: 'auto', 
+      flex: 1, 
+      paddingBottom: '140px', 
+      paddingTop: '6px',
+      boxSizing: 'border-box' 
+    }}>
+      {/* ================= UNIFORM HEADER SECTION ================= */}
+      <div style={{ display: 'flex', alignItems: 'center', position: 'relative', marginBottom: '20px', padding: '6px 0' }}>
+        <button 
+          onClick={() => setView('cart')} 
+          style={{ 
+            background: 'none', 
+            border: 'none', 
+            cursor: 'pointer', 
+            display: 'flex', 
+            alignItems: 'center', 
+            gap: '6px', 
+            color: activeTheme.text, 
+            fontSize: '14px', 
+            fontWeight: '700', 
+            padding: '4px 8px', 
+            borderRadius: '8px', 
+            backgroundColor: 'rgba(0,0,0,0.04)', 
+            zIndex: 1 
+          }}
+        >
+          <ArrowLeft size={16}/> Bag
         </button>
-        <h2 style={{ color: '#E53935', margin: 0, fontSize: '17px', textAlign: 'center', textTransform: 'uppercase', letterSpacing: '0.8px', fontWeight: '600', whiteSpace: 'nowrap' }}>
+        <h2 style={{ 
+          position: 'absolute', 
+          left: 0, 
+          right: 0, 
+          textAlign: 'center', 
+          fontSize: '16px', 
+          color: activeTheme.brand, 
+          margin: 0, 
+          fontWeight: '700', 
+          letterSpacing: '0.5px', 
+          textTransform: 'uppercase', 
+          pointerEvents: 'none' 
+        }}>
           Order & Delivery
         </h2>
-        <div style={{ width: '75px' }}></div>
       </div>
 
-      {/* Main Container Card */}
+      {/* ================= MAIN CONTAINER CARD ================= */}
       <div style={{ 
-        border: '1px solid #E53935', 
-        borderRadius: '16px', 
+        border: `1px solid ${activeTheme.brand}`, 
+        borderRadius: activeTheme.radius, 
         background: '#FFFBF2', 
-        padding: '18px 16px',
-        boxShadow: '0 6px 18px rgba(229, 57, 53, 0.05)',
+        padding: '16px',
+        boxShadow: '0 4px 12px rgba(0,0,0,0.04)',
         display: 'flex',
         flexDirection: 'column',
         gap: '16px',
@@ -403,8 +419,8 @@ export default function DeliveryView({
         {/* Contact Info */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', textAlign: 'left' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <div style={{ fontSize: '11px', fontWeight: '800', color: '#8C7A6B', textTransform: 'uppercase', letterSpacing: '0.8px' }}>
-              1. Contact Info <span style={{ color: '#E53935' }}>*</span>
+            <div style={{ fontSize: '11px', fontWeight: '800', color: '#776E62', textTransform: 'uppercase', letterSpacing: '0.8px' }}>
+              1. Contact Info <span style={{ color: activeTheme.brand }}>*</span>
             </div>
             <span 
               onClick={() => setIsPrivacyPolicyOpen(true)}
@@ -441,7 +457,7 @@ export default function DeliveryView({
         {/* Delivery Mode Switcher */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', textAlign: 'left' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <div style={{ fontSize: '11px', fontWeight: '800', color: '#8C7A6B', textTransform: 'uppercase', letterSpacing: '0.8px' }}>
+            <div style={{ fontSize: '11px', fontWeight: '800', color: '#776E62', textTransform: 'uppercase', letterSpacing: '0.8px' }}>
               2. Delivery Mode
             </div>
             <span 
@@ -452,7 +468,7 @@ export default function DeliveryView({
             </span>
           </div>
 
-          <div style={{ display: 'flex', background: '#EFE7DA', padding: '4px', borderRadius: '12px', gap: '4px', border: '1px solid #E53935', boxSizing: 'border-box' }}>
+          <div style={{ display: 'flex', background: '#EFECE6', padding: '4px', borderRadius: '12px', gap: '4px', border: `1px solid ${activeTheme.brand}`, boxSizing: 'border-box' }}>
             <button 
               type="button"
               onClick={() => setFulfillmentMode('DELIVERY')}
@@ -462,7 +478,7 @@ export default function DeliveryView({
                 borderRadius: '9px',
                 border: 'none',
                 background: currentMode === 'DELIVERY' ? '#FFFBF2' : 'transparent',
-                color: currentMode === 'DELIVERY' ? '#E53935' : '#8C7A6B',
+                color: currentMode === 'DELIVERY' ? activeTheme.brand : '#776E62',
                 fontWeight: '800',
                 fontSize: '12px',
                 cursor: 'pointer',
@@ -478,7 +494,7 @@ export default function DeliveryView({
               <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                 <Bike size={15} /> Delivery
               </div>
-              <span style={{ fontSize: '9.5px', color: currentMode === 'DELIVERY' ? '#E53935' : '#7A6E65', fontWeight: '700' }}>
+              <span style={{ fontSize: '9.5px', color: currentMode === 'DELIVERY' ? activeTheme.brand : '#776E62', fontWeight: '700' }}>
                 Est. ₹{distanceInfo.fee}
               </span>
             </button>
@@ -492,7 +508,7 @@ export default function DeliveryView({
                 borderRadius: '9px',
                 border: 'none',
                 background: currentMode === 'PICKUP' ? '#FFFBF2' : 'transparent',
-                color: currentMode === 'PICKUP' ? '#E53935' : '#8C7A6B',
+                color: currentMode === 'PICKUP' ? activeTheme.brand : '#776E62',
                 fontWeight: '800',
                 fontSize: '12px',
                 cursor: 'pointer',
@@ -508,7 +524,7 @@ export default function DeliveryView({
               <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                 <ShoppingBag size={15} /> Self Pickup
               </div>
-              <span style={{ fontSize: '9px', background: '#E6F4EA', color: '#137333', padding: '1px 6px', borderRadius: '6px', fontWeight: '800' }}>
+              <span style={{ fontSize: '9px', background: '#ECFDF5', color: '#059669', padding: '1px 6px', borderRadius: '6px', fontWeight: '800' }}>
                 FREE (₹0)
               </span>
             </button>
@@ -516,8 +532,8 @@ export default function DeliveryView({
 
           {currentMode === 'DELIVERY' && (
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingLeft: '2px', paddingRight: '2px' }}>
-              <div style={{ fontSize: '10.5px', color: '#6E5D4F', fontStyle: 'italic', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                <Navigation size={11} color="#E53935" />
+              <div style={{ fontSize: '10.5px', color: '#776E62', fontStyle: 'italic', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                <Navigation size={11} color={activeTheme.brand} />
                 Bengaluru deliveries only (Up to 30 km).
               </div>
             </div>
@@ -535,7 +551,6 @@ export default function DeliveryView({
               onChange={handleAddressChange} 
             />
 
-            {/* Interactive Map Floating Modal Trigger Button */}
             <button 
               type="button"
               onClick={() => {
@@ -543,36 +558,34 @@ export default function DeliveryView({
                 setIsMapModalOpen(true);
               }} 
               style={{ 
-                width: '100%', padding: '11px', borderRadius: '10px', border: '1px dashed #E53935',
-                background: '#FFFBF2', color: '#E53935', cursor: 'pointer', fontWeight: '700', fontSize: '12px',
+                width: '100%', padding: '11px', borderRadius: '10px', border: `1px dashed ${activeTheme.brand}`,
+                background: '#FFFBF2', color: activeTheme.brand, cursor: 'pointer', fontWeight: '700', fontSize: '12px',
                 display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '7px', boxSizing: 'border-box'
               }}
             >
               <MapPin size={16} /> Choose Location on Google Map
             </button>
 
-            {/* REAL-TIME BADGE */}
             <div style={{ 
-              background: distanceInfo.invalid ? '#FFEBEE' : (distanceInfo.source === 'gps' ? '#E6F4EA' : '#FFF0F0'), 
-              border: `1px solid ${distanceInfo.invalid ? '#C62828' : (distanceInfo.source === 'gps' ? '#137333' : '#E53935')}`, 
+              background: distanceInfo.invalid ? '#FEF2F2' : (distanceInfo.source === 'gps' ? '#ECFDF5' : '#FFF5F5'), 
+              border: `1px solid ${distanceInfo.invalid ? '#DC2626' : (distanceInfo.source === 'gps' ? '#059669' : activeTheme.brand)}`, 
               borderRadius: '8px', padding: '9px 12px', display: 'flex', alignItems: 'center', 
-              justifyContent: 'space-between', fontSize: '11.5px', color: '#2C221E', boxSizing: 'border-box'
+              justifyContent: 'space-between', fontSize: '11.5px', color: activeTheme.text, boxSizing: 'border-box'
             }}>
               <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                {distanceInfo.invalid && <AlertCircle size={14} color="#C62828" />}
-                {distanceInfo.source === 'gps' && !distanceInfo.invalid && <CheckCircle2 size={14} color="#137333" />}
+                {distanceInfo.invalid && <AlertCircle size={14} color="#DC2626" />}
+                {distanceInfo.source === 'gps' && !distanceInfo.invalid && <CheckCircle2 size={14} color="#059669" />}
                 <strong>{distanceInfo.invalid ? 'Notice:' : 'Est. Distance:'}</strong> {distanceInfo.km}
               </span>
-              <span style={{ fontWeight: '800', color: distanceInfo.invalid ? '#C62828' : (distanceInfo.source === 'gps' ? '#137333' : '#E53935') }}>
+              <span style={{ fontWeight: '800', color: distanceInfo.invalid ? '#DC2626' : (distanceInfo.source === 'gps' ? '#059669' : activeTheme.brand) }}>
                 {distanceInfo.invalid ? 'Not Deliverable' : `Fee: ₹${distanceInfo.fee}`}
               </span>
             </div>
 
-            {/* OUT OF COVERAGE NOTIFICATION & ALTERNATIVE ACTIONS */}
             {distanceInfo.invalid && (
               <div style={{
-                background: '#FFF3F3',
-                border: '1px dashed #C62828',
+                background: '#FEF2F2',
+                border: '1px dashed #DC2626',
                 borderRadius: '10px',
                 padding: '12px',
                 display: 'flex',
@@ -581,7 +594,7 @@ export default function DeliveryView({
                 marginTop: '2px',
                 boxSizing: 'border-box'
               }}>
-                <div style={{ fontSize: '11px', color: '#C62828', fontWeight: '500', lineHeight: '1.4' }}>
+                <div style={{ fontSize: '11px', color: '#DC2626', fontWeight: '500', lineHeight: '1.4' }}>
                   This location is outside our delivery zone. You can switch to **Self Pickup** or reach out to us directly via WhatsApp to coordinate special arrangements.
                 </div>
                 <div style={{ display: 'flex', gap: '8px', marginTop: '2px' }}>
@@ -589,7 +602,7 @@ export default function DeliveryView({
                     type="button"
                     onClick={() => setFulfillmentMode('PICKUP')}
                     style={{
-                      flex: 1, padding: '8px 10px', background: '#E53935', color: '#FFFFFF',
+                      flex: 1, padding: '8px 10px', background: activeTheme.brand, color: '#FFFFFF',
                       border: 'none', borderRadius: '8px', fontSize: '11px', fontWeight: '800',
                       cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '5px'
                     }}
@@ -614,44 +627,44 @@ export default function DeliveryView({
             )}
           </div>
         ) : (
-          <div style={{ background: '#FFFBF2', padding: '14px', borderRadius: '12px', border: '1px solid #E53935', display: 'flex', alignItems: 'center', gap: '12px', textAlign: 'left', boxSizing: 'border-box' }}>
+          <div style={{ background: '#FFFBF2', padding: '14px', borderRadius: '12px', border: `1px solid ${activeTheme.brand}`, display: 'flex', alignItems: 'center', gap: '12px', textAlign: 'left', boxSizing: 'border-box' }}>
             <div style={{ background: '#FFF5F5', padding: '10px', borderRadius: '10px' }}>
-              <MapPin size={22} color="#E53935" />
+              <MapPin size={22} color={activeTheme.brand} />
             </div>
             <div>
-              <div style={{ fontSize: '13px', fontWeight: '600', color: '#2C221E' }}>Lyte Bytes Kitchen</div>
-              <div style={{ fontSize: '11px', color: '#8C7A6B', marginTop: '2px' }}>
-                Prakruti Township, Babusahibpalya, Bengaluru • <strong style={{ color: '#137333' }}>₹0 Delivery Fee</strong>
+              <div style={{ fontSize: '13px', fontWeight: '600', color: activeTheme.text }}>Lyte Bytes Kitchen</div>
+              <div style={{ fontSize: '11px', color: '#776E62', marginTop: '2px' }}>
+                Prakruti Township, Babusahibpalya, Bengaluru • <strong style={{ color: '#059669' }}>₹0 Delivery Fee</strong>
               </div>
             </div>
           </div>
         )}
 
         {/* Schedule Container */}
-        <div style={{ borderTop: `1px dashed #E53935`, paddingTop: '8px', width: '100%', boxSizing: 'border-box' }}>
-          <div style={{ fontSize: '14px', fontWeight: '500', color: '#E53935', letterSpacing: '0.8px', textTransform: 'uppercase', marginBottom: '8px', textAlign: 'center' }}>
+        <div style={{ borderTop: `1px dashed ${activeTheme.brand}`, paddingTop: '12px', width: '100%', boxSizing: 'border-box' }}>
+          <div style={{ fontSize: '12px', fontWeight: '700', color: '#776E62', letterSpacing: '0.8px', textTransform: 'uppercase', marginBottom: '8px', textAlign: 'center' }}>
             {currentMode === 'DELIVERY' ? 'Preferred Delivery Time (Optional)' : 'Preferred Pickup Time (Optional)'}
           </div>
 
-          <div style={{ border: '1px solid #E53935', borderRadius: '12px', background: '#FFFBF2', padding: '8px 12px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', width: '100%', alignItems: 'center', boxSizing: 'border-box' }}>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', borderRight: '1px solid #E53935', paddingRight: '8px', textAlign: 'left' }}>
-              <label style={{ fontSize: '12px', fontWeight: '500', color: '#8C7A6B', textTransform: 'uppercase', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                <Calendar size={15} /> Date
+          <div style={{ border: `1px solid ${activeTheme.brand}`, borderRadius: '12px', background: '#FFFBF2', padding: '8px 12px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', width: '100%', alignItems: 'center', boxSizing: 'border-box' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', borderRight: `1px solid ${activeTheme.brand}`, paddingRight: '8px', textAlign: 'left' }}>
+              <label style={{ fontSize: '11px', fontWeight: '600', color: '#776E62', textTransform: 'uppercase', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                <Calendar size={14} /> Date
               </label>
-              <input type="date" value={deliveryDate || ''} onChange={(e) => setDeliveryDate(e.target.value)} style={{ border: 'none', background: 'transparent', color: '#2C221E', fontSize: '12px', fontWeight: '600', outline: 'none', width: '100%', fontFamily: 'inherit' }} />
+              <input type="date" value={deliveryDate || ''} onChange={(e) => setDeliveryDate(e.target.value)} style={{ border: 'none', background: 'transparent', color: activeTheme.text, fontSize: '12px', fontWeight: '600', outline: 'none', width: '100%', fontFamily: 'inherit' }} />
             </div>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', paddingLeft: '4px', textAlign: 'left' }}>
-              <label style={{ fontSize: '12px', fontWeight: '500', color: '#8C7A6B', textTransform: 'uppercase', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                <Clock size={15} /> Slot / Time
+              <label style={{ fontSize: '11px', fontWeight: '600', color: '#776E62', textTransform: 'uppercase', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                <Clock size={14} /> Slot / Time
               </label>
-              <input type="time" value={deliveryTime || ''} onChange={(e) => setDeliveryTime(e.target.value)} style={{ border: 'none', background: 'transparent', color: '#2C221E', fontSize: '12px', fontWeight: '600', outline: 'none', width: '100%', fontFamily: 'inherit' }} />
+              <input type="time" value={deliveryTime || ''} onChange={(e) => setDeliveryTime(e.target.value)} style={{ border: 'none', background: 'transparent', color: activeTheme.text, fontSize: '12px', fontWeight: '600', outline: 'none', width: '100%', fontFamily: 'inherit' }} />
             </div>
           </div>
         </div>
 
         {/* Action Button */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', width: '100%' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', width: '100%', marginTop: '4px' }}>
           <button 
             type="button"
             onClick={isFormValid ? handleProceedToPayment : () => alert(distanceInfo.invalid ? "Delivery is only available within Bengaluru. Please switch to Self Pickup or contact via WhatsApp." : "Please complete contact details and address.")} 
@@ -659,19 +672,34 @@ export default function DeliveryView({
             style={{ 
               ...actionButtonStyle, 
               border: 'none', 
-              background: '#E53935',
+              background: activeTheme.brand,
               color: '#FFFFFF',
-              padding: '15px', 
-              fontSize: '14px', 
-              fontWeight: '800',
-              borderRadius: (theme && theme.radius) || '12px', 
+              padding: '14px', 
+              fontSize: '16px', 
+              fontWeight: '700',
+              borderRadius: activeTheme.radius, 
               width: '100%', 
               opacity: isFormValid ? 1 : 0.5,
               cursor: isFormValid ? 'pointer' : 'not-allowed',
               boxSizing: 'border-box'
             }}
           >
-            Proceed to Payment {distanceInfo.fee > 0 && !distanceInfo.invalid ? `(Incl. ₹${distanceInfo.fee} Delivery)` : ''}
+            Proceed to Payment {distanceInfo.fee > 0 && !distanceInfo.invalid ? `(Incl. ₹${distanceInfo.fee})` : ''}
+          </button>
+          
+          <button 
+            type="button"
+            onClick={() => setView('cart')}
+            style={{ 
+              ...secondaryButtonStyle, 
+              padding: '14px', 
+              fontSize: '16px', 
+              borderRadius: activeTheme.radius, 
+              width: '100%',
+              boxSizing: 'border-box'
+            }}
+          >
+            Back to Bag
           </button>
         </div>
 
@@ -686,13 +714,12 @@ export default function DeliveryView({
         }}>
           <div style={{
             background: '#FFFBF2', width: '100%', maxWidth: '480px', height: '85vh',
-            borderRadius: '16px', border: '2px solid #E53935', display: 'flex',
+            borderRadius: '16px', border: `2px solid ${activeTheme.brand}`, display: 'flex',
             flexDirection: 'column', overflow: 'hidden', boxShadow: '0 12px 32px rgba(0,0,0,0.2)'
           }}>
-            {/* Modal Header */}
             <div style={{
-              padding: '12px 16px', background: '#E53935', color: '#FFFFFF',
-              display: 'flex', alignItems: 'center', justifyContent: 'between'
+              padding: '12px 16px', background: activeTheme.brand, color: '#FFFFFF',
+              display: 'flex', alignItems: 'center', justifyContent: 'space-between'
             }}>
               <div style={{ fontWeight: '700', fontSize: '14px', flex: 1 }}>Select Delivery Location</div>
               <button 
@@ -703,71 +730,67 @@ export default function DeliveryView({
               </button>
             </div>
 
-            {/* Places Search Bar & Current GPS Button */}
-<div style={{ padding: '10px 12px', background: '#FDF7ED', borderBottom: '1px solid #E0D3C1', display: 'flex', gap: '8px', alignItems: 'center' }}>
-  <div style={{ position: 'relative', flex: 1 }}>
-    <Search size={16} color="#8C7A6B" style={{ position: 'absolute', left: '10px', top: '12px', pointerEvents: 'none' }} />
-    <input 
-      ref={searchInputRef}
-      type="text"
-      placeholder="Search street, area, or landmark..."
-      style={{
-        width: '100%', 
-        padding: '10px 10px 10px 34px', 
-        borderRadius: '8px',
-        border: '1px solid #E53935', 
-        background: '#FFFFFF', 
-        color: '#E53935',
-        WebkitTextFillColor: '#E53935',
-        fontSize: '12px', 
-        outline: 'none', 
-        boxSizing: 'border-box'
-      }}
-    />
-  </div>
-  <button 
-    type="button"
-    onClick={handleUseCurrentLocation}
-    title="Use Current GPS Location"
-    style={{
-      padding: '10px 12px', background: '#E53935', color: '#FFFFFF', border: 'none',
-      borderRadius: '8px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center'
-    }}
-  >
-    <Crosshair size={16} />
-  </button>
-</div>
+            <div style={{ padding: '10px 12px', background: '#FDF7ED', borderBottom: '1px solid #D8C7A5', display: 'flex', gap: '8px', alignItems: 'center' }}>
+              <div style={{ position: 'relative', flex: 1 }}>
+                <Search size={16} color="#776E62" style={{ position: 'absolute', left: '10px', top: '12px', pointerEvents: 'none' }} />
+                <input 
+                  ref={searchInputRef}
+                  type="text"
+                  placeholder="Search street, area, or landmark..."
+                  style={{
+                    width: '100%', 
+                    padding: '10px 10px 10px 34px', 
+                    borderRadius: '8px',
+                    border: `1px solid ${activeTheme.brand}`, 
+                    background: '#FFFFFF', 
+                    color: activeTheme.brand,
+                    WebkitTextFillColor: activeTheme.brand,
+                    fontSize: '12px', 
+                    outline: 'none', 
+                    boxSizing: 'border-box'
+                  }}
+                />
+              </div>
+              <button 
+                type="button"
+                onClick={handleUseCurrentLocation}
+                title="Use Current GPS Location"
+                style={{
+                  padding: '10px 12px', background: activeTheme.brand, color: '#FFFFFF', border: 'none',
+                  borderRadius: '8px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center'
+                }}
+              >
+                <Crosshair size={16} />
+              </button>
+            </div>
 
-            {/* Google Map View Container */}
             <div ref={mapRef} style={{ flex: 1, width: '100%', background: '#eee' }} />
 
-            {/* Selected Address & Fee Status Footer inside Modal */}
-            <div style={{ padding: '12px 16px', background: '#FFFBF2', borderTop: '1px solid #E0D3C1', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-              <div style={{ fontSize: '11.5px', color: '#2C221E', maxHeight: '50px', overflowY: 'auto' }}>
-                <strong style={{ color: '#E53935' }}>Selected Address:</strong> {tempAddress || 'Drop pin or search area'}
+            <div style={{ padding: '12px 16px', background: '#FFFBF2', borderTop: '1px solid #D8C7A5', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              <div style={{ fontSize: '11.5px', color: activeTheme.text, maxHeight: '50px', overflowY: 'auto', textAlign: 'left' }}>
+                <strong style={{ color: activeTheme.brand }}>Selected Address:</strong> {tempAddress || 'Drop pin or search area'}
               </div>
 
               <div style={{ 
-                background: tempDistanceInfo.invalid ? '#FFEBEE' : '#E6F4EA', 
-                border: `1px solid ${tempDistanceInfo.invalid ? '#C62828' : '#137333'}`, 
+                background: tempDistanceInfo.invalid ? '#FEF2F2' : '#ECFDF5', 
+                border: `1px solid ${tempDistanceInfo.invalid ? '#DC2626' : '#059669'}`, 
                 borderRadius: '8px', padding: '8px 12px', display: 'flex', alignItems: 'center', 
                 justifyContent: 'space-between', fontSize: '11.5px'
               }}>
-                <span style={{ fontWeight: '700', color: tempDistanceInfo.invalid ? '#C62828' : '#137333' }}>
+                <span style={{ fontWeight: '700', color: tempDistanceInfo.invalid ? '#DC2626' : '#059669' }}>
                   {tempDistanceInfo.invalid ? 'Out of Bengaluru Coverage' : `Est. Distance: ${tempDistanceInfo.km}`}
                 </span>
-                <span style={{ fontWeight: '800', color: tempDistanceInfo.invalid ? '#C62828' : '#137333' }}>
+                <span style={{ fontWeight: '800', color: tempDistanceInfo.invalid ? '#DC2626' : '#059669' }}>
                   {tempDistanceInfo.invalid ? 'Unavailable' : `Fee: ₹${tempDistanceInfo.fee}`}
                 </span>
               </div>
 
-              {/* Modal Action Buttons (Confirm vs WhatsApp Support if out of bounds) */}
               {tempDistanceInfo.invalid ? (
                 <div style={{ display: 'flex', gap: '8px' }}>
                   <button 
                     type="button"
                     onClick={() => setIsMapModalOpen(false)}
-                    style={{ flex: 1, padding: '10px', background: '#8C7A6B', color: '#FFFFFF', border: 'none', borderRadius: '8px', fontWeight: '700', fontSize: '12px', cursor: 'pointer' }}
+                    style={{ flex: 1, padding: '10px', background: '#776E62', color: '#FFFFFF', border: 'none', borderRadius: '8px', fontWeight: '700', fontSize: '12px', cursor: 'pointer' }}
                   >
                     Cancel
                   </button>
@@ -802,7 +825,7 @@ export default function DeliveryView({
                     setIsMapModalOpen(false);
                   }}
                   style={{
-                    width: '100%', padding: '12px', background: '#E53935', color: '#FFFFFF',
+                    width: '100%', padding: '12px', background: activeTheme.brand, color: '#FFFFFF',
                     border: 'none', borderRadius: '10px', fontWeight: '800', fontSize: '13px', cursor: 'pointer'
                   }}
                 >

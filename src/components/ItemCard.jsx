@@ -28,77 +28,96 @@ export default function ItemCard({ item, openModal, addToCart, resolveImagePath,
     }
   };
 
+  const isGridView = layout === 'grid';
+
   return (
     <div 
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       style={{ 
         padding: '14px', 
-        border: isHovered ? '1px solid rgba(255, 89, 88, 0.4)' : theme.border, 
-        borderRadius: theme.radius, 
+        border: isHovered ? '1px solid rgba(255, 89, 88, 0.4)' : (theme.border || '1px solid rgba(216, 199, 165, 0.3)'), 
+        borderRadius: theme.radius || '16px', 
         display: 'flex', 
-        flexDirection: layout === 'grid' ? 'column' : 'row', 
+        flexDirection: isGridView ? 'column' : 'row', 
         gap: '14px', 
-        backgroundColor: theme.buttonBg, 
+        backgroundColor: theme.buttonBg || '#201C18', 
         boxShadow: isHovered ? '0 16px 36px rgba(0,0,0,0.22)' : '0 2px 8px rgba(0,0,0,0.06)', 
-        alignItems: layout === 'grid' ? 'stretch' : 'center',
-        transform: isHovered ? 'translateY(-5px)' : 'translateY(0px)',
+        alignItems: isGridView ? 'stretch' : 'center',
+        transform: isHovered ? 'translateY(-4px)' : 'translateY(0px)',
         transition: 'all 0.35s cubic-bezier(0.16, 1, 0.3, 1)',
-        cursor: 'pointer'
+        cursor: 'pointer',
+        boxSizing: 'border-box',
+        width: '100%'
       }}
     >
       {/* Image Container with Premium Zoom */}
       <div 
-        onClick={() => openModal('ZOOM', item)} 
+        onClick={(e) => {
+          e.stopPropagation();
+          openModal('ZOOM', item);
+        }} 
         onMouseEnter={() => setIsImgHovered(true)}
         onMouseLeave={() => setIsImgHovered(false)}
-        style={{ cursor: 'pointer', flexShrink: 0, borderRadius: '10px', overflow: 'hidden' }}
+        style={{ 
+          cursor: 'pointer', 
+          flexShrink: 0, 
+          borderRadius: '12px', 
+          overflow: 'hidden',
+          width: isGridView ? '100%' : '100px',
+          height: isGridView ? '130px' : '100px',
+          backgroundColor: 'rgba(0,0,0,0.1)'
+        }}
       >
         <img 
-          src={resolveImagePath(item.imageUrl, 'menu-items')} 
+          src={resolveImagePath ? resolveImagePath(item.imageUrl, 'menu-items') : item.imageUrl} 
           alt={item.name} 
           style={{ 
-            width: layout === 'grid' ? '100%' : '100px', 
-            height: layout === 'grid' ? '100px' : '100px', 
+            width: '100%', 
+            height: '100%', 
             objectFit: 'cover', 
             display: 'block',
-            transform: isImgHovered ? 'scale(1.1)' : 'scale(1)',
+            transform: isImgHovered ? 'scale(1.08)' : 'scale(1)',
             transition: 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)'
           }} 
         />
       </div>
 
       {/* Content Container */}
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', textAlign: 'left', minHeight: layout === 'grid' ? 'auto' : '100px', justifyContent: 'space-between' }}>
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', textAlign: 'left', justifyContent: 'space-between', gap: '8px' }}>
         <div>
-          <div style={{ display: 'flex', alignItems: 'flex-start', gap: '6px', marginBottom: '1px' }}>
+          <div style={{ display: 'flex', alignItems: 'flex-start', gap: '6px', marginBottom: '2px' }}>
             {item.variation && (
               <img 
                 src={`/menu-items/${item.variation.trim().toLowerCase() === 'non-veg' ? 'non-veg' : item.variation.trim().toLowerCase()}.png`} 
                 alt={item.variation} 
-                style={{ width: '14px', height: '14px', flexShrink: '0', marginTop: '2px' }} 
+                style={{ width: '14px', height: '14px', flexShrink: '0', marginTop: '3px' }} 
               />
             )}
-            <div style={{ fontWeight: '600', fontSize: '15px', color: '#ffffff', lineHeight: '1.2' }}>
+            <div style={{ fontWeight: '700', fontSize: '15px', color: '#ffffff', lineHeight: '1.3' }}>
               {item.name}
             </div>
           </div>
           
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1px', marginTop: '2px' }}>
-            <span style={{ fontSize: '12px', color: theme.brand, fontStyle: 'italic', fontWeight: '500' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1px' }}>
+            <span style={{ fontSize: '12px', color: theme.brand || '#FF5958', fontStyle: 'italic', fontWeight: '500' }}>
               {displayUnit}
             </span>
+          </div>
+        </div>
+        
+        {/* Bottom Row: Customisable Text (Left) & Price + Add Button (Right) */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: isGridView ? '4px' : '0' }}>
+          <div>
             {hasVariants && (
-              <span style={{ fontSize: '10px', color: '#E8E4D9', opacity: 0.8, fontWeight: '400' }}>
+              <span style={{ fontSize: '12px', color: '#B5AFA7', fontWeight: '400' }}>
                 Customisable
               </span>
             )}
           </div>
-        </div>
-        
-        <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', marginTop: '8px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-            <div style={{ color: theme.brand, fontWeight: '600', fontSize: '15px' }}>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <div style={{ color: theme.brand || '#FF5958', fontWeight: '700', fontSize: '16px' }}>
               ₹{displayPrice}
             </div>
 
@@ -110,18 +129,18 @@ export default function ItemCard({ item, openModal, addToCart, resolveImagePath,
               onTouchStart={() => setIsPressed(true)}
               onTouchEnd={() => setIsPressed(false)}
               style={{
-                backgroundColor: isAddedRecently ? '#10B981' : theme.brand,
+                backgroundColor: isAddedRecently ? '#10B981' : (theme.brand || '#FF5958'),
                 color: '#FFFFFF',
                 border: 'none',
-                padding: '6px 22px', 
+                padding: '6px 18px', 
                 borderRadius: '20px',
                 fontWeight: '600',
-                fontSize: '14px',
+                fontSize: '13px',
                 cursor: 'pointer',
                 boxShadow: isAddedRecently ? '0 4px 16px rgba(16, 185, 129, 0.4)' : '0 4px 12px rgba(255, 89, 88, 0.25)',
                 transform: isPressed ? 'scale(0.92)' : (isAddedRecently ? 'scale(1.05)' : 'scale(1)'),
-                transition: 'transform 0.1s ease, opacity 0.2s ease',
-                minWidth: '70px',
+                transition: 'transform 0.1s ease, background-color 0.2s ease, box-shadow 0.2s ease',
+                minWidth: '68px',
                 textAlign: 'center'
               }}
             >

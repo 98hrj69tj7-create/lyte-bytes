@@ -20,60 +20,73 @@ export default function ItemsView({
   resolveImagePath
 }) {
   return (
-    <div style={{ paddingBottom: '90px' }}>
-      <button 
-        onClick={() => setView('subcat')} 
-        style={{ 
-          ...backButtonStyle, 
-          display: 'flex', 
-          alignItems: 'center', 
-          gap: '6px', 
-          marginBottom: '10px' 
-        }}
-      >
-        <ArrowLeft size={18}/> Back
-      </button>
+    <div style={{ paddingBottom: '140px' }}>
+      {/* Uniform Header with Absolute Centered Title & Floating Back Button */}
+      <div style={{ display: 'flex', alignItems: 'center', position: 'relative', marginBottom: '20px', padding: '6px 0' }}>
+        <button 
+          onClick={() => setView('subcat')} 
+          style={{ 
+            background: 'none', 
+            border: 'none', 
+            cursor: 'pointer', 
+            display: 'flex', 
+            alignItems: 'center', 
+            gap: '6px', 
+            color: theme.text, 
+            fontSize: '14px', 
+            fontWeight: '700', 
+            padding: '4px 8px', 
+            borderRadius: '8px', 
+            backgroundColor: 'rgba(0,0,0,0.04)', 
+            zIndex: 1 
+          }}
+        >
+          <ArrowLeft size={16}/> Back
+        </button>
+        <h2 style={{ position: 'absolute', left: 0, right: 0, textAlign: 'center', fontSize: '16px', color: '#FF5958', margin: 0, fontWeight: '700', letterSpacing: '0.5px', textTransform: 'uppercase', pointerEvents: 'none' }}>
+          {activeSub || 'Items'}
+        </h2>
+      </div>
 
-      {/* Uniform Global Search Bar */}
-      <div style={{ marginBottom: '16px', padding: '0 2px' }}>
+      {/* Uniform Glowing Coral-Red Search Bar */}
+      <div style={{ marginBottom: '24px' }}>
         <input 
           type="text"
           placeholder="Search all items..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="catchy-search-input"
           style={{
             width: '100%',
-            padding: '12px 14px',
-            border: '2px solid #ff5958',
-            borderRadius: theme.radius,
-            backgroundColor: theme.bg,
-            color: '#3E3328',
-            fontSize: '15px',
+            padding: '14px 20px',
+            border: '1.5px solid #FF5958',
+            borderRadius: '16px',
+            backgroundColor: '#FFFFFF',
+            color: theme.text,
+            fontSize: '14px',
             fontWeight: '500',
             outline: 'none',
-            boxSizing: 'border-box'
+            boxSizing: 'border-box',
+            boxShadow: '0 0 12px rgba(255, 89, 88, 0.25)',
+            transition: 'all 0.3s ease'
           }}
         />
       </div>
 
-      {/* ========================================================== */}
-      {/* TRANSPARENT CONTROLS BAR: Veg/Non-Veg (Left) & Grid/List (Right) */}
-      {/* ========================================================== */}
+      {/* Transparent Controls Bar: Veg/Non-Veg (Left) & Grid/List (Right) */}
       <div style={{ 
         display: 'flex', 
         alignItems: 'center', 
         justifyContent: 'space-between', 
-        marginBottom: '16px', 
+        marginBottom: '20px', 
         padding: '4px 2px',
-        backgroundColor: 'transparent', // Completely transparent background
-        border: 'none'                     // No outer border box
+        backgroundColor: 'transparent',
+        border: 'none'
       }}>
         {/* Left Side: Slide Toggle Switch for Veg / Non-Veg */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           <span 
             onClick={() => setIsNonVeg(false)}
-            style={{ fontSize: '12px', fontWeight: '800', color: isNonVeg === false ? '#2D8A56' : '#2D8A56', cursor: 'pointer', letterSpacing: '0.5px' }}
+            style={{ fontSize: '12px', fontWeight: '800', color: '#2D8A56', cursor: 'pointer', letterSpacing: '0.5px' }}
           >
             VEG
           </span>
@@ -95,7 +108,7 @@ export default function ItemsView({
           
           <span 
             onClick={() => setIsNonVeg(true)}
-            style={{ fontSize: '12px', fontWeight: '700', color: isNonVeg === true ? '#D32F2F' : '#D32F2F', cursor: 'pointer', letterSpacing: '0.5px' }}
+            style={{ fontSize: '12px', fontWeight: '700', color: '#D32F2F', cursor: 'pointer', letterSpacing: '0.5px' }}
           >
             NON-VEG
           </span>
@@ -106,8 +119,8 @@ export default function ItemsView({
           <button 
             onClick={() => setLayout('list')} 
             style={{ 
-              background: layout === 'list' ? theme.brand : 'transparent', 
-              border: layout === 'list' ? 'none' : theme.border, 
+              background: layout === 'list' ? '#FF5958' : 'transparent', 
+              border: layout === 'list' ? 'none' : '1px solid rgba(216, 199, 165, 0.4)', 
               borderRadius: '8px', 
               padding: '6px 8px', 
               cursor: 'pointer', 
@@ -123,8 +136,8 @@ export default function ItemsView({
           <button 
             onClick={() => setLayout('grid')} 
             style={{ 
-              background: layout === 'grid' ? theme.brand : 'transparent', 
-              border: layout === 'grid' ? 'none' : theme.border, 
+              background: layout === 'grid' ? '#FF5958' : 'transparent', 
+              border: layout === 'grid' ? 'none' : '1px solid rgba(216, 199, 165, 0.4)', 
               borderRadius: '8px', 
               padding: '6px 8px', 
               cursor: 'pointer', 
@@ -144,7 +157,7 @@ export default function ItemsView({
         display: layout === 'grid' ? 'grid' : 'flex', 
         gridTemplateColumns: layout === 'grid' ? 'repeat(2, 1fr)' : 'none', 
         flexDirection: 'column', 
-        gap: '16px' 
+        gap: '14px' 
       }}>
         {(searchQuery 
           ? Object.values(menuData).flatMap(cat => Object.values(cat.subcategories).flat())
