@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function Header({ theme = {} }) {
+export default function Header({ theme = {}, setView }) {
   const activeTheme = {
     brand: theme?.brand || '#FF5958',
     text: theme?.text || '#2C221E',
@@ -23,8 +23,12 @@ export default function Header({ theme = {} }) {
       top: 0,
       zIndex: 900
     }}>
-      {/* Brand Logo & Name */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+      {/* Brand Logo & Name with Admin Trigger */}
+      <div 
+        onDoubleClick={() => setView && setView('admin-customers')}
+        style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer', userSelect: 'none' }}
+        title="Double-click for Admin Access"
+      >
         <img 
           src="/logo.png" 
           alt="Lyte Bytes Logo" 
@@ -36,7 +40,7 @@ export default function Header({ theme = {} }) {
             border: activeTheme.border 
           }} 
         />
-        <h2 style={{ fontSize: '22px', margin: 0, color: activeTheme.brand, fontWeight: '800', letterSpacing: '0.5px' }}>
+        <h2 style={{ fontSize: '25px', margin: 0, color: activeTheme.brand, fontWeight: '800', letterSpacing: '0.5px' }}>
           LYTE BYTES
         </h2>
       </div>
@@ -47,13 +51,13 @@ export default function Header({ theme = {} }) {
           <img 
             src="/Fssai.png" 
             alt="FSSAI" 
-            style={{ width: '24px', height: '24px', objectFit: 'contain' }} 
+            style={{ width: '25px', height: '24px', objectFit: 'contain' }} 
           />
           <span style={{ fontSize: '11px', fontWeight: '600', color: activeTheme.text, letterSpacing: '0.3px' }}>
             21225008002806
           </span>
         </div>
-        <span style={{ fontSize: '10.5px', fontWeight: '600', color: '#776E62', lineHeight: '1', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+        <span style={{ fontSize: '11px', fontWeight: '600', color: '#776E62', lineHeight: '1', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
           Halal Compliant
         </span>
       </div>

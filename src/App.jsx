@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import HomeAndSubCategoryView from './components/HomeAndSubCategoryView';
-import ItemCard from './components/ItemCard';
 import ItemModal from './components/ItemModal';
 import MultiVariantDrawer from './components/MultiVariantDrawer';
 import StickyCartBar from './components/StickyCartBar';
@@ -9,16 +8,16 @@ import ItemsView from './components/ItemsView';
 import CartView from './components/CartView';
 import DeliveryView from './components/DeliveryView';
 import PaymentView from './components/PaymentView';
-import PaymentVerificationView from './components/PaymentVerificationView'; // 💡 New Verification View
+import PaymentVerificationView from './components/PaymentVerificationView'; 
 import TrackView from './components/TrackView';
 import SupportInfoView from './components/SupportInfoView';
 import CustomerView from './components/CustomerView'; 
+import AdminCustomerDashboard from './components/AdminCustomerDashboard';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import LimitedOfferModal from './components/LimitedOfferModal';
 import { trackAbandonedLead } from './components/leadTracker';
 import Papa from 'papaparse';
-import { ArrowLeft } from 'lucide-react';
 
 // --- IMAGE RESOLVER ---
 const resolveImagePath = (path, folder = '') => {
@@ -42,10 +41,6 @@ const appTheme = {
 };
 
 // --- SHARED STYLES WITH FOCUS/TAP RESETS ---
-const navButtonStyle = { 
-  width: '100%', padding: '16px', marginBottom: '12px', backgroundColor: appTheme.buttonBg, color: appTheme.bg, border: 'none', borderRadius: appTheme.radius, fontWeight: '600', fontSize: '18px', cursor: 'pointer', textAlign: 'center', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '10px', outline: 'none', WebkitTapHighlightColor: 'transparent', userSelect: 'none'
-};
-
 const actionButtonStyle = { 
   width: '100%', padding: '16px', marginBottom: '12px', backgroundColor: appTheme.buttonBg, color: appTheme.bg, border: 'none', borderRadius: appTheme.radius, fontWeight: '600', fontSize: '18px', cursor: 'pointer', textAlign: 'center', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '10px', outline: 'none', WebkitTapHighlightColor: 'transparent', userSelect: 'none'
 };
@@ -123,7 +118,7 @@ export default function App() {
     'Paytm': '9108286886@ptaxis'
   };
 
-  const [currentStage, setCurrentStage] = useState(1);
+  const [currentStage] = useState(1);
 
   // --- THEME ---
   const theme = {
@@ -444,9 +439,17 @@ export default function App() {
             customer={customer}
           />
         )}
+
+        {view === 'admin-customers' && (
+          <AdminCustomerDashboard 
+            theme={theme} 
+            onBack={() => setView('home')} 
+            setView={setView}
+          />
+        )}
       </main>
 
-      {!['cart', 'delivery', 'payment', 'verifying', 'track', 'profile', 'account'].includes(view) && (
+      {!['cart', 'delivery', 'payment', 'verifying', 'track', 'profile', 'account', 'admin-customers'].includes(view) && (
         <StickyCartBar 
           cart={cart} 
           onViewCart={() => setView('cart')} 

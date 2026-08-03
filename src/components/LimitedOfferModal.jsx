@@ -83,7 +83,7 @@ export default function LimitedOfferModal({ theme = {}, setView }) {
 
   return (
     <div 
-      onClick={() => setIsOpen(false)}
+      onClick={() => setIsOpen(null)}
       style={{
         position: 'fixed',
         top: 0,
@@ -104,7 +104,7 @@ export default function LimitedOfferModal({ theme = {}, setView }) {
       }}
     >
       <div 
-        onClick={(e) => e.stopPropagation()}
+        onClick={() => e.stopPropagation()}
         style={{
           background: activeTheme.bg,
           borderRadius: activeTheme.radius,

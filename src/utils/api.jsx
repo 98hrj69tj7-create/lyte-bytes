@@ -1,4 +1,4 @@
-const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxwvAdpv29y8Q6I-gfJmktYHoOtq4Bc8JYIaWry-urbKSBMvP65bpopzoUUBFx-NNTefA/exec";
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzxcQ3x6REyLMeids_Lh7t0shVUdbSHRizgdzW4rC_C-xM7j7FGy_t0VDEjSex9YdfJwg/exec";
 
 // 1. GET: Fetch all historical transactions from Google Sheets
 export async function fetchHistoricalOrders() {
