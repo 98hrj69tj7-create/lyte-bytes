@@ -1,5 +1,6 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Raleway:wght@300;400;600&display=swap');
+
 :root {
-  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Raleway:wght@300;400;600&display=swap');
   --text: #6b6375;
   --text-h: #08060d;
   --bg: #fff;
@@ -120,6 +121,7 @@ code {
   padding: 4px 8px;
   background: var(--code-bg);
 }
+
 @keyframes searchPulse {
   0% {
     border-color: #ff5958;

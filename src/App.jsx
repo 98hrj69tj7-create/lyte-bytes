@@ -8,10 +8,10 @@ import ItemsView from './components/ItemsView';
 import CartView from './components/CartView';
 import DeliveryView from './components/DeliveryView';
 import PaymentView from './components/PaymentView';
-import PaymentVerificationView from './components/PaymentVerificationView'; 
+import PaymentVerificationView from './components/PaymentVerificationView';
 import TrackView from './components/TrackView';
 import SupportInfoView from './components/SupportInfoView';
-import CustomerView from './components/CustomerView'; 
+import CustomerView from './components/CustomerView';
 import AdminCustomerDashboard from './components/AdminCustomerDashboard';
 import Header from './components/Header';
 import Footer from './components/Footer';
@@ -23,10 +23,8 @@ import Papa from 'papaparse';
 const resolveImagePath = (path, folder = '') => {
   if (!path) return "/catering.jpg";
   if (path.startsWith('http')) return path;
-  
   const base = folder ? `/${folder}/` : "/";
   const cleanPath = path.startsWith('/') ? path.slice(1) : path;
-  
   return `${base}${cleanPath}`;
 };
 
@@ -41,7 +39,7 @@ const appTheme = {
 };
 
 // --- SHARED STYLES WITH FOCUS/TAP RESETS ---
-const actionButtonStyle = { 
+const actionButtonStyle = {
   width: '100%', padding: '16px', marginBottom: '12px', backgroundColor: appTheme.buttonBg, color: appTheme.bg, border: 'none', borderRadius: appTheme.radius, fontWeight: '600', fontSize: '18px', cursor: 'pointer', textAlign: 'center', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '10px', outline: 'none', WebkitTapHighlightColor: 'transparent', userSelect: 'none'
 };
 
@@ -57,7 +55,7 @@ const inputStyle = {
   width: '100%', padding: '12px', marginBottom: '12px', borderRadius: appTheme.radius, border: appTheme.border, fontSize: '16px', boxSizing: 'border-box', outline: 'none'
 };
 
-const accordionHeaderStyle = { 
+const accordionHeaderStyle = {
   display: 'flex', alignItems: 'center', justifyContent: 'flex-start', gap: '10px', padding: '12px 15px', border: appTheme.border, borderRadius: appTheme.radius, cursor: 'pointer', color: appTheme.brand, fontWeight: 'bold', backgroundColor: 'transparent', marginBottom: '10px', outline: 'none', WebkitTapHighlightColor: 'transparent', userSelect: 'none'
 };
 
@@ -122,10 +120,10 @@ export default function App() {
 
   // --- THEME ---
   const theme = {
-    bg: '#FDF6E3',          // Warm Beige
-    text: '#2B2B2B',        // Main text
-    brand: '#FF5958',       // Brand Red
-    buttonBg: '#4A443A',    // Deep Earthy Coffee
+    bg: '#FDF6E3', // Warm Beige
+    text: '#2B2B2B', // Main text
+    brand: '#FF5958', // Brand Red
+    buttonBg: '#4A443A', // Deep Earthy Coffee
     border: '1px solid #D8C7A5',
     radius: '12px'
   };
@@ -151,7 +149,7 @@ export default function App() {
     "Bakery & Cakes": "bakery.png",
     "Catering": "catering.png",
     "Finger Foods": "finger-foods.png",
-    "Jams & Spreads": "jams.png",  
+    "Jams & Spreads": "jams.png",
   };
 
   const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxuPMBHUCj8co8CfPSr-SmsXsB3cWZEfi0rcViHNjLeFiVXX85X7a_aNiCz57sSp0Qf/exec';
@@ -178,11 +176,11 @@ export default function App() {
           if (!row.Category) return;
 
           if (!transformed[row.Category]) {
-            transformed[row.Category] = { 
-              imageUrl: categoryImages[row.Category] || "/catering.jpg", 
-              subcategories: {} 
+            transformed[row.Category] = {
+              imageUrl: categoryImages[row.Category] || "/catering.jpg",
+              subcategories: {}
             };
-          } 
+          }
           if (!transformed[row.Category].subcategories[row.Sub_Category]) {
             transformed[row.Category].subcategories[row.Sub_Category] = [];
           }
@@ -191,6 +189,15 @@ export default function App() {
           const existingItem = subList.find(i => i.name === row.Item_Name);
 
           if (existingItem) {
+            // Preserve tags if existing item lacks them
+            if (!existingItem.tags && (row.Tags || row.tags)) {
+              existingItem.tags = row.Tags || row.tags;
+            }
+            // Preserve rating if existing item lacks it
+            if (!existingItem.rating && (row.Rating || row.rating)) {
+              existingItem.rating = row.Rating || row.rating;
+            }
+
             if (!existingItem.variants) {
               existingItem.variants = [
                 { label: existingItem.unit, price: existingItem.price },
@@ -210,6 +217,8 @@ export default function App() {
               unit: row.Unit || "",
               variation: row.Variation || "",
               imageUrl: row.Img_name,
+              tags: row.Tags || row.tags || "", 
+              rating: row.Rating || row.rating || "", // 👈 Mapped Rating column here
               isCustomisable: row.Customisable?.trim().toLowerCase() === 'yes'
             });
           }
@@ -224,7 +233,6 @@ export default function App() {
     setCart((prev) => {
       const itemPrice = parseFloat(item.price) || 0;
       const exists = prev.find(i => i.name === item.name && i.unit === item.unit);
-      
       if (exists) {
         return prev.map((i) =>
           (i.name === item.name && i.unit === item.unit)
@@ -292,14 +300,12 @@ export default function App() {
   return (
     <div style={{ height: '100dvh', display: 'flex', flexDirection: 'column', position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: theme.bg, color: theme.text, fontFamily: 'system-ui, sans-serif' }}>
       <LimitedOfferModal theme={theme} setView={setView} />
-      
       <Header theme={theme} setView={setView} />
-      
       <main style={{ flex: 1, paddingTop: '5px', paddingLeft: '20px', paddingRight: '20px', paddingBottom: '80px', overflowY: 'auto' }}>
         {view === 'offers' && <OffersTab theme={theme} />}
 
         {(view === 'home' || view === 'subcat') && (
-          <HomeAndSubCategoryView 
+          <HomeAndSubCategoryView
             view={view}
             theme={theme}
             searchQuery={searchQuery}
@@ -318,7 +324,7 @@ export default function App() {
         )}
 
         {view === 'items' && (
-          <ItemsView 
+          <ItemsView
             setView={setView}
             backButtonStyle={backButtonStyle}
             theme={theme}
@@ -338,7 +344,7 @@ export default function App() {
         )}
 
         {view === 'cart' && (
-          <CartView 
+          <CartView
             setView={setView}
             backButtonStyle={backButtonStyle}
             theme={theme}
@@ -353,14 +359,14 @@ export default function App() {
         )}
 
         {view === 'verifying' && (
-          <PaymentVerificationView 
+          <PaymentVerificationView
             theme={theme}
             onVerificationComplete={() => setView('track')}
           />
         )}
 
         {view === 'track' && (
-          <TrackView 
+          <TrackView
             setView={setView}
             currentStage={currentStage}
             theme={theme}
@@ -373,7 +379,7 @@ export default function App() {
         )}
 
         {view === 'delivery' && (
-          <DeliveryView 
+          <DeliveryView
             theme={theme}
             setView={setView}
             customer={customer}
@@ -397,7 +403,7 @@ export default function App() {
         )}
 
         {view === 'payment' && (
-          <PaymentView 
+          <PaymentView
             theme={theme}
             setView={setView}
             cart={cart}
@@ -421,7 +427,7 @@ export default function App() {
         )}
 
         {view?.toLowerCase() === 'info' && (
-          <SupportInfoView 
+          <SupportInfoView
             theme={theme}
             setView={setView}
             showTC={showTC}
@@ -434,45 +440,45 @@ export default function App() {
         )}
 
         {(view === 'account' || view === 'profile') && (
-          <CustomerView 
-            onBack={() => setView('home')} 
+          <CustomerView
+            onBack={() => setView('home')}
             customer={customer}
           />
         )}
 
         {view === 'admin-customers' && (
-          <AdminCustomerDashboard 
-            theme={theme} 
-            onBack={() => setView('home')} 
+          <AdminCustomerDashboard
+            theme={theme}
+            onBack={() => setView('home')}
             setView={setView}
           />
         )}
       </main>
 
       {!['cart', 'delivery', 'payment', 'verifying', 'track', 'profile', 'account', 'admin-customers'].includes(view) && (
-        <StickyCartBar 
-          cart={cart} 
-          onViewCart={() => setView('cart')} 
+        <StickyCartBar
+          cart={cart}
+          onViewCart={() => setView('cart')}
         />
       )}
 
       <Footer view={view} setView={setView} theme={theme} cart={cart} />
 
       {activeModal.type === 'ZOOM' && (
-        <ItemModal 
-          selectedItem={activeModal.data} 
-          setSelectedItem={closeModal} 
+        <ItemModal
+          selectedItem={activeModal.data}
+          setSelectedItem={closeModal}
           addToCart={addToCart}
           theme={theme}
-          resolveImagePath={resolveImagePath} 
+          resolveImagePath={resolveImagePath}
         />
       )}
 
       {activeModal.type === 'VARIANTS' && (
-        <MultiVariantDrawer 
-          selectedItem={activeModal.type === 'VARIANTS' ? activeModal.data : null} 
-          setSelectedItem={(item) => setActiveModal({ type: item ? 'VARIANTS' : null, data: item })} 
-          addToCart={addToCart} 
+        <MultiVariantDrawer
+          selectedItem={activeModal.type === 'VARIANTS' ? activeModal.data : null}
+          setSelectedItem={(item) => setActiveModal({ type: item ? 'VARIANTS' : null, data: item })}
+          addToCart={addToCart}
         />
       )}
     </div>
