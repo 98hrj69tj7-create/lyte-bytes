@@ -104,7 +104,7 @@ export default function LimitedOfferModal({ theme = {}, setView }) {
       }}
     >
       <div 
-        onClick={() => e.stopPropagation()}
+        onClick={(e) => e.stopPropagation(null)}
         style={{
           background: activeTheme.bg,
           borderRadius: activeTheme.radius,

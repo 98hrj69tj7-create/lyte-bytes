@@ -54,7 +54,7 @@ export function getAllOffers(currentOrderNumber = 1) {
   if (isWithinDateWindow && isWithinTimeWindow) {
     offersList.push({
       id: 'early_aug',
-      tag: "LIMITED WINDOW",
+      tag: "LIMITED",
       title: "INDEPENDENCE DAY SPECIAL",
       description: "Get special discounts this Independence Day.",
       code: "IND15",
