@@ -1,7 +1,33 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { List as ListIcon, Grid, ArrowLeft, ChevronRight } from 'lucide-react';
 import ItemCard from './ItemCard';
 
+/**
+ * Safely extracts an image path from an object regardless of property naming convention
+ */
+function getImgUrl(obj) {
+  if (!obj || typeof obj !== 'object') return null;
+  return obj.imageUrl || obj.image || obj.img || obj.banner || obj.categoryImage || obj.photo || null;
+}
+
+/**
+ * Case-insensitive category lookup helper
+ */
+function findCategoryData(menuData, catKey) {
+  if (!menuData || !catKey) return null;
+  if (menuData[catKey]) return menuData[catKey];
+  
+  const normalizedKey = String(catKey).trim().toLowerCase();
+  const foundKey = Object.keys(menuData).find(
+    k => String(k).trim().toLowerCase() === normalizedKey
+  );
+  
+  return foundKey ? menuData[foundKey] : null;
+}
+
+/**
+ * Generates a clean, Base64-encoded SVG fallback data URL.
+ */
 function getFallbackSvgImage(title = "Lyte Bytes") {
   const svgString = `
     <svg xmlns="http://www.w3.org/2000/svg" width="600" height="400" viewBox="0 0 600 400">
@@ -24,12 +50,70 @@ function getFallbackSvgImage(title = "Lyte Bytes") {
       <text x="300" y="270" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="600" fill="#FF5958" text-anchor="middle" letter-spacing="3">CRAFTED DELICACY</text>
     </svg>
   `;
-  return `data:image/svg+xml;utf8,${encodeURIComponent(svgString)}`;
+
+  const base64 = typeof window !== 'undefined' && window.btoa 
+    ? window.btoa(unescape(encodeURIComponent(svgString))) 
+    : '';
+
+  return `data:image/svg+xml;base64,${base64}`;
 }
 
+/**
+ * Resolves the image path for a subcategory using hierarchical fallback
+ */
+function resolveSubcategoryImage(subName, activeCat, menuData, resolveImagePath) {
+  const catObj = findCategoryData(menuData, activeCat);
+  if (!catObj) return getFallbackSvgImage(subName);
+
+  let subItemImg = null;
+
+  if (Array.isArray(catObj.subcategories)) {
+    const subObj = catObj.subcategories.find(
+      s => (s.name || s.title || s.id || '').trim().toLowerCase() === String(subName).trim().toLowerCase()
+    );
+    if (subObj) {
+      subItemImg = getImgUrl(subObj);
+      if (!subItemImg && Array.isArray(subObj.items)) {
+        const itemWithImg = subObj.items.find(item => getImgUrl(item));
+        subItemImg = getImgUrl(itemWithImg);
+      }
+    }
+  } else if (catObj.subcategories && typeof catObj.subcategories === 'object') {
+    const matchedKey = Object.keys(catObj.subcategories).find(
+      k => k.trim().toLowerCase() === String(subName).trim().toLowerCase()
+    );
+    if (matchedKey) {
+      const val = catObj.subcategories[matchedKey];
+      if (Array.isArray(val)) {
+        const itemWithImg = val.find(item => getImgUrl(item));
+        subItemImg = getImgUrl(itemWithImg);
+      } else if (typeof val === 'object') {
+        subItemImg = getImgUrl(val);
+      }
+    }
+  }
+
+  const catImg = getImgUrl(catObj);
+
+  const resolvedSubItemImg = subItemImg ? resolveImagePath(subItemImg) : null;
+  const resolvedCatImg = catImg ? resolveImagePath(catImg) : null;
+
+  return resolvedSubItemImg || resolvedCatImg || getFallbackSvgImage(subName);
+}
+
+/**
+ * Category Card Component
+ */
 function CategoryCard({ cat, resolveImagePath, theme, onClick }) {
   const [isHovered, setIsHovered] = useState(false);
-  const bgImage = cat.imageUrl ? resolveImagePath(cat.imageUrl) : getFallbackSvgImage(cat.name);
+  const rawPath = getImgUrl(cat);
+  const initialImg = rawPath ? resolveImagePath(rawPath) : getFallbackSvgImage(cat.name);
+  const [imgSrc, setImgSrc] = useState(initialImg);
+
+  useEffect(() => {
+    const freshRaw = getImgUrl(cat);
+    setImgSrc(freshRaw ? resolveImagePath(freshRaw) : getFallbackSvgImage(cat.name));
+  }, [cat]);
 
   return (
     <div 
@@ -50,50 +134,60 @@ function CategoryCard({ cat, resolveImagePath, theme, onClick }) {
         alignItems: 'center'
       }}
     >
-      <div style={{
-        position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
-        backgroundImage: `url(${bgImage})`, backgroundSize: 'cover', backgroundPosition: 'center',
-        transform: isHovered ? 'scale(1.06)' : 'scale(1)',
-        transition: 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
-        zIndex: 1
-      }} />
+      <img 
+        src={imgSrc}
+        alt={cat.name}
+        onError={() => setImgSrc(getFallbackSvgImage(cat.name))}
+        style={{
+          position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
+          objectFit: 'cover',
+          transform: isHovered ? 'scale(1.06)' : 'scale(1)',
+          transition: 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
+          zIndex: 1
+        }}
+      />
+
       <div style={{
         position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
         background: 'linear-gradient(90deg, rgba(20,18,15,0.88) 0%, rgba(20,18,15,0.6) 60%, rgba(20,18,15,0.3) 100%)',
         zIndex: 2
       }} />
+
       <div style={{ position: 'relative', zIndex: 3, padding: '0 22px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', boxSizing: 'border-box' }}>
         <div style={{ flex: 1 }}>
-          <span style={{ fontSize: '10px', textTransform: 'uppercase', letterSpacing: '1.5px', color: '#FF5958', fontWeight: '700', display: 'block', marginBottom: '4px' }}>
-            Collection
-          </span>
           <h3 style={{ fontSize: '19px', fontWeight: '700', color: '#FFFFFF', margin: 0, letterSpacing: '0.5px', textShadow: '0 2px 4px rgba(0,0,0,0.3)' }}>
             {cat.name}
           </h3>
         </div>
         <div style={{
           width: '32px', height: '32px', borderRadius: '50%',
-          backgroundColor: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(4px)',
-          display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#FFFFFF',
-          border: '1px solid rgba(255,255,255,0.2)',
+          backgroundColor: '#FF5958',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          boxShadow: '0 2px 8px rgba(255, 89, 88, 0.4)',
           transform: isHovered ? 'translateX(4px)' : 'translateX(0)',
           transition: 'transform 0.3s ease'
         }}>
-          <ChevronRight size={18} />
+          <ChevronRight size={18} color="#FFFFFF" />
         </div>
       </div>
     </div>
   );
 }
 
+/**
+ * SubCategory Card Component
+ */
 function SubCategoryCard({ sub, resolveImagePath, activeCat, menuData, onClick }) {
   const [isHovered, setIsHovered] = useState(false);
-  const catObj = menuData[activeCat];
-  const subItems = (catObj && catObj.subcategories && catObj.subcategories[sub]) || [];
-  const foundItemWithImage = subItems.find(item => item.imageUrl)?.imageUrl;
-  const representativeImage = foundItemWithImage 
-    ? resolveImagePath(foundItemWithImage) 
-    : (catObj?.imageUrl ? resolveImagePath(catObj.imageUrl) : getFallbackSvgImage(sub));
+  
+  const initialImg = resolveSubcategoryImage(sub, activeCat, menuData, resolveImagePath);
+  const [imgSrc, setImgSrc] = useState(initialImg);
+
+  useEffect(() => {
+    setImgSrc(resolveSubcategoryImage(sub, activeCat, menuData, resolveImagePath));
+  }, [sub, activeCat, menuData]);
+
+  const fallbackSvg = getFallbackSvgImage(sub);
 
   return (
     <div 
@@ -114,42 +208,59 @@ function SubCategoryCard({ sub, resolveImagePath, activeCat, menuData, onClick }
         alignItems: 'center'
       }}
     >
-      <div style={{
-        position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
-        backgroundImage: `url(${representativeImage})`, backgroundSize: 'cover', backgroundPosition: 'center',
-        transform: isHovered ? 'scale(1.06)' : 'scale(1)',
-        transition: 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
-        zIndex: 1
-      }} />
+      <img 
+        src={imgSrc}
+        alt={sub}
+        onError={() => {
+          const catObj = findCategoryData(menuData, activeCat);
+          const catImg = getImgUrl(catObj);
+          const resolvedCatImg = catImg ? resolveImagePath(catImg) : null;
+
+          if (imgSrc !== resolvedCatImg && resolvedCatImg) {
+            setImgSrc(resolvedCatImg);
+          } else if (imgSrc !== fallbackSvg) {
+            setImgSrc(fallbackSvg);
+          }
+        }}
+        style={{
+          position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
+          objectFit: 'cover',
+          transform: isHovered ? 'scale(1.06)' : 'scale(1)',
+          transition: 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
+          zIndex: 1
+        }}
+      />
+
       <div style={{
         position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
         background: 'linear-gradient(90deg, rgba(20,18,15,0.88) 0%, rgba(20,18,15,0.6) 60%, rgba(20,18,15,0.3) 100%)',
         zIndex: 2
       }} />
+
       <div style={{ position: 'relative', zIndex: 3, padding: '0 22px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', boxSizing: 'border-box' }}>
         <div style={{ flex: 1 }}>
-          <span style={{ fontSize: '10px', textTransform: 'uppercase', letterSpacing: '1.5px', color: '#FF5958', fontWeight: '700', display: 'block', marginBottom: '4px' }}>
-            Menu
-          </span>
           <h3 style={{ fontSize: '19px', fontWeight: '700', color: '#FFFFFF', margin: 0, letterSpacing: '0.5px', textShadow: '0 2px 4px rgba(0,0,0,0.3)' }}>
             {sub}
           </h3>
         </div>
         <div style={{
           width: '32px', height: '32px', borderRadius: '50%',
-          backgroundColor: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(4px)',
-          display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#FFFFFF',
-          border: '1px solid rgba(255,255,255,0.2)',
+          backgroundColor: '#FF5958',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          boxShadow: '0 2px 8px rgba(255, 89, 88, 0.4)',
           transform: isHovered ? 'translateX(4px)' : 'translateX(0)',
           transition: 'transform 0.3s ease'
         }}>
-          <ChevronRight size={18} />
+          <ChevronRight size={18} color="#FFFFFF" />
         </div>
       </div>
     </div>
   );
 }
 
+/**
+ * Main View Component
+ */
 export default function HomeAndSubCategoryView({ 
   view, 
   theme, 
@@ -166,6 +277,17 @@ export default function HomeAndSubCategoryView({
   addToCart, 
   resolveImagePath 
 }) {
+  const currentCategoryData = findCategoryData(menuData, activeCat);
+
+  let subCategoryKeys = [];
+  if (currentCategoryData && currentCategoryData.subcategories) {
+    if (Array.isArray(currentCategoryData.subcategories)) {
+      subCategoryKeys = currentCategoryData.subcategories.map(s => typeof s === 'string' ? s : (s.name || s.title || s.id));
+    } else if (typeof currentCategoryData.subcategories === 'object') {
+      subCategoryKeys = Object.keys(currentCategoryData.subcategories);
+    }
+  }
+
   return (
     <>
       {view === 'home' && (
@@ -221,25 +343,40 @@ export default function HomeAndSubCategoryView({
               </div>
 
               <div style={{ display: layout === 'grid' ? 'grid' : 'flex', gridTemplateColumns: layout === 'grid' ? 'repeat(2, 1fr)' : 'none', flexDirection: 'column', gap: '14px' }}>
-                {Object.values(menuData).flatMap(cat => Object.values(cat.subcategories).flat())
-                  .filter(item => item.name.toLowerCase().includes(searchQuery.toLowerCase()))
-                  .map((item, i) => {
-                    const processedItem = {
-                      ...item,
-                      imageUrl: item.imageUrl || getFallbackSvgImage(item.name)
-                    };
-                    return (
-                      <ItemCard 
-                        key={i}
-                        item={processedItem} 
-                        openModal={openModal} 
-                        addToCart={addToCart} 
-                        resolveImagePath={resolveImagePath} 
-                        layout={layout}
-                        theme={theme}
-                      />
-                    );
-                  })}
+                {Object.entries(menuData).flatMap(([catKey, cat]) => {
+                  const catImg = getImgUrl(cat);
+                  const subValues = Array.isArray(cat.subcategories) 
+                    ? cat.subcategories.flatMap(s => s.items || s) 
+                    : Object.values(cat.subcategories || {}).flat();
+
+                  return subValues.map(item => ({
+                    ...item,
+                    parentCatImage: catImg
+                  }));
+                })
+                .filter(item => item && item.name && item.name.toLowerCase().includes(searchQuery.toLowerCase()))
+                .map((item, i) => {
+                  const rawItemImg = getImgUrl(item);
+                  const resolvedImg = rawItemImg ? resolveImagePath(rawItemImg) : null;
+                  const resolvedCatImg = item.parentCatImage ? resolveImagePath(item.parentCatImage) : null;
+
+                  const processedItem = {
+                    ...item,
+                    imageUrl: resolvedImg || resolvedCatImg || getFallbackSvgImage(item.name)
+                  };
+
+                  return (
+                    <ItemCard 
+                      key={i}
+                      item={processedItem} 
+                      openModal={openModal} 
+                      addToCart={addToCart} 
+                      resolveImagePath={resolveImagePath} 
+                      layout={layout}
+                      theme={theme}
+                    />
+                  );
+                })}
               </div>
             </div>
           ) : (
@@ -247,7 +384,7 @@ export default function HomeAndSubCategoryView({
               {Object.keys(menuData).map(catKey => (
                 <CategoryCard 
                   key={catKey}
-                  cat={{ name: catKey, imageUrl: menuData[catKey].imageUrl }}
+                  cat={{ name: catKey, ...menuData[catKey] }}
                   resolveImagePath={resolveImagePath}
                   theme={theme}
                   onClick={() => { setActiveCat(catKey); setActiveSub(null); setView('subcat'); }}
@@ -273,7 +410,7 @@ export default function HomeAndSubCategoryView({
           </div>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-            {activeCat && menuData[activeCat]?.subcategories && Object.keys(menuData[activeCat].subcategories).map(sub => (
+            {subCategoryKeys.map(sub => (
               <SubCategoryCard 
                 key={sub}
                 sub={sub}
