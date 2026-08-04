@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { List as ListIcon, Grid, ArrowLeft, ChevronRight } from 'lucide-react';
+import { List as ListIcon, Grid, ArrowLeft, ChevronRight, Search, MessageCircle } from 'lucide-react';
 import ItemCard from './ItemCard';
 
 /**
@@ -277,7 +277,13 @@ export default function HomeAndSubCategoryView({
   addToCart, 
   resolveImagePath 
 }) {
+  const [showStory, setShowStory] = useState(false);
   const currentCategoryData = findCategoryData(menuData, activeCat);
+
+  // Check if current active category is Catering
+  const isCateringCategory = activeCat && activeCat.toLowerCase().includes('catering');
+  const whatsappNumber = "919876543210"; 
+  const whatsappMessage = encodeURIComponent("Hi Lyte Bytes, I would like to inquire about your catering services and customized menu packages!");
 
   let subCategoryKeys = [];
   if (currentCategoryData && currentCategoryData.subcategories) {
@@ -301,28 +307,116 @@ export default function HomeAndSubCategoryView({
             </h1>
           </div>
 
-          <div style={{ marginBottom: '24px' }}>
-            <input 
-              type="text"
-              placeholder="Search across all menus..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              style={{
-                width: '100%',
-                padding: '14px 20px',
-                border: '1.5px solid #FF5958',
-                borderRadius: '16px',
-                backgroundColor: '#FFFFFF',
-                color: theme.text,
-                fontSize: '14px',
-                fontWeight: '500',
-                outline: 'none',
-                boxSizing: 'border-box',
-                boxShadow: '0 0 12px rgba(255, 89, 88, 0.25)',
-                transition: 'all 0.3s ease'
-              }}
-            />
+          {/* --- PREMIUM SEARCH BAR --- */}
+          <div style={{ marginBottom: '20px' }}>
+            <div style={{
+              position: 'relative',
+              display: 'flex',
+              alignItems: 'center',
+              width: '100%',
+              backgroundColor: '#FFFFFF',
+              borderRadius: '16px',
+              border: '1.5px solid #FF5958',
+              boxShadow: '0 4px 20px rgba(255, 89, 88, 0.18), inset 0 1px 2px rgba(255, 255, 255, 0.5)',
+              boxSizing: 'border-box',
+              transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)'
+            }}>
+              <span style={{ display: 'flex', alignItems: 'center', paddingLeft: '16px', color: '#FF5958' }}>
+                <Search size={18} />
+              </span>
+              <input 
+                type="text"
+                placeholder="Search across all menus..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                style={{
+                  width: '100%',
+                  padding: '14px 14px',
+                  border: 'none',
+                  backgroundColor: 'transparent',
+                  color: theme.text,
+                  fontSize: '14px',
+                  fontWeight: '500',
+                  outline: 'none',
+                  boxSizing: 'border-box'
+                }}
+              />
+              {searchQuery && (
+                <button 
+                  onClick={() => setSearchQuery('')}
+                  style={{
+                    background: 'none',
+                    border: 'none',
+                    color: '#999',
+                    cursor: 'pointer',
+                    paddingRight: '16px',
+                    fontSize: '14px',
+                    fontWeight: 'bold',
+                    display: 'flex',
+                    alignItems: 'center'
+                  }}
+                >
+                  ✕
+                </button>
+              )}
+            </div>
           </div>
+
+          {/* --- THE LYTE BYTES STORY CARD --- */}
+          {!searchQuery.trim() && (
+            <div style={{
+              backgroundColor: '#FFFDF9',
+              border: theme.border,
+              borderRadius: '16px',
+              padding: '12px',
+              marginBottom: '20px',
+              textAlign: 'left',
+              boxShadow: '0 2px 6px rgba(0,0,0,0.03)'
+            }}>
+              <div 
+                onClick={() => setShowStory(!showStory)}
+                style={{ 
+                  display: 'flex', 
+                  justifyContent: 'space-between', 
+                  alignItems: 'center', 
+                  cursor: 'pointer',
+                  userSelect: 'none',
+                  WebkitTapHighlightColor: 'transparent'
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <span style={{ fontSize: '16px' }}>✨</span>
+                  <h3 style={{ margin: 0, fontSize: '15px', fontWeight: '600', color: theme.buttonBg || '#4A443A' }}>
+                    Our Story & Quality Promise
+                  </h3>
+                </div>
+                <span style={{ fontSize: '13px', color: '#FF5958', fontWeight: '600' }}>
+                  {showStory ? 'Less ▲' : 'More ▼'}
+                </span>
+              </div>
+
+              {showStory && (
+                <div style={{ 
+                  marginTop: '12px', 
+                  fontSize: '14px', 
+                  lineHeight: '1.5', 
+                  color: theme.text, 
+                  borderTop: '1px solid #F0E6D2', 
+                  paddingTop: '12px' 
+                }}>
+                  <p style={{ marginBottom: '8px' }}>
+                    Welcome to <b>Lyte Bytes</b>! Backed by professional hotel management expertise, we blend culinary precision with authentic home-crafted warmth to bring you exceptional delicacies from our signature Ammi’s Achar and rich bakery dishes to grand catering spreads.
+                  </p>
+                  <p style={{ marginBottom: '8px' }}>
+                    <b>Uncompromising Quality:</b> We use strictly premium, restaurant-grade ingredients, pure oils, and farm-fresh produce with zero artificial chemical preservatives.
+                  </p>
+                  <p style={{ margin: 0 }}>
+                    <b>Trusted Standards:</b> Fully FSSAI registered and Halal compliant, every batch is prepared in a thoroughly sanitized environment keeping your family's safety first.
+                  </p>
+                </div>
+              )}
+            </div>
+          )}
 
           {searchQuery.trim() ? (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
@@ -397,7 +491,7 @@ export default function HomeAndSubCategoryView({
 
       {view === 'subcat' && (
         <div style={{ paddingBottom: '140px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', position: 'relative', marginBottom: '20px', padding: '6px 0' }}>
+          <div style={{ display: 'flex', alignItems: 'center', position: 'relative', marginBottom: '14px', padding: '6px 0' }}>
             <button 
               onClick={() => setView('home')} 
               style={{ background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px', color: theme.text, fontSize: '14px', fontWeight: '700', padding: '4px 8px', borderRadius: '8px', backgroundColor: 'rgba(0,0,0,0.04)', zIndex: 1 }}
@@ -409,6 +503,66 @@ export default function HomeAndSubCategoryView({
             </h2>
           </div>
 
+          {/* --- SLEEK & PREMIUM WHATSAPP CATERING INQUIRY CARD (NOW ON TOP & SLIM) --- */}
+          {isCateringCategory && (
+            <a
+              href={`https://wa.me/${whatsappNumber}?text=${whatsappMessage}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                backgroundColor: '#FFFDF9',
+                border: theme.border || '1px solid #F0E6D2',
+                borderRadius: '14px',
+                padding: '10px 14px',
+                marginBottom: '14px',
+                textDecoration: 'none',
+                boxShadow: '0 2px 6px rgba(0,0,0,0.02)',
+                transition: 'all 0.3s ease',
+                cursor: 'pointer'
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <div style={{
+                  backgroundColor: 'rgba(37, 211, 102, 0.12)',
+                  borderRadius: '50%',
+                  width: '32px',
+                  height: '32px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  flexShrink: 0
+                }}>
+                  <MessageCircle size={28} color="#25D366" />
+                </div>
+                <div>
+                  <h4 style={{ margin: 0, fontSize: '13px', fontWeight: '700', color: theme.text, letterSpacing: '0.1px' }}>
+                    Custom bulk menus & pricing?
+                  </h4>
+                  <p style={{ margin: '1px 0 0 0', fontSize: '11px', color: '#777', fontWeight: '500' }}>
+                     Chat with us on WhatsApp
+                  </p>
+                </div>
+              </div>
+              <div style={{
+                backgroundColor: '#25D366',
+                color: '#FFFFFF',
+                borderRadius: '8px',
+                padding: '5px 10px',
+                fontSize: '11px',
+                fontWeight: '700',
+                whiteSpace: 'nowrap',
+                boxShadow: '0 2px 5px rgba(37, 211, 102, 0.2)',
+                flexShrink: 0
+              }}>
+                Chat Now
+              </div>
+            </a>
+          )}
+
+          {/* Subcategories List */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
             {subCategoryKeys.map(sub => (
               <SubCategoryCard 
