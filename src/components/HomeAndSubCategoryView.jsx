@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { List as ListIcon, Grid, ArrowLeft, ChevronRight, Search, MessageCircle } from 'lucide-react';
+import { List as ListIcon, Grid, ArrowLeft, ChevronRight, ChevronDown, Search, MessageCircle, Heart, Sparkles, Clock, ShieldCheck, ChefHat, BookOpen, Home } from 'lucide-react';
 import ItemCard from './ItemCard';
 
 /**
@@ -102,7 +102,7 @@ function resolveSubcategoryImage(subName, activeCat, menuData, resolveImagePath)
 }
 
 /**
- * Category Card Component
+ * Category Card Component (Sleek, Compact, High-End Luxury Polish)
  */
 function CategoryCard({ cat, resolveImagePath, theme, onClick }) {
   const [isHovered, setIsHovered] = useState(false);
@@ -122,16 +122,17 @@ function CategoryCard({ cat, resolveImagePath, theme, onClick }) {
       onClick={onClick}
       style={{ 
         position: 'relative',
-        height: '110px',
+        height: '84px',
         borderRadius: '16px',
         overflow: 'hidden',
         cursor: 'pointer',
-        boxShadow: isHovered ? '0 16px 36px rgba(0,0,0,0.22)' : '0 6px 16px rgba(0,0,0,0.1)',
-        transform: isHovered ? 'translateY(-4px)' : 'translateY(0px)',
-        transition: 'all 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
-        border: '1px solid rgba(216, 199, 165, 0.4)',
+        boxShadow: isHovered ? '0 12px 28px rgba(0,0,0,0.18)' : '0 4px 16px rgba(0,0,0,0.04)',
+        transform: isHovered ? 'translateY(-2px)' : 'translateY(0px)',
+        transition: 'all 0.35s cubic-bezier(0.16, 1, 0.3, 1)',
+        border: '0.5px solid rgba(216, 199, 165, 0.6)',
         display: 'flex',
-        alignItems: 'center'
+        alignItems: 'center',
+        backgroundColor: '#1A1714'
       }}
     >
       <img 
@@ -141,33 +142,38 @@ function CategoryCard({ cat, resolveImagePath, theme, onClick }) {
         style={{
           position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
           objectFit: 'cover',
-          transform: isHovered ? 'scale(1.06)' : 'scale(1)',
-          transition: 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
-          zIndex: 1
+          transform: isHovered ? 'scale(1.05)' : 'scale(1)',
+          transition: 'transform 0.5s cubic-bezier(0.16, 1, 0.3, 1)',
+          zIndex: 1,
+          opacity: 0.85
         }}
       />
 
       <div style={{
         position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
-        background: 'linear-gradient(90deg, rgba(20,18,15,0.88) 0%, rgba(20,18,15,0.6) 60%, rgba(20,18,15,0.3) 100%)',
+        background: 'linear-gradient(90deg, rgba(20,18,15,0.92) 0%, rgba(20,18,15,0.7) 55%, rgba(20,18,15,0.35) 100%)',
         zIndex: 2
       }} />
 
-      <div style={{ position: 'relative', zIndex: 3, padding: '0 22px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', boxSizing: 'border-box' }}>
-        <div style={{ flex: 1 }}>
-          <h3 style={{ fontSize: '19px', fontWeight: '700', color: '#FFFFFF', margin: 0, letterSpacing: '0.5px', textShadow: '0 2px 4px rgba(0,0,0,0.3)' }}>
+      <div style={{ position: 'relative', zIndex: 3, padding: '0 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', boxSizing: 'border-box' }}>
+        <div style={{ flex: 1, paddingRight: '12px' }}>
+          <h3 style={{ fontSize: '16px', fontWeight: '700', color: '#FFFFFF', margin: 0, letterSpacing: '-0.2px', textShadow: '0 1px 3px rgba(0,0,0,0.4)', lineHeight: '1.2' }}>
             {cat.name}
           </h3>
+          <span style={{ fontSize: '10.5px', fontWeight: '500', color: '#E6D5BC', letterSpacing: '0.5px', textTransform: 'uppercase', opacity: 0.9 }}>
+            Explore Collection
+          </span>
         </div>
         <div style={{
-          width: '32px', height: '32px', borderRadius: '50%',
+          width: '28px', height: '28px', borderRadius: '50%',
           backgroundColor: '#FF5958',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          boxShadow: '0 2px 8px rgba(255, 89, 88, 0.4)',
-          transform: isHovered ? 'translateX(4px)' : 'translateX(0)',
-          transition: 'transform 0.3s ease'
+          boxShadow: '0 2px 6px rgba(255, 89, 88, 0.35)',
+          transform: isHovered ? 'translateX(3px)' : 'translateX(0)',
+          transition: 'transform 0.3s ease',
+          flexShrink: 0
         }}>
-          <ChevronRight size={18} color="#FFFFFF" />
+          <ChevronRight size={15} color="#FFFFFF" />
         </div>
       </div>
     </div>
@@ -175,7 +181,7 @@ function CategoryCard({ cat, resolveImagePath, theme, onClick }) {
 }
 
 /**
- * SubCategory Card Component
+ * SubCategory Card Component (Sleek, Compact, High-End)
  */
 function SubCategoryCard({ sub, resolveImagePath, activeCat, menuData, onClick }) {
   const [isHovered, setIsHovered] = useState(false);
@@ -196,16 +202,17 @@ function SubCategoryCard({ sub, resolveImagePath, activeCat, menuData, onClick }
       onClick={onClick}
       style={{ 
         position: 'relative',
-        height: '110px',
+        height: '84px',
         borderRadius: '16px',
         overflow: 'hidden',
         cursor: 'pointer',
-        boxShadow: isHovered ? '0 16px 36px rgba(0,0,0,0.22)' : '0 6px 16px rgba(0,0,0,0.1)',
-        transform: isHovered ? 'translateY(-4px)' : 'translateY(0px)',
-        transition: 'all 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
-        border: '1px solid rgba(216, 199, 165, 0.4)',
+        boxShadow: isHovered ? '0 12px 28px rgba(0,0,0,0.18)' : '0 4px 16px rgba(0,0,0,0.04)',
+        transform: isHovered ? 'translateY(-2px)' : 'translateY(0px)',
+        transition: 'all 0.35s cubic-bezier(0.16, 1, 0.3, 1)',
+        border: '0.5px solid rgba(216, 199, 165, 0.6)',
         display: 'flex',
-        alignItems: 'center'
+        alignItems: 'center',
+        backgroundColor: '#1A1714'
       }}
     >
       <img 
@@ -225,33 +232,38 @@ function SubCategoryCard({ sub, resolveImagePath, activeCat, menuData, onClick }
         style={{
           position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
           objectFit: 'cover',
-          transform: isHovered ? 'scale(1.06)' : 'scale(1)',
-          transition: 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
-          zIndex: 1
+          transform: isHovered ? 'scale(1.05)' : 'scale(1)',
+          transition: 'transform 0.5s cubic-bezier(0.16, 1, 0.3, 1)',
+          zIndex: 1,
+          opacity: 0.85
         }}
       />
 
       <div style={{
         position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
-        background: 'linear-gradient(90deg, rgba(20,18,15,0.88) 0%, rgba(20,18,15,0.6) 60%, rgba(20,18,15,0.3) 100%)',
+        background: 'linear-gradient(90deg, rgba(20,18,15,0.92) 0%, rgba(20,18,15,0.7) 55%, rgba(20,18,15,0.35) 100%)',
         zIndex: 2
       }} />
 
-      <div style={{ position: 'relative', zIndex: 3, padding: '0 22px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', boxSizing: 'border-box' }}>
-        <div style={{ flex: 1 }}>
-          <h3 style={{ fontSize: '19px', fontWeight: '700', color: '#FFFFFF', margin: 0, letterSpacing: '0.5px', textShadow: '0 2px 4px rgba(0,0,0,0.3)' }}>
+      <div style={{ position: 'relative', zIndex: 3, padding: '0 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', boxSizing: 'border-box' }}>
+        <div style={{ flex: 1, paddingRight: '12px' }}>
+          <h3 style={{ fontSize: '16px', fontWeight: '700', color: '#FFFFFF', margin: 0, letterSpacing: '-0.2px', textShadow: '0 1px 3px rgba(0,0,0,0.4)', lineHeight: '1.2' }}>
             {sub}
           </h3>
+          <span style={{ fontSize: '10.5px', fontWeight: '500', color: '#E6D5BC', letterSpacing: '0.5px', textTransform: 'uppercase', opacity: 0.9 }}>
+            Handcrafted Selection
+          </span>
         </div>
         <div style={{
-          width: '32px', height: '32px', borderRadius: '50%',
+          width: '28px', height: '28px', borderRadius: '50%',
           backgroundColor: '#FF5958',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          boxShadow: '0 2px 8px rgba(255, 89, 88, 0.4)',
-          transform: isHovered ? 'translateX(4px)' : 'translateX(0)',
-          transition: 'transform 0.3s ease'
+          boxShadow: '0 2px 6px rgba(255, 89, 88, 0.35)',
+          transform: isHovered ? 'translateX(3px)' : 'translateX(0)',
+          transition: 'transform 0.3s ease',
+          flexShrink: 0
         }}>
-          <ChevronRight size={18} color="#FFFFFF" />
+          <ChevronRight size={15} color="#FFFFFF" />
         </div>
       </div>
     </div>
@@ -280,9 +292,8 @@ export default function HomeAndSubCategoryView({
   const [showStory, setShowStory] = useState(false);
   const currentCategoryData = findCategoryData(menuData, activeCat);
 
-  // Check if current active category is Catering
   const isCateringCategory = activeCat && activeCat.toLowerCase().includes('catering');
-  const whatsappNumber = "919876543210"; 
+  const whatsappNumber = "9108286886"; 
   const whatsappMessage = encodeURIComponent("Hi Lyte Bytes, I would like to inquire about your catering services and customized menu packages!");
 
   let subCategoryKeys = [];
@@ -297,33 +308,31 @@ export default function HomeAndSubCategoryView({
   return (
     <>
       {view === 'home' && (
-        <div style={{ paddingBottom: '140px' }}>
-          <div style={{ textAlign: 'center', margin: '8px 0 16px 0' }}>
-            <span style={{ fontSize: '11px', color: theme.brand, fontWeight: '700', letterSpacing: '2px', textTransform: 'uppercase' }}>
-              ✦ Curated Delicacies ✦
+        <div style={{ paddingBottom: '100px' }}>
+          {/* --- TOP BRAND SLOGAN BAR --- */}
+          <div style={{ textAlign: 'center', margin: '4px 0 10px 0' }}>
+            <span style={{ fontSize: '10px', color: '#B57C3C', fontWeight: '600', letterSpacing: '1.5px', textTransform: 'uppercase', opacity: 0.95 }}>
+              ✦ Home‑Made Heart &nbsp;•&nbsp; Gourmet Delights &nbsp;•&nbsp; Handcrafted Goodness ✦
             </span>
-            <h1 style={{ fontSize: '20px', color: theme.text, margin: '4px 0 0 0', fontWeight: '800', letterSpacing: '0.3px' }}>
-              Freshly Crafted For You
-            </h1>
           </div>
 
-          {/* --- PREMIUM SEARCH BAR --- */}
-          <div style={{ marginBottom: '20px' }}>
+          {/* --- CORAL RED GLOW SEARCH BAR --- */}
+          <div style={{ marginBottom: '12px' }}>
             <div style={{
               position: 'relative',
               display: 'flex',
               alignItems: 'center',
               width: '100%',
               backgroundColor: '#FFFFFF',
-              borderRadius: '16px',
+              borderRadius: '14px',
               border: '1.5px solid #FF5958',
-              boxShadow: '0 4px 20px rgba(255, 89, 88, 0.18), inset 0 1px 2px rgba(255, 255, 255, 0.5)',
+              boxShadow: '0 0 20px rgba(255, 89, 88, 0.28), 0 4px 12px rgba(255, 89, 88, 0.15), inset 0 1px 2px rgba(255, 255, 255, 0.8)',
               boxSizing: 'border-box',
               transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)'
             }}>
-              <span style={{ display: 'flex', alignItems: 'center', paddingLeft: '16px', color: '#FF5958' }}>
-                <Search size={18} />
-              </span>
+              <div style={{ paddingLeft: '14px', display: 'flex', alignItems: 'center', color: '#FF5958' }}>
+                <Search size={16} />
+              </div>
               <input 
                 type="text"
                 placeholder="Search across all menus..."
@@ -331,7 +340,7 @@ export default function HomeAndSubCategoryView({
                 onChange={(e) => setSearchQuery(e.target.value)}
                 style={{
                   width: '100%',
-                  padding: '14px 14px',
+                  padding: '12px 12px 12px 10px',
                   border: 'none',
                   backgroundColor: 'transparent',
                   color: theme.text,
@@ -349,8 +358,8 @@ export default function HomeAndSubCategoryView({
                     border: 'none',
                     color: '#999',
                     cursor: 'pointer',
-                    paddingRight: '16px',
-                    fontSize: '14px',
+                    paddingRight: '14px',
+                    fontSize: '13px',
                     fontWeight: 'bold',
                     display: 'flex',
                     alignItems: 'center'
@@ -362,81 +371,172 @@ export default function HomeAndSubCategoryView({
             </div>
           </div>
 
-          {/* --- THE LYTE BYTES STORY CARD --- */}
+          {/* --- iOS-STYLE REFINED STORY CARD (TOP & LEFT CHAMPAGNE GOLD HIGHLIGHT) --- */}
           {!searchQuery.trim() && (
-            <div style={{
-              backgroundColor: '#FFFDF9',
-              border: theme.border,
-              borderRadius: '16px',
-              padding: '12px',
-              marginBottom: '20px',
-              textAlign: 'left',
-              boxShadow: '0 2px 6px rgba(0,0,0,0.03)'
-            }}>
-              <div 
-                onClick={() => setShowStory(!showStory)}
-                style={{ 
-                  display: 'flex', 
-                  justifyContent: 'space-between', 
-                  alignItems: 'center', 
-                  cursor: 'pointer',
-                  userSelect: 'none',
-                  WebkitTapHighlightColor: 'transparent'
-                }}
-              >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <span style={{ fontSize: '16px' }}>✨</span>
-                  <h3 style={{ margin: 0, fontSize: '15px', fontWeight: '600', color: theme.buttonBg || '#4A443A' }}>
-                    Our Story & Quality Promise
-                  </h3>
+            <div 
+              onClick={() => setShowStory(!showStory)}
+              style={{
+                background: 'linear-gradient(135deg, #FFFDF9 0%, #FAF3E8 100%)',
+                border: '4px solid #D4AF37',
+                borderRadius: '16px',
+                padding: '10px 14px',
+                marginBottom: '14px',
+                textAlign: 'left',
+                boxShadow: '-4px -4px 16px rgba(212, 175, 55, 0.12), 0 4px 20px rgba(0, 0, 0, 0.03)',
+                position: 'relative',
+                overflow: 'hidden',
+                cursor: 'pointer',
+                WebkitTapHighlightColor: 'transparent',
+                transition: 'all 0.35s cubic-bezier(0.16, 1, 0.3, 1)'
+              }}
+            >
+              <div style={{
+                position: 'absolute',
+                top: '-20px',
+                right: '-20px',
+                width: '90px',
+                height: '90px',
+                borderRadius: '50%',
+                background: 'radial-gradient(circle, rgba(255,89,88,0.06) 0%, rgba(255,89,88,0) 70%)',
+                pointerEvents: 'none'
+              }} />
+
+              <div style={{ 
+                display: 'flex', 
+                justifyContent: 'space-between', 
+                alignItems: 'center'
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                  <div style={{
+                    width: '36px',
+                    height: '36px',
+                    borderRadius: '10px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    color: '#FF5958',
+                    flexShrink: '0'
+                  }}>
+                    <Heart size={24} fill="#FF5958" color="#FF5958" />
+                  </div>
+                  <div>
+                    <h3 style={{ margin: '1px 0', fontSize: '17px', fontWeight: '600', color: '#1C1917', letterSpacing: '0.3px', lineHeight: '1.2' }}>
+                      Our Origins & Our Promise
+                    </h3>
+                    <p style={{ margin: '1px 0', fontSize: '12px', color: '#78716C', fontWeight: '500', letterSpacing: '0.3px', lineHeight: '1.3' }}>
+                      A legacy of warmth & authenticity
+                    </p>
+                    <p style={{ margin: '1px 0', fontSize: '11px', color: '#A89F95', fontStyle: 'italic', fontWeight: '400', lineHeight: '1.2' }}>
+                      Since 1995
+                    </p>
+                  </div>
                 </div>
-                <span style={{ fontSize: '13px', color: '#FF5958', fontWeight: '600' }}>
-                  {showStory ? 'Less ▲' : 'More ▼'}
-                </span>
+
+                {/* Clean inline More/Less text link with Down Chevron */}
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '2px',
+                  fontSize: '12px',
+                  fontWeight: '500',
+                  color: '#FF5958',
+                  flexShrink: 0
+                }}>
+                  <span>{showStory ? 'Less' : 'More'}</span>
+                  <ChevronDown 
+                    size={14} 
+                    style={{ 
+                      transform: showStory ? 'rotate(180deg)' : 'rotate(0deg)', 
+                      transition: 'transform 0.3s cubic-bezier(0.16, 1, 0.3, 1)' 
+                    }} 
+                  />
+                </div>
               </div>
 
               {showStory && (
-                <div style={{ 
-                  marginTop: '12px', 
-                  fontSize: '14px', 
-                  lineHeight: '1.5', 
-                  color: theme.text, 
-                  borderTop: '1px solid #F0E6D2', 
-                  paddingTop: '12px' 
-                }}>
-                  <p style={{ marginBottom: '8px' }}>
-                    Welcome to <b>Lyte Bytes</b>! Backed by professional hotel management expertise, we blend culinary precision with authentic home-crafted warmth to bring you exceptional delicacies from our signature Ammi’s Achar and rich bakery dishes to grand catering spreads.
-                  </p>
-                  <p style={{ marginBottom: '8px' }}>
-                    <b>Uncompromising Quality:</b> We use strictly premium, restaurant-grade ingredients, pure oils, and farm-fresh produce with zero artificial chemical preservatives.
-                  </p>
-                  <p style={{ margin: 0 }}>
-                    <b>Trusted Standards:</b> Fully FSSAI registered and Halal compliant, every batch is prepared in a thoroughly sanitized environment keeping your family's safety first.
-                  </p>
+                <div 
+                  onClick={(e) => e.stopPropagation()}
+                  style={{ 
+                    marginTop: '12px', 
+                    fontSize: '13px', 
+                    lineHeight: '1.5', 
+                    color: '#292524', 
+                    borderTop: '0.5px solid rgba(212, 175, 55, 0.4)', 
+                    paddingTop: '10px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '10px'
+                  }}
+                >
+                  <div>
+                    <h4 style={{ fontSize: '12px', textTransform: 'uppercase', letterSpacing: '1.2px', color: '#FF5958', fontWeight: '700', margin: '0 0 4px 0', display: 'flex', alignItems: 'center', gap: '5px' }}>
+                      <Home size={14} fill="#FF5958" color="#FF5958" /> Our Origins
+                    </h4>
+                    
+                    <p style={{ margin: '0 0 6px 0', color: '#44403C' }}>
+                      Lyte Bytes began in 1995 in our home kitchen under my mother’s guidance, she built on the belief that <b>good food needs patience, honesty, and warmth</b>, not shortcuts. From corporate catering origins to specialty baking, small-batch wines, and handcrafted packaged goods, every offering carries that same sincere touch.
+                    </p>
+                    <p style={{ margin: 0, color: '#44403C' }}>
+                      We operate with absolute transparency and care. Every item is freshly prepared when your order arrives: <b><i>never stored, never rushed.</i></b>
+                    </p>
+                  </div>
+
+                  {/* Compact Highlights Grid */}
+                  <div style={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(2, 1fr)',
+                    gap: '6px',
+                    backgroundColor: '#F3EAD8',
+                    borderRadius: '12px',
+                    padding: '4px 12px'
+                  }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11.5px', fontWeight: '600', color: '#292524' }}>
+                      <span style={{ color: '#FF5958' }}>✓</span> Fresh Batches
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11.5px', fontWeight: '600', color: '#292524' }}>
+                      <span style={{ color: '#FF5958' }}>✓</span> Zero Preservatives
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11.5px', fontWeight: '600', color: '#292524' }}>
+                      <span style={{ color: '#FF5958' }}>✓</span> Zero Wastage
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11.5px', fontWeight: '600', color: '#292524' }}>
+                      <span style={{ color: '#FF5958' }}>✓</span> 100% Batch Crafted
+                    </div>
+                  </div>
+
+                  {/* Promise Note */}
+                  <div style={{ paddingTop: '2px' }}>
+                    <h4 style={{ fontSize: '11px', textTransform: 'uppercase', letterSpacing: '1.2px', color: '#FF5958', fontWeight: '700', margin: '0 0 4px 0', display: 'flex', alignItems: 'center', gap: '5px' }}>
+                      <ShieldCheck size={13} fill="#FF5958" color="#FF5958" /> Our Promise
+                    </h4>
+                    <p style={{ margin: 0, fontWeight: '400', color: '#292524', fontSize: '12.5px', lineHeight: '1.4' }}>
+                      Freshly crafted for you, made to order, and made to be remembered with the exact precision that has guided us for decades.
+                    </p>
+                  </div>
                 </div>
               )}
             </div>
           )}
 
           {searchQuery.trim() ? (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
-                <span style={{ fontSize: '14px', fontWeight: '700', color: theme.text }}>Search Results</span>
-                <button onClick={() => setSearchQuery('')} style={{ background: 'none', border: 'none', color: theme.brand, cursor: 'pointer', fontSize: '13px', fontWeight: 'bold' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2px' }}>
+                <span style={{ fontSize: '13px', fontWeight: '700', color: theme.text }}>Search Results</span>
+                <button onClick={() => setSearchQuery('')} style={{ background: 'none', border: 'none', color: theme.brand, cursor: 'pointer', fontSize: '12px', fontWeight: 'bold' }}>
                   Clear
                 </button>
               </div>
 
-              <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end', marginBottom: '4px' }}>
-                <button onClick={() => setLayout('list')} style={{ background: layout === 'list' ? '#FF5958' : 'transparent', border: layout === 'list' ? 'none' : '1px solid rgba(216, 199, 165, 0.4)', borderRadius: '8px', padding: '6px', cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
-                  <ListIcon size={18} color={layout === 'list' ? '#FFFFFF' : theme.text}/>
+              <div style={{ display: 'flex', gap: '6px', justifyContent: 'flex-end', marginBottom: '2px' }}>
+                <button onClick={() => setLayout('list')} style={{ background: layout === 'list' ? '#FF5958' : 'transparent', border: layout === 'list' ? 'none' : '1px solid rgba(216, 199, 165, 0.4)', borderRadius: '6px', padding: '5px', cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
+                  <ListIcon size={16} color={layout === 'list' ? '#FFFFFF' : theme.text}/>
                 </button>
-                <button onClick={() => setLayout('grid')} style={{ background: layout === 'grid' ? '#FF5958' : 'transparent', border: layout === 'grid' ? 'none' : '1px solid rgba(216, 199, 165, 0.4)', borderRadius: '8px', padding: '6px', cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
-                  <Grid size={18} color={layout === 'grid' ? '#FFFFFF' : theme.text}/>
+                <button onClick={() => setLayout('grid')} style={{ background: layout === 'grid' ? '#FF5958' : 'transparent', border: layout === 'grid' ? 'none' : '1px solid rgba(216, 199, 165, 0.4)', borderRadius: '6px', padding: '5px', cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
+                  <Grid size={16} color={layout === 'grid' ? '#FFFFFF' : theme.text}/>
                 </button>
               </div>
 
-              <div style={{ display: layout === 'grid' ? 'grid' : 'flex', gridTemplateColumns: layout === 'grid' ? 'repeat(2, 1fr)' : 'none', flexDirection: 'column', gap: '14px' }}>
+              <div style={{ display: layout === 'grid' ? 'grid' : 'flex', gridTemplateColumns: layout === 'grid' ? 'repeat(2, 1fr)' : 'none', flexDirection: 'column', gap: '10px' }}>
                 {Object.entries(menuData).flatMap(([catKey, cat]) => {
                   const catImg = getImgUrl(cat);
                   const subValues = Array.isArray(cat.subcategories) 
@@ -474,7 +574,7 @@ export default function HomeAndSubCategoryView({
               </div>
             </div>
           ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
               {Object.keys(menuData).map(catKey => (
                 <CategoryCard 
                   key={catKey}
@@ -490,20 +590,20 @@ export default function HomeAndSubCategoryView({
       )}
 
       {view === 'subcat' && (
-        <div style={{ paddingBottom: '140px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', position: 'relative', marginBottom: '14px', padding: '6px 0' }}>
+        <div style={{ paddingBottom: '100px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', position: 'relative', marginBottom: '12px', padding: '4px 0' }}>
             <button 
               onClick={() => setView('home')} 
-              style={{ background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px', color: theme.text, fontSize: '14px', fontWeight: '700', padding: '4px 8px', borderRadius: '8px', backgroundColor: 'rgba(0,0,0,0.04)', zIndex: 1 }}
+              style={{ background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px', color: theme.text, fontSize: '13px', fontWeight: '700', padding: '4px 8px', borderRadius: '6px', backgroundColor: 'rgba(0,0,0,0.04)', zIndex: 1 }}
             >
-              <ArrowLeft size={16}/> Back
+              <ArrowLeft size={15}/> Back
             </button>
-            <h2 style={{ position: 'absolute', left: 0, right: 0, textAlign: 'center', fontSize: '16px', color: '#FF5958', margin: 0, fontWeight: '700', letterSpacing: '0.5px', textTransform: 'uppercase', pointerEvents: 'none' }}>
+            <h2 style={{ position: 'absolute', left: 0, right: 0, textAlign: 'center', fontSize: '15px', color: '#FF5958', margin: 0, fontWeight: '700', letterSpacing: '0.5px', textTransform: 'uppercase', pointerEvents: 'none' }}>
               {activeCat}
             </h2>
           </div>
 
-          {/* --- SLEEK & PREMIUM WHATSAPP CATERING INQUIRY CARD (NOW ON TOP & SLIM) --- */}
+          {/* --- SLEEK WHATSAPP CATERING BANNER --- */}
           {isCateringCategory && (
             <a
               href={`https://wa.me/${whatsappNumber}?text=${whatsappMessage}`}
@@ -514,35 +614,35 @@ export default function HomeAndSubCategoryView({
                 alignItems: 'center',
                 justifyContent: 'space-between',
                 backgroundColor: '#FFFDF9',
-                border: theme.border || '1px solid #F0E6D2',
-                borderRadius: '14px',
-                padding: '10px 14px',
+                border: '0.5px solid rgba(216, 199, 165, 0.7)',
+                borderRadius: '16px',
+                padding: '12px 16px',
                 marginBottom: '14px',
                 textDecoration: 'none',
-                boxShadow: '0 2px 6px rgba(0,0,0,0.02)',
+                boxShadow: '0 4px 16px rgba(0,0,0,0.03)',
                 transition: 'all 0.3s ease',
                 cursor: 'pointer'
               }}
             >
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                 <div style={{
                   backgroundColor: 'rgba(37, 211, 102, 0.12)',
                   borderRadius: '50%',
-                  width: '32px',
-                  height: '32px',
+                  width: '34px',
+                  height: '34px',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   flexShrink: 0
                 }}>
-                  <MessageCircle size={28} color="#25D366" />
+                  <MessageCircle size={20} color="#25D366" />
                 </div>
                 <div>
-                  <h4 style={{ margin: 0, fontSize: '13px', fontWeight: '700', color: theme.text, letterSpacing: '0.1px' }}>
+                  <h4 style={{ margin: 0, fontSize: '13px', fontWeight: '600', color: theme.text, letterSpacing: '-0.2px' }}>
                     Custom bulk menus & pricing?
                   </h4>
-                  <p style={{ margin: '1px 0 0 0', fontSize: '11px', color: '#777', fontWeight: '500' }}>
-                     Chat with us on WhatsApp
+                  <p style={{ margin: '1px 0 0 0', fontSize: '11px', color: '#78716C', fontWeight: '400' }}>
+                    Chat with us instantly on WhatsApp
                   </p>
                 </div>
               </div>
@@ -550,11 +650,11 @@ export default function HomeAndSubCategoryView({
                 backgroundColor: '#25D366',
                 color: '#FFFFFF',
                 borderRadius: '8px',
-                padding: '5px 10px',
-                fontSize: '11px',
-                fontWeight: '700',
+                padding: '6px 12px',
+                fontSize: '11.5px',
+                fontWeight: '600',
                 whiteSpace: 'nowrap',
-                boxShadow: '0 2px 5px rgba(37, 211, 102, 0.2)',
+                boxShadow: '0 2px 6px rgba(37, 211, 102, 0.25)',
                 flexShrink: 0
               }}>
                 Chat Now
@@ -563,7 +663,7 @@ export default function HomeAndSubCategoryView({
           )}
 
           {/* Subcategories List */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
             {subCategoryKeys.map(sub => (
               <SubCategoryCard 
                 key={sub}
