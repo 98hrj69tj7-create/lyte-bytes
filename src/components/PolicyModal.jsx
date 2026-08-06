@@ -33,7 +33,7 @@ export default function PolicyModal({ isOpen, onClose, title, children, theme = 
       }}
     >
       <div 
-        onClick={(e) => e.stopPropagation()}
+        onClick={() => e.stopPropagation(null)}
         style={{
           width: '100%',
           maxWidth: '460px',
@@ -58,7 +58,6 @@ export default function PolicyModal({ isOpen, onClose, title, children, theme = 
           justifyContent: 'center', 
           alignItems: 'center', 
           marginBottom: '16px', 
-          borderBottom: '1px dashed #E5D6B5', 
           paddingBottom: '12px',
           position: 'relative'
         }}>
@@ -73,25 +72,6 @@ export default function PolicyModal({ isOpen, onClose, title, children, theme = 
           }}>
             {title}
           </h3>
-          <button
-            onClick={onClose}
-            style={{
-              position: 'absolute',
-              right: 0,
-              background: 'rgba(0,0,0,0.04)',
-              border: 'none',
-              cursor: 'pointer',
-              borderRadius: '50%',
-              width: '28px',
-              height: '28px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: activeTheme.text
-            }}
-          >
-            <X size={16} />
-          </button>
         </div>
 
         {/* Modal Body Content */}

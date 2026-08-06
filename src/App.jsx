@@ -103,6 +103,16 @@ export default function App() {
   const [upiApp, setUpiApp] = useState('');
   const [upiId, setUpiId] = useState('');
   
+  // State to track whether the "Our Story & Our Promise" card is expanded
+  const [isStoryExpanded, setIsStoryExpanded] = useState(false);
+
+  // Reset story expansion when navigating away from home view
+  useEffect(() => {
+    if (view !== 'home') {
+      setIsStoryExpanded(false);
+    }
+  }, [view]);
+  
   // Haptic Micro-Feedback State
   const [pressedBtn, setPressedBtn] = useState(null);
   const getPressStyle = (id) => ({
@@ -218,7 +228,7 @@ export default function App() {
               variation: row.Variation || "",
               imageUrl: row.Img_name,
               tags: row.Tags || row.tags || "", 
-              rating: row.Rating || row.rating || "", // 👈 Mapped Rating column here
+              rating: row.Rating || row.rating || "", 
               isCustomisable: row.Customisable?.trim().toLowerCase() === 'yes'
             });
           }
@@ -320,6 +330,7 @@ export default function App() {
             openModal={openModal}
             addToCart={addToCart}
             resolveImagePath={resolveImagePath}
+            onStoryToggle={setIsStoryExpanded}
           />
         )}
 
@@ -455,14 +466,17 @@ export default function App() {
         )}
       </main>
 
-      {!['cart', 'delivery', 'payment', 'verifying', 'track', 'profile', 'account', 'admin-customers'].includes(view) && (
+      {/* Conditionally hide Sticky Cart Bar and Footer when the story card is expanded */}
+      {!['cart', 'delivery', 'payment', 'verifying', 'track', 'profile', 'account', 'admin-customers'].includes(view) && !isStoryExpanded && (
         <StickyCartBar
           cart={cart}
           onViewCart={() => setView('cart')}
         />
       )}
 
-      <Footer view={view} setView={setView} theme={theme} cart={cart} />
+      {!isStoryExpanded && (
+        <Footer view={view} setView={setView} theme={theme} cart={cart} />
+      )}
 
       {activeModal.type === 'ZOOM' && (
         <ItemModal

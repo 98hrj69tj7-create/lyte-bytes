@@ -59,6 +59,10 @@ export default function StickyCartBar({ cart = [], onViewCart }) {
   const [isVisible, setIsVisible] = useState(true);
   const lastScrollTopRef = useRef(0);
   const [isPulseActive, setIsPulseActive] = useState(false);
+  
+  // Track previous item count to detect newly added items
+  const prevTotalItemsRef = useRef(0);
+  const isInitialMount = useRef(true);
 
   // 1. Calculate Total Items & Total Price Safely
   const totalItems = Array.isArray(cart) 
@@ -75,12 +79,21 @@ export default function StickyCartBar({ cart = [], onViewCart }) {
       }, 0) 
     : 0;
 
-  // 2. Smooth Pulse Trigger
+  // 2. Controlled Pulse Trigger (Only when totalItems increases after initial load)
   useEffect(() => {
-    if (totalItems > 0) {
+    if (isInitialMount.current) {
+      prevTotalItemsRef.current = totalItems;
+      isInitialMount.current = false;
+      return;
+    }
+
+    if (totalItems > prevTotalItemsRef.current) {
       setIsPulseActive(true);
       const timer = setTimeout(() => setIsPulseActive(false), 900);
+      prevTotalItemsRef.current = totalItems;
       return () => clearTimeout(timer);
+    } else {
+      prevTotalItemsRef.current = totalItems;
     }
   }, [totalItems]);
 

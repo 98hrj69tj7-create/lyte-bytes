@@ -174,6 +174,34 @@ export default function DeliveryView({
   const searchInputRef = useRef(null);
 
   const currentMode = customer.fulfillmentType || 'DELIVERY';
+  const whatsappNumber = "9108286886";
+
+  // Combined handler: triggers vCard (.vcf) download AND opens WhatsApp chat simultaneously
+  const handleChatAndSave = (customText) => {
+    const vcardData = [
+      'BEGIN:VCARD',
+      'VERSION:3.0',
+      'FN:Lyte Bytes',
+      'ORG:Lyte Bytes - Gourmet Delights',
+      'TEL;TYPE=WORK,VOICE:+919108286886',
+      'NOTE:Handcrafted Goodness & Gourmet Delights Since 1995',
+      'END:VCARD'
+    ].join('\n');
+
+    const blob = new Blob([vcardData], { type: 'text/vcard;charset=utf-8' });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', 'Lyte_Bytes_Contact.vcf');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
+
+    const message = customText || "Hi, I am trying to order from an out-of-coverage location and would like to discuss options.";
+    const waUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+    window.open(waUrl, '_blank');
+  };
 
   const activeTheme = {
     brand: theme?.brand || '#FF5958',
@@ -610,18 +638,17 @@ export default function DeliveryView({
                     <ShoppingBag size={13} /> Switch to Pickup
                   </button>
 
-                  <a
-                    href="https://wa.me/?text=Hi,%20I%20am%20trying%20to%20order%20from%20an%20out-of-coverage%20location%20and%20would%20like%20to%20discuss%20options."
-                    target="_blank"
-                    rel="noopener noreferrer"
+                  <button
+                    type="button"
+                    onClick={() => handleChatAndSave("Hi, I am trying to order from an out-of-coverage location and would like to discuss options.")}
                     style={{
                       flex: 1, padding: '8px 10px', background: '#25D366', color: '#FFFFFF',
                       border: 'none', borderRadius: '8px', fontSize: '11px', fontWeight: '800',
-                      textDecoration: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '5px'
+                      cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '5px'
                     }}
                   >
                     <MessageCircle size={13} /> Chat on WhatsApp
-                  </a>
+                  </button>
                 </div>
               </div>
             )}
@@ -794,18 +821,17 @@ export default function DeliveryView({
                   >
                     Cancel
                   </button>
-                  <a
-                    href="https://wa.me/?text=Hi,%20I%20am%20trying%20to%20order%20from%20an%20out-of-coverage%20location%20via%20map%20pin%20and%20would%20like%20to%20discuss%20options."
-                    target="_blank"
-                    rel="noopener noreferrer"
+                  <button
+                    type="button"
+                    onClick={() => handleChatAndSave("Hi, I am trying to order from an out-of-coverage location via map pin and would like to discuss options.")}
                     style={{
                       flex: 1, padding: '10px', background: '#25D366', color: '#FFFFFF',
-                      borderRadius: '8px', fontWeight: '700', fontSize: '12px', textDecoration: 'none',
-                      display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '5px'
+                      border: 'none', borderRadius: '8px', fontWeight: '700', fontSize: '12px',
+                      cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '5px'
                     }}
                   >
                     <MessageCircle size={14} /> Chat on WhatsApp
-                  </a>
+                  </button>
                 </div>
               ) : (
                 <button 

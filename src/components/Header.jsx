@@ -32,8 +32,8 @@ export default function Header({ theme = {}, setView }) {
           src="/logo.png" 
           alt="Lyte Bytes Logo" 
           style={{ 
-            width: '45px', 
-            height: '45px', 
+            width: '50px', 
+            height: '50px', 
             borderRadius: '50%', 
             objectFit: 'cover',
             border: activeTheme.border,
@@ -41,18 +41,18 @@ export default function Header({ theme = {}, setView }) {
           }} 
         />
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
-          <h2 style={{ fontSize: '20px', margin: 0, color: activeTheme.brand, fontWeight: '800', letterSpacing: '1px', lineHeight: '1.1' }}>
+          <h2 style={{ fontSize: '25px', margin: 0, color: activeTheme.brand, fontWeight: '800', letterSpacing: '1px', lineHeight: '1.1' }}>
             LYTE BYTES
           </h2>
           {/* Tagline with Brand-Matching Highlight on "You" */}
-          <span style={{ fontSize: '10px', color: '#776E62', fontWeight: '600', letterSpacing: '1px', textTransform: 'uppercase', marginTop: '2px' }}>
+          <span style={{ fontSize: '11px', color: '#776E62', fontWeight: '500', letterSpacing: '0.5px', textTransform: 'uppercase', marginTop: '2px' }}>
             Freshly Crafted For <span style={{ color: activeTheme.brand, fontWeight: '800' }}>"YOU"</span>
           </span>
         </div>
       </div>
 
       {/* Compliance & Certifications */}
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', justifyContent: 'center', gap: '3px' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', justifyContent: 'center', gap: '1px' }}>
         {/* FSSAI Row */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
           <img 
@@ -60,7 +60,7 @@ export default function Header({ theme = {}, setView }) {
             alt="FSSAI" 
             style={{ width: '20px', height: '18px', objectFit: 'contain' }} 
           />
-          <span style={{ fontSize: '10px', fontWeight: '600', color: activeTheme.text, letterSpacing: '0.2px' }}>
+          <span style={{ fontSize: '10px', fontWeight: '500', color: activeTheme.text, letterSpacing: '0.2px'}}>
             21225008002806
           </span>
         </div>
@@ -69,9 +69,9 @@ export default function Header({ theme = {}, setView }) {
           <img 
             src="/halallogo.png" 
             alt="Halal" 
-            style={{ width: '15px', height: '15px', objectFit: 'contain' }} 
+            style={{ width: '20px', height: '15px', objectFit: 'contain' }} 
           />
-          <span style={{ fontSize: '9px', fontWeight: '600', color: '#8C8070', letterSpacing: '0.3px', lineHeight: '1' }}>
+          <span style={{ fontSize: '10px', fontWeight: '500', color: activeTheme.text, letterSpacing: '0.2px'}}>
             Halal compliant
           </span>
         </div>

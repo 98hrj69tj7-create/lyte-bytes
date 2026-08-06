@@ -36,12 +36,12 @@ export default function OffersTab({ theme = {} }) {
           right: 0, 
           textAlign: 'center', 
           fontSize: '16px', 
-          color: activeTheme.brand, 
+          color: '#FF5958', 
           margin: 0, 
           fontWeight: '700', 
           letterSpacing: '0.5px', 
           textTransform: 'uppercase', 
-          pointerEvents: 'none' 
+          pointerEvents: 'none'
         }}>
           Offers & Rewards
         </h2>
@@ -59,7 +59,7 @@ export default function OffersTab({ theme = {} }) {
         fontWeight: '600',
         display: 'flex',
         alignItems: 'center',
-        gap: '10px',
+        gap: '12px',
         boxShadow: '0 2px 8px rgba(0,0,0,0.03)',
         boxSizing: 'border-box',
         width: '100%'
@@ -75,7 +75,7 @@ export default function OffersTab({ theme = {} }) {
           justifyContent: 'center',
           flexShrink: 0
         }}>
-          <CheckCircle2 size={16} color={activeTheme.brand} />
+          <CheckCircle2 size={30} color={activeTheme.brand} />
         </div>
         <span style={{ lineHeight: '1.4' }}>All active rewards below are available directly inside your Bag during checkout!</span>
       </div>

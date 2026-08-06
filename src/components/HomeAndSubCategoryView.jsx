@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { List as ListIcon, Grid, ArrowLeft, ChevronRight, ChevronDown, Search, MessageCircle, Heart, Sparkles, Clock, ShieldCheck, ChefHat, BookOpen, Home } from 'lucide-react';
+import { List as ListIcon, Grid, ArrowLeft, ChevronRight, ChevronDown, Search, MessageCircle, Heart, Sparkles, Clock, ShieldCheck, ChefHat, BookOpen, Home, UserPlus } from 'lucide-react';
 import ItemCard from './ItemCard';
 
 /**
@@ -102,7 +102,7 @@ function resolveSubcategoryImage(subName, activeCat, menuData, resolveImagePath)
 }
 
 /**
- * Category Card Component (Sleek, Compact, High-End Luxury Polish)
+ * Category Card Component
  */
 function CategoryCard({ cat, resolveImagePath, theme, onClick }) {
   const [isHovered, setIsHovered] = useState(false);
@@ -157,12 +157,9 @@ function CategoryCard({ cat, resolveImagePath, theme, onClick }) {
 
       <div style={{ position: 'relative', zIndex: 3, padding: '0 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', boxSizing: 'border-box' }}>
         <div style={{ flex: 1, paddingRight: '12px' }}>
-          <h3 style={{ fontSize: '16px', fontWeight: '700', color: '#FFFFFF', margin: 0, letterSpacing: '-0.2px', textShadow: '0 1px 3px rgba(0,0,0,0.4)', lineHeight: '1.2' }}>
+          <h3 style={{ fontSize: '20px', fontWeight: '700', color: '#FFFFFF', margin: 0, letterSpacing: '-0.2px', textShadow: '0 1px 3px rgba(0,0,0,0.4)', lineHeight: '1.2' }}>
             {cat.name}
           </h3>
-          <span style={{ fontSize: '10.5px', fontWeight: '500', color: '#E6D5BC', letterSpacing: '0.5px', textTransform: 'uppercase', opacity: 0.9 }}>
-            Explore Collection
-          </span>
         </div>
         <div style={{
           width: '28px', height: '28px', borderRadius: '50%',
@@ -181,7 +178,7 @@ function CategoryCard({ cat, resolveImagePath, theme, onClick }) {
 }
 
 /**
- * SubCategory Card Component (Sleek, Compact, High-End)
+ * SubCategory Card Component
  */
 function SubCategoryCard({ sub, resolveImagePath, activeCat, menuData, onClick }) {
   const [isHovered, setIsHovered] = useState(false);
@@ -247,12 +244,9 @@ function SubCategoryCard({ sub, resolveImagePath, activeCat, menuData, onClick }
 
       <div style={{ position: 'relative', zIndex: 3, padding: '0 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', boxSizing: 'border-box' }}>
         <div style={{ flex: 1, paddingRight: '12px' }}>
-          <h3 style={{ fontSize: '16px', fontWeight: '700', color: '#FFFFFF', margin: 0, letterSpacing: '-0.2px', textShadow: '0 1px 3px rgba(0,0,0,0.4)', lineHeight: '1.2' }}>
+          <h3 style={{ fontSize: '18px', fontWeight: '700', color: '#FFFFFF', margin: 0, letterSpacing: '-0.2px', textShadow: '0 1px 3px rgba(0,0,0,0.4)', lineHeight: '1.2' }}>
             {sub}
           </h3>
-          <span style={{ fontSize: '10.5px', fontWeight: '500', color: '#E6D5BC', letterSpacing: '0.5px', textTransform: 'uppercase', opacity: 0.9 }}>
-            Handcrafted Selection
-          </span>
         </div>
         <div style={{
           width: '28px', height: '28px', borderRadius: '50%',
@@ -287,14 +281,49 @@ export default function HomeAndSubCategoryView({
   setView, 
   openModal, 
   addToCart, 
-  resolveImagePath 
+  resolveImagePath,
+  onStoryToggle
 }) {
   const [showStory, setShowStory] = useState(false);
   const currentCategoryData = findCategoryData(menuData, activeCat);
 
+  useEffect(() => {
+    if (typeof onStoryToggle === 'function') {
+      onStoryToggle(showStory);
+    }
+  }, [showStory, onStoryToggle]);
+
   const isCateringCategory = activeCat && activeCat.toLowerCase().includes('catering');
   const whatsappNumber = "9108286886"; 
   const whatsappMessage = encodeURIComponent("Hi Lyte Bytes, I would like to inquire about your catering services and customized menu packages!");
+
+  // Combined handler: triggers vCard (.vcf) download AND opens WhatsApp chat simultaneously
+  const handleChatAndSave = () => {
+    // 1. Generate and trigger vCard download prompt
+    const vcardData = [
+      'BEGIN:VCARD',
+      'VERSION:3.0',
+      'FN:Lyte Bytes',
+      'ORG:Lyte Bytes - Gourmet Delights',
+      'TEL;TYPE=WORK,VOICE:+919108286886',
+      'NOTE:Handcrafted Goodness & Gourmet Delights Since 1995',
+      'END:VCARD'
+    ].join('\n');
+
+    const blob = new Blob([vcardData], { type: 'text/vcard;charset=utf-8' });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', 'Lyte_Bytes_Contact.vcf');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
+
+    // 2. Open WhatsApp chat in a new tab
+    const waUrl = `https://wa.me/${whatsappNumber}?text=${whatsappMessage}`;
+    window.open(waUrl, '_blank');
+  };
 
   let subCategoryKeys = [];
   if (currentCategoryData && currentCategoryData.subcategories) {
@@ -311,8 +340,8 @@ export default function HomeAndSubCategoryView({
         <div style={{ paddingBottom: '100px' }}>
           {/* --- TOP BRAND SLOGAN BAR --- */}
           <div style={{ textAlign: 'center', margin: '4px 0 10px 0' }}>
-            <span style={{ fontSize: '10px', color: '#B57C3C', fontWeight: '600', letterSpacing: '1.5px', textTransform: 'uppercase', opacity: 0.95 }}>
-              ✦ Home‑Made Heart &nbsp;•&nbsp; Gourmet Delights &nbsp;•&nbsp; Handcrafted Goodness ✦
+            <span style={{ fontSize: '12px', color: '#B57C3C', fontWeight: '600', letterSpacing: '1.5px', textTransform: 'uppercase', opacity: 0.95 }}>
+              <p>✦ Home‑Made Heart ✦ Gourmet Delights ✦</p> <p>✦ Handcrafted Goodness ✦</p>
             </span>
           </div>
 
@@ -331,7 +360,6 @@ export default function HomeAndSubCategoryView({
               transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)'
             }}>
               <div style={{ paddingLeft: '14px', display: 'flex', alignItems: 'center', color: '#FF5958' }}>
-                <Search size={16} />
               </div>
               <input 
                 type="text"
@@ -350,24 +378,6 @@ export default function HomeAndSubCategoryView({
                   boxSizing: 'border-box'
                 }}
               />
-              {searchQuery && (
-                <button 
-                  onClick={() => setSearchQuery('')}
-                  style={{
-                    background: 'none',
-                    border: 'none',
-                    color: '#999',
-                    cursor: 'pointer',
-                    paddingRight: '14px',
-                    fontSize: '13px',
-                    fontWeight: 'bold',
-                    display: 'flex',
-                    alignItems: 'center'
-                  }}
-                >
-                  ✕
-                </button>
-              )}
             </div>
           </div>
 
@@ -377,7 +387,7 @@ export default function HomeAndSubCategoryView({
               onClick={() => setShowStory(!showStory)}
               style={{
                 background: 'linear-gradient(135deg, #FFFDF9 0%, #FAF3E8 100%)',
-                border: '4px solid #D4AF37',
+                border: '3.5px solid #D4AF37',
                 borderRadius: '16px',
                 padding: '10px 14px',
                 marginBottom: '14px',
@@ -417,7 +427,7 @@ export default function HomeAndSubCategoryView({
                     color: '#FF5958',
                     flexShrink: '0'
                   }}>
-                    <Heart size={24} fill="#FF5958" color="#FF5958" />
+                    <Heart size={30} fill="#FF5958" color="#FF5958" />
                   </div>
                   <div>
                     <h3 style={{ margin: '1px 0', fontSize: '17px', fontWeight: '600', color: '#1C1917', letterSpacing: '0.3px', lineHeight: '1.2' }}>
@@ -426,13 +436,12 @@ export default function HomeAndSubCategoryView({
                     <p style={{ margin: '1px 0', fontSize: '12px', color: '#78716C', fontWeight: '500', letterSpacing: '0.3px', lineHeight: '1.3' }}>
                       A legacy of warmth & authenticity
                     </p>
-                    <p style={{ margin: '1px 0', fontSize: '11px', color: '#A89F95', fontStyle: 'italic', fontWeight: '400', lineHeight: '1.2' }}>
+                    <p style={{ margin: '1px 0', fontSize: '11px', color: '#78716C', fontStyle: 'italic', fontWeight: '400', lineHeight: '1.2' }}>
                       Since 1995
                     </p>
                   </div>
                 </div>
 
-                {/* Clean inline More/Less text link with Down Chevron */}
                 <div style={{
                   display: 'flex',
                   alignItems: 'center',
@@ -474,14 +483,13 @@ export default function HomeAndSubCategoryView({
                     </h4>
                     
                     <p style={{ margin: '0 0 6px 0', color: '#44403C' }}>
-                      Lyte Bytes began in 1995 in our home kitchen under my mother’s guidance, she built on the belief that <b>good food needs patience, honesty, and warmth</b>, not shortcuts. From corporate catering origins to specialty baking, small-batch wines, and handcrafted packaged goods, every offering carries that same sincere touch.
+                      Lyte Bytes began in 1995 in our home kitchen under my mother’s guidance, built on the belief that <b>good food needs patience, honesty, and warmth</b>, not shortcuts. From corporate catering origins to specialty baking, small-batch wines, and handcrafted packaged goods, every offering carries that same sincere touch.
                     </p>
                     <p style={{ margin: 0, color: '#44403C' }}>
                       We operate with absolute transparency and care. Every item is freshly prepared when your order arrives: <b><i>never stored, never rushed.</i></b>
                     </p>
                   </div>
 
-                  {/* Compact Highlights Grid */}
                   <div style={{
                     display: 'grid',
                     gridTemplateColumns: 'repeat(2, 1fr)',
@@ -504,7 +512,6 @@ export default function HomeAndSubCategoryView({
                     </div>
                   </div>
 
-                  {/* Promise Note */}
                   <div style={{ paddingTop: '2px' }}>
                     <h4 style={{ fontSize: '11px', textTransform: 'uppercase', letterSpacing: '1.2px', color: '#FF5958', fontWeight: '700', margin: '0 0 4px 0', display: 'flex', alignItems: 'center', gap: '5px' }}>
                       <ShieldCheck size={13} fill="#FF5958" color="#FF5958" /> Our Promise
@@ -521,7 +528,7 @@ export default function HomeAndSubCategoryView({
           {searchQuery.trim() ? (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2px' }}>
-                <span style={{ fontSize: '13px', fontWeight: '700', color: theme.text }}>Search Results</span>
+                <span style={{ fontSize: '13px', fontWeight: '600', color: theme.text }}>Search Results</span>
                 <button onClick={() => setSearchQuery('')} style={{ background: 'none', border: 'none', color: theme.brand, cursor: 'pointer', fontSize: '12px', fontWeight: 'bold' }}>
                   Clear
                 </button>
@@ -603,63 +610,65 @@ export default function HomeAndSubCategoryView({
             </h2>
           </div>
 
-          {/* --- SLEEK WHATSAPP CATERING BANNER --- */}
+          {/* --- WHATSAPP CATERING BANNER WITH AUTO-SAVE CONTACT TRIGGER --- */}
           {isCateringCategory && (
-            <a
-              href={`https://wa.me/${whatsappNumber}?text=${whatsappMessage}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                backgroundColor: '#FFFDF9',
-                border: '0.5px solid rgba(216, 199, 165, 0.7)',
-                borderRadius: '16px',
-                padding: '12px 16px',
-                marginBottom: '14px',
-                textDecoration: 'none',
-                boxShadow: '0 4px 16px rgba(0,0,0,0.03)',
-                transition: 'all 0.3s ease',
-                cursor: 'pointer'
-              }}
-            >
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                <div style={{
-                  backgroundColor: 'rgba(37, 211, 102, 0.12)',
-                  borderRadius: '50%',
-                  width: '34px',
-                  height: '34px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  flexShrink: 0
-                }}>
-                  <MessageCircle size={20} color="#25D366" />
+            <div style={{
+              display: 'flex',
+              flexDirection: 'column',
+              backgroundColor: '#FFFDF9',
+              border: '1px solid #FF5958',
+              borderRadius: '16px',
+              padding: '12px 16px',
+              marginBottom: '14px',
+              boxShadow: '0 4px 16px rgba(0,0,0,0.03)',
+              gap: '8px'
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                  <div style={{
+                    backgroundColor: 'rgba(33, 184, 88, 0.12)',
+                    borderRadius: '50%',
+                    width: '35px',
+                    height: '35px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    flexShrink: 0
+                  }}>
+                    <MessageCircle size={30} color="#25D366" />
+                  </div>
+                  <div>
+                    <h4 style={{ margin: 0, fontSize: '13px', fontWeight: '600', color: theme.text, letterSpacing: '-0.2px' }}>
+                      Bulk Orders & Pricing?
+                    </h4>
+                    <p style={{ margin: '0', fontSize: '11px', color: '#78716C', fontWeight: '400' }}>
+                      Chat with us on WhatsApp
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <h4 style={{ margin: 0, fontSize: '13px', fontWeight: '600', color: theme.text, letterSpacing: '-0.2px' }}>
-                    Custom bulk menus & pricing?
-                  </h4>
-                  <p style={{ margin: '1px 0 0 0', fontSize: '11px', color: '#78716C', fontWeight: '400' }}>
-                    Chat with us instantly on WhatsApp
-                  </p>
-                </div>
+                <button
+                  onClick={handleChatAndSave}
+                  style={{
+                    backgroundColor: '#25D366',
+                    color: '#FFFFFF',
+                    border: 'none',
+                    borderRadius: '8px',
+                    padding: '7px 14px',
+                    fontSize: '12px',
+                    fontWeight: '600',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    whiteSpace: 'nowrap',
+                    boxShadow: '0 2px 6px rgba(37, 211, 102, 0.25)',
+                    flexShrink: 0
+                  }}
+                >
+                  <MessageCircle size={14} /> Chat Now
+                </button>
               </div>
-              <div style={{
-                backgroundColor: '#25D366',
-                color: '#FFFFFF',
-                borderRadius: '8px',
-                padding: '6px 12px',
-                fontSize: '11.5px',
-                fontWeight: '600',
-                whiteSpace: 'nowrap',
-                boxShadow: '0 2px 6px rgba(37, 211, 102, 0.25)',
-                flexShrink: 0
-              }}>
-                Chat Now
-              </div>
-            </a>
+            </div>
           )}
 
           {/* Subcategories List */}
