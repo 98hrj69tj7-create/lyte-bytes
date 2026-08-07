@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Sparkles, Tag, ChevronLeft, ChevronRight, ShoppingBag } from 'lucide-react';
+import { Sparkles, Tag, ChevronLeft, ChevronRight, ShoppingBag, Clock } from 'lucide-react';
 import { getAllOffers } from '../utils/offersEngine';
 
 export default function LimitedOfferModal({ theme = {}, setView }) {
@@ -15,7 +15,7 @@ export default function LimitedOfferModal({ theme = {}, setView }) {
     text: theme?.text || '#2C221E',
     border: theme?.border || '1px solid rgba(216, 199, 165, 0.4)',
     bg: theme?.bg || '#FFFBF2',
-    radius: theme?.radius || '16px',
+    radius: theme?.radius || '20px',
   };
 
   // Get current order count to filter dynamic offers using your offers engine
@@ -83,40 +83,40 @@ export default function LimitedOfferModal({ theme = {}, setView }) {
 
   return (
     <div 
-      onClick={() => setIsOpen(null)}
+      onClick={() => setIsOpen(false)}
       style={{
         position: 'fixed',
         top: 0,
         left: 0,
         right: 0,
         bottom: 0,
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        backgroundColor: 'rgba(44, 34, 30, 0.6)',
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        zIndex: 99999, // Ensure it's explicitly above all app layouts
-        padding: '20px',
-        backdropFilter: 'blur(8px)',
-        WebkitBackdropFilter: 'blur(8px)',
+        zIndex: 99999,
+        padding: '16px',
+        backdropFilter: 'blur(12px)',
+        WebkitBackdropFilter: 'blur(12px)',
         cursor: 'pointer',
         pointerEvents: 'auto',
         boxSizing: 'border-box'
       }}
     >
       <div 
-        onClick={(e) => e.stopPropagation(null)}
+        onClick={(e) => e.stopPropagation()}
         style={{
           background: activeTheme.bg,
           borderRadius: activeTheme.radius,
           border: activeTheme.border,
           width: '100%',
-          maxWidth: '400px',
+          maxWidth: '380px',
           display: 'flex',
           flexDirection: 'column',
-          boxShadow: '0 12px 40px rgba(0,0,0,0.2)',
+          boxShadow: '0 24px 60px rgba(44, 34, 30, 0.22)',
           overflow: 'hidden',
           position: 'relative',
-          animation: 'scaleUp 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
+          animation: 'scaleUp 0.35s cubic-bezier(0.16, 1, 0.3, 1)',
           cursor: 'default',
           pointerEvents: 'auto',
           boxSizing: 'border-box'
@@ -128,65 +128,63 @@ export default function LimitedOfferModal({ theme = {}, setView }) {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          padding: '16px 20px',
-          borderBottom: '1px dashed #E5D6B5',
-          backgroundColor: '#FFFBF2'
+          padding: '20px 20px 4px 20px',
+          boxSizing: 'border-box'
         }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <Sparkles size={16} color={activeTheme.brand} />
-            <span style={{ fontSize: '15px', fontWeight: '700', color: activeTheme.text, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-              Special Live Offers
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <div style={{ 
+              padding: '2px', 
+              borderRadius: '10px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}>
+              <Sparkles size={22} color={activeTheme.brand} />
+            </div>
+            <span style={{ fontSize: '15px', fontWeight: '800', color: activeTheme.text, textTransform: 'uppercase', letterSpacing: '1.5px' }}>
+              Live Offers
             </span>
           </div>
         </div>
 
-        {/* Dynamic Notice Banner */}
-        <div style={{
-          background: '#FFF8E7',
-          borderBottom: '1px solid #E5D6B5',
-          padding: '10px 16px',
-          fontSize: '12px',
-          color: '#776E62',
-          textAlign: 'center',
-          fontWeight: '600',
-          boxSizing: 'border-box'
-        }}>
-          💡 Available to apply directly in your bag at checkout!
-        </div>
-
-        {/* Carousel Container */}
-        <div style={{ padding: '16px 20px', position: 'relative', boxSizing: 'border-box' }}>
-          {/* Active Carousel Card */}
+        {/* Carousel Container Wrapper */}
+        <div style={{ padding: '14px 20px 16px 20px', position: 'relative', boxSizing: 'border-box' }}>
+          
+          {/* Active Carousel Card with optimized internal padding and flow */}
           <div 
             style={{
-              background: `linear-gradient(135deg, ${currentOffer.themeColor || activeTheme.brand}, #2C2416)`,
-              borderRadius: '12px',
-              padding: '18px 16px',
+              background: 'linear-gradient(145deg, #2C221E 0%, #3D3028 100%)',
+              borderRadius: '16px',
+              padding: '18px 20px',
               color: '#FFFFFF',
-              boxShadow: '0 6px 20px rgba(0,0,0,0.1)',
+              boxShadow: '0 10px 30px rgba(44, 34, 30, 0.25)',
               position: 'relative',
               overflow: 'hidden',
-              minHeight: '185px',
+              minHeight: '200px',
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'space-between',
-              boxSizing: 'border-box'
+              boxSizing: 'border-box',
+              border: '1px solid rgba(216, 199, 165, 0.2)'
             }}
           >
-            <div style={{ position: 'absolute', right: '-20px', bottom: '-20px', opacity: 0.12, pointerEvents: 'none' }}>
-              <Sparkles size={120} />
+            <div style={{ position: 'absolute', right: '-20px', bottom: '-20px', opacity: 0.08, pointerEvents: 'none' }}>
+              <Sparkles size={120} color="#FFFFFF" />
             </div>
 
             <div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px', position: 'relative', zIndex: 1 }}>
+              {/* Header row inside card */}
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px', position: 'relative', zIndex: 1 }}>
                 <span style={{ 
-                  background: 'rgba(255,255,255,0.2)', 
-                  padding: '4px 10px', 
-                  borderRadius: '20px', 
-                  fontSize: '10px', 
+                  background: 'rgba(255, 255, 255, 0.12)', 
+                  border: '1px solid rgba(255, 255, 255, 0.15)',
+                  padding: '3px 10px', 
+                  borderRadius: '12px', 
+                  fontSize: '9.5px', 
                   fontWeight: '600', 
                   letterSpacing: '1px',
-                  textTransform: 'uppercase'
+                  textTransform: 'uppercase',
+                  color: '#FFFBF2'
                 }}>
                   {currentOffer.tag}
                 </span>
@@ -196,17 +194,17 @@ export default function LimitedOfferModal({ theme = {}, setView }) {
                     <div style={{
                       display: 'inline-flex',
                       alignItems: 'center',
-                      gap: '4px',
-                      background: 'rgba(239, 68, 68, 0.3)',
-                      border: '1px solid rgba(239, 68, 68, 0.6)',
-                      padding: '3px 8px',
-                      borderRadius: '6px',
+                      gap: '5px',
+                      background: 'rgba(239, 68, 68, 0.25)',
+                      border: '1px solid rgba(239, 68, 68, 0.5)',
+                      padding: '3px 12px',
+                      borderRadius: '10px',
                       fontSize: '10px',
-                      fontWeight: '700',
+                      fontWeight: '500',
                       color: '#FEE2E2',
-                      letterSpacing: '0.3px'
+                      letterSpacing: '0.4px'
                     }}>
-                      <span>⏳</span>
+                      <Clock size={10} />
                       <span>
                         {String(timeLeft.hours).padStart(2, '0')}:
                         {String(timeLeft.minutes).padStart(2, '0')}:
@@ -215,22 +213,31 @@ export default function LimitedOfferModal({ theme = {}, setView }) {
                     </div>
                   )}
 
-                  <span style={{ fontSize: '13px', fontWeight: '700', background: 'rgba(0,0,0,0.25)', padding: '3px 9px', borderRadius: '6px' }}>
+                  <span style={{ 
+                    fontSize: '11px', 
+                    fontWeight: '800', 
+                    background: activeTheme.brand, 
+                    color: '#FFFFFF',
+                    padding: '3px 10px', 
+                    borderRadius: '6px',
+                    boxShadow: '0 2px 8px rgba(255, 89, 88, 0.4)'
+                  }}>
                     {currentOffer.discount}
                   </span>
                 </div>
               </div>
 
-              <h3 style={{ fontSize: '17px', fontWeight: '700', margin: '6px 0 4px 0', position: 'relative', zIndex: 1 }}>
+              {/* Title & Description with balanced vertical margins */}
+              <h3 style={{ fontSize: '16px', fontWeight: '800', margin: '6px 0 6px 0', position: 'relative', zIndex: 1, letterSpacing: '0.3px', color: '#FFFBF2' }}>
                 {currentOffer.title}
               </h3>
-              <p style={{ fontSize: '13px', opacity: 0.9, margin: '0 0 10px 0', lineHeight: '1.45', position: 'relative', zIndex: 1 }}>
+              <p style={{ fontSize: '12px', opacity: 0.85, margin: '0 0 12px 0', lineHeight: '1.45', position: 'relative', zIndex: 1, color: '#E8E1D5' }}>
                 {currentOffer.description}
               </p>
 
               {/* Condition Badge */}
-              <div style={{ fontSize: '11.5px', opacity: '0.85', display: 'flex', alignItems: 'center', gap: '6px', position: 'relative', zIndex: 1, marginBottom: '14px' }}>
-                <Tag size={12} /> {currentOffer.condition}
+              <div style={{ fontSize: '10.5px', opacity: '0.8', display: 'flex', alignItems: 'center', gap: '5px', position: 'relative', zIndex: 1, marginBottom: '12px', color: '#D4C8B8' }}>
+                <Tag size={11} color={activeTheme.brand} /> {currentOffer.condition}
               </div>
             </div>
 
@@ -240,19 +247,20 @@ export default function LimitedOfferModal({ theme = {}, setView }) {
               alignItems: 'center',
               justifyContent: 'center',
               gap: '6px',
-              background: 'rgba(255,255,255,0.18)', 
-              backdropFilter: 'blur(4px)',
-              WebkitBackdropFilter: 'blur(4px)',
-              padding: '10px 12px', 
+              background: 'rgba(255, 255, 255, 0.08)', 
+              backdropFilter: 'blur(6px)',
+              WebkitBackdropFilter: 'blur(6px)',
+              padding: '9px 12px', 
               borderRadius: '10px',
-              border: '1px dashed rgba(255,255,255,0.4)',
-              marginTop: 'auto',
+              border: '1px solid rgba(255, 255, 255, 0.15)',
+              marginTop: '4px',
               fontSize: '12px',
               fontWeight: '700',
               position: 'relative',
-              zIndex: 1
+              zIndex: 1,
+              color: '#FFFBF2'
             }}>
-              <ShoppingBag size={14} />
+              <ShoppingBag size={20} color={activeTheme.brand} />
               <span>Available in Bag at Checkout</span>
             </div>
           </div>
@@ -263,7 +271,6 @@ export default function LimitedOfferModal({ theme = {}, setView }) {
               <button 
                 onClick={handlePrev}
                 style={{
-                  background: '#FFFFFF',
                   border: activeTheme.border,
                   borderRadius: '50%',
                   width: '32px',
@@ -273,7 +280,9 @@ export default function LimitedOfferModal({ theme = {}, setView }) {
                   justifyContent: 'center',
                   cursor: 'pointer',
                   color: activeTheme.text,
-                  boxShadow: '0 2px 6px rgba(0,0,0,0.04)'
+                  background: '#FFFFFF',
+                  boxShadow: '0 2px 8px rgba(44, 34, 30, 0.06)',
+                  transition: 'transform 0.2s'
                 }}
               >
                 <ChevronLeft size={16} />
@@ -289,7 +298,7 @@ export default function LimitedOfferModal({ theme = {}, setView }) {
                       width: currentIndex === idx ? '18px' : '6px',
                       height: '6px',
                       borderRadius: '3px',
-                      backgroundColor: currentIndex === idx ? activeTheme.brand : '#E5D6B5',
+                      backgroundColor: currentIndex === idx ? activeTheme.brand : '#D4C8B8',
                       cursor: 'pointer',
                       transition: 'all 0.3s ease'
                     }}
@@ -300,7 +309,6 @@ export default function LimitedOfferModal({ theme = {}, setView }) {
               <button 
                 onClick={handleNext}
                 style={{
-                  background: '#FFFFFF',
                   border: activeTheme.border,
                   borderRadius: '50%',
                   width: '32px',
@@ -310,7 +318,9 @@ export default function LimitedOfferModal({ theme = {}, setView }) {
                   justifyContent: 'center',
                   cursor: 'pointer',
                   color: activeTheme.text,
-                  boxShadow: '0 2px 6px rgba(0,0,0,0.04)'
+                  background: '#FFFFFF',
+                  boxShadow: '0 2px 8px rgba(44, 34, 30, 0.06)',
+                  transition: 'transform 0.2s'
                 }}
               >
                 <ChevronRight size={16} />
@@ -321,8 +331,7 @@ export default function LimitedOfferModal({ theme = {}, setView }) {
 
         {/* Footer CTA Control */}
         <div style={{
-          padding: '14px 20px 20px 20px',
-          borderTop: '1px dashed #E5D6B5',
+          padding: '8px 20px 20px 20px',
           backgroundColor: '#FFFBF2',
           textAlign: 'center',
           boxSizing: 'border-box'
@@ -331,17 +340,18 @@ export default function LimitedOfferModal({ theme = {}, setView }) {
             onClick={handleClaim}
             style={{
               width: '100%',
-              padding: '14px',
+              padding: '12px 16px',
               backgroundColor: activeTheme.brand,
               color: '#FFFFFF',
               border: 'none',
               borderRadius: '12px',
               fontWeight: '700',
-              fontSize: '15px',
+              fontSize: '14px',
               cursor: 'pointer',
-              boxShadow: '0 4px 15px rgba(255, 89, 88, 0.3)',
+              boxShadow: '0 6px 20px rgba(255, 89, 88, 0.35)',
               transition: 'all 0.2s ease',
-              boxSizing: 'border-box'
+              boxSizing: 'border-box',
+              letterSpacing: '0.4px'
             }}
           >
             Explore Menu

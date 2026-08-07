@@ -17,8 +17,8 @@ export function getAllOffers(currentOrderNumber = 1) {
     if (currentOrderNumber <= 25) {
       offersList.push({
         id: 'anniv_early',
-        tag: "ANNIVERSARY - EARLY BIRD",
-        title: "Anniversary Celebration",
+        tag: "ANNIVERSARY",
+        title: "Anniversary Early Bird",
         description: "Exclusive early bird reward! Celebrate with us.",
         code: "ANNI25",
         discount: "25% OFF",
@@ -55,11 +55,11 @@ export function getAllOffers(currentOrderNumber = 1) {
     offersList.push({
       id: 'early_aug',
       tag: "LIMITED",
-      title: "INDEPENDENCE DAY SPECIAL",
+      title: "Independence Day Special",
       description: "Get special discounts this Independence Day.",
       code: "IND15",
       discount: "15% OFF",
-      condition: "Valid Aug 1-15 between 00:00 AM & 23:59 PM",
+      condition: "Valid Aug 1-15 between 06:00 AM & 18:00 PM",
       minOrder: 0,
       themeColor: "#1D4ED8"
     });
@@ -69,11 +69,11 @@ export function getAllOffers(currentOrderNumber = 1) {
   if (month === 10) {
     offersList.push({
       id: 'diwali_season',
-      tag: "FESTIVE SEASON",
+      tag: "FESTIVE",
       title: "Full Month Festive Celebration",
-      description: "Enjoy festive savings all through October on orders above ₹999!",
+      description: "Enjoy festive savings all through October on orders!",
       code: "FEST20",
-      discount: "Flat 20% OFF",
+      discount: "20% OFF",
       condition: "Enjoy the festive season with us",
       minOrder: 0,
       themeColor: "#D97706"
@@ -84,11 +84,11 @@ export function getAllOffers(currentOrderNumber = 1) {
   if (month === 3) {
     offersList.push({
       id: 'holi_delights',
-      tag: "RANG BARSE",
+      tag: "HOLI",
       title: "Holi Delights Offer",
-      description: "Buy any 2 snacks or sweets and get 1 traditional beverage free.",
+      description: "Buy any 2 snacks and get 1 traditional beverage free.",
       code: "HOLIFEST",
-      discount: "B2G1 FREE",
+      discount: "SPECIAL",
       condition: "Applicable on all snack items",
       minOrder: 299,
       themeColor: "#DB2777"
@@ -98,7 +98,7 @@ export function getAllOffers(currentOrderNumber = 1) {
   // 5. EVERGREEN DEFAULT STORE OFFER
   offersList.push({
     id: 'welcome_perk',
-    tag: "LYTE PERKS",
+    tag: "WELCOME",
     title: "Welcome Wholesome Offer",
     description: "Enjoy handcrafted freshness delivered to you.",
     code: "APPFIRST",

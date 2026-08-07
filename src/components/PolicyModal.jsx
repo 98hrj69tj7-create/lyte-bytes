@@ -8,8 +8,8 @@ export default function PolicyModal({ isOpen, onClose, title, children, theme = 
     brand: theme?.brand || '#FF5958',
     text: theme?.text || '#2C221E',
     border: theme?.border || '1px solid rgba(216, 199, 165, 0.4)',
-    bg: theme?.bg || '#FFFFFF',
-    radius: theme?.radius || '16px'
+    bg: theme?.bg || '#FFFBF2',
+    radius: theme?.radius || '20px'
   };
 
   return (
@@ -21,7 +21,7 @@ export default function PolicyModal({ isOpen, onClose, title, children, theme = 
         left: 0,
         right: 0,
         bottom: 0,
-        backgroundColor: 'rgba(0, 0, 0, 0.45)',
+        backgroundColor: 'rgba(44, 34, 30, 0.55)',
         backdropFilter: 'blur(8px)',
         WebkitBackdropFilter: 'blur(8px)',
         zIndex: 1000,
@@ -33,18 +33,18 @@ export default function PolicyModal({ isOpen, onClose, title, children, theme = 
       }}
     >
       <div 
-        onClick={() => e.stopPropagation(null)}
+        onClick={(e) => e.stopPropagation()}
         style={{
           width: '100%',
           maxWidth: '460px',
           margin: 'auto',
-          background: '#FFFBF2',
+          background: activeTheme.bg,
           color: activeTheme.text,
           borderRadius: activeTheme.radius,
           padding: '24px 20px',
-          maxHeight: '75vh',
+          maxHeight: '80vh',
           overflowY: 'auto',
-          boxShadow: '0 12px 40px rgba(0, 0, 0, 0.2)',
+          boxShadow: '0 20px 50px rgba(44, 34, 30, 0.25)',
           border: activeTheme.border,
           boxSizing: 'border-box',
           display: 'flex',
@@ -57,26 +57,47 @@ export default function PolicyModal({ isOpen, onClose, title, children, theme = 
           display: 'flex', 
           justifyContent: 'center', 
           alignItems: 'center', 
-          marginBottom: '16px', 
-          paddingBottom: '12px',
+          marginBottom: '10px', 
+          paddingBottom: '14px',
+          borderBottom: '1px solid rgba(216, 199, 165, 0.3)',
           position: 'relative'
         }}>
           <h3 style={{ 
             margin: 0, 
-            fontSize: '16px', 
+            fontSize: '15px', 
             color: activeTheme.brand, 
             fontWeight: '700', 
             textTransform: 'uppercase', 
-            letterSpacing: '0.5px',
+            letterSpacing: '1px',
             textAlign: 'center'
           }}>
             {title}
           </h3>
+          <button
+            onClick={onClose}
+            style={{
+              position: 'absolute',
+              right: 0,
+              background: 'rgba(216, 199, 165, 0.18)',
+              border: 'none',
+              borderRadius: '50%',
+              width: '32px',
+              height: '32px',
+              cursor: 'pointer',
+              color: activeTheme.text,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              transition: 'background 0.2s ease'
+            }}
+          >
+            <X size={18} />
+          </button>
         </div>
 
         {/* Modal Body Content */}
         <div style={{ 
-          fontSize: '13.5px', 
+          fontSize: '13px', 
           lineHeight: '1.6', 
           color: '#776E62', 
           display: 'flex', 
