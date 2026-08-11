@@ -82,7 +82,8 @@ function TestimonialCard({ item, onClick, renderWatermarkSvg, renderSourceLogo, 
               color: activeTheme.text, 
               lineHeight: '1.35', 
               fontStyle: isGroup2 ? 'italic' : 'normal',
-              fontFamily: 'serif' 
+              fontFamily: 'serif',
+              whiteSpace: 'pre-line' // Added this to respect the line breaks in your Instagram comments!
             }}
           >
             "{item.text}"
@@ -119,36 +120,37 @@ export default function SupportInfoView({
   const [termsOpen, setTermsOpen] = useState(false);
   const [selectedReview, setSelectedReview] = useState(null);
 
+  // Updated with your actual real-world reviews from the images!
   const [testimonials, setTestimonials] = useState([
     {
       id: 1,
       source: 'facebook',
-      text: 'This customised wedding cake made our day extra special because not just the cake ruled, but the taste was beyond comparison!',
+      text: 'This customised wedding cake by Lyte Bytes made our day extra special because not just the cake ruled, but the taste was beyond comparison! A heartfelt thanks to Florian Francis who took time to make this amazingly delicious made to order cake with great precision of our theme Checkmate & uncompromising taste. WE LOVED IT! 😍❤️',
       author: 'Deborah Sarkar'
     },
     {
       id: 2,
-      source: 'google',
-      text: 'The best pickles and homemade treats! Authentic taste and amazing packaging.',
-      author: 'Priya S.'
+      source: 'facebook',
+      text: 'One of the best Christmas cakes I have had! Just the way I like it. It smells divine! It comes with special instructions on shelf life, storage and re-heating details. I love the personal touch. Thanks guys!',
+      author: 'Aparna Punnakkal'
     },
     {
       id: 3,
-      source: 'instagram',
-      text: 'Loved the Jam and pickles! Super quick delivery and top-notch quality.',
-      author: 'Lizy Priya'
+      source: 'facebook',
+      text: 'Very Hygenic well packed good quantity reasonable price over all high quality and very delicious They have a unique blend of taste and aroma . I strongly recommend Lyte Bytes.',
+      author: 'Mary Margret'
     },
     {
       id: 4,
-      source: 'whatsapp',
-      text: 'Received the order safely today. The tomato pickle reminds me of home!',
-      author: 'Angelina.'
+      source: 'facebook',
+      text: 'Authentic homemade cakes nice packing above all heavenly taste..........................great',
+      author: 'Satish Kumar'
     },
     {
       id: 5,
-      source: 'whatsapp',
-      text: 'The gesture boxes and custom sweets arrived perfectly on time. Everyone loved them!',
-      author: 'Karthik R.'
+      source: 'instagram',
+      text: '"Loved the Jam and pickles😍" — @priyaana1\n"Very tasty 😋" — @kanaka376\n"Looks amazing!!" — @gainsaccountants_',
+      author: 'Instagram Community'
     }
   ]);
 
@@ -669,7 +671,14 @@ export default function SupportInfoView({
                 </span>
               </div>
 
-              <p style={{ margin: 0, fontSize: '12px', color: activeTheme.text, lineHeight: '1.65', fontStyle: 'serif' }}>
+              <p style={{ 
+                margin: 0, 
+                fontSize: '12px', 
+                color: activeTheme.text, 
+                lineHeight: '1.65', 
+                fontStyle: 'serif',
+                whiteSpace: 'pre-line' // Keeps Instagram styling intact inside the pop-up modal!
+              }}>
                 "{selectedReview.text}"
               </p>
 
