@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Home, Sparkles, Navigation, PhoneIcon, User } from 'lucide-react';
+import { Home, Sparkles, Navigation, User, Headphones } from 'lucide-react';
 
 export default function Footer({ view, setView, theme }) {
   const [isVisible, setIsVisible] = useState(true);
@@ -29,12 +29,12 @@ export default function Footer({ view, setView, theme }) {
     return () => window.removeEventListener('scroll', handleScroll, true);
   }, []);
 
-  // 5 Main Navigation Items
+  // 5 Main Navigation Items with updated "Concierge" label and tailored icon
   const navItems = [
     { id: 'home', label: 'Home', icon: Home },
     { id: 'offers', label: 'Offers', icon: Sparkles },       
     { id: 'track', label: 'Track', icon: Navigation },     
-    { id: 'info', label: 'Support', icon: PhoneIcon },
+    { id: 'info', label: 'Concierge', icon: Headphones },
     { id: 'account', label: 'Account', icon: User }, // 5th Tab for Customer/Loyalty page
   ];
 

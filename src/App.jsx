@@ -96,8 +96,6 @@ export default function App() {
   const [customer, setCustomer] = useLocalStorage('app_customer', { name: '', phone: '', email: '', address: '' });
   const [payment, setPayment] = useState(null);
   const [showConditions, setShowConditions] = useState(false);
-  const [showTC, setShowTC] = useState(false);
-  const [showPrivacy, setShowPrivacy] = useState(false);
   const [deliveryDate, setDeliveryDate] = useState('');
   const [deliveryTime, setDeliveryTime] = useState('');
   const [upiApp, setUpiApp] = useState('');
@@ -199,11 +197,9 @@ export default function App() {
           const existingItem = subList.find(i => i.name === row.Item_Name);
 
           if (existingItem) {
-            // Preserve tags if existing item lacks them
             if (!existingItem.tags && (row.Tags || row.tags)) {
               existingItem.tags = row.Tags || row.tags;
             }
-            // Preserve rating if existing item lacks it
             if (!existingItem.rating && (row.Rating || row.rating)) {
               existingItem.rating = row.Rating || row.rating;
             }
@@ -441,12 +437,6 @@ export default function App() {
           <SupportInfoView
             theme={theme}
             setView={setView}
-            showTC={showTC}
-            setShowTC={setShowTC}
-            showPrivacy={showPrivacy}
-            setShowPrivacy={setShowPrivacy}
-            backButtonStyle={backButtonStyle}
-            accordionHeaderStyle={accordionHeaderStyle}
           />
         )}
 
@@ -466,7 +456,6 @@ export default function App() {
         )}
       </main>
 
-      {/* Conditionally hide Sticky Cart Bar and Footer when the story card is expanded */}
       {!['cart', 'delivery', 'payment', 'verifying', 'track', 'profile', 'account', 'admin-customers'].includes(view) && !isStoryExpanded && (
         <StickyCartBar
           cart={cart}

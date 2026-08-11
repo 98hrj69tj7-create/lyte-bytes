@@ -372,18 +372,6 @@ export function PrivacyPolicyModalContent({ brandColor = '#FF5958' }) {
           Your information is never sold. Data is shared exclusively with trusted local logistics partners. We do not use tracking cookies.
         </p>
       </div>
-
-      <div style={cardStyle}>
-        <div style={headerRowStyle}>
-          <div style={iconBoxStyle}>
-            <Lock size={14} color={brandColor} />
-          </div>
-          <h4 style={titleStyle}>User Rights</h4>
-        </div>
-        <p style={textStyle}>
-          You retain full control over your data and may request profile or data deletion anytime via WhatsApp or email.
-        </p>
-      </div>
     </div>
   );
 }

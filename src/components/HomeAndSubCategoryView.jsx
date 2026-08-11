@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { List as ListIcon, Grid, ArrowLeft, ChevronRight, ChevronDown, Search, MessageCircle, Heart, Sparkles, Clock, ShieldCheck, ChefHat, BookOpen, Home, UserPlus } from 'lucide-react';
+import { List as ListIcon, Grid, ArrowLeft, ChevronRight, ChevronDown, Search, MessageCircle, Heart, Sparkles, Clock, ShieldCheck, ChefHat, BookOpen, Home, UserPlus, Gift } from 'lucide-react';
 import ItemCard from './ItemCard';
 
 /**
@@ -336,6 +336,23 @@ export default function HomeAndSubCategoryView({
 
   return (
     <>
+      <style>{`
+        @keyframes prismSweep {
+          0% { left: -150%; }
+          30% { left: 150%; }
+          100% { left: 150%; }
+        }
+        .support-card {
+          transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+          cursor: pointer;
+        }
+        .support-card:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 12px 30px rgba(44, 34, 30, 0.08) !important;
+          border-color: rgba(212, 175, 55, 0.6) !important;
+        }
+      `}</style>
+      
       {view === 'home' && (
         <div style={{ paddingBottom: '100px' }}>
           {/* --- TOP BRAND SLOGAN BAR --- */}
@@ -610,63 +627,78 @@ export default function HomeAndSubCategoryView({
             </h2>
           </div>
 
-          {/* --- WHATSAPP CATERING BANNER WITH AUTO-SAVE CONTACT TRIGGER --- */}
+          {/* 🌟 0. Bulk Order Callout Card with Golden Glass Sweep */}
           {isCateringCategory && (
-            <div style={{
-              display: 'flex',
-              flexDirection: 'column',
-              backgroundColor: '#FFFDF9',
-              border: '1px solid #FF5958',
-              borderRadius: '16px',
-              padding: '12px 16px',
-              marginBottom: '14px',
-              boxShadow: '0 4px 16px rgba(0,0,0,0.03)',
-              gap: '8px'
-            }}>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                  <div style={{
-                    backgroundColor: 'rgba(33, 184, 88, 0.12)',
-                    borderRadius: '50%',
-                    width: '35px',
-                    height: '35px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    flexShrink: 0
-                  }}>
-                    <MessageCircle size={30} color="#25D366" />
-                  </div>
-                  <div>
-                    <h4 style={{ margin: 0, fontSize: '13px', fontWeight: '600', color: theme.text, letterSpacing: '-0.2px' }}>
-                      Bulk Orders & Pricing?
-                    </h4>
-                    <p style={{ margin: '0', fontSize: '11px', color: '#78716C', fontWeight: '400' }}>
-                      Chat with us on WhatsApp
-                    </p>
-                  </div>
+            <div 
+              className="support-card" 
+              onClick={handleChatAndSave}
+              style={{ 
+                display: 'flex', 
+                alignItems: 'center', 
+                justifyContent: 'space-between',
+                padding: '12px 16px', 
+                background: 'linear-gradient(135deg, #FFF9EC 0%, #F3E6D0 100%)', 
+                border: '1px solid #FF5958', 
+                borderRadius: '16px', 
+                boxShadow: '0 4px 16px rgba(44, 34, 30, 0.04)',
+                boxSizing: 'border-box',
+                width: '100%',
+                position: 'relative',
+                overflow: 'hidden',
+                marginBottom: '14px'
+              }}
+            >
+              {/* --- 🎨 GOLDEN GLASS SHIMMER SWEEP LAYER --- */}
+              <div style={{
+                position: 'absolute',
+                top: 0,
+                left: '-150%',
+                width: '150%',
+                height: '100%',
+                background: 'linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.28), transparent)',
+                transform: 'skewX(-20deg)',
+                animation: 'prismSweep 4s infinite ease-in-out',
+                pointerEvents: 'none',
+                zIndex: 1
+              }} />
+
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flex: 1, minWidth: 0, position: 'relative', zIndex: 2 }}>
+                <div style={{ 
+                  backgroundColor: 'rgba(212, 175, 55, 0.22)',
+                  borderRadius: '50%',
+                  width: '38px',
+                  height: '38px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  flexShrink: 0 
+                }}>
+                  <Gift size={20} color="#D4AF37" />
                 </div>
-                <button
-                  onClick={handleChatAndSave}
-                  style={{
-                    backgroundColor: '#25D366',
-                    color: '#FFFFFF',
-                    border: 'none',
-                    borderRadius: '8px',
-                    padding: '7px 14px',
-                    fontSize: '12px',
-                    fontWeight: '600',
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '6px',
-                    whiteSpace: 'nowrap',
-                    boxShadow: '0 2px 6px rgba(37, 211, 102, 0.25)',
-                    flexShrink: 0
-                  }}
-                >
-                  <MessageCircle size={14} /> Chat Now
-                </button>
+                <div style={{ textAlign: 'left', minWidth: 0 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '1px' }}>
+                    <span style={{ fontSize: '9px', fontWeight: '800', color: '#B89728', letterSpacing: '0.8px', textTransform: 'uppercase' }}>
+                      ✦ Bespoke Catering ✦
+                    </span>
+                  </div>
+                  <h3 style={{ margin: '0 0 1px 0', color: theme.text, fontSize: '13.5px', fontWeight: '700', letterSpacing: '-0.2px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                    Bulk Orders & Pricing
+                  </h3>
+                  <p style={{ margin: 0, color: '#7A6F61', fontSize: '11px', fontWeight: '400', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                    Competitive pricing for bulk orders
+                  </p>
+                </div>
+              </div>
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexShrink: '0',
+                marginLeft: '10px',
+                position: 'relative',
+                zIndex: 2
+              }}>
+                <ChevronRight size={18} color="#D4AF37" strokeWidth={2.5} />
               </div>
             </div>
           )}
