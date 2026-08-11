@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { 
   ArrowLeft, MessageCircle, CheckCircle, Mail, Star, ChevronRight, 
-  FileText, Gift 
+  FileText, Gift, Camera 
 } from 'lucide-react';
 import { GeneralTermsModalContent } from './PolicyContents';
 
@@ -82,8 +82,7 @@ function TestimonialCard({ item, onClick, renderWatermarkSvg, renderSourceLogo, 
               color: activeTheme.text, 
               lineHeight: '1.35', 
               fontStyle: isGroup2 ? 'italic' : 'normal',
-              fontFamily: 'serif',
-              whiteSpace: 'pre-line' // Added this to respect the line breaks in your Instagram comments!
+              fontFamily: 'serif' 
             }}
           >
             "{item.text}"
@@ -96,9 +95,28 @@ function TestimonialCard({ item, onClick, renderWatermarkSvg, renderSourceLogo, 
         </div>
 
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '10.5px', borderTop: '1px solid rgba(216, 199, 165, 0.2)', paddingTop: '4px', marginTop: '2px' }}>
-          <span style={{ fontWeight: isGroup2 ? '700' : '600', color: activeTheme.text }}>
-            {isGroup2 ? `— ${item.author}` : item.author}
-          </span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <span style={{ fontWeight: isGroup2 ? '700' : '600', color: activeTheme.text }}>
+              {isGroup2 ? `— ${item.author}` : item.author}
+            </span>
+            {/* Camera badge if image is attached */}
+            {item.imageUrl && (
+              <span style={{
+                fontSize: '9px',
+                color: '#B89728',
+                backgroundColor: 'rgba(212, 175, 55, 0.12)',
+                padding: '1px 5px',
+                borderRadius: '6px',
+                fontWeight: '700',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '3px'
+              }}>
+                <Camera size={10} color="#B89728" /> Photo
+              </span>
+            )}
+          </div>
+
           <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
             {renderSourceLogo(item.source)}
             {isGroup2 && (
@@ -120,37 +138,38 @@ export default function SupportInfoView({
   const [termsOpen, setTermsOpen] = useState(false);
   const [selectedReview, setSelectedReview] = useState(null);
 
-  // Updated with your actual real-world reviews from the images!
   const [testimonials, setTestimonials] = useState([
     {
       id: 1,
       source: 'facebook',
-      text: 'This customised wedding cake by Lyte Bytes made our day extra special because not just the cake ruled, but the taste was beyond comparison! A heartfelt thanks to Florian Francis who took time to make this amazingly delicious made to order cake with great precision of our theme Checkmate & uncompromising taste. WE LOVED IT! 😍❤️',
-      author: 'Deborah Sarkar'
+      text: 'This customised wedding cake made our day extra special because not just the cake ruled, but the taste was beyond comparison!',
+      author: 'Deborah Sarkar',
+      imageUrl: 'https://images.unsplash.com/photo-1535141192574-5d4897c13136?auto=format&fit=crop&q=80&w=600'
     },
     {
       id: 2,
-      source: 'facebook',
-      text: 'One of the best Christmas cakes I have had! Just the way I like it. It smells divine! It comes with special instructions on shelf life, storage and re-heating details. I love the personal touch. Thanks guys!',
-      author: 'Aparna Punnakkal'
+      source: 'google',
+      text: 'The best pickles and homemade treats! Authentic taste and amazing packaging.',
+      author: 'Priya S.'
     },
     {
       id: 3,
-      source: 'facebook',
-      text: 'Very Hygenic well packed good quantity reasonable price over all high quality and very delicious They have a unique blend of taste and aroma . I strongly recommend Lyte Bytes.',
-      author: 'Mary Margret'
+      source: 'instagram',
+      text: 'Loved the Jam and pickles! Super quick delivery and top-notch quality.',
+      author: 'Lizy Priya',
+      imageUrl: 'https://images.unsplash.com/photo-1589135113942-8c10fae13460?auto=format&fit=crop&q=80&w=600'
     },
     {
       id: 4,
-      source: 'facebook',
-      text: 'Authentic homemade cakes nice packing above all heavenly taste..........................great',
-      author: 'Satish Kumar'
+      source: 'whatsapp',
+      text: 'Received the order safely today. The tomato pickle reminds me of home!',
+      author: 'Angelina.'
     },
     {
       id: 5,
-      source: 'instagram',
-      text: '"Loved the Jam and pickles😍" — @priyaana1\n"Very tasty 😋" — @kanaka376\n"Looks amazing!!" — @gainsaccountants_',
-      author: 'Instagram Community'
+      source: 'whatsapp',
+      text: 'The gesture boxes and custom sweets arrived perfectly on time. Everyone loved them!',
+      author: 'Karthik R.'
     }
   ]);
 
@@ -169,7 +188,8 @@ export default function SupportInfoView({
               id: item.ID || item.id || Math.random(),
               text: item.Text || item.text || '',
               author: item.Author || item.author || 'Customer',
-              source: (item.Source || item.source || 'google').toLowerCase()
+              source: (item.Source || item.source || 'google').toLowerCase(),
+              imageUrl: item.Image || item.image || item.Photo || item.photo || item.imageUrl || item['Image URL'] || null
             }))
             .filter(item => item.text && item.text.trim().length > 0);
           
@@ -429,14 +449,14 @@ export default function SupportInfoView({
         display: 'flex', flexDirection: 'column', gap: '12px', boxSizing: 'border-box', width: '100%'
       }}>
 
-        {/* 🌟 0. Festive Gift Hampers / Bulk Order Callout Card with Golden Glass Sweep */}
+        {/* 🌟 Festive Gift Hampers / Bulk Order Callout Card */}
         <div 
           className="support-card" 
           onClick={handleWhatsAppGiftInquiry}
           style={{ 
             display: 'flex', 
             alignItems: 'center', 
-            justifyContent: 'space-between',
+            justify: 'space-between',
             padding: '12px 16px', 
             background: 'linear-gradient(135deg, #FFF9EC 0%, #F3E6D0 100%)', 
             border: '1px solid #FF5958', 
@@ -448,7 +468,6 @@ export default function SupportInfoView({
             overflow: 'hidden'
           }}
         >
-          {/* --- 🎨 GOLDEN GLASS SHIMMER SWEEP LAYER --- */}
           <div style={{
             position: 'absolute',
             top: 0,
@@ -567,11 +586,11 @@ export default function SupportInfoView({
           
           <a href="https://wa.me/9108286886" onClick={handleWhatsAppClick} style={{ textDecoration: 'none', display: 'block', width: '100%' }}>
             <div className="support-card" style={{ display: 'flex', alignItems: 'center', padding: '10px 18px', backgroundColor: '#FFFFFF', border: activeTheme.border, borderRadius: '14px', boxShadow: '0 4px 15px rgba(44, 34, 30, 0.03)' }}>
-              <div style={{width: '42px', height: '42px', borderRadius: '12px', marginRight: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: '0', background: 'rgba(37, 211, 102, 0.1)' }}>
+              <div style={{width: '42px', height: '42px', borderRadius: '12px', marginRight: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: '0' }}>
                 <MessageCircle size={30} color="#25D366" />
               </div>
               <div style={{ textAlign: 'left', flex: 1 }}>
-                <h3 style={{ margin: '0 0 2px 0', color: activeTheme.text, fontSize: '14.5px', fontWeight: '700', letterSpacing: '0.2px' }}>Concierge WhatsApp</h3>
+                <h3 style={{ margin: '0 0 2px 0', color: activeTheme.text, fontSize: '14.5px', fontWeight: '700', letterSpacing: '0.2px' }}>WhatsApp</h3>
                 <p style={{ margin: 0, color: '#8C8275', fontSize: '12px', fontWeight: '500' }}>Immediate bespoke assistance</p>
               </div>
               <ChevronRight size={16} color="#B5ACA1" />
@@ -580,11 +599,11 @@ export default function SupportInfoView({
 
           <a href="mailto:lytebytesblr@gmail.com" style={{ textDecoration: 'none', display: 'block', width: '100%' }}>
             <div className="support-card" style={{ display: 'flex', alignItems: 'center', padding: '10px 18px', backgroundColor: '#FFFFFF', border: activeTheme.border, borderRadius: '14px', boxShadow: '0 4px 15px rgba(44, 34, 30, 0.03)' }}>
-              <div style={{ width: '42px', height: '42px', borderRadius: '12px', marginRight: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: '0', background: 'rgba(212, 175, 55, 0.1)' }}>
+              <div style={{ width: '42px', height: '42px', borderRadius: '12px', marginRight: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: '0' }}>
                 <Mail size={30} color="#D4AF37" />
               </div>
               <div style={{ textAlign: 'left', flex: 1 }}>
-                <h3 style={{ margin: '0 0 2px 0', color: activeTheme.text, fontSize: '14.5px', fontWeight: '700', letterSpacing: '0.2px' }}>Email Concierge</h3>
+                <h3 style={{ margin: '0 0 2px 0', color: activeTheme.text, fontSize: '14.5px', fontWeight: '700', letterSpacing: '0.2px' }}>Email</h3>
                 <p style={{ margin: 0, color: '#8C8275', fontSize: '12px', fontWeight: '500' }}>Detailed queries & bulk orders</p>
               </div>
               <ChevronRight size={16} color="#B5ACA1" />
@@ -597,11 +616,11 @@ export default function SupportInfoView({
               onClick={() => setTermsOpen(!termsOpen)}
               style={{ display: 'flex', alignItems: 'center', padding: '14px 18px', backgroundColor: '#FFFFFF', border: activeTheme.border, borderRadius: '14px', boxShadow: '0 4px 15px rgba(44, 34, 30, 0.03)' }}
             >
-              <div style={{ width: '42px', height: '42px', borderRadius: '12px', marginRight: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: '0', background: 'rgba(212, 175, 55, 0.1)' }}>
+              <div style={{ width: '42px', height: '42px', borderRadius: '12px', marginRight: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: '0' }}>
                 <FileText size={30} color="#D4AF37" />
               </div>
               <div style={{ textAlign: 'left', flex: 1 }}>
-                <h3 style={{ margin: '0 0 2px 0', color: activeTheme.text, fontSize: '14.5px', fontWeight: '700', letterSpacing: '0.2px' }}>Policies & Guidelines</h3>
+                <h3 style={{ margin: '0 0 2px 0', color: activeTheme.text, fontSize: '14.5px', fontWeight: '700', letterSpacing: '0.2px' }}>General Guidelines</h3>
                 <p style={{ margin: 0, color: '#8C8275', fontSize: '12px', fontWeight: '500' }}>Terms, shipping & privacy</p>
               </div>
               <ChevronRight 
@@ -625,6 +644,7 @@ export default function SupportInfoView({
 
       </div>
 
+      {/* ================= EXPANDED REVIEW MODAL (WITH PHOTO) ================= */}
       {selectedReview && (
         <div 
           onClick={() => setSelectedReview(null)}
@@ -638,12 +658,12 @@ export default function SupportInfoView({
           <div 
             onClick={(e) => e.stopPropagation()}
             style={{
-              backgroundColor: '#FFFBF2', borderRadius: '20px', padding: '28px',
-              maxWidth: '360px', width: '100%', boxSizing: 'border-box',
+              backgroundColor: '#FFFBF2', borderRadius: '20px', padding: '24px',
+              maxWidth: '380px', width: '100%', boxSizing: 'border-box',
               position: 'relative', boxShadow: '0 20px 40px rgba(0,0,0,0.2)',
               border: '1px solid rgba(212, 175, 55, 0.4)',
-              textAlign: 'left', display: 'flex', flexDirection: 'column', gap: '18px',
-              overflow: 'hidden'
+              textAlign: 'left', display: 'flex', flexDirection: 'column', gap: '16px',
+              maxHeight: '85vh', overflowY: 'auto'
             }}
           >
             <div style={{
@@ -663,26 +683,53 @@ export default function SupportInfoView({
               {renderWatermarkSvg(selectedReview.source)}
             </div>
 
-            <div style={{ position: 'relative', zIndex: '1', display: 'flex', flexDirection: 'column', gap: '18px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <Star size={12} fill="#D4AF37" color="#D4AF37" />
-                <span style={{ fontSize: '12px', fontWeight: '800', color: '#D4AF37', textTransform: 'uppercase', letterSpacing: '1px' }}>
-                  Verified {selectedReview.source} Review
-                </span>
+            <div style={{ position: 'relative', zIndex: '1', display: 'flex', flexDirection: 'column', gap: '14px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <Star size={12} fill="#D4AF37" color="#D4AF37" />
+                  <span style={{ fontSize: '12px', fontWeight: '800', color: '#D4AF37', textTransform: 'uppercase', letterSpacing: '1px' }}>
+                    Verified {selectedReview.source} Review
+                  </span>
+                </div>
+                <button 
+                  onClick={() => setSelectedReview(null)}
+                  style={{
+                    background: 'none', border: 'none', fontSize: '16px', color: '#8C8275',
+                    cursor: 'pointer', padding: '0 4px', lineHeight: '1'
+                  }}
+                >
+                  ✕
+                </button>
               </div>
 
-              <p style={{ 
-                margin: 0, 
-                fontSize: '12px', 
-                color: activeTheme.text, 
-                lineHeight: '1.65', 
-                fontStyle: 'serif',
-                whiteSpace: 'pre-line' // Keeps Instagram styling intact inside the pop-up modal!
-              }}>
+              {/* Display Image ONLY in expanded mode if present */}
+              {selectedReview.imageUrl && (
+                <div style={{
+                  width: '100%',
+                  borderRadius: '12px',
+                  overflow: 'hidden',
+                  border: '1px solid rgba(212, 175, 55, 0.35)',
+                  boxShadow: '0 6px 16px rgba(0,0,0,0.08)',
+                  backgroundColor: '#000'
+                }}>
+                  <img 
+                    src={selectedReview.imageUrl} 
+                    alt={`Review by ${selectedReview.author}`} 
+                    style={{
+                      width: '100%',
+                      maxHeight: '230px',
+                      objectFit: 'cover',
+                      display: 'block'
+                    }}
+                  />
+                </div>
+              )}
+
+              <p style={{ margin: 0, fontSize: '12.5px', color: activeTheme.text, lineHeight: '1.65', fontFamily: 'serif' }}>
                 "{selectedReview.text}"
               </p>
 
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '14px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '10px', borderTop: '1px solid rgba(216, 199, 165, 0.3)' }}>
                 <span style={{ fontWeight: '700', color: activeTheme.text, fontSize: '14px' }}>{selectedReview.author}</span>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                   {renderSourceLogo(selectedReview.source)}
