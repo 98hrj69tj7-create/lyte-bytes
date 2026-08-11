@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { Sparkles, Tag, ShoppingBag, X, Clock, ShieldCheck } from 'lucide-react';
+import { Sparkles, Tag, ShoppingBag, X } from 'lucide-react';
 import { getAllOffers } from '../utils/offersEngine';
+import { OfferPolicyModalContent } from './PolicyContents';
 
 // ==========================================
 // POLICY MODAL COMPONENT (WRAPPER)
@@ -12,7 +13,7 @@ function PolicyModal({ isOpen, onClose, title, children, theme = {} }) {
     brand: theme?.brand || '#FF5958',
     text: theme?.text || '#2C221E',
     border: theme?.border || '1px solid rgba(216, 199, 165, 0.4)',
-    bg: theme?.bg || '#FFFFFF',
+    bg: theme?.bg || '#FFFBF2',
     radius: theme?.radius || '22px'
   };
 
@@ -25,88 +26,63 @@ function PolicyModal({ isOpen, onClose, title, children, theme = {} }) {
         left: 0,
         right: 0,
         bottom: 0,
-        backgroundColor: 'rgba(46, 40, 40, 0.77)', // 🎨 [TWEAK]: Backdrop darkness & opacity
-        backdropFilter: 'blur(15px)',             // 🎨 [TWEAK]: Background blur intensity
+        backgroundColor: 'rgba(46, 40, 40, 0.77)',
+        backdropFilter: 'blur(15px)',
         WebkitBackdropFilter: 'blur(10px)',
         zIndex: 1000,
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        padding: '14px',                          // 🎨 [TWEAK]: Outer screen margin around modal
+        padding: '16px',
         boxSizing: 'border-box'
       }}
     >
       <div 
-        onClick={(e) => e.stopPropagation()}
+        onClick={() => e.stopPropagation(null)}
         style={{
           width: '100%',
-          maxWidth: '440px',                      // 🎨 [TWEAK]: Maximum width of the modal popup box
+          maxWidth: '460px',
           margin: 'auto',
-          background: '#FDF6E3',                  // 🎨 [TWEAK]: Modal background color
+          background: activeTheme.bg,
           color: activeTheme.text,
-          borderRadius: '20px',       // 🎨 [TWEAK]: Modal container corner roundness
-          padding: '18px 24px',                   // 🎨 [TWEAK]: Inner padding inside the main container (top/bottom, left/right)
-          maxHeight: '82vh',                      // 🎨 [TWEAK]: Maximum height relative to screen viewport
-          overflowY: 'auto',                      // Enables smooth scrolling if content is long
-          boxShadow: '0 24px 60px rgba(44, 34, 30, 0.3)', // 🎨 [TWEAK]: Modal drop shadow depth
-          border: activeTheme.border,
-          boxSizing: 'border-box',
+          borderRadius: '16px',
+          border: `2px solid ${activeTheme.brand}`,
+          maxHeight: '85vh',
           display: 'flex',
           flexDirection: 'column',
-          position: 'relative'
+          overflow: 'hidden',
+          boxShadow: '0 16px 40px rgba(0,0,0,0.25)',
+          boxSizing: 'border-box'
         }}
       >
         {/* Modal Header */}
         <div style={{ 
+          padding: '14px 16px',
+          background: activeTheme.bg,
+          borderBottom: '1px solid #EFECE6',
           display: 'flex', 
-          justifyContent: 'center', 
-          alignItems: 'center', 
-          marginBottom: '10px',                   // 🎨 [TWEAK]: Space between header and the first micro-card
-          paddingBottom: '10px',                  // 🎨 [TWEAK]: Space between header title and bottom border line
-          position: 'relative'
+          justifyContent: 'space-between', 
+          alignItems: 'center'
         }}>
-          <h3 style={{ 
-            margin: 0, 
-            fontSize: '16px',                     // 🎨 [TWEAK]: Header title font size
+          <div style={{ 
+            fontSize: '15px', 
             color: activeTheme.brand, 
-            fontWeight: '700', 
+            fontWeight: '800', 
             textTransform: 'uppercase', 
-            letterSpacing: '1.2px',                 // 🎨 [TWEAK]: Space between header letters
-            textAlign: 'center'
+            letterSpacing: '0.8px'
           }}>
             {title}
-          </h3>
-          <button
-            onClick={onClose}
-            style={{
-              position: 'absolute',
-              right: 0,
-              background: '#FDF6E3', // 🎨 [TWEAK]: Close button background color
-              border: 'none',
-              borderRadius: '50%',
-              width: '32px',                        // 🎨 [TWEAK]: Close button width
-              height: '32px',                       // 🎨 [TWEAK]: Close button height
-              cursor: 'pointer',
-              color: '#FF5958',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              transition: 'all 0.2s ease'
-            }}
-          >
-            <X size={30} />
-          </button>
+          </div>
         </div>
 
         {/* Modal Body Content Container */}
         <div style={{ 
-          fontSize: '13px', 
-          lineHeight: '1.65', 
-          color: '#FDF6E3', 
+          padding: '12px 16px', 
+          overflowY: 'auto', 
           display: 'flex', 
           flexDirection: 'column', 
-          gap: '6px',                            // 🎨 [TWEAK]: Vertical gap/spacing *between* individual micro-cards
-          textAlign: 'left'
+          gap: '8px',
+          boxSizing: 'border-box'
         }}>
           {children}
         </div>
@@ -252,7 +228,7 @@ export default function OffersTab({ theme = {} }) {
                 {offer.description}
               </p>
 
-              <div style={{ fontSize: '10.5px', opacity: '0.8', display: 'flex', alignItems: 'center', gap: '5px', position: 'relative', zIndex: 1, marginBottom: '12px', color: '#D4C8B8' }}>
+              <div style={{ fontSize: '10.5px', opacity: '0.8', display: 'flex', alignItems: 'center', gap: '5px', position: 'relative', zIndex: '1', marginBottom: '12px', color: '#D4C8B8' }}>
                 <Tag size={11} color={activeTheme.brand} /> {offer.condition}
               </div>
             </div>
@@ -283,7 +259,7 @@ export default function OffersTab({ theme = {} }) {
       </div>
 
       {/* ========================================== */}
-      {/* OFFER CONDITIONS MODAL CONTENT (MICRO-CARDS) */}
+      {/* OFFER CONDITIONS MODAL (USING POLICY CONTENTS) */}
       {/* ========================================== */}
       <PolicyModal 
         isOpen={isPolicyOpen} 
@@ -291,74 +267,8 @@ export default function OffersTab({ theme = {} }) {
         title="Offer Conditions" 
         theme={activeTheme}
       >
-        {/* Micro-Card 1 */}
-        <div style={cardStyle}>
-          <div style={headerRowStyle}>
-            <Clock size={15} color={activeTheme.brand} />
-            <span style={titleStyle}>Validity & Single-Use</span>
-          </div>
-          <p style={textStyle}>
-            Offers are valid for limited windows only. Promo codes cannot be combined, have no cash value, and apply as <strong>one code per order</strong>. Canceled orders forfeit their discount.
-          </p>
-        </div>
-
-        {/* Micro-Card 2 */}
-        <div style={cardStyle}>
-          <div style={headerRowStyle}>
-            <Tag size={15} color={activeTheme.brand} />
-            <span style={titleStyle}>Perks, Minimums & Taxes</span>
-          </div>
-          <p style={textStyle}>
-            Welcome and early-bird perks are limited to one use per customer. Minimum order values and discounts apply exclusively to item prices, excluding taxes, packaging, and delivery fees.
-          </p>
-        </div>
-
-        {/* Micro-Card 3 */}
-        <div style={cardStyle}>
-          <div style={headerRowStyle}>
-            <ShieldCheck size={15} color={activeTheme.brand} />
-            <span style={titleStyle}>Stock, Exclusions & Fair Usage</span>
-          </div>
-          <p style={textStyle}>
-            Promotional offers apply only to in-stock items and exclude custom hampers or special products. Accounts or orders suspected of promo code misuse will be blocked or canceled.
-          </p>
-        </div>
+        <OfferPolicyModalContent brandColor={activeTheme.brand} />
       </PolicyModal>
     </div>
   );
 }
-
-// ==========================================
-// 🎨 ADJUSTABLE MICRO-CARD DESIGN SETTINGS
-// ==========================================
-const cardStyle = {
-  background: 'rgba(216, 199, 165, 0.12)',       // 🎨 [TWEAK]: Micro-card background tint color & opacity
-  border: '1px dashed rgba(216, 199, 165, 0.3)',   // 🎨 [TWEAK]: Micro-card border style, thickness & color
-  borderRadius: '12px',                           // 🎨 [TWEAK]: Micro-card corner roundness
-  padding: '4px 14px',                            // 🎨 [TWEAK]: Micro-card internal spacing (top/bottom, left/right)
-  display: 'flex',
-  flexDirection: 'column',
-  gap: '4px'                                      // 🎨 [TWEAK]: Vertical space between card header row and text paragraph
-};
-
-const headerRowStyle = {
-  display: 'flex',
-  alignItems: 'center',
-  gap: '6px'                                      // 🎨 [TWEAK]: Space between the icon and micro-card title text
-};
-
-const titleStyle = {
-  fontSize: '12px',                               // 🎨 [TWEAK]: Micro-card title font size
-  fontWeight: '600',                              // 🎨 [TWEAK]: Micro-card title font weight (boldness)
-  textTransform: 'uppercase',
-  letterSpacing: '0.8px',                         // 🎨 [TWEAK]: Micro-card title letter spacing
-  color: '#2C221E'                                // 🎨 [TWEAK]: Micro-card title text color
-};
-
-const textStyle = {
-  margin: 0,
-  fontSize: '10.5px',                             // 🎨 [TWEAK]: Body text font size inside micro-cards
-  fontWeight: '300',                              // 🎨 [TWEAK]: Body text font weight
-  lineHeight: '1.55',                             // 🎨 [TWEAK]: Line spacing/height for paragraph readability
-  color: '#6E6457'                                // 🎨 [TWEAK]: Body text color inside micro-cards
-};

@@ -1,111 +1,126 @@
 import React from 'react';
-import { X } from 'lucide-react';
 
-export default function PolicyModal({ isOpen, onClose, title, children, theme = {} }) {
+/**
+ * PolicyModal Component
+ * 
+ * Customisation Guide:
+ * - Backdrop: Clicking anywhere outside the modal box triggers `onClose` to dismiss it.
+ * - Card Container: Uses `stopPropagation()` to ensure interacting inside the modal doesn't accidentally close it.
+ * - Header: The "X" button has been completely removed.
+ * - Footer: The agreement section has been completely removed.
+ */
+export default function PolicyModal({ 
+  isOpen = false, 
+  onClose = () => {}, 
+  title = 'Terms & Conditions',
+  theme = {},
+  children 
+}) {
+  // Return null if the modal is not active
   if (!isOpen) return null;
 
+  // Active theme configuration fallback values
   const activeTheme = {
     brand: theme?.brand || '#FF5958',
     text: theme?.text || '#2C221E',
-    border: theme?.border || '1px solid rgba(216, 199, 165, 0.4)',
-    bg: theme?.bg || '#FFFBF2',
-    radius: theme?.radius || '20px'
+    bg: '#FFFBF2',
+    cardBg: '#FFFFFF',
+    border: '#EFECE6',
   };
 
   return (
+    /* 1. Backdrop Overlay: Click anywhere outside the modal content box to close */
     <div 
       onClick={onClose}
       style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        right: 0,
+        position: 'fixed', 
+        top: 0, 
+        left: 0, 
+        right: 0, 
         bottom: 0,
-        backgroundColor: 'rgba(44, 34, 30, 0.55)',
-        backdropFilter: 'blur(8px)',
-        WebkitBackdropFilter: 'blur(8px)',
-        zIndex: 1000,
+        background: 'rgba(46, 40, 40, 0.77)', 
+        zIndex: 1200, 
         display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        padding: '20px',
+        backdropFilter: 'blur(15px)', 
+        WebkitBackdropFilter: 'blur(20px)',
+        alignItems: 'center', 
+        justifyContent: 'center', 
+        padding: '12px', 
         boxSizing: 'border-box'
       }}
     >
+      {/* 2. Inner Modal Card: e.stopPropagation() prevents clicks inside from triggering the backdrop close */}
       <div 
         onClick={(e) => e.stopPropagation()}
         style={{
-          width: '100%',
-          maxWidth: '460px',
-          margin: 'auto',
-          background: activeTheme.bg,
-          color: activeTheme.text,
-          borderRadius: activeTheme.radius,
-          padding: '24px 20px',
-          maxHeight: '80vh',
-          overflowY: 'auto',
-          boxShadow: '0 20px 50px rgba(44, 34, 30, 0.25)',
-          border: activeTheme.border,
-          boxSizing: 'border-box',
+          background: activeTheme.bg, 
+          width: '100%', 
+          maxWidth: '460px', 
+          maxHeight: '85vh',
+          borderRadius: '16px', 
+          border: `2px solid ${activeTheme.brand}`, 
           display: 'flex',
-          flexDirection: 'column',
-          position: 'relative'
+          flexDirection: 'column', 
+          overflow: 'hidden', 
+          boxShadow: '0 16px 40px rgba(0,0,0,0.25)',
+          boxSizing: 'border-box'
         }}
       >
-        {/* Modal Header */}
-        <div style={{ 
+        {/* Header (X button successfully removed) */}
+        <div style={{
+          padding: '10px 20px', 
+          background: activeTheme.bg, 
           display: 'flex', 
-          justifyContent: 'center', 
           alignItems: 'center', 
-          marginBottom: '10px', 
-          paddingBottom: '14px',
-          borderBottom: '1px solid rgba(216, 199, 165, 0.3)',
-          position: 'relative'
+          justifyContent: 'space-between'
         }}>
-          <h3 style={{ 
-            margin: 0, 
+          <div style={{ 
+            fontWeight: '800', 
             fontSize: '15px', 
             color: activeTheme.brand, 
-            fontWeight: '700', 
             textTransform: 'uppercase', 
-            letterSpacing: '1px',
-            textAlign: 'center'
+            letterSpacing: '0.8px' 
           }}>
             {title}
-          </h3>
-          <button
-            onClick={onClose}
-            style={{
-              position: 'absolute',
-              right: 0,
-              background: 'rgba(216, 199, 165, 0.18)',
-              border: 'none',
-              borderRadius: '50%',
-              width: '32px',
-              height: '32px',
-              cursor: 'pointer',
-              color: activeTheme.text,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              transition: 'background 0.2s ease'
-            }}
-          >
-            <X size={18} />
-          </button>
+          </div>
         </div>
 
-        {/* Modal Body Content */}
+        {/* Content Body with Elite Tight Spacing */}
         <div style={{ 
-          fontSize: '13px', 
-          lineHeight: '1.6', 
-          color: '#776E62', 
+          padding: '12px', 
+          overflowY: 'auto', 
           display: 'flex', 
           flexDirection: 'column', 
-          gap: '12px',
-          textAlign: 'left'
+          gap: '8px',
+          boxSizing: 'border-box',
+          textAlign: 'left',
+          fontSize: '12px',
+          color: '#665C52',
+          lineHeight: '1.5'
         }}>
-          {children}
+          {/* Automatically styles any <p> tags passed from parent into clean micro-cards */}
+          {React.Children.map(children, (child, index) => {
+            if (React.isValidElement(child) && child.type === 'p') {
+              return (
+                <div 
+                  key={index}
+                  style={{
+                    background: activeTheme.cardBg,
+                    border: `1px solid ${activeTheme.border}`,
+                    borderRadius: '10px',
+                    padding: '12px 14px',
+                    boxShadow: '0 2px 6px rgba(0,0,0,0.02)',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '4px'
+                  }}
+                >
+                  {child}
+                </div>
+              );
+            }
+            return child;
+          })}
         </div>
       </div>
     </div>

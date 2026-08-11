@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
-import { ArrowLeft, ShoppingBag, X, Tag, Check, Sparkles, ChevronRight } from 'lucide-react';
+import { 
+  ArrowLeft, ShoppingBag, X, Tag, Check, Sparkles, ChevronRight 
+} from 'lucide-react';
 import PolicyModal from './PolicyModal';
+import { CartViewPolicyModalContent } from './PolicyContents';
 
 // Default Live Coupons (Fallback if not passed via props)
 const DEFAULT_COUPONS = [
@@ -22,7 +25,6 @@ const DEFAULT_COUPONS = [
 
 export default function CartView({
   setView = () => {},
-  backButtonStyle = {},
   theme = {},
   cart = [],
   removeFromCart = () => {},
@@ -442,18 +444,14 @@ export default function CartView({
         </div>
       )}
 
-      {/* ================= POLICY BOTTOM SHEET MODAL ================= */}
+      {/* ================= POLICY BOTTOM SHEET MODAL (USING SHARED CONTENT) ================= */}
       <PolicyModal 
         isOpen={isPolicyOpen} 
         onClose={() => setIsPolicyOpen(false)} 
-        title="Order & Checkout Terms" 
+        title="Order Conditions" 
         theme={activeTheme}
       >
-        <p><strong>Advance Ordering & Cut-Off:</strong> All items are freshly prepared; orders must be placed in advance to ensure quality and availability.</p>
-        <p><strong>Payment Terms:</strong> Full payment is required at checkout to confirm your order placement.</p>
-        <p><strong>Cancellations & Refunds:</strong> Due to the perishable and fresh nature of our food, orders are non-cancellable and non-refundable once confirmed.</p>
-        <p><strong>Modifications & Substitutions:</strong> Orders can be modified prior to dispatch. In rare cases of fresh ingredient shortages, minor substitutions or immediate item refunds may apply.</p>
-        <p><strong>Fair Usage:</strong> We reserve the right to cancel or block accounts associated with fraudulent, unverified, or repeated fake bookings.</p>
+        <CartViewPolicyModalContent brandColor={activeTheme.brand} />
       </PolicyModal>
     </div>
   );

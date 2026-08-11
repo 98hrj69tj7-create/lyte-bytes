@@ -5,6 +5,7 @@ import {
   Bike, Navigation, CheckCircle2, AlertCircle, MessageCircle
 } from 'lucide-react';
 import PolicyModal from './PolicyModal';
+import { DeliveryPolicyModalContent, GeneralTermsModalContent, PrivacyPolicyModalContent } from './PolicyContents';
 
 const KITCHEN_LAT = 13.0232;
 const KITCHEN_LNG = 77.6492;
@@ -870,11 +871,7 @@ export default function DeliveryView({
         title="Delivery Conditions" 
         theme={activeTheme}
       >
-        <p><strong>Service Radius:</strong> We currently deliver exclusively within Bengaluru.</p>
-        <p><strong>Delivery Slots & Timelines:</strong> Standard delivery takes 24–48 hours. Preferred slots (Morning: 8–11 AM, Afternoon: 12–2 PM, Evening: 5–8 PM) can be selected at checkout.</p>
-        <p><strong>Fees & Tracking:</strong> Delivery charges are calculated dynamically at checkout. Real-time status tracking is available in the app.</p>
-        <p><strong>Address Accuracy & Handover:</strong> Please provide precise address details. Due to product perishability, our delivery partners can wait a maximum of 10 minutes at the drop location; uncontactable orders cannot be refunded.</p>
-        <p><strong>External Delays:</strong> While we prioritize punctuality, unforeseen local conditions (severe weather, heavy traffic blockades) may occasionally impact delivery windows.</p>
+        <DeliveryPolicyModalContent brandColor={activeTheme.brand} />
       </PolicyModal>
 
       {/* Privacy & Compliance Modal */}
@@ -884,10 +881,7 @@ export default function DeliveryView({
         title="Privacy & Compliance" 
         theme={activeTheme}
       >
-        <p><strong>Data Collection:</strong> We collect essential details (name, phone number, address) strictly for order fulfillment, logistics coordination, and customer support.</p>
-        <p><strong>Data Sharing & Security:</strong> Your information is never sold. Data is shared exclusively with trusted local logistics partners. We do not use tracking cookies.</p>
-        <p><strong>User Rights:</strong> You retain full control over your data and may request profile or data deletion anytime via WhatsApp or email.</p>
-        <p><strong>FSSAI & Food Safety:</strong> Lyte Bytes operates as a certified FSSAI-registered kitchen adhering to strict hygiene standards. <strong>Allergy Notice:</strong> Prepared in a home kitchen that handles common allergens including nuts, dairy, and gluten.</p>
+        <PrivacyPolicyModalContent brandColor={activeTheme.brand} />
       </PolicyModal>
     </div>
   );

@@ -1,17 +1,17 @@
 import React, { useState } from 'react';
-import { ArrowLeft, MessageCircle, CheckCircle, Mail, Star, ChevronRight } from 'lucide-react';
-import PolicyModal from './PolicyModal';
+import { 
+  ArrowLeft, MessageCircle, CheckCircle, Mail, Star, ChevronRight, 
+  FileText 
+} from 'lucide-react';
+// Import GeneralTermsModalContent directly from your PolicyContent file 
+// (adjust the path './PolicyContent' if your file structure is different)
+import { GeneralTermsModalContent } from './PolicyContents';
 
 export default function SupportInfoView({
   theme = {},
-  setView = () => {},
-  showTC = false,
-  setShowTC = () => {},
-  showPrivacy = false,
-  setShowPrivacy = () => {}
+  setView = () => {}
 }) {
-  const [isTermsOpen, setIsTermsOpen] = useState(false);
-  const [isPrivacyOpen, setIsPrivacyOpen] = useState(false);
+  const [termsOpen, setTermsOpen] = useState(false);
 
   const activeTheme = {
     brand: theme?.brand || '#FF5958',
@@ -97,6 +97,7 @@ export default function SupportInfoView({
         }
         .support-card {
           transition: transform 0.2s ease, box-shadow 0.2s ease;
+          cursor: pointer;
         }
         .support-card:hover {
           transform: translateY(-2px);
@@ -135,12 +136,12 @@ export default function SupportInfoView({
 
       {/* Main Container Card */}
       <div style={{ 
-        border: activeTheme.border, borderRadius: activeTheme.radius, bordercolor: '#FF5958(216, 199, 165, 0.6)',
+        border: activeTheme.border, borderRadius: activeTheme.radius, borderColor: 'rgba(216, 199, 165, 0.6)',
         background: '#FFFBF2', padding: '20px', boxShadow: '0 8px 30px rgba(44, 34, 30, 0.04)',
         display: 'flex', flexDirection: 'column', gap: '20px', boxSizing: 'border-box', width: '100%'
       }}>
 
-        {/* 1. Give Feedback Container (First Option) */}
+        {/* 1. Give Feedback Container */}
         <a href="https://g.page/r/CRodKxCU6unDEBM/review" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none' }}>
           <div className="support-card" style={{ display: 'flex', alignItems: 'center', padding: '10px 16px', backgroundColor: '#FFFFFF', border: activeTheme.border, borderRadius: '14px', boxShadow: '0 2px 8px rgba(44, 34, 30, 0.02)' }}>
             <div style={{width: '42px', height: '42px', borderRadius: '12px', marginRight: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: '0' }}>
@@ -154,7 +155,7 @@ export default function SupportInfoView({
           </div>
         </a>
 
-        {/* 2. Customer Stories / Testimonials Section */}
+        {/* 2. Customer Stories Section */}
         <div style={{ borderTop: `1px dashed ${activeTheme.brand}`, paddingTop: '16px', display: 'flex', flexDirection: 'column', gap: '12px', overflow: 'hidden' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <span style={{ fontSize: '11.5px', fontWeight: '800', color: '#776E62', textTransform: 'uppercase', letterSpacing: '1px', textAlign: 'left' }}>
@@ -182,8 +183,6 @@ export default function SupportInfoView({
                   </p>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '11px' }}>
                     <span style={{ fontWeight: '700', color: activeTheme.brand }}>— {item.author}</span>
-                    
-                    {/* Source Logo Badge */}
                     <div style={{ padding: '4px 8px', borderRadius: '6px', display: 'flex', alignItems: 'center', gap: '5px' }}>
                       {item.source === 'google' ? (
                         <svg width="13" height="13" viewBox="0 0 24 24">
@@ -198,7 +197,6 @@ export default function SupportInfoView({
                         </svg>
                       )}
                     </div>
-
                   </div>
                 </div>
               ))}
@@ -206,7 +204,7 @@ export default function SupportInfoView({
           </div>
         </div>
 
-        {/* 3. WhatsApp Support & Email Support Options */}
+        {/* 3. Support & Terms Options Section */}
         <div style={{ borderTop: `1px dashed ${activeTheme.brand}`, paddingTop: '16px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
           
           {/* WhatsApp Support */}
@@ -237,76 +235,41 @@ export default function SupportInfoView({
             </div>
           </a>
 
-        </div>
+          {/* Terms & Conditions Accordion Dropdown */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            <div 
+              className="support-card" 
+              onClick={() => setTermsOpen(!termsOpen)}
+              style={{ display: 'flex', alignItems: 'center', padding: '10px 16px', backgroundColor: '#FFFFFF', border: activeTheme.border, borderRadius: '14px', boxShadow: '0 2px 8px rgba(44, 34, 30, 0.02)' }}
+            >
+              <div style={{ width: '42px', height: '42px', borderRadius: '12px', marginRight: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: '0' }}>
+                <FileText size={26} color={activeTheme.brand} />
+              </div>
+              <div style={{ textAlign: 'left', flex: 1 }}>
+                <h3 style={{ margin: '0 0 2px 0', color: activeTheme.text, fontSize: '14.5px', fontWeight: '700' }}>Terms & Conditions</h3>
+                <p style={{ margin: 0, color: '#8C8275', fontSize: '12px', fontWeight: '500' }}>Read platform guidelines & policies</p>
+              </div>
+              <ChevronRight 
+                size={16} 
+                color="#B5ACA1" 
+                style={{ 
+                  transform: termsOpen ? 'rotate(90deg)' : 'rotate(0deg)', 
+                  transition: 'transform 0.2s ease' 
+                }} 
+              />
+            </div>
 
-        {/* Policies & Information Section */}
-        <div style={{ borderTop: `1px dashed rgba(216, 199, 165, 0.6)`, paddingTop: '1px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
-          <div style={{ fontSize: '11.5px', fontWeight: '800', color: '#776E62', textTransform: 'uppercase', letterSpacing: '1px', textAlign: 'left' }}>
-            Policies & Information
+            {/* Directly rendered GeneralTermsModalContent component */}
+            {termsOpen && (
+              <div style={{ paddingTop: '4px', paddingBottom: '4px' }}>
+                <GeneralTermsModalContent brandColor={activeTheme.brand} />
+              </div>
+            )}
           </div>
-          <div style={{ display: 'flex', gap: '10px' }}>
-            <button
-              type="button"
-              onClick={() => {
-                if (typeof setShowTC === 'function') setShowTC(true);
-                setIsTermsOpen(true);
-              }}
-              style={{
-                flex: 1, padding: '12px', background: '#FFFFFF', border: activeTheme.border,
-                borderRadius: '12px', fontSize: '12.5px', fontWeight: '700', color: activeTheme.text, cursor: 'pointer',
-                boxShadow: '0 2px 6px rgba(44, 34, 30, 0.02)', transition: 'background 0.2s'
-              }}
-            >
-              Terms & Conditions
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                if (typeof setShowPrivacy === 'function') setShowPrivacy(true);
-                setIsPrivacyOpen(true);
-              }}
-              style={{
-                flex: 1, padding: '12px', background: '#FFFFFF', border: activeTheme.border,
-                borderRadius: '12px', fontSize: '12.5px', fontWeight: '700', color: activeTheme.text, cursor: 'pointer',
-                boxShadow: '0 2px 6px rgba(44, 34, 30, 0.02)', transition: 'background 0.2s'
-              }}
-            >
-              Privacy Policy
-            </button>
-          </div>
+
         </div>
 
       </div>
-
-      {/* Terms & Conditions Modal */}
-      <PolicyModal 
-        isOpen={showTC || isTermsOpen} 
-        onClose={() => {
-          if (typeof setShowTC === 'function') setShowTC(false);
-          setIsTermsOpen(false);
-        }} 
-        title="Terms & Conditions" 
-        theme={activeTheme}
-      >
-        <p><strong>General:</strong> All orders placed with Lyte Bytes are subject to availability and confirmation of order acceptance.</p>
-        <p><strong>Pricing & Payments:</strong> Prices are listed in INR and are inclusive of applicable local taxes where specified. Payment must be completed via our secure payment gateway prior to dispatch.</p>
-        <p><strong>Cancellations & Refunds:</strong> Due to the perishable and artisanal nature of our food products, cancellations are only permitted within 1 hour of order placement. Refunds for valid quality concerns are handled on a case-by-case basis.</p>
-      </PolicyModal>
-
-      {/* Privacy Policy Modal */}
-      <PolicyModal 
-        isOpen={showPrivacy || isPrivacyOpen} 
-        onClose={() => {
-          if (typeof setShowPrivacy === 'function') setShowPrivacy(false);
-          setIsPrivacyOpen(false);
-        }} 
-        title="Privacy Policy" 
-        theme={activeTheme}
-      >
-        <p><strong>Information Security:</strong> We respect your privacy and protect your personal information with strict confidentiality measures.</p>
-        <p><strong>Usage:</strong> Data collected during checkout is used exclusively for order processing, delivery logistics, and direct customer support.</p>
-        <p><strong>No Third-Party Sharing:</strong> We never rent, sell, or trade your contact details with external marketing entities.</p>
-      </PolicyModal>
     </div>
   );
 }
