@@ -165,7 +165,7 @@ export default function InstallPrompt({ theme = {} }) {
             fontWeight: '500' 
           }}>
             {isIos 
-              ? "To install our app on your device, tap the Share button (⎋) below and select 'Add to Home Screen' (➕)."
+              ? "To install our app on your device, tap the Share button (⎋) below and select 'Add to Home Screen'."
               : "Add Lyte Bytes to your home screen for quick ordering, instant access, and an app-like experience."}
           </p>
         </div>

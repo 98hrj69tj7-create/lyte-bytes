@@ -181,25 +181,6 @@ export default function LimitedOfferModal({ theme = {}, setView }) {
               Exclusive Offers
             </span>
           </div>
-
-          <button
-            onClick={handleClose}
-            style={{
-              position: 'absolute',
-              top: '18px',
-              right: '18px',
-              background: 'none',
-              border: 'none',
-              cursor: 'pointer',
-              color: '#78716C',
-              padding: '4px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center'
-            }}
-          >
-            <X size={18} />
-          </button>
         </div>
 
         {/* Carousel Container Wrapper */}
