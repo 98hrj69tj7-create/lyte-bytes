@@ -11,25 +11,39 @@ export default function InstallPrompt({ theme = {} }) {
     const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
     if (isStandalone) return;
 
-    // 2. Check if the user previously dismissed the prompt
-    const hasDismissed = localStorage.getItem('lyte_bytes_pwa_dismissed');
-    if (hasDismissed) return;
+    // 2. Check if the user previously dismissed the install prompt
+    const hasDismissedInstall = localStorage.getItem('lyte_bytes_pwa_dismissed');
+    if (hasDismissedInstall) return;
 
     // Detect iOS device
     const userAgent = window.navigator.userAgent.toLowerCase();
     const iosDevice = /iphone|ipad|ipod/.test(userAgent);
     setIsIos(iosDevice);
 
+    // 3. Sequential trigger logic: Wait until user acts on/closes the Limited Offer Modal
+    const checkAndShowPrompt = () => {
+      const offerClosed = localStorage.getItem('lyte_offer_closed');
+      
+      if (!offerClosed) {
+        // If the offer modal is still active, poll again in 1 second
+        setTimeout(checkAndShowPrompt, 1000);
+        return;
+      }
+
+      // Offer modal has been dismissed by user action! Safe to show install prompt.
+      setShowBanner(true);
+    };
+
     if (iosDevice) {
-      // Show the iOS guide modal after a short delay
-      const timer = setTimeout(() => setShowBanner(true), 2500);
+      // Start checking after initial load delay
+      const timer = setTimeout(checkAndShowPrompt, 2000);
       return () => clearTimeout(timer);
     } else {
       // Listen for Android / Chrome automated install prompt event
       const handler = (e) => {
         e.preventDefault();
         setDeferredPrompt(e);
-        setShowBanner(true);
+        checkAndShowPrompt();
       };
 
       window.addEventListener('beforeinstallprompt', handler);
@@ -39,7 +53,6 @@ export default function InstallPrompt({ theme = {} }) {
 
   const handleDismiss = () => {
     setShowBanner(false);
-    // Remember that the user dismissed it so it won't pop up again
     localStorage.setItem('lyte_bytes_pwa_dismissed', 'true');
   };
 
@@ -152,7 +165,7 @@ export default function InstallPrompt({ theme = {} }) {
             fontWeight: '500' 
           }}>
             {isIos 
-              ? "To install our app on your iPhone, tap the Safari Share button (⎋) below and select 'Add to Home Screen' (➕)."
+              ? "To install our app on your device, tap the Share button (⎋) below and select 'Add to Home Screen' (➕)."
               : "Add Lyte Bytes to your home screen for quick ordering, instant access, and an app-like experience."}
           </p>
         </div>

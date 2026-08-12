@@ -22,25 +22,38 @@ export default function LimitedOfferModal({ theme = {}, setView }) {
   const currentCount = parseInt(localStorage.getItem('store_order_count') || '1', 10);
   const allOffers = getAllOffers(currentCount);
 
-  // 1. Trigger Logic: Session Capped & Delayed Load (3.5 seconds)
+  // 1. Trigger Logic: 10-Hour Cooldown via localStorage & Delayed Load (3.5 seconds)
   useEffect(() => {
-    const hasSeenModal = sessionStorage.getItem('has_seen_offer_modal_session');
-    
-    // Only auto-open if user hasn't seen it in this session
-    if (!hasSeenModal && allOffers.length > 0) {
+    const lastShownTime = localStorage.getItem('lyte_offer_last_shown_time');
+    const now = new Date().getTime();
+    const tenHoursInMs = 10 * 60 * 60 * 1000;
+
+    const hasExpired = !lastShownTime || (now - parseInt(lastShownTime, 10)) > tenHoursInMs;
+
+    if (hasExpired && allOffers.length > 0) {
       const timer = setTimeout(() => {
         setIsOpen(true);
-        sessionStorage.setItem('has_seen_offer_modal_session', 'true');
+        localStorage.setItem('lyte_offer_last_shown_time', now.toString());
+        // Reset the closed flag so PWA install prompt waits until this new instance is closed
+        localStorage.removeItem('lyte_offer_closed');
       }, 3500); // 3.5 second delay gives user time to settle into Home view
 
       return () => clearTimeout(timer);
+    } else {
+      // If it hasn't expired yet, ensure the install prompt knows the offer is already bypassed
+      localStorage.setItem('lyte_offer_closed', 'true');
     }
   }, [allOffers.length]);
+
+  const handleClose = () => {
+    setIsOpen(false);
+    localStorage.setItem('lyte_offer_closed', 'true');
+  };
 
   // 2. Close on Escape key press
   useEffect(() => {
     const handleKeyDown = (e) => {
-      if (e.key === 'Escape') setIsOpen(false);
+      if (e.key === 'Escape') handleClose();
     };
     if (isOpen) {
       window.addEventListener('keydown', handleKeyDown);
@@ -90,7 +103,7 @@ export default function LimitedOfferModal({ theme = {}, setView }) {
   };
 
   const handleClaim = () => {
-    setIsOpen(false);
+    handleClose();
     if (setView) setView('home');
   };
 
@@ -100,7 +113,7 @@ export default function LimitedOfferModal({ theme = {}, setView }) {
 
   return (
     <div 
-      onClick={() => setIsOpen(false)}
+      onClick={handleClose}
       style={{
         position: 'fixed',
         top: 0,
@@ -151,7 +164,8 @@ export default function LimitedOfferModal({ theme = {}, setView }) {
           alignItems: 'center',
           justifyContent: 'center',
           padding: '22px 20px 4px 20px',
-          boxSizing: 'border-box'
+          boxSizing: 'border-box',
+          position: 'relative'
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <div style={{ 
@@ -167,6 +181,25 @@ export default function LimitedOfferModal({ theme = {}, setView }) {
               Exclusive Offers
             </span>
           </div>
+
+          <button
+            onClick={handleClose}
+            style={{
+              position: 'absolute',
+              top: '18px',
+              right: '18px',
+              background: 'none',
+              border: 'none',
+              cursor: 'pointer',
+              color: '#78716C',
+              padding: '4px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}
+          >
+            <X size={18} />
+          </button>
         </div>
 
         {/* Carousel Container Wrapper */}
@@ -357,26 +390,6 @@ export default function LimitedOfferModal({ theme = {}, setView }) {
           textAlign: 'center',
           boxSizing: 'border-box'
         }}>
-          <button
-            onClick={handleClaim}
-            style={{
-              width: '100%',
-              padding: '13px 16px',
-              background: 'linear-gradient(135deg, #FF5958 0%, #E11D48 100%)',
-              color: '#FFFFFF',
-              border: '1px solid rgba(255, 255, 255, 0.2)',
-              borderRadius: '14px',
-              fontWeight: '700',
-              fontSize: '14px',
-              cursor: 'pointer',
-              boxShadow: '0 6px 20px rgba(255, 89, 88, 0.35)',
-              transition: 'all 0.2s ease',
-              boxSizing: 'border-box',
-              letterSpacing: '0.4px'
-            }}
-          >
-            Claim Offer & Browse Menu
-          </button>
         </div>
 
       </div>
