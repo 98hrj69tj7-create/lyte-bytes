@@ -1,6 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { List as ListIcon, Grid, ArrowLeft, ChevronRight, ChevronDown, Search, MessageCircle, Heart, Sparkles, Clock, ShieldCheck, ChefHat, BookOpen, Home, UserPlus, Gift } from 'lucide-react';
+import { 
+  List as ListIcon, Grid, ArrowLeft, ChevronRight, ChevronDown, 
+  Heart, Sparkles, ShieldCheck, ChefHat, Home, Gift, Award, 
+  Badge,
+  BadgeCheck
+} from 'lucide-react';
 import ItemCard from './ItemCard';
+
+/* ==========================================================================
+   CONFIG & UTILITY HELPERS
+   ========================================================================== */
 
 /**
  * Safely extracts an image path from an object regardless of property naming convention
@@ -37,17 +46,17 @@ function getFallbackSvgImage(title = "Lyte Bytes") {
           <stop offset="100%" stop-color="#14120f" />
         </linearGradient>
         <radialGradient id="glow" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stop-color="#FF5958" stop-opacity="0.25" />
-          <stop offset="100%" stop-color="#FF5958" stop-opacity="0" />
+          <stop offset="0%" stop-color="#C5A059" stop-opacity="0.25" />
+          <stop offset="100%" stop-color="#C5A059" stop-opacity="0" />
         </radialGradient>
       </defs>
       <rect width="600" height="400" fill="url(#bg)" />
       <circle cx="300" cy="200" r="180" fill="url(#glow)" />
-      <g transform="translate(300, 160) scale(1.8)" fill="none" stroke="#FF5958" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <g transform="translate(300, 160) scale(1.8)" fill="none" stroke="#C5A059" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v7a3 3 0 0 0 3 3h4v5h4v-5h4a3 3 0 0 0 3-3v-7h-3V7a5 5 0 0 0-5-5z"></path>
       </g>
-      <text x="300" y="245" font-family="system-ui, -apple-system, sans-serif" font-size="24" font-weight="bold" fill="#FFFFFF" text-anchor="middle" letter-spacing="1">${title}</text>
-      <text x="300" y="270" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="600" fill="#FF5958" text-anchor="middle" letter-spacing="3">CRAFTED DELICACY</text>
+      <text x="300" y="245" font-family="'Cormorant Garamond', serif" font-size="26" font-weight="bold" fill="#FFFFFF" text-anchor="middle" letter-spacing="1">${title}</text>
+      <text x="300" y="270" font-family="'Plus Jakarta Sans', sans-serif" font-size="11" font-weight="600" fill="#C5A059" text-anchor="middle" letter-spacing="3">CRAFTED DELICACY</text>
     </svg>
   `;
 
@@ -101,9 +110,9 @@ function resolveSubcategoryImage(subName, activeCat, menuData, resolveImagePath)
   return resolvedSubItemImg || resolvedCatImg || getFallbackSvgImage(subName);
 }
 
-/**
- * Category Card Component
- */
+/* ==========================================================================
+   CATEGORY CARD COMPONENT
+   ========================================================================== */
 function CategoryCard({ cat, resolveImagePath, theme, onClick }) {
   const [isHovered, setIsHovered] = useState(false);
   const rawPath = getImgUrl(cat);
@@ -129,10 +138,11 @@ function CategoryCard({ cat, resolveImagePath, theme, onClick }) {
         boxShadow: isHovered ? '0 12px 28px rgba(0,0,0,0.18)' : '0 4px 16px rgba(0,0,0,0.04)',
         transform: isHovered ? 'translateY(-2px)' : 'translateY(0px)',
         transition: 'all 0.35s cubic-bezier(0.16, 1, 0.3, 1)',
-        border: '0.5px solid rgba(216, 199, 165, 0.6)',
+        border: '0.5px solid rgba(197, 160, 89, 0.4)',
         display: 'flex',
         alignItems: 'center',
-        backgroundColor: '#1A1714'
+        backgroundColor: '#1A1714',
+        fontFamily: "'Plus Jakarta Sans', sans-serif"
       }}
     >
       <img 
@@ -155,31 +165,54 @@ function CategoryCard({ cat, resolveImagePath, theme, onClick }) {
         zIndex: 2
       }} />
 
-      <div style={{ position: 'relative', zIndex: 3, padding: '0 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', boxSizing: 'border-box' }}>
+      <div style={{ 
+        position: 'relative', 
+        zIndex: 3, 
+        padding: '0 18px', 
+        display: 'flex', 
+        justifyContent: 'space-between', 
+        alignItems: 'center', 
+        width: '100%', 
+        boxSizing: 'border-box' 
+      }}>
         <div style={{ flex: 1, paddingRight: '12px' }}>
-          <h3 style={{ fontSize: '20px', fontWeight: '700', color: '#FFFFFF', margin: 0, letterSpacing: '-0.2px', textShadow: '0 1px 3px rgba(0,0,0,0.4)', lineHeight: '1.2' }}>
+          <h3 style={{ 
+            fontFamily: "'Cormorant Garamond', serif",
+            fontSize: '22px',
+            fontWeight: '700',
+            color: '#FFFFFF',
+            margin: 0, 
+            letterSpacing: '0.2px', 
+            textShadow: '0 1px 3px rgba(0,0,0,0.4)', 
+            lineHeight: '1.1' 
+          }}>
             {cat.name}
           </h3>
         </div>
+        
         <div style={{
-          width: '28px', height: '28px', borderRadius: '50%',
-          backgroundColor: '#FF5958',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          boxShadow: '0 2px 6px rgba(255, 89, 88, 0.35)',
+          width: '30px', 
+          height: '30px', 
+          borderRadius: '50%',
+          backgroundColor: '#C5A059',
+          display: 'flex', 
+          alignItems: 'center', 
+          justifyContent: 'center',
+          boxShadow: '0 2px 8px rgba(197, 160, 89, 0.4)',
           transform: isHovered ? 'translateX(3px)' : 'translateX(0)',
           transition: 'transform 0.3s ease',
           flexShrink: 0
         }}>
-          <ChevronRight size={15} color="#FFFFFF" />
+          <ChevronRight size={16} color="#FFFFFF" strokeWidth={2.2} />
         </div>
       </div>
     </div>
   );
 }
 
-/**
- * SubCategory Card Component
- */
+/* ==========================================================================
+   SUBCATEGORY CARD COMPONENT
+   ========================================================================== */
 function SubCategoryCard({ sub, resolveImagePath, activeCat, menuData, onClick }) {
   const [isHovered, setIsHovered] = useState(false);
   
@@ -206,10 +239,11 @@ function SubCategoryCard({ sub, resolveImagePath, activeCat, menuData, onClick }
         boxShadow: isHovered ? '0 12px 28px rgba(0,0,0,0.18)' : '0 4px 16px rgba(0,0,0,0.04)',
         transform: isHovered ? 'translateY(-2px)' : 'translateY(0px)',
         transition: 'all 0.35s cubic-bezier(0.16, 1, 0.3, 1)',
-        border: '0.5px solid rgba(216, 199, 165, 0.6)',
+        border: '0.5px solid rgba(197, 160, 89, 0.4)',
         display: 'flex',
         alignItems: 'center',
-        backgroundColor: '#1A1714'
+        backgroundColor: '#1A1714',
+        fontFamily: "'Plus Jakarta Sans', sans-serif"
       }}
     >
       <img 
@@ -242,31 +276,53 @@ function SubCategoryCard({ sub, resolveImagePath, activeCat, menuData, onClick }
         zIndex: 2
       }} />
 
-      <div style={{ position: 'relative', zIndex: 3, padding: '0 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', boxSizing: 'border-box' }}>
+      <div style={{ 
+        position: 'relative', 
+        zIndex: 3, 
+        padding: '0 18px', 
+        display: 'flex', 
+        justifyContent: 'space-between', 
+        alignItems: 'center', 
+        width: '100%', 
+        boxSizing: 'border-box' 
+      }}>
         <div style={{ flex: 1, paddingRight: '12px' }}>
-          <h3 style={{ fontSize: '18px', fontWeight: '700', color: '#FFFFFF', margin: 0, letterSpacing: '-0.2px', textShadow: '0 1px 3px rgba(0,0,0,0.4)', lineHeight: '1.2' }}>
+          <h3 style={{ 
+            fontFamily: "'Cormorant Garamond', serif",
+            fontSize: '20px',
+            fontWeight: '700',
+            color: '#FFFFFF',
+            margin: 0,
+            letterSpacing: '0.2px',
+            textShadow: '0 1px 3px rgba(0,0,0,0.4)',
+            lineHeight: '1.1'
+          }}>
             {sub}
           </h3>
         </div>
         <div style={{
-          width: '28px', height: '28px', borderRadius: '50%',
-          backgroundColor: '#FF5958',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          boxShadow: '0 2px 6px rgba(255, 89, 88, 0.35)',
+          width: '30px', 
+          height: '30px', 
+          borderRadius: '50%',
+          backgroundColor: '#C5A059',
+          display: 'flex', 
+          alignItems: 'center', 
+          justifyContent: 'center',
+          boxShadow: '0 2px 8px rgba(197, 160, 89, 0.4)',
           transform: isHovered ? 'translateX(3px)' : 'translateX(0)',
           transition: 'transform 0.3s ease',
           flexShrink: 0
         }}>
-          <ChevronRight size={15} color="#FFFFFF" />
+          <ChevronRight size={16} color="#FFFFFF" strokeWidth={2.2} />
         </div>
       </div>
     </div>
   );
 }
 
-/**
- * Main View Component
- */
+/* ==========================================================================
+   MAIN VIEW COMPONENT
+   ========================================================================== */
 export default function HomeAndSubCategoryView({ 
   view, 
   theme, 
@@ -297,9 +353,7 @@ export default function HomeAndSubCategoryView({
   const whatsappNumber = "9108286886"; 
   const whatsappMessage = encodeURIComponent("Hi Lyte Bytes, I would like to inquire about your catering services and customized menu packages!");
 
-  // Combined handler: triggers vCard (.vcf) download AND opens WhatsApp chat simultaneously
   const handleChatAndSave = () => {
-    // 1. Generate and trigger vCard download prompt
     const vcardData = [
       'BEGIN:VCARD',
       'VERSION:3.0',
@@ -320,10 +374,17 @@ export default function HomeAndSubCategoryView({
     document.body.removeChild(link);
     window.URL.revokeObjectURL(url);
 
-    // 2. Open WhatsApp chat in a new tab
     const waUrl = `https://wa.me/${whatsappNumber}?text=${whatsappMessage}`;
     window.open(waUrl, '_blank');
   };
+
+  /* ------------------------------------------------------------------------
+     ALPHABETICAL SORTING (A to Z) LOGIC FOR CATEGORIES AND SUBCATEGORIES
+     ------------------------------------------------------------------------ */
+  
+  const sortedCategoryKeys = Object.keys(menuData || {}).sort((a, b) => 
+    a.localeCompare(b, undefined, { sensitivity: 'base' })
+  );
 
   let subCategoryKeys = [];
   if (currentCategoryData && currentCategoryData.subcategories) {
@@ -333,6 +394,10 @@ export default function HomeAndSubCategoryView({
       subCategoryKeys = Object.keys(currentCategoryData.subcategories);
     }
   }
+  
+  subCategoryKeys.sort((a, b) => 
+    String(a).localeCompare(String(b), undefined, { sensitivity: 'base' })
+  );
 
   return (
     <>
@@ -349,16 +414,33 @@ export default function HomeAndSubCategoryView({
         .support-card:hover {
           transform: translateY(-2px);
           box-shadow: 0 12px 30px rgba(44, 34, 30, 0.08) !important;
-          border-color: rgba(212, 175, 55, 0.6) !important;
+          border-color: rgba(197, 160, 89, 0.6) !important;
         }
       `}</style>
       
+      {/* ====================================================================
+         HOME VIEW
+         ==================================================================== */}
       {view === 'home' && (
-        <div style={{ paddingBottom: '100px' }}>
+        <div style={{ 
+          paddingBottom: '100px',
+          fontFamily: "'Plus Jakarta Sans', sans-serif" 
+        }}>
+          
           {/* --- TOP BRAND SLOGAN BAR --- */}
-          <div style={{ textAlign: 'center', margin: '4px 0 10px 0' }}>
-            <span style={{ fontSize: '12px', color: '#B57C3C', fontWeight: '600', letterSpacing: '1.5px', textTransform: 'uppercase', opacity: 0.95 }}>
-              <p>✦ Home‑Made Heart ✦ Gourmet Delights ✦</p> <p>✦ Handcrafted Goodness ✦</p>
+          <div style={{ 
+            textAlign: 'center', 
+            margin: '2px 0 10px 0'
+          }}>
+            <span style={{ 
+              fontSize: '10px', 
+              color: '#8A6D2B', 
+              fontWeight: '600', 
+              letterSpacing: '2px', 
+              textTransform: 'uppercase',
+              display: 'inline-block'
+            }}>
+              ✦ Home‑Made Heart ✦ Gourmet Delights ✦ <p>✦ Handcrafted Goodness ✦</p>
             </span>
           </div>
 
@@ -376,7 +458,7 @@ export default function HomeAndSubCategoryView({
               boxSizing: 'border-box',
               transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)'
             }}>
-              <div style={{ paddingLeft: '14px', display: 'flex', alignItems: 'center', color: '#FF5958' }}>
+              <div style={{ paddingLeft: '10px', display: 'flex', alignItems: 'center', color: '#FF5958' }}>
               </div>
               <input 
                 type="text"
@@ -398,169 +480,296 @@ export default function HomeAndSubCategoryView({
             </div>
           </div>
 
-          {/* --- iOS-STYLE REFINED STORY CARD (TOP & LEFT CHAMPAGNE GOLD HIGHLIGHT) --- */}
-          {!searchQuery.trim() && (
-            <div 
-              onClick={() => setShowStory(!showStory)}
-              style={{
-                background: 'linear-gradient(135deg, #FFFDF9 0%, #FAF3E8 100%)',
-                border: '3.5px solid #D4AF37',
-                borderRadius: '16px',
-                padding: '10px 14px',
-                marginBottom: '14px',
-                textAlign: 'left',
-                boxShadow: '-4px -4px 16px rgba(212, 175, 55, 0.12), 0 4px 20px rgba(0, 0, 0, 0.03)',
-                position: 'relative',
-                overflow: 'hidden',
-                cursor: 'pointer',
-                WebkitTapHighlightColor: 'transparent',
-                transition: 'all 0.35s cubic-bezier(0.16, 1, 0.3, 1)'
-              }}
-            >
-              <div style={{
-                position: 'absolute',
-                top: '-20px',
-                right: '-20px',
-                width: '90px',
-                height: '90px',
-                borderRadius: '50%',
-                background: 'radial-gradient(circle, rgba(255,89,88,0.06) 0%, rgba(255,89,88,0) 70%)',
-                pointerEvents: 'none'
-              }} />
+          {/* --- HERITAGE & CRAFT STORY CARD (ELITE LEFT-ALIGNED EDITION) --- */}
+{!searchQuery.trim() && (
+  <div 
+    className="support-card"
+    style={{
+      background: 'linear-gradient(135deg, #FFFDF9 0%, #FAF4EB 100%)',
+      borderRadius: '20px',
+      border: '1px solid rgba(197, 160, 89, 0.45)',
+      padding: '10px 16px',
+      marginBottom: '12px',
+      boxShadow: '0 4px 18px rgba(44, 34, 30, 0.04)',
+      position: 'relative',
+      overflow: 'hidden',
+      transition: 'all 0.35s cubic-bezier(0.16, 1, 0.3, 1)'
+    }}
+  >
+    {/* Prism Sweep Animated Shimmer Light Effect */}
+    <div style={{
+      position: 'absolute',
+      top: 0,
+      left: '-150%',
+      width: '150%',
+      height: '100%',
+      background: 'linear-gradient(90deg, transparent, rgba(197, 160, 89, 0.22), transparent)',
+      transform: 'skewX(-20deg)',
+      animation: 'prismSweep 4s infinite ease-in-out',
+      pointerEvents: 'none',
+      zIndex: 1
+    }} />
 
-              <div style={{ 
-                display: 'flex', 
-                justifyContent: 'space-between', 
-                alignItems: 'center'
-              }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                  <div style={{
-                    width: '36px',
-                    height: '36px',
-                    borderRadius: '10px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    color: '#FF5958',
-                    flexShrink: '0'
-                  }}>
-                    <Heart size={30} fill="#FF5958" color="#FF5958" />
-                  </div>
-                  <div>
-                    <h3 style={{ margin: '1px 0', fontSize: '17px', fontWeight: '600', color: '#1C1917', letterSpacing: '0.3px', lineHeight: '1.2' }}>
-                      Our Origins & Our Promise
-                    </h3>
-                    <p style={{ margin: '1px 0', fontSize: '12px', color: '#78716C', fontWeight: '500', letterSpacing: '0.3px', lineHeight: '1.3' }}>
-                      A legacy of warmth & authenticity
-                    </p>
-                    <p style={{ margin: '1px 0', fontSize: '11px', color: '#78716C', fontStyle: 'italic', fontWeight: '400', lineHeight: '1.2' }}>
-                      Since 1995
-                    </p>
-                  </div>
-                </div>
+    {/* --- HEADER BLOCK (CENTER-ALIGNED & CLICKABLE) --- */}
+<div 
+  onClick={() => setShowStory(prev => !prev)}
+  style={{ 
+    display: 'flex', 
+    alignItems: 'center', 
+    justifyContent: 'space-between',
+    position: 'relative',
+    cursor: 'pointer',
+    zIndex: 2,
+    paddingBottom: '2px'
+  }}
+>
+  {/* Elite Authenticated Shield Seal (Left - 50px) */}
+  <div style={{
+    width: '50px',
+    height: '50px',
+    borderRadius: '10px 10px 22px 22px', /* Shield Silhouette */
+    border: '2px solid #C5A059',
+    background: 'linear-gradient(180deg, #FFFFFF 0%, #FAF4EB 100%)',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    boxShadow: '0 3px 10px rgba(197, 160, 89, 0.18), inset 0 0 0 1.5px #FFFDF9',
+    flexShrink: 0
+  }}>
+    <BadgeCheck size={20} color="#C5A059" strokeWidth={2} />
+    <span style={{ 
+      fontSize: '10px', 
+      fontWeight: '700', 
+      color: '#8A6D2B', 
+      letterSpacing: '0.8px', 
+      marginTop: '1px',
+      fontFamily: "'Plus Jakarta Sans', sans-serif"
+    }}>
+      1995
+    </span>
+  </div>
 
-                <div style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '2px',
-                  fontSize: '12px',
-                  fontWeight: '500',
-                  color: '#FF5958',
-                  flexShrink: 0
-                }}>
-                  <span>{showStory ? 'Less' : 'More'}</span>
-                  <ChevronDown 
-                    size={14} 
-                    style={{ 
-                      transform: showStory ? 'rotate(180deg)' : 'rotate(0deg)', 
-                      transition: 'transform 0.3s cubic-bezier(0.16, 1, 0.3, 1)' 
-                    }} 
-                  />
-                </div>
-              </div>
+  {/* Perfectly Centered Typography Block */}
+  <div style={{ 
+    flex: 1, 
+    textAlign: 'center',
+    padding: '0 8px'
+  }}>
+    <span style={{ 
+      fontSize: '9px', 
+      textTransform: 'uppercase', 
+      letterSpacing: '1.5px', 
+      color: '#C5A059', 
+      fontWeight: '600',
+      display: 'block',
+      marginBottom: '2px'
+    }}>
+      ✦ HERITAGE & CRAFT ✦
+    </span>
+    <h2 style={{
+      fontFamily: "'Cormorant Garamond', serif",
+      fontSize: '18px',
+      fontWeight: '600',
+      color: '#FF5958',
+      margin: 0,
+      lineHeight: '1.15'
+    }}>
+      Our Origins & Our Promise
+    </h2>
+    <p style={{ 
+      fontSize: '12px', 
+      fontWeight: '500',
+      color: '#3f3c3a', 
+      margin: '3px 0 0 0', 
+      fontStyle: 'italic', 
+      fontFamily: "'Cormorant Garamond', serif" 
+    }}>
+      A legacy of warmth & authenticity
+    </p>
+  </div>
 
-              {showStory && (
-                <div 
-                  onClick={(e) => e.stopPropagation()}
-                  style={{ 
-                    marginTop: '12px', 
-                    fontSize: '13px', 
-                    lineHeight: '1.5', 
-                    color: '#292524', 
-                    borderTop: '0.5px solid rgba(212, 175, 55, 0.4)', 
-                    paddingTop: '10px',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '10px'
-                  }}
-                >
-                  <div>
-                    <h4 style={{ fontSize: '12px', textTransform: 'uppercase', letterSpacing: '1.2px', color: '#FF5958', fontWeight: '700', margin: '0 0 4px 0', display: 'flex', alignItems: 'center', gap: '5px' }}>
-                      <Home size={14} fill="#FF5958" color="#FF5958" /> Our Origins
-                    </h4>
-                    
-                    <p style={{ margin: '0 0 6px 0', color: '#44403C' }}>
-                      Lyte Bytes began in 1995 in our home kitchen under my mother’s guidance, built on the belief that <b>good food needs patience, honesty, and warmth</b>, not shortcuts. From corporate catering origins to specialty baking, small-batch wines, and handcrafted packaged goods, every offering carries that same sincere touch.
-                    </p>
-                    <p style={{ margin: 0, color: '#44403C' }}>
-                      We operate with absolute transparency and care. Every item is freshly prepared when your order arrives: <b><i>never stored, never rushed.</i></b>
-                    </p>
-                  </div>
+  {/* Invisible Balance Spacer (Matches 50px Shield Width) */}
+  <div style={{ width: '50px', flexShrink: 0 }} />
 
-                  <div style={{
-                    display: 'grid',
-                    gridTemplateColumns: 'repeat(2, 1fr)',
-                    gap: '6px',
-                    backgroundColor: '#F3EAD8',
-                    borderRadius: '12px',
-                    padding: '4px 12px'
-                  }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11.5px', fontWeight: '600', color: '#292524' }}>
-                      <span style={{ color: '#FF5958' }}>✓</span> Fresh Batches
-                    </div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11.5px', fontWeight: '600', color: '#292524' }}>
-                      <span style={{ color: '#FF5958' }}>✓</span> Zero Preservatives
-                    </div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11.5px', fontWeight: '600', color: '#292524' }}>
-                      <span style={{ color: '#FF5958' }}>✓</span> Zero Wastage
-                    </div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11.5px', fontWeight: '600', color: '#292524' }}>
-                      <span style={{ color: '#FF5958' }}>✓</span> 100% Batch Crafted
-                    </div>
-                  </div>
+  {/* Story Toggle Pill Positioned Neat at Bottom-Right */}
+  <button 
+    onClick={(e) => {
+      e.stopPropagation();
+      setShowStory(prev => !prev);
+    }}
+    style={{
+      position: 'absolute',
+      bottom: '0px',
+      right: '0px',
+      border: '1px solid rgba(197, 160, 89, 0.45)',
+      backgroundColor: '#FFFFFF',
+      borderRadius: '16px',
+      padding: '4px 10px',
+      fontSize: '11px',
+      fontWeight: '600',
+      color: '#FF5958',
+      display: 'flex',
+      alignItems: 'center',
+      gap: '3px',
+      cursor: 'pointer',
+      boxShadow: '0 2px 6px rgba(0,0,0,0.03)',
+      transition: 'all 0.2s ease',
+      zIndex: 3
+    }}
+  >
+    <span>{showStory ? 'Less' : 'Story'}</span>
+    <ChevronDown 
+      size={13} 
+      style={{ 
+        transform: showStory ? 'rotate(180deg)' : 'rotate(0deg)', 
+        transition: 'transform 0.3s ease' 
+      }} 
+    />
+  </button>
+</div>
 
-                  <div style={{ paddingTop: '2px' }}>
-                    <h4 style={{ fontSize: '11px', textTransform: 'uppercase', letterSpacing: '1.2px', color: '#FF5958', fontWeight: '700', margin: '0 0 4px 0', display: 'flex', alignItems: 'center', gap: '5px' }}>
-                      <ShieldCheck size={13} fill="#FF5958" color="#FF5958" /> Our Promise
-                    </h4>
-                    <p style={{ margin: 0, fontWeight: '400', color: '#292524', fontSize: '12.5px', lineHeight: '1.4' }}>
-                      Freshly crafted for you, made to order, and made to be remembered with the exact precision that has guided us for decades.
-                    </p>
-                  </div>
-                </div>
-              )}
+    {/* --- EXPANDED STORY DRAWER --- */}
+    {showStory && (
+      <div style={{ marginTop: '16px', position: 'relative', zIndex: 2 }}>
+        <div style={{ height: '1px', backgroundColor: 'rgba(197, 160, 89, 0.25)', marginBottom: '12px' }} />
+
+        {/* Section 1: Our Origins */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '8px' }}>
+          <Home size={13} color="#8B0000" />
+          <span style={{ fontSize: '10px', textTransform: 'uppercase', letterSpacing: '1.6px', color: '#8B0000', fontWeight: '800' }}>
+            Our Origins
+          </span>
+        </div>
+
+        <p style={{ 
+          fontSize: '12.5px', 
+          lineHeight: '1.65', 
+          color: '#44403C', 
+          fontWeight: '400', 
+          marginBottom: '10px',
+          textAlign: 'left'
+        }}>
+          Lyte Bytes is a culinary brand shaped by two generations: my mother’s treasured heritage recipes and my passion for elevating them for today’s food lovers. For nearly three decades, our kitchen has specialised in fresh, small-batch craftsmanship, where every dish reflects intention, precision, and family warmth.
+        </p>
+
+        <p style={{ 
+          fontSize: '12.5px', 
+          lineHeight: '1.65', 
+          color: '#44403C', 
+          fontWeight: '400', 
+          marginBottom: '16px',
+          textAlign: 'left'
+        }}>
+          What began with my mother’s catering and timeless techniques has evolved into a refined experience—from customized event menus to artisanal baking and signature pickles under <strong style={{ color: '#1A1816', fontWeight: '700' }}>Ammi’s Achar</strong>.
+        </p>
+
+        {/* Micro-Pills Grid */}
+        <div style={{ 
+          display: 'grid', 
+          gridTemplateColumns: '1fr 1fr', 
+          gap: '8px', 
+          marginBottom: '16px' 
+        }}>
+          {[
+            { icon: Sparkles, label: 'Fresh Batches' },
+            { icon: ShieldCheck, label: 'Zero Preservatives' },
+            { icon: Heart, label: 'Zero Wastage' },
+            { icon: ChefHat, label: '100% Handcrafted' }
+          ].map((item, idx) => (
+            <div key={idx} style={{
+              backgroundColor: 'rgba(197, 160, 89, 0.08)',
+              border: '1px solid rgba(197, 160, 89, 0.22)',
+              borderRadius: '10px',
+              padding: '8px 10px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '7px'
+            }}>
+              <item.icon size={13} color="#8A6D2B" />
+              <span style={{ fontSize: '10.5px', fontWeight: '600', color: '#292524', letterSpacing: '0.2px' }}>
+                {item.label}
+              </span>
             </div>
-          )}
+          ))}
+        </div>
 
+        {/* Editorial Quote Card */}
+        <div style={{
+          backgroundColor: '#FAF6F0',
+          borderRadius: '10px',
+          padding: '12px 14px',
+          marginBottom: '16px',
+          borderLeft: '3px solid #8B0000',
+          textAlign: 'left'
+        }}>
+          <p style={{
+            fontFamily: "'Cormorant Garamond', serif",
+            fontSize: '14.5px',
+            fontStyle: 'italic',
+            lineHeight: '1.45',
+            color: '#332F2E',
+            margin: 0
+          }}>
+            "Ammi’s Achar showcases authentic vegetarian and meat-based pickles prepared using age-old methods, premium ingredients, and meticulous attention to detail."
+          </p>
+        </div>
+
+        {/* Our Promise Block */}
+        <div style={{
+          borderLeft: '2.5px solid #C5A059',
+          paddingLeft: '12px',
+          paddingTop: '2px',
+          paddingBottom: '2px',
+          textAlign: 'left'
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#8A6D2B', marginBottom: '3px' }}>
+            <ShieldCheck size={13} color="#8A6D2B" />
+            <span style={{ fontSize: '10px', textTransform: 'uppercase', letterSpacing: '1.4px', fontWeight: '800' }}>
+              Our Promise
+            </span>
+          </div>
+          <p style={{
+            fontFamily: "'Cormorant Garamond', serif",
+            fontSize: '15.5px',
+            fontWeight: '600',
+            lineHeight: '1.35',
+            color: '#1A1816',
+            margin: 0
+          }}>
+            At Lyte Bytes, every batch is a promise: crafted with purpose, rooted in legacy, and refined for today’s palate.
+          </p>
+        </div>
+      </div>
+    )}
+  </div>
+)}
+
+          {/* --- SEARCH RESULTS OR CATEGORY LIST --- */}
           {searchQuery.trim() ? (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2px' }}>
                 <span style={{ fontSize: '13px', fontWeight: '600', color: theme.text }}>Search Results</span>
-                <button onClick={() => setSearchQuery('')} style={{ background: 'none', border: 'none', color: theme.brand, cursor: 'pointer', fontSize: '12px', fontWeight: 'bold' }}>
+                <button onClick={() => setSearchQuery('')} style={{ background: 'none', border: 'none', color: '#C5A059', cursor: 'pointer', fontSize: '12px', fontWeight: 'bold' }}>
                   Clear
                 </button>
               </div>
 
               <div style={{ display: 'flex', gap: '6px', justifyContent: 'flex-end', marginBottom: '2px' }}>
-                <button onClick={() => setLayout('list')} style={{ background: layout === 'list' ? '#FF5958' : 'transparent', border: layout === 'list' ? 'none' : '1px solid rgba(216, 199, 165, 0.4)', borderRadius: '6px', padding: '5px', cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
+                <button onClick={() => setLayout('list')} style={{ background: layout === 'list' ? '#C5A059' : 'transparent', border: layout === 'list' ? 'none' : '1px solid rgba(197, 160, 89, 0.4)', borderRadius: '6px', padding: '5px', cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
                   <ListIcon size={16} color={layout === 'list' ? '#FFFFFF' : theme.text}/>
                 </button>
-                <button onClick={() => setLayout('grid')} style={{ background: layout === 'grid' ? '#FF5958' : 'transparent', border: layout === 'grid' ? 'none' : '1px solid rgba(216, 199, 165, 0.4)', borderRadius: '6px', padding: '5px', cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
+                <button onClick={() => setLayout('grid')} style={{ background: layout === 'grid' ? '#C5A059' : 'transparent', border: layout === 'grid' ? 'none' : '1px solid rgba(197, 160, 89, 0.4)', borderRadius: '6px', padding: '5px', cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
                   <Grid size={16} color={layout === 'grid' ? '#FFFFFF' : theme.text}/>
                 </button>
               </div>
 
-              <div style={{ display: layout === 'grid' ? 'grid' : 'flex', gridTemplateColumns: layout === 'grid' ? 'repeat(2, 1fr)' : 'none', flexDirection: 'column', gap: '10px' }}>
+              <div style={{ 
+                display: layout === 'grid' ? 'grid' : 'flex', 
+                gridTemplateColumns: layout === 'grid' ? 'repeat(2, 1fr)' : 'none', 
+                flexDirection: 'column', 
+                gap: '10px' 
+              }}>
                 {Object.entries(menuData).flatMap(([catKey, cat]) => {
                   const catImg = getImgUrl(cat);
                   const subValues = Array.isArray(cat.subcategories) 
@@ -573,6 +782,7 @@ export default function HomeAndSubCategoryView({
                   }));
                 })
                 .filter(item => item && item.name && item.name.toLowerCase().includes(searchQuery.toLowerCase()))
+                .sort((a, b) => (a.name || '').localeCompare(b.name || '', undefined, { sensitivity: 'base' }))
                 .map((item, i) => {
                   const rawItemImg = getImgUrl(item);
                   const resolvedImg = rawItemImg ? resolveImagePath(rawItemImg) : null;
@@ -598,8 +808,13 @@ export default function HomeAndSubCategoryView({
               </div>
             </div>
           ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-              {Object.keys(menuData).map(catKey => (
+            /* --- RENDER ALPHABETICALLY SORTED CATEGORIES (A-Z) --- */
+            <div style={{ 
+              display: 'flex', 
+              flexDirection: 'column', 
+              gap: '10px'
+            }}>
+              {sortedCategoryKeys.map(catKey => (
                 <CategoryCard 
                   key={catKey}
                   cat={{ name: catKey, ...menuData[catKey] }}
@@ -613,21 +828,61 @@ export default function HomeAndSubCategoryView({
         </div>
       )}
 
+      {/* ====================================================================
+         SUBCATEGORY VIEW
+         ==================================================================== */}
       {view === 'subcat' && (
-        <div style={{ paddingBottom: '100px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', position: 'relative', marginBottom: '12px', padding: '4px 0' }}>
+        <div style={{ 
+          paddingBottom: '100px', 
+          fontFamily: "'Plus Jakarta Sans', sans-serif" 
+        }}>
+          {/* --- TOP BAR (BACK BUTTON & CATEGORY TITLE) --- */}
+          <div style={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            position: 'relative', 
+            marginBottom: '12px', 
+            padding: '4px 0' 
+          }}>
             <button 
               onClick={() => setView('home')} 
-              style={{ background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px', color: theme.text, fontSize: '13px', fontWeight: '700', padding: '4px 8px', borderRadius: '6px', backgroundColor: 'rgba(0,0,0,0.04)', zIndex: 1 }}
+              style={{ 
+                background: 'none', 
+                border: 'none', 
+                cursor: 'pointer', 
+                display: 'flex', 
+                alignItems: 'center', 
+                gap: '4px', 
+                color: theme.text, 
+                fontSize: '13px', 
+                fontWeight: '700', 
+                padding: '6px 12px', 
+                borderRadius: '20px', 
+                backgroundColor: 'rgba(0,0,0,0.04)', 
+                zIndex: 1 
+              }}
             >
               <ArrowLeft size={15}/> Back
             </button>
-            <h2 style={{ position: 'absolute', left: 0, right: 0, textAlign: 'center', fontSize: '15px', color: '#FF5958', margin: 0, fontWeight: '700', letterSpacing: '0.5px', textTransform: 'uppercase', pointerEvents: 'none' }}>
+            <h2 style={{ 
+              position: 'absolute', 
+              left: 0, 
+              right: 0, 
+              textAlign: 'center', 
+              fontFamily: "'Cormorant Garamond', serif", 
+              fontSize: '20px', 
+              color: '#1A1816', 
+              margin: 0, 
+              fontWeight: '700', 
+              letterSpacing: '0.5px', 
+              textTransform: 'uppercase', 
+              pointerEvents: 'none' 
+            }}>
               {activeCat}
             </h2>
           </div>
 
-          {/* 🌟 0. Bulk Order Callout Card with Golden Glass Sweep */}
+          {/* Bespoke Catering Callout Card */}
           {isCateringCategory && (
             <div 
               className="support-card" 
@@ -636,26 +891,25 @@ export default function HomeAndSubCategoryView({
                 display: 'flex', 
                 alignItems: 'center', 
                 justifyContent: 'space-between',
-                padding: '12px 16px', 
-                background: 'linear-gradient(135deg, #FFF9EC 0%, #F3E6D0 100%)', 
-                border: '1px solid #FF5958', 
+                padding: '14px 16px', 
+                background: 'linear-gradient(135deg, #FFFDF9 0%, #FAF4EB 100%)', 
+                border: '1px solid rgba(197, 160, 89, 0.5)', 
                 borderRadius: '16px', 
                 boxShadow: '0 4px 16px rgba(44, 34, 30, 0.04)',
                 boxSizing: 'border-box',
                 width: '100%',
                 position: 'relative',
                 overflow: 'hidden',
-                marginBottom: '14px'
+                marginBottom: '16px'
               }}
             >
-              {/* --- 🎨 GOLDEN GLASS SHIMMER SWEEP LAYER --- */}
               <div style={{
                 position: 'absolute',
                 top: 0,
                 left: '-150%',
                 width: '150%',
                 height: '100%',
-                background: 'linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.28), transparent)',
+                background: 'linear-gradient(90deg, transparent, rgba(197, 160, 89, 0.28), transparent)',
                 transform: 'skewX(-20deg)',
                 animation: 'prismSweep 4s infinite ease-in-out',
                 pointerEvents: 'none',
@@ -664,28 +918,28 @@ export default function HomeAndSubCategoryView({
 
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flex: 1, minWidth: 0, position: 'relative', zIndex: 2 }}>
                 <div style={{ 
-                  backgroundColor: 'rgba(212, 175, 55, 0.22)',
+                  backgroundColor: 'rgba(197, 160, 89, 0.15)',
                   borderRadius: '50%',
-                  width: '38px',
-                  height: '38px',
+                  width: '40px',
+                  height: '40px',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   flexShrink: 0 
                 }}>
-                  <Gift size={20} color="#D4AF37" />
+                  <Gift size={20} color="#8A6D2B" />
                 </div>
                 <div style={{ textAlign: 'left', minWidth: 0 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '1px' }}>
-                    <span style={{ fontSize: '9px', fontWeight: '800', color: '#B89728', letterSpacing: '0.8px', textTransform: 'uppercase' }}>
+                    <span style={{ fontSize: '9px', fontWeight: '800', color: '#8A6D2B', letterSpacing: '1px', textTransform: 'uppercase' }}>
                       ✦ Bespoke Catering ✦
                     </span>
                   </div>
-                  <h3 style={{ margin: '0 0 1px 0', color: theme.text, fontSize: '13.5px', fontWeight: '700', letterSpacing: '-0.2px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                  <h3 style={{ margin: '0 0 1px 0', fontFamily: "'Cormorant Garamond', serif", color: '#1A1816', fontSize: '17px', fontWeight: '700', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                     Bulk Orders & Pricing
                   </h3>
-                  <p style={{ margin: 0, color: '#7A6F61', fontSize: '11px', fontWeight: '400', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                    Competitive pricing for bulk orders
+                  <p style={{ margin: 0, color: '#78716C', fontSize: '11.5px', fontWeight: '400', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                    Competitive pricing for bespoke bulk orders
                   </p>
                 </div>
               </div>
@@ -698,13 +952,17 @@ export default function HomeAndSubCategoryView({
                 position: 'relative',
                 zIndex: 2
               }}>
-                <ChevronRight size={18} color="#D4AF37" strokeWidth={2.5} />
+                <ChevronRight size={18} color="#8A6D2B" strokeWidth={2.5} />
               </div>
             </div>
           )}
 
-          {/* Subcategories List */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+          {/* --- RENDER ALPHABETICALLY SORTED SUBCATEGORIES (A-Z) --- */}
+          <div style={{ 
+            display: 'flex', 
+            flexDirection: 'column', 
+            gap: '10px' 
+          }}>
             {subCategoryKeys.map(sub => (
               <SubCategoryCard 
                 key={sub}

@@ -1,37 +1,86 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 
-// Color & Style Mapping for Tags
+/* ==========================================================================
+   TAG STYLES CONFIGURATION (SORTED ALPHABETICALLY A-Z)
+   ========================================================================== */
 const TAG_STYLES = {
-  BEST_SELLER: { label: 'Best Seller', bg: 'rgba(255, 215, 0, 0.1)', border: '#FFD700', text: '#FFD700', emoji: '🏆' },
-  HOT: { label: 'Hot', bg: 'rgba(255, 89, 88, 0.1)', border: '#FF5958', text: '#FF7372', emoji: '🔥' },
-  NEW: { label: 'New', bg: 'rgba(16, 185, 129, 0.1)', border: '#10B981', text: '#34D399', emoji: '✨' },
-  FAST_MOVING: { label: 'Fast Moving', bg: 'rgba(245, 158, 11, 0.1)', border: '#F59E0B', text: '#FBBF24', emoji: '⚡' },
-  HIGH_PROTEIN: { label: 'High Protein', bg: 'rgba(59, 130, 246, 0.1)', border: '#3B82F6', text: '#60A5FA', emoji: '💪' },
-  LOW_CAL: { label: 'Low Cal', bg: 'rgba(16, 185, 129, 0.1)', border: '#10B981', text: '#34D399', emoji: '🥗' },
-  CHEFS_SPECIAL: { label: "Chef's Special", bg: 'rgba(139, 92, 246, 0.1)', border: '#8B5CF6', text: '#A78BFA', emoji: '👨‍🍳' },
-  AMMIS_SPECIAL: { label: "Ammi's Special", bg: 'rgba(236, 72, 153, 0.1)', border: '#EC4899', text: '#F472B6', emoji: '👵' },
-  PREMIUM: { label: 'Gourmet', bg: 'rgba(168, 85, 247, 0.1)', border: '#A855F7', text: '#C084FC', emoji: '👑' }
+  AMMIS_SPECIAL: { 
+    label: "Ammi's Special", 
+    bg: 'rgba(236, 72, 153, 0.1)', 
+    border: '#EC4899', 
+    text: '#F472B6', 
+    emoji: '👵' 
+  },
+  BEST_SELLER: { 
+    label: 'Best Seller', 
+    bg: 'rgba(255, 215, 0, 0.1)', 
+    border: '#FFD700', 
+    text: '#FFD700', 
+    emoji: '🏆' 
+  },
+  CHEFS_SPECIAL: { 
+    label: "Chef's Special", 
+    bg: 'rgba(139, 92, 246, 0.1)', 
+    border: '#8B5CF6', 
+    text: '#A78BFA', 
+    emoji: '👨‍🍳' 
+  },
+  FAST_MOVING: { 
+    label: 'Fast Moving', 
+    bg: 'rgba(245, 158, 11, 0.1)', 
+    border: '#F59E0B', 
+    text: '#FBBF24', 
+    emoji: '⚡' 
+  },
+  HIGH_PROTEIN: { 
+    label: 'High Protein', 
+    bg: 'rgba(59, 130, 246, 0.1)', 
+    border: '#3B82F6', 
+    text: '#60A5FA', 
+    emoji: '💪' 
+  },
+  HOT: { 
+    label: 'Hot', 
+    bg: 'rgba(255, 89, 88, 0.1)', 
+    border: '#FF5958', 
+    text: '#FF7372', 
+    emoji: '🔥' 
+  },
+  LOW_CAL: { 
+    label: 'Low Cal', 
+    bg: 'rgba(16, 185, 129, 0.1)', 
+    border: '#10B981', 
+    text: '#34D399', 
+    emoji: '🥗' 
+  },
+  NEW: { 
+    label: 'New', 
+    bg: 'rgba(16, 185, 129, 0.1)', 
+    border: '#10B981', 
+    text: '#34D399', 
+    emoji: '✨' 
+  },
+  PREMIUM: { 
+    label: 'Gourmet', 
+    bg: 'rgba(168, 85, 247, 0.1)', 
+    border: '#A855F7', 
+    text: '#C084FC', 
+    emoji: '👑' 
+  }
 };
 
-// Complete Storage & Care Instructions Dataset for All Menu Items
+/* ==========================================================================
+   STORAGE & CARE INSTRUCTIONS DATASET (SORTED ALPHABETICALLY A-Z)
+   ========================================================================== */
 const STORAGE_DATA = {
-  plumCake: {
-    title: "Directions - Traditional Rich Plum Cake",
-    shelfLife: "25–30 Days",
+  beverages: {
+    title: "Directions - Non-Alcoholic Wine",
+    shelfLife: "12 Months (Unopened) / 5 Days (Opened)",
     steps: [
-      "Keep tightly wrapped in cling film or in an airtight container to preserve moisture.",
-      "Store in a cool, dry place. Do not refrigerate, as cold air dries out the crumb.",
-      "Optionally brush lightly with wine or orange juice periodically to retain deep moisture.",
-      "Warm in a microwave (20–30 sec) or preheated OTG (120°C for 3–4 mins) for optimal warmth and aroma."
-    ]
-  },
-  freshCakes: {
-    title: "Directions - Fresh Cakes & Loaves",
-    shelfLife: "3–5 Days (Refrigerated)",
-    steps: [
-      "Store in a refrigerator inside an airtight container to retain soft sponge texture.",
-      "Allow slice to sit at room temperature for 15 minutes before serving for maximum flavor.",
-      "Keep remaining cake wrapped or covered to prevent frosting oxidation."
+      "Store unopened bottles in a cool, dark location away from direct sunlight.",
+      "Serve chilled (8°C–10°C) for the best flavor profile.",
+      "Keep refrigerated once opened and consume within 5 days."
     ]
   },
   dryBakery: {
@@ -43,14 +92,13 @@ const STORAGE_DATA = {
       "Always use clean, completely dry hands or tongs when handling to maintain crispness."
     ]
   },
-  pickles: {
-    title: "Directions - Ammi's Achar",
-    shelfLife: "6 Months",
+  freshCakes: {
+    title: "Directions - Fresh Cakes & Loaves",
+    shelfLife: "3–5 Days (Refrigerated)",
     steps: [
-      "Always use a fresh, completely dry spoon to avoid moisture-induced spoilage.",
-      "Maintain a subtle layer of oil over the surface to lock in freshness.",
-      "If oil level depletes, heat 2 tbsp of refined oil, cool completely, and pour over the top.",
-      "Store in a cool pantry or refrigerate after opening for extended longevity."
+      "Store in a refrigerator inside an airtight container to retain soft sponge texture.",
+      "Allow slice to sit at room temperature for 15 minutes before serving for maximum flavor.",
+      "Keep remaining cake wrapped or covered to prevent frosting oxidation."
     ]
   },
   jamsSpreads: {
@@ -71,6 +119,26 @@ const STORAGE_DATA = {
       "Reheat thoroughly in a microwave (1–2 mins) or covered pan on medium heat prior to serving."
     ]
   },
+  pickles: {
+    title: "Directions - Ammi's Achar",
+    shelfLife: "6 Months",
+    steps: [
+      "Always use a fresh, completely dry spoon to avoid moisture-induced spoilage.",
+      "Maintain a subtle layer of oil over the surface to lock in freshness.",
+      "If oil level depletes, heat 2 tbsp of refined oil, cool completely, and pour over the top.",
+      "Store in a cool pantry or refrigerate after opening for extended longevity."
+    ]
+  },
+  plumCake: {
+    title: "Directions - Traditional Rich Plum Cake",
+    shelfLife: "25–30 Days",
+    steps: [
+      "Keep tightly wrapped in cling film or in an airtight container to preserve moisture.",
+      "Store in a cool, dry place. Do not refrigerate, as cold air dries out the crumb.",
+      "Optionally brush lightly with wine or orange juice periodically to retain deep moisture.",
+      "Warm in a microwave (20–30 sec) or preheated OTG (120°C for 3–4 mins) for optimal warmth and aroma."
+    ]
+  },
   sandwichesCutlets: {
     title: "Directions - Sandwiches & Cutlets",
     shelfLife: "Consume Fresh (Within 3 Hours)",
@@ -79,20 +147,15 @@ const STORAGE_DATA = {
       "For cutlets, reheat in an air fryer (180°C for 2–3 mins) or dry skillet to restore crispness.",
       "Keep sandwiches wrapped in foil in a cool area if consuming within a short window."
     ]
-  },
-  beverages: {
-    title: "Directions - Non-Alcoholic Wine",
-    shelfLife: "12 Months (Unopened) / 5 Days (Opened)",
-    steps: [
-      "Store unopened bottles in a cool, dark location away from direct sunlight.",
-      "Serve chilled (8°C–10°C) for the best flavor profile.",
-      "Keep refrigerated once opened and consume within 5 days."
-    ]
   }
 };
 
+/* ==========================================================================
+   UTILITY & HELPER FUNCTIONS
+   ========================================================================== */
+
 /**
- * Maps menu items to their corresponding storage guidelines based on name, category, or sub-category
+ * Maps menu items to their corresponding storage guidelines based on context keyword matching
  */
 function getStorageGuideline(item) {
   if (!item) return STORAGE_DATA.mealsBiryani;
@@ -127,7 +190,7 @@ function getStorageGuideline(item) {
     return STORAGE_DATA.mealsBiryani;
   }
 
-  return STORAGE_DATA.mealsBiryani; // Safe default fallback
+  return STORAGE_DATA.mealsBiryani; // Fallback default
 }
 
 function normalizeTagKey(tag) {
@@ -147,6 +210,9 @@ function shouldShowRating(item) {
   return Number(rating) === 5;
 }
 
+/* ==========================================================================
+   INLINE TAG BADGE COMPONENT
+   ========================================================================== */
 function InlineTagBadge({ tagKey }) {
   const normalizedKey = normalizeTagKey(tagKey);
   if (!normalizedKey) return null;
@@ -167,16 +233,22 @@ function InlineTagBadge({ tagKey }) {
     <span style={{
       display: 'inline-flex',
       alignItems: 'center',
+      
+      /* --- CUSTOMIZATION: Tag Badge Inner Gap & Padding --- */
       gap: '3px',
-      padding: '1px 6px',
-      borderRadius: '8px',
+      padding: '1px 6px',                     // Adjust top/bottom and left/right padding
+      borderRadius: '8px',                    // Badge corner rounding
+      
       backgroundColor: config.bg,
       border: `1px solid ${subtleBorder}`,
       color: config.text,
-      fontSize: '9.5px',
+      
+      /* --- CUSTOMIZATION: Tag Typography --- */
+      fontSize: '9.5px',                      // Font size for tags
       fontWeight: '500',
       lineHeight: '1.2',
       letterSpacing: '0.1px',
+      
       backdropFilter: 'blur(4px)',
       WebkitBackdropFilter: 'blur(4px)',
       width: 'fit-content'
@@ -187,12 +259,23 @@ function InlineTagBadge({ tagKey }) {
   );
 }
 
+/* ==========================================================================
+   MAIN ITEM CARD COMPONENT
+   ========================================================================== */
 export default function ItemCard({ item, openModal, addToCart, resolveImagePath, layout }) {
   const [isHovered, setIsHovered] = useState(false);
   const [isImgHovered, setIsImgHovered] = useState(false);
   const [isPressed, setIsPressed] = useState(false);
   const [isAddedRecently, setIsAddedRecently] = useState(false);
   const [showStorageModal, setShowStorageModal] = useState(false);
+
+  const timerRef = useRef(null);
+
+  useEffect(() => {
+    return () => {
+      if (timerRef.current) clearTimeout(timerRef.current);
+    };
+  }, []);
 
   const hasVariants = item?.variants && item.variants.length > 0;
   const displayPrice = hasVariants ? item.variants[0].price : (parseFloat(item?.price) || 0);
@@ -220,35 +303,39 @@ export default function ItemCard({ item, openModal, addToCart, resolveImagePath,
     } else {
       addToCart(item);
       setIsAddedRecently(true);
-      setTimeout(() => setIsAddedRecently(false), 1000);
+      if (timerRef.current) clearTimeout(timerRef.current);
+      timerRef.current = setTimeout(() => setIsAddedRecently(false), 1000);
     }
   };
 
   const isGridView = layout === 'grid';
   const showGoogleRating = shouldShowRating(item);
+  const variationString = item?.variation ? String(item.variation).trim().toLowerCase() : '';
 
   return (
     <>
+      {/* CARD CONTAINER */}
       <div 
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
         style={{ 
+          /* --- CUSTOMIZATION: Card Internal Padding & Layout Gap --- */
           padding: isGridView ? '10px' : '10px 12px', 
-          borderRadius: '16px', 
+          borderRadius: '16px',               // Corner rounding
           display: 'flex', 
           flexDirection: isGridView ? 'column' : 'row', 
-          gap: isGridView ? '10px' : '12px', 
+          gap: isGridView ? '10px' : '12px',    // Space between image & details
           overflow: 'hidden',
           
-          /* Dark Glassmorphic Style */
+          /* --- CUSTOMIZATION: Dark Glassmorphic Card Background & Borders --- */
           background: isHovered 
             ? 'linear-gradient(135deg, rgba(38, 33, 29, 0.96) 0%, rgba(22, 19, 16, 0.98) 100%)' 
             : 'linear-gradient(135deg, rgba(30, 26, 23, 0.92) 0%, rgba(18, 15, 13, 0.96) 100%)',
           backdropFilter: 'blur(16px)',
           WebkitBackdropFilter: 'blur(16px)',
           border: isHovered 
-            ? '1px solid rgba(255, 89, 88, 0.4)' 
-            : '1px solid rgba(255, 255, 255, 0.08)',
+            ? '1px solid rgba(255, 89, 88, 0.4)' // Border color on hover
+            : '1px solid rgba(255, 255, 255, 0.08)', // Normal state border
           
           boxShadow: isHovered 
             ? '0 8px 24px -4px rgba(0, 0, 0, 0.5), 0 0 16px rgba(255, 89, 88, 0.12)' 
@@ -262,22 +349,34 @@ export default function ItemCard({ item, openModal, addToCart, resolveImagePath,
           width: '100%'
         }}
       >
-        {/* 1. Thumbnail Image Container */}
+        {/* 1. THUMBNAIL IMAGE CONTAINER */}
         <div 
+          role="button"
+          tabIndex={0}
+          aria-label={`View image for ${item?.name || 'item'}`}
           onClick={(e) => {
             e.stopPropagation();
             openModal('ZOOM', item);
           }} 
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.stopPropagation();
+              openModal('ZOOM', item);
+            }
+          }}
           onMouseEnter={() => setIsImgHovered(true)}
           onMouseLeave={() => setIsImgHovered(false)}
           style={{ 
             position: 'relative', 
             cursor: 'pointer', 
             flexShrink: 0, 
-            borderRadius: '12px', 
+            borderRadius: '12px',             // Corner rounding for item image
             overflow: 'hidden',
+            
+            /* --- CUSTOMIZATION: Thumbnail Dimensions (Grid vs List View) --- */
             width: isGridView ? '100%' : '90px',
             height: isGridView ? '125px' : '90px',
+            
             backgroundColor: 'rgba(0, 0, 0, 0.4)',
             border: '1px solid rgba(255, 255, 255, 0.05)'
           }}
@@ -296,7 +395,7 @@ export default function ItemCard({ item, openModal, addToCart, resolveImagePath,
           />
 
           {/* Veg / Non-Veg Glass Overlay Badge (Top Left) */}
-          {item.variation && (
+          {variationString && (
             <div style={{
               position: 'absolute',
               top: '5px',
@@ -314,7 +413,7 @@ export default function ItemCard({ item, openModal, addToCart, resolveImagePath,
               zIndex: 1
             }}>
               <img 
-                src={`/menu-items/${item.variation.trim().toLowerCase() === 'non-veg' ? 'non-veg' : item.variation.trim().toLowerCase()}.png`} 
+                src={`/menu-items/${variationString === 'non-veg' ? 'non-veg' : variationString}.png`} 
                 alt={item.variation} 
                 style={{ width: '12px', height: '12px', display: 'block' }} 
               />
@@ -327,22 +426,24 @@ export default function ItemCard({ item, openModal, addToCart, resolveImagePath,
               e.stopPropagation();
               setShowStorageModal(true);
             }}
+            aria-label="Storage & Care Guidelines"
             title="Storage & Care Guidelines"
             style={{
               position: 'absolute',
               top: '5px',
               right: '5px',
+              
+              /* --- CUSTOMIZATION: (i) Icon Circle Styling --- */
               backgroundColor: 'rgba(18, 15, 13, 0.85)',
-              backdropFilter: 'blur(6px)',
-              WebkitBackdropFilter: 'blur(6px)',
+              border: '1px solid rgba(255, 215, 0, 0.5)', // Gold border
+              color: '#FFD700',                          // Gold icon color
               borderRadius: '50%',
               width: '22px',
               height: '22px',
+              
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              border: '1px solid rgba(255, 215, 0, 0.5)',
-              color: '#FFD700',
               fontSize: '12px',
               fontWeight: '700',
               cursor: 'pointer',
@@ -355,7 +456,7 @@ export default function ItemCard({ item, openModal, addToCart, resolveImagePath,
             i
           </button>
 
-          {/* Google 5-Star Glass Badge */}
+          {/* Google 5-Star Rating Glass Badge (Bottom Left) */}
           {showGoogleRating && (
             <div style={{
               position: 'absolute',
@@ -391,7 +492,7 @@ export default function ItemCard({ item, openModal, addToCart, resolveImagePath,
           )}
         </div>
 
-        {/* 2. Content Column */}
+        {/* 2. CONTENT COLUMN */}
         <div style={{ 
           flex: 1, 
           display: 'flex', 
@@ -400,8 +501,10 @@ export default function ItemCard({ item, openModal, addToCart, resolveImagePath,
           alignItems: 'flex-start',
           minWidth: 0,
           width: '100%',
-          height: isGridView ? 'auto' : '90px'
+          minHeight: isGridView ? 'auto' : '90px',
+          height: 'auto'
         }}>
+          {/* Item Name & Details */}
           <div style={{ 
             display: 'flex', 
             flexDirection: 'column', 
@@ -411,9 +514,10 @@ export default function ItemCard({ item, openModal, addToCart, resolveImagePath,
             width: '100%' 
           }}>
             <div style={{ 
+              /* --- CUSTOMIZATION: Item Title Typography --- */
               fontWeight: '700', 
-              fontSize: '15px', 
-              color: '#FFFFFF', 
+              fontSize: '15px',                // Title font size
+              color: '#FFFFFF',                // Title color
               lineHeight: '1.2',
               letterSpacing: '0.1px',
               textAlign: 'left',
@@ -422,6 +526,7 @@ export default function ItemCard({ item, openModal, addToCart, resolveImagePath,
               {item.name}
             </div>
 
+            {/* Unit / Portion & Customisable Label */}
             {(displayUnit || (isGridView && hasVariants)) && (
               <div style={{ 
                 display: 'flex',
@@ -435,7 +540,12 @@ export default function ItemCard({ item, openModal, addToCart, resolveImagePath,
                 flexWrap: 'wrap'
               }}>
                 {displayUnit && (
-                  <span style={{ color: '#FF6B6B', fontStyle: 'italic', fontWeight: '400' }}>
+                  <span style={{ 
+                    /* --- CUSTOMIZATION: Portion Unit Text Color --- */
+                    color: '#FF6B6B', 
+                    fontStyle: 'italic', 
+                    fontWeight: '400' 
+                  }}>
                     {displayUnit}
                   </span>
                 )}
@@ -452,6 +562,7 @@ export default function ItemCard({ item, openModal, addToCart, resolveImagePath,
               </div>
             )}
 
+            {/* Primary Tag Badge */}
             {primaryTag && (
               <div style={{ marginTop: '2px', display: 'flex', justifyContent: 'flex-start', width: '100%' }}>
                 <InlineTagBadge tagKey={primaryTag} />
@@ -459,12 +570,13 @@ export default function ItemCard({ item, openModal, addToCart, resolveImagePath,
             )}
           </div>
           
+          {/* Price & Add Button Row */}
           <div style={{ 
             display: 'flex', 
             justify: 'space-between', 
             alignItems: 'center', 
             width: '100%',
-            marginTop: isGridView ? '8px' : '0'
+            marginTop: isGridView ? '8px' : '4px'
           }}>
             <div>
               {hasVariants && !isGridView && (
@@ -480,10 +592,12 @@ export default function ItemCard({ item, openModal, addToCart, resolveImagePath,
               gap: '10px',
               marginLeft: 'auto' 
             }}>
+              {/* Price Label */}
               <div style={{ 
-                color: '#FF5958', 
+                /* --- CUSTOMIZATION: Price Styling --- */
+                color: '#FF5958',              // Price text color
                 fontWeight: '600', 
-                fontSize: '16px',
+                fontSize: '16px',              // Price font size
                 letterSpacing: '-0.2px',
                 lineHeight: '1',
                 textShadow: '0 0 10px rgba(255, 89, 88, 0.25)'
@@ -491,6 +605,7 @@ export default function ItemCard({ item, openModal, addToCart, resolveImagePath,
                 ₹{displayPrice}
               </div>
 
+              {/* Add / Added Button */}
               <button 
                 onClick={handleAddClick}
                 onMouseDown={() => setIsPressed(true)}
@@ -498,13 +613,18 @@ export default function ItemCard({ item, openModal, addToCart, resolveImagePath,
                 onTouchStart={() => setIsPressed(true)}
                 onTouchEnd={() => setIsPressed(false)}
                 style={{
+                  /* --- CUSTOMIZATION: Add Button Gradients --- */
                   background: isAddedRecently 
-                    ? 'linear-gradient(135deg, #10B981 0%, #059669 100%)' 
-                    : 'linear-gradient(135deg, #FF5958 0%, #E11D48 100%)',
+                    ? 'linear-gradient(135deg, #10B981 0%, #059669 100%)' // Green gradient when added
+                    : 'linear-gradient(135deg, #FF5958 0%, #E11D48 100%)', // Default Coral gradient
+                  
                   color: '#FFFFFF',
                   border: '1px solid rgba(255, 255, 255, 0.2)',
+                  
+                  /* --- CUSTOMIZATION: Button Padding & Corners --- */
                   padding: '4px 16px', 
                   borderRadius: '16px',
+                  
                   fontWeight: '600',
                   fontSize: '12px',
                   letterSpacing: '0.2px',
@@ -524,8 +644,8 @@ export default function ItemCard({ item, openModal, addToCart, resolveImagePath,
         </div>
       </div>
 
-      {/* 3. Fully Left-Aligned Storage & Care Guidelines Modal */}
-      {showStorageModal && guideline && (
+      {/* 3. STORAGE & CARE INSTRUCTIONS MODAL (REACT PORTAL) */}
+      {showStorageModal && guideline && createPortal(
         <div 
           onClick={(e) => {
             e.stopPropagation();
@@ -534,9 +654,12 @@ export default function ItemCard({ item, openModal, addToCart, resolveImagePath,
           style={{
             position: 'fixed',
             inset: 0,
+            
+            /* --- CUSTOMIZATION: Modal Backdrop Overlay --- */
             backgroundColor: 'rgba(0, 0, 0, 0.78)',
             backdropFilter: 'blur(12px)',
             WebkitBackdropFilter: 'blur(12px)',
+            
             zIndex: 9999,
             display: 'flex',
             alignItems: 'center',
@@ -547,12 +670,16 @@ export default function ItemCard({ item, openModal, addToCart, resolveImagePath,
           <div 
             onClick={(e) => e.stopPropagation()}
             style={{
+              /* --- CUSTOMIZATION: Modal Card Background & Border --- */
               background: 'linear-gradient(135deg, rgba(32, 27, 24, 0.98) 0%, rgba(18, 15, 13, 0.98) 100%)',
               border: '1px solid rgba(255, 215, 0, 0.3)',
               borderRadius: '20px',
+              
+              /* --- CUSTOMIZATION: Modal Dimensions & Padding --- */
               padding: '22px 20px',
               maxWidth: '380px',
               width: '100%',
+              
               boxShadow: '0 20px 40px rgba(0, 0, 0, 0.8), 0 0 20px rgba(255, 215, 0, 0.12)',
               color: '#FFFFFF',
               textAlign: 'left',
@@ -573,7 +700,7 @@ export default function ItemCard({ item, openModal, addToCart, resolveImagePath,
                 margin: 0, 
                 fontSize: '16px', 
                 fontWeight: '700', 
-                color: '#FFD700', 
+                color: '#FFD700',               // Modal title text color
                 lineHeight: '1.3',
                 textAlign: 'left',
                 paddingRight: '10px'
@@ -582,6 +709,7 @@ export default function ItemCard({ item, openModal, addToCart, resolveImagePath,
               </h4>
               <button 
                 onClick={() => setShowStorageModal(false)}
+                aria-label="Close modal"
                 style={{ 
                   background: 'rgba(255, 255, 255, 0.08)', 
                   border: '1px solid rgba(255, 255, 255, 0.15)', 
@@ -602,7 +730,7 @@ export default function ItemCard({ item, openModal, addToCart, resolveImagePath,
               </button>
             </div>
 
-            {/* Left-Aligned Single Shelf Life Badge */}
+            {/* Shelf Life Pill Badge */}
             <div style={{
               display: 'inline-flex',
               alignItems: 'center',
@@ -621,13 +749,16 @@ export default function ItemCard({ item, openModal, addToCart, resolveImagePath,
               <span><strong>Shelf Life:</strong> {guideline.shelfLife}</span>
             </div>
 
-            {/* Strictly Left-Aligned Ordered Instructions */}
+            {/* Instruction Steps */}
             <ol style={{ 
               paddingLeft: '20px', 
               margin: '0 0 18px 0', 
               display: 'flex', 
               flexDirection: 'column', 
+              
+              /* --- CUSTOMIZATION: Step List Gap --- */
               gap: '10px',
+              
               fontSize: '12.5px',
               lineHeight: '1.5',
               color: '#E4E4E7',
@@ -642,7 +773,7 @@ export default function ItemCard({ item, openModal, addToCart, resolveImagePath,
               ))}
             </ol>
 
-            {/* Full-width Confirm Button */}
+            {/* Modal Confirm Button */}
             <button
               onClick={() => setShowStorageModal(false)}
               style={{
@@ -662,7 +793,8 @@ export default function ItemCard({ item, openModal, addToCart, resolveImagePath,
               Got it
             </button>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </>
   );

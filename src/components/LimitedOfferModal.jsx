@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Sparkles, Tag, ChevronLeft, ChevronRight, ShoppingBag, Clock } from 'lucide-react';
+import { Sparkles, Tag, ChevronLeft, ChevronRight, ShoppingBag, Clock, X } from 'lucide-react';
 import { getAllOffers } from '../utils/offersEngine';
 
 export default function LimitedOfferModal({ theme = {}, setView }) {
@@ -18,23 +18,40 @@ export default function LimitedOfferModal({ theme = {}, setView }) {
     radius: theme?.radius || '20px',
   };
 
-  // Get current order count to filter dynamic offers using your offers engine
+  // Get current order count to filter dynamic offers using offers engine
   const currentCount = parseInt(localStorage.getItem('store_order_count') || '1', 10);
   const allOffers = getAllOffers(currentCount);
 
+  // 1. Trigger Logic: Session Capped & Delayed Load (3.5 seconds)
   useEffect(() => {
-    // Pop-up appears automatically 400ms after load
-    const timer = setTimeout(() => {
-      setIsOpen(true);
-    }, 400); 
+    const hasSeenModal = sessionStorage.getItem('has_seen_offer_modal_session');
+    
+    // Only auto-open if user hasn't seen it in this session
+    if (!hasSeenModal && allOffers.length > 0) {
+      const timer = setTimeout(() => {
+        setIsOpen(true);
+        sessionStorage.setItem('has_seen_offer_modal_session', 'true');
+      }, 3500); // 3.5 second delay gives user time to settle into Home view
 
-    return () => clearTimeout(timer);
-  }, []);
+      return () => clearTimeout(timer);
+    }
+  }, [allOffers.length]);
+
+  // 2. Close on Escape key press
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') setIsOpen(false);
+    };
+    if (isOpen) {
+      window.addEventListener('keydown', handleKeyDown);
+    }
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen]);
 
   // Active ticking countdown interval logic
   useEffect(() => {
     const targetTime = new Date();
-    targetTime.setHours(23, 59, 59, 999); // Countdown expires at midnight today
+    targetTime.setHours(23, 59, 59, 999); // Expires at midnight today
 
     const updateCountdown = () => {
       const now = new Date();
@@ -55,12 +72,12 @@ export default function LimitedOfferModal({ theme = {}, setView }) {
     return () => clearInterval(timerInterval);
   }, []);
 
-  // Auto-slide carousel effect every 4 seconds if modal is open and multiple offers exist
+  // Auto-slide carousel effect every 4.5 seconds if modal is open and multiple offers exist
   useEffect(() => {
     if (!isOpen || allOffers.length <= 1) return;
     const interval = setInterval(() => {
       setCurrentIndex((prevIndex) => (prevIndex + 1) % allOffers.length);
-    }, 4000);
+    }, 4500);
     return () => clearInterval(interval);
   }, [isOpen, allOffers.length]);
 
@@ -90,21 +107,27 @@ export default function LimitedOfferModal({ theme = {}, setView }) {
         left: 0,
         right: 0,
         bottom: 0,
-        backgroundColor: 'rgba(44, 34, 30, 0.6)',
+        backgroundColor: 'rgba(44, 34, 30, 0.65)',
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
         zIndex: 99999,
         padding: '16px',
-        backdropFilter: 'blur(12px)',
-        WebkitBackdropFilter: 'blur(12px)',
+        backdropFilter: 'blur(8px)',
+        WebkitBackdropFilter: 'blur(8px)',
         cursor: 'pointer',
-        pointerEvents: 'auto',
         boxSizing: 'border-box'
       }}
     >
+      <style>{`
+        @keyframes modalScaleIn {
+          0% { opacity: 0; transform: scale(0.92) translateY(12px); }
+          100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+      `}</style>
+
       <div 
-        onClick={() => e.stopPropagation(null)}
+        onClick={(e) => e.stopPropagation()}
         style={{
           background: activeTheme.bg,
           borderRadius: activeTheme.radius,
@@ -113,16 +136,40 @@ export default function LimitedOfferModal({ theme = {}, setView }) {
           maxWidth: '380px',
           display: 'flex',
           flexDirection: 'column',
-          boxShadow: '0 24px 60px rgba(44, 34, 30, 0.22)',
+          boxShadow: '0 24px 60px rgba(44, 34, 30, 0.28)',
           overflow: 'hidden',
           position: 'relative',
-          animation: 'scaleUp 0.35s cubic-bezier(0.16, 1, 0.3, 1)',
+          animation: 'modalScaleIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards',
           cursor: 'default',
-          pointerEvents: 'auto',
           boxSizing: 'border-box'
         }}
       >
         
+        {/* Top Explicit Close (X) Button */}
+        <button
+          onClick={() => setIsOpen(false)}
+          aria-label="Close offer modal"
+          style={{
+            position: 'absolute',
+            top: '14px',
+            right: '14px',
+            border: 'none',
+            background: 'rgba(0,0,0,0.05)',
+            borderRadius: '50%',
+            width: '30px',
+            height: '30px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            cursor: 'pointer',
+            zIndex: 10,
+            color: activeTheme.text,
+            transition: 'background 0.2s'
+          }}
+        >
+          <X size={16} />
+        </button>
+
         {/* Modal Header */}
         <div style={{
           display: 'flex',
@@ -139,10 +186,10 @@ export default function LimitedOfferModal({ theme = {}, setView }) {
               alignItems: 'center',
               justifyContent: 'center'
             }}>
-              <Sparkles size={22} color={activeTheme.brand} />
+              <Sparkles size={20} color={activeTheme.brand} />
             </div>
-            <span style={{ fontSize: '15px', fontWeight: '800', color: activeTheme.text, textTransform: 'uppercase', letterSpacing: '1.5px' }}>
-              Live Offers
+            <span style={{ fontSize: '14px', fontWeight: '800', color: activeTheme.text, textTransform: 'uppercase', letterSpacing: '1.5px' }}>
+              Exclusive Offers
             </span>
           </div>
         </div>
@@ -150,7 +197,7 @@ export default function LimitedOfferModal({ theme = {}, setView }) {
         {/* Carousel Container Wrapper */}
         <div style={{ padding: '14px 20px 16px 20px', position: 'relative', boxSizing: 'border-box' }}>
           
-          {/* Active Carousel Card with optimized internal padding and flow */}
+          {/* Active Carousel Card */}
           <div 
             style={{
               background: 'linear-gradient(145deg, #2C221E 0%, #3D3028 100%)',
@@ -197,7 +244,7 @@ export default function LimitedOfferModal({ theme = {}, setView }) {
                       gap: '5px',
                       background: 'rgba(239, 68, 68, 0.25)',
                       border: '1px solid rgba(239, 68, 68, 0.5)',
-                      padding: '3px 12px',
+                      padding: '3px 10px',
                       borderRadius: '10px',
                       fontSize: '10px',
                       fontWeight: '500',
@@ -227,7 +274,7 @@ export default function LimitedOfferModal({ theme = {}, setView }) {
                 </div>
               </div>
 
-              {/* Title & Description with balanced vertical margins */}
+              {/* Title & Description */}
               <h3 style={{ fontSize: '16px', fontWeight: '800', margin: '6px 0 6px 0', position: 'relative', zIndex: 1, letterSpacing: '0.3px', color: '#FFFBF2' }}>
                 {currentOffer.title}
               </h3>
@@ -260,8 +307,8 @@ export default function LimitedOfferModal({ theme = {}, setView }) {
               zIndex: 1,
               color: '#FFFBF2'
             }}>
-              <ShoppingBag size={20} color={activeTheme.brand} />
-              <span>Available in Bag at Checkout</span>
+              <ShoppingBag size={18} color={activeTheme.brand} />
+              <span>Auto-applied in Bag at Checkout</span>
             </div>
           </div>
 
@@ -281,8 +328,7 @@ export default function LimitedOfferModal({ theme = {}, setView }) {
                   cursor: 'pointer',
                   color: activeTheme.text,
                   background: '#FFFFFF',
-                  boxShadow: '0 2px 8px rgba(44, 34, 30, 0.06)',
-                  transition: 'transform 0.2s'
+                  boxShadow: '0 2px 8px rgba(44, 34, 30, 0.06)'
                 }}
               >
                 <ChevronLeft size={16} />
@@ -319,8 +365,7 @@ export default function LimitedOfferModal({ theme = {}, setView }) {
                   cursor: 'pointer',
                   color: activeTheme.text,
                   background: '#FFFFFF',
-                  boxShadow: '0 2px 8px rgba(44, 34, 30, 0.06)',
-                  transition: 'transform 0.2s'
+                  boxShadow: '0 2px 8px rgba(44, 34, 30, 0.06)'
                 }}
               >
                 <ChevronRight size={16} />
@@ -354,7 +399,7 @@ export default function LimitedOfferModal({ theme = {}, setView }) {
               letterSpacing: '0.4px'
             }}
           >
-            Explore Menu
+            Claim Offer & Browse Menu
           </button>
         </div>
 
