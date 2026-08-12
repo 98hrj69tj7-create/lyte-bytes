@@ -11,9 +11,9 @@ function PolicyModal({ isOpen, onClose, title, children, theme = {} }) {
 
   const activeTheme = {
     brand: theme?.brand || '#FF5958',
-    text: theme?.text || '#2C221E',
-    border: theme?.border || '1px solid rgba(216, 199, 165, 0.4)',
-    bg: theme?.bg || '#FFFBF2',
+    text: theme?.text || '#1A1816',
+    border: theme?.border || '1px solid rgba(197, 160, 89, 0.4)',
+    bg: theme?.bg || '#FFFDF9',
     radius: theme?.radius || '22px'
   };
 
@@ -26,9 +26,9 @@ function PolicyModal({ isOpen, onClose, title, children, theme = {} }) {
         left: 0,
         right: 0,
         bottom: 0,
-        backgroundColor: 'rgba(46, 40, 40, 0.77)',
-        backdropFilter: 'blur(15px)',
-        WebkitBackdropFilter: 'blur(10px)',
+        backgroundColor: 'rgba(20, 15, 12, 0.82)',
+        backdropFilter: 'blur(8px)',
+        WebkitBackdropFilter: 'blur(8px)',
         zIndex: 1000,
         display: 'flex',
         justifyContent: 'center',
@@ -38,50 +38,58 @@ function PolicyModal({ isOpen, onClose, title, children, theme = {} }) {
       }}
     >
       <div 
-        onClick={() => e.stopPropagation(null)}
+        onClick={(e) => e.stopPropagation()}
         style={{
           width: '100%',
           maxWidth: '460px',
           margin: 'auto',
-          background: activeTheme.bg,
+          background: 'linear-gradient(135deg, #FFFDF9 0%, #FAF4EB 100%)',
           color: activeTheme.text,
-          borderRadius: '16px',
-          border: `2px solid ${activeTheme.brand}`,
+          borderRadius: '20px',
+          border: '1px solid rgba(197, 160, 89, 0.4)',
           maxHeight: '85vh',
           display: 'flex',
           flexDirection: 'column',
           overflow: 'hidden',
           boxShadow: '0 16px 40px rgba(0,0,0,0.25)',
-          boxSizing: 'border-box'
+          boxSizing: 'border-box',
+          fontFamily: "'Plus Jakarta Sans', sans-serif"
         }}
       >
         {/* Modal Header */}
         <div style={{ 
-          padding: '14px 16px',
-          background: activeTheme.bg,
-          borderBottom: '1px solid #EFECE6',
+          padding: '16px 20px',
+          background: 'transparent',
+          borderBottom: '1px solid rgba(197, 160, 89, 0.25)',
           display: 'flex', 
           justifyContent: 'space-between', 
           alignItems: 'center'
         }}>
           <div style={{ 
-            fontSize: '15px', 
+            fontFamily: "'Cormorant Garamond', serif",
+            fontSize: '20px', 
             color: activeTheme.brand, 
-            fontWeight: '800', 
+            fontWeight: '700', 
             textTransform: 'uppercase', 
             letterSpacing: '0.8px'
           }}>
             {title}
           </div>
+          <button 
+            onClick={onClose}
+            style={{ background: 'rgba(255, 255, 255, 0.6)', border: '1px solid rgba(197, 160, 89, 0.3)', borderRadius: '50%', width: '28px', height: '28px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', padding: 0 }}
+          >
+            <X size={16} color={activeTheme.text} />
+          </button>
         </div>
 
         {/* Modal Body Content Container */}
         <div style={{ 
-          padding: '12px 16px', 
+          padding: '16px 20px', 
           overflowY: 'auto', 
           display: 'flex', 
           flexDirection: 'column', 
-          gap: '8px',
+          gap: '10px',
           boxSizing: 'border-box'
         }}>
           {children}
@@ -102,9 +110,9 @@ export default function OffersTab({ theme = {} }) {
 
   const activeTheme = {
     brand: theme?.brand || '#FF5958',
-    text: theme?.text || '#2C221E',
-    border: theme?.border || '1px solid rgba(216, 199, 165, 0.4)',
-    bg: theme?.bg || '#FFFFFF',
+    text: theme?.text || '#1A1816',
+    border: theme?.border || '1px solid rgba(197, 160, 89, 0.4)',
+    bg: theme?.bg || '#FFFDF9',
     radius: theme?.radius || '16px',
   };
 
@@ -117,7 +125,8 @@ export default function OffersTab({ theme = {} }) {
       paddingBottom: '140px', 
       paddingTop: '6px',
       boxSizing: 'border-box',
-      width: '100%'
+      width: '100%',
+      fontFamily: "'Plus Jakarta Sans', sans-serif"
     }}>
       {/* Header Section */}
       <div style={{ 
@@ -125,15 +134,16 @@ export default function OffersTab({ theme = {} }) {
         flexDirection: 'column', 
         alignItems: 'center',
         marginTop: '16px', 
-        marginBottom: '20px', 
+        marginBottom: '16px', 
         padding: '0 16px', 
         boxSizing: 'border-box',
         width: '100%'
       }}>
         <h2 style={{ 
-          fontSize: '16px', 
-          color: activeTheme.brand, 
-          margin: 0, 
+          fontFamily: "'Cormorant Garamond', serif",
+          fontSize: '22px', 
+          color: '#FF5958', 
+          margin: '-8px 0 0 0',
           fontWeight: '700', 
           letterSpacing: '0.5px', 
           textTransform: 'uppercase',
@@ -166,44 +176,44 @@ export default function OffersTab({ theme = {} }) {
         </div>
       </div>
 
-      {/* Render Active Offers List */}
+      {/* Render Active Offers List with Golden Ticket Styling */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', width: '100%', boxSizing: 'border-box', padding: '0 16px' }}>
         {offers.map((offer) => (
           <div 
             key={offer.id}
             style={{
-              background: 'linear-gradient(145deg, #2C221E 0%, #3D3028 100%)',
+              background: 'linear-gradient(135deg, #FFFDF9 0%, #FAF4EB 100%)',
               borderRadius: '16px',
               padding: '18px 20px',
-              color: '#FFFFFF',
-              boxShadow: '0 10px 30px rgba(44, 34, 30, 0.25)',
+              color: activeTheme.text,
+              boxShadow: '0 8px 24px rgba(44, 34, 30, 0.06)',
               position: 'relative',
               overflow: 'hidden',
-              minHeight: '200px',
+              minHeight: '180px',
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'space-between',
               boxSizing: 'border-box',
-              border: '1px solid rgba(216, 199, 165, 0.2)',
+              border: '1px dashed #C5A059', // Golden Ticket Border
               width: '100%'
             }}
           >
-            <div style={{ position: 'absolute', right: '-20px', bottom: '-20px', opacity: 0.08, pointerEvents: 'none' }}>
-              <Sparkles size={120} color="#FFFFFF" />
+            <div style={{ position: 'absolute', right: '-15px', bottom: '-15px', opacity: 0.05, pointerEvents: 'none' }}>
+              <Sparkles size={110} color="#C5A059" />
             </div>
 
             <div>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px', position: 'relative', zIndex: 1 }}>
                 <span style={{ 
-                  background: 'rgba(255, 255, 255, 0.12)', 
-                  border: '1px solid rgba(255, 255, 255, 0.15)',
+                  background: 'rgba(197, 160, 89, 0.12)', 
+                  border: '1px solid rgba(197, 160, 89, 0.3)',
                   padding: '3px 10px', 
                   borderRadius: '12px', 
-                  fontSize: '9.5px', 
-                  fontWeight: '600', 
+                  fontSize: '10px', 
+                  fontWeight: '700', 
                   letterSpacing: '1px',
                   textTransform: 'uppercase',
-                  color: '#FFFBF2'
+                  color: '#8A6D2B'
                 }}>
                   {offer.tag}
                 </span>
@@ -215,21 +225,21 @@ export default function OffersTab({ theme = {} }) {
                   color: '#FFFFFF',
                   padding: '3px 10px', 
                   borderRadius: '6px',
-                  boxShadow: '0 2px 8px rgba(255, 89, 88, 0.4)'
+                  boxShadow: '0 2px 8px rgba(255, 89, 88, 0.3)'
                 }}>
                   {offer.discount}
                 </span>
               </div>
 
-              <h3 style={{ fontSize: '16px', fontWeight: '800', margin: '6px 0 6px 0', position: 'relative', zIndex: 1, letterSpacing: '0.3px', color: '#FFFBF2' }}>
+              <h3 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '19px', fontWeight: '700', margin: '4px 0 6px 0', position: 'relative', zIndex: 1, letterSpacing: '0.3px', color: activeTheme.text }}>
                 {offer.title}
               </h3>
-              <p style={{ fontSize: '12px', opacity: 0.85, margin: '0 0 12px 0', lineHeight: '1.45', position: 'relative', zIndex: 1, color: '#E8E1D5' }}>
+              <p style={{ fontSize: '12.5px', color: '#78716C', margin: '0 0 10px 0', lineHeight: '1.45', position: 'relative', zIndex: 1, fontWeight: '500' }}>
                 {offer.description}
               </p>
 
-              <div style={{ fontSize: '10.5px', opacity: '0.8', display: 'flex', alignItems: 'center', gap: '5px', position: 'relative', zIndex: '1', marginBottom: '12px', color: '#D4C8B8' }}>
-                <Tag size={11} color={activeTheme.brand} /> {offer.condition}
+              <div style={{ fontSize: '11px', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '5px', position: 'relative', zIndex: '1', marginBottom: '12px', color: '#8A6D2B' }}>
+                <Tag size={12} color={activeTheme.brand} /> {offer.condition}
               </div>
             </div>
 
@@ -238,20 +248,20 @@ export default function OffersTab({ theme = {} }) {
               alignItems: 'center',
               justifyContent: 'center',
               gap: '6px',
-              background: 'rgba(255, 255, 255, 0.08)', 
+              background: 'rgba(197, 160, 89, 0.08)', 
               backdropFilter: 'blur(6px)',
               WebkitBackdropFilter: 'blur(6px)',
               padding: '9px 12px', 
               borderRadius: '10px',
-              border: '1px solid rgba(255, 255, 255, 0.15)',
+              border: '1px solid rgba(197, 160, 89, 0.25)',
               marginTop: '4px',
               fontSize: '12px',
               fontWeight: '700',
               position: 'relative',
               zIndex: 1,
-              color: '#FFFBF2'
+              color: activeTheme.text
             }}>
-              <ShoppingBag size={20} color={activeTheme.brand} />
+              <ShoppingBag size={18} color={activeTheme.brand} />
               <span>Available in Bag at Checkout</span>
             </div>
           </div>

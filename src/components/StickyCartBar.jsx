@@ -1,56 +1,41 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { ArrowRight } from 'lucide-react';
 
-// ============================================================================
-// 🎨 ELITE COLOR PALETTES
-// ============================================================================
 const PALETTES = {
   obsidianGold: {
-    bg: 'linear-gradient(135deg, rgba(26, 20, 19, 0.96) 0%, rgba(15, 12, 11, 0.98) 100%)',
-    border: '1px solid rgba(212, 175, 55, 0.35)',
-    shadow: '0 16px 36px rgba(0, 0, 0, 0.65), inset 0 1px 1px rgba(255, 215, 0, 0.2)',
+    bg: 'linear-gradient(135deg, rgba(26, 23, 20, 0.98) 0%, rgba(18, 15, 13, 0.99) 100%)', // #1A1714 Dark Charcoal Base
+    border: '1px solid rgba(197, 160, 89, 0.4)',
+    shadow: '0 16px 36px rgba(0, 0, 0, 0.65), inset 0 1px 1px rgba(197, 160, 89, 0.2)',
     
-    badgeBg: 'linear-gradient(135deg, #FF5958 0%, #D32F2F 100%)',
+    badgeBg: 'linear-gradient(135deg, #FF5958 0%, #E11D48 100%)',
     badgeText: '#FFFFFF',
-    labelColor: '#D4AF37',   // Champagne Gold
+    labelColor: '#C5A059',   // Champagne Gold
     priceColor: '#FFFBF2',
     
-    goldGlow: '212, 175, 55', 
+    goldGlow: '197, 160, 89', 
     
-    btnBg: 'linear-gradient(135deg, #FF5958 0%, #E53935 100%)',
-    btnText: '#FFFBF2',
+    btnBg: 'linear-gradient(135deg, #FF5958 0%, #E11D48 100%)',
+    btnText: '#FFFFFF',
     btnShadow: '0 4px 16px rgba(255, 89, 88, 0.4)'
   }
 };
 
-// ============================================================================
-// 📏 SPACING & LAYOUT CONTROLS (Tweak all spacing & sizes here!)
-// ============================================================================
 const SPACING = {
-  // 1. 🛸 FLOATING DOCK CONTAINER
-  dockBottom: '82px',          // Height above screen bottom (clears footer nav)
-  dockMaxWidth: '325px',        // Maximum width of the sticky bar
-  dockPadding: '10px 16px',     // Internal padding [Top/Bottom Left/Right]
-  dockBorderRadius: '50px',     // Outer capsule pill rounding
-
-  // 2. 🔀 LAYOUT GAPS
-  badgeToTextGap: '12px',      // Gap between red circle badge and text stack
-  labelToPriceGap: '3px',       // Vertical space between "ITEMS SELECTED" & Price
-
-  // 3. 🔴 CIRCLE BADGE
-  badgeSize: '35px',            // Circle width & height diameter
-  badgeFontSize: '14px',        // Item count number size
-
-  // 4. 🔤 TEXT SIZES
-  labelFontSize: '10px',        // "ITEMS SELECTED" label font size
-  priceFontSize: '16px',        // Price "₹4,145" font size
-
-  // 5. 🔘 RIGHT BUTTON (VIEW BAG)
-  btnPadding: '6px 12px',       // Button inner padding [Top/Bottom Left/Right]
-  btnBorderRadius: '20px',      // Button corner rounding
-  btnTextToIconGap: '5px',      // Gap between "VIEW BAG" text and arrow icon
-  btnFontSize: '12px',          // Button text size
-  btnIconSize: 16,              // Lucide Arrow icon size in pixels
+  dockBottom: '82px',          
+  dockMaxWidth: '325px',        
+  dockPadding: '10px 16px',     
+  dockBorderRadius: '50px',     
+  badgeToTextGap: '12px',      
+  labelToPriceGap: '3px',       
+  badgeSize: '35px',            
+  badgeFontSize: '14px',        
+  labelFontSize: '10px',        
+  priceFontSize: '16px',        
+  btnPadding: '6px 12px',       
+  btnBorderRadius: '20px',      
+  btnTextToIconGap: '5px',      
+  btnFontSize: '12px',          
+  btnIconSize: 16,              
 };
 
 export default function StickyCartBar({ cart = [], onViewCart }) {
@@ -60,11 +45,9 @@ export default function StickyCartBar({ cart = [], onViewCart }) {
   const lastScrollTopRef = useRef(0);
   const [isPulseActive, setIsPulseActive] = useState(false);
   
-  // Track previous item count to detect newly added items
   const prevTotalItemsRef = useRef(0);
   const isInitialMount = useRef(true);
 
-  // 1. Calculate Total Items & Total Price Safely
   const totalItems = Array.isArray(cart) 
     ? cart.reduce((sum, item) => sum + (Number(item.qty) || 1), 0) 
     : 0;
@@ -79,7 +62,6 @@ export default function StickyCartBar({ cart = [], onViewCart }) {
       }, 0) 
     : 0;
 
-  // 2. Controlled Pulse Trigger (Only when totalItems increases after initial load)
   useEffect(() => {
     if (isInitialMount.current) {
       prevTotalItemsRef.current = totalItems;
@@ -97,7 +79,6 @@ export default function StickyCartBar({ cart = [], onViewCart }) {
     }
   }, [totalItems]);
 
-  // 3. Scroll Sync
   useEffect(() => {
     const handleScroll = (e) => {
       const target = e.target === document ? document.documentElement : e.target;
@@ -134,7 +115,7 @@ export default function StickyCartBar({ cart = [], onViewCart }) {
           backdropFilter: 'blur(20px)',
           WebkitBackdropFilter: 'blur(20px)',
           border: isPulseActive 
-            ? '1px solid rgba(212, 175, 55, 0.85)' 
+            ? '1px solid rgba(197, 160, 89, 0.85)' 
             : theme.border,
           borderRadius: SPACING.dockBorderRadius,
           color: theme.priceColor,
@@ -156,9 +137,10 @@ export default function StickyCartBar({ cart = [], onViewCart }) {
           opacity: isVisible ? 1 : 0,
           pointerEvents: isVisible ? 'auto' : 'none',
           transition: 'transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.45s ease, border 0.6s ease, box-shadow 0.6s ease',
+          fontFamily: "'Plus Jakarta Sans', sans-serif"
         }}
       >
-        {/* --- 🎨 SHIMMER GLASS SWEEP LAYER --- */}
+        {/* Shimmer Glass Sweep Layer */}
         <div style={{
           position: 'absolute',
           top: 0,
@@ -171,17 +153,14 @@ export default function StickyCartBar({ cart = [], onViewCart }) {
           pointerEvents: 'none'
         }} />
 
-        {/* --- LEFT SECTION: ITEM COUNT BADGE & PRICE --- */}
+        {/* Left Section: Item Count Badge & Price */}
         <div style={{ 
           display: 'flex', 
           alignItems: 'center', 
           gap: SPACING.badgeToTextGap,
           zIndex: 1 
         }}>
-          {/* 🔴 ITEM COUNTER CIRCLE */}
           <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            
-            {/* 🌟 RIPPLE RING */}
             <div style={{
               position: 'absolute',
               width: '100%',
@@ -194,7 +173,6 @@ export default function StickyCartBar({ cart = [], onViewCart }) {
               pointerEvents: 'none',
             }} />
 
-            {/* 🔮 MAIN BADGE CIRCLE */}
             <div style={{
               position: 'relative',
               display: 'flex',
@@ -204,7 +182,7 @@ export default function StickyCartBar({ cart = [], onViewCart }) {
               height: SPACING.badgeSize,
               borderRadius: '50%',
               background: theme.badgeBg,
-              border: isPulseActive ? '1.5px solid #FFF5C0' : '1.5px solid #D4AF37',
+              border: isPulseActive ? '1.5px solid #FFF5C0' : '1.5px solid #C5A059',
               
               boxShadow: isPulseActive
                 ? `0 0 0 4px rgba(${theme.goldGlow}, 0.3), 0 0 18px rgba(${theme.goldGlow}, 0.85), 0 0 30px rgba(${theme.goldGlow}, 0.4)`
@@ -225,7 +203,6 @@ export default function StickyCartBar({ cart = [], onViewCart }) {
             </div>
           </div>
 
-          {/* 💰 PRICE & LABEL STACK (LEFT ALIGNED) */}
           <div style={{ 
             display: 'flex', 
             flexDirection: 'column', 
@@ -260,7 +237,7 @@ export default function StickyCartBar({ cart = [], onViewCart }) {
           </div>
         </div>
 
-        {/* --- RIGHT SECTION: VIEW BAG BUTTON --- */}
+        {/* Right Section: View Bag Button */}
         <div style={{ 
           display: 'flex', 
           alignItems: 'center', 

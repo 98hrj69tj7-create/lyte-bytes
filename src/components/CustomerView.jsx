@@ -18,10 +18,10 @@ export default function CustomerView({
 }) {
   const activeTheme = {
     brand: theme?.brand || '#FF5958',
-    text: theme?.text || '#2C221E',
-    border: theme?.border || '1px solid rgba(216, 199, 165, 0.4)',
-    bg: theme?.bg || '#FFFFFF',
-    radius: theme?.radius || '16px'
+    text: theme?.text || '#1A1816',
+    border: theme?.border || '1px solid rgba(197, 160, 89, 0.4)',
+    bg: theme?.bg || '#FFFDF9',
+    radius: theme?.radius || '20px'
   };
 
   // Navigation Handler
@@ -64,7 +64,8 @@ export default function CustomerView({
       paddingBottom: '140px', 
       paddingTop: '6px',
       boxSizing: 'border-box',
-      width: '100%'
+      width: '100%',
+      fontFamily: "'Plus Jakarta Sans', sans-serif"
     }}>
 
       {/* ================= UNIFORM HEADER SECTION ================= */}
@@ -72,31 +73,32 @@ export default function CustomerView({
         <button 
           onClick={handleBack} 
           style={{ 
-            background: 'none', 
-            border: 'none', 
+            background: 'rgba(255, 255, 255, 0.6)', 
+            border: '1px solid rgba(197, 160, 89, 0.3)', 
             cursor: 'pointer', 
             display: 'flex', 
             alignItems: 'center', 
             gap: '6px', 
             color: activeTheme.text, 
-            fontSize: '14px', 
-            fontWeight: '700', 
-            padding: '4px 8px', 
-            borderRadius: '8px', 
-            backgroundColor: 'rgba(0,0,0,0.04)', 
+            fontSize: '13px', 
+            fontWeight: '600', 
+            padding: '6px 12px', 
+            borderRadius: '12px', 
             zIndex: 1,
+            transition: 'all 0.2s ease',
             ...backButtonStyle
           }}
         >
-          <ArrowLeft size={16}/> Menu
+          <ArrowLeft size={15}/> Menu
         </button>
         <h2 style={{ 
           position: 'absolute', 
           left: 0, 
           right: 0, 
           textAlign: 'center', 
-          fontSize: '16px', 
-          color: activeTheme.brand, 
+          fontFamily: "'Cormorant Garamond', serif",
+          fontSize: '21px', 
+          color: '#FF5958', 
           margin: 0, 
           fontWeight: '700', 
           letterSpacing: '0.5px', 
@@ -115,17 +117,17 @@ export default function CustomerView({
           display: 'flex', 
           alignItems: 'center', 
           padding: '16px 18px', 
-          backgroundColor: '#FFFBF2', 
-          border: activeTheme.border, 
+          background: 'linear-gradient(135deg, #FFFDF9 0%, #FAF4EB 100%)', 
+          border: '1px solid rgba(197, 160, 89, 0.4)', 
           borderRadius: activeTheme.radius, 
-          boxShadow: '0 2px 8px rgba(0,0,0,0.03)',
+          boxShadow: '0 8px 24px rgba(44, 34, 30, 0.06)',
           boxSizing: 'border-box'
         }}>
           <div style={{ 
-            backgroundColor: '#FFF8E7', 
-            border: '1px solid #E5D6B5',
-            width: '44px', 
-            height: '44px', 
+            backgroundColor: 'rgba(197, 160, 89, 0.12)', 
+            border: '1px solid rgba(197, 160, 89, 0.3)',
+            width: '46px', 
+            height: '46px', 
             borderRadius: '50%', 
             marginRight: '14px', 
             display: 'flex', 
@@ -137,10 +139,10 @@ export default function CustomerView({
           </div>
 
           <div style={{ textAlign: 'left', flex: 1 }}>
-            <h3 style={{ margin: '0 0 2px 0', color: activeTheme.text, fontSize: '15.5px', fontWeight: '700' }}>
+            <h3 style={{ margin: '0 0 2px 0', color: activeTheme.text, fontSize: '17px', fontWeight: '700', fontFamily: "'Cormorant Garamond', serif" }}>
               {name}
             </h3>
-            <p style={{ margin: 0, color: '#776E62', fontSize: '13px', fontWeight: '500' }}>
+            <p style={{ margin: 0, color: '#78716C', fontSize: '12.5px', fontWeight: '500' }}>
               {phone}
             </p>
           </div>
@@ -149,27 +151,27 @@ export default function CustomerView({
         {/* --- LOYALTY TIER CARD --- */}
         <div style={{ 
           padding: '18px 20px', 
-          backgroundColor: '#FFFBF2', 
-          border: activeTheme.border, 
+          background: 'linear-gradient(135deg, #FFFDF9 0%, #FAF4EB 100%)', 
+          border: '1px solid rgba(197, 160, 89, 0.4)', 
           borderRadius: activeTheme.radius, 
-          boxShadow: '0 2px 8px rgba(0,0,0,0.03)',
+          boxShadow: '0 8px 24px rgba(44, 34, 30, 0.06)',
           boxSizing: 'border-box'
         }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '14px' }}>
             <div style={{ textAlign: 'left' }}>
-              <span style={{ fontSize: '10.5px', fontWeight: '700', color: '#B45309', letterSpacing: '0.6px', textTransform: 'uppercase' }}>
+              <span style={{ fontSize: '10px', fontWeight: '800', color: '#8A6D2B', letterSpacing: '0.8px', textTransform: 'uppercase' }}>
                 CURRENT STATUS
               </span>
-              <h3 style={{ margin: '4px 0 0 0', color: '#854D0E', fontSize: '19px', fontWeight: '800' }}>
+              <h3 style={{ margin: '4px 0 0 0', color: '#854D0E', fontSize: '20px', fontWeight: '700', fontFamily: "'Cormorant Garamond', serif" }}>
                 Gold Member
               </h3>
             </div>
             
             <div style={{ 
-              backgroundColor: '#FEF3C7', 
-              border: '1px solid #FDE68A',
-              width: '38px', 
-              height: '38px', 
+              backgroundColor: 'rgba(197, 160, 89, 0.15)', 
+              border: '1px solid rgba(197, 160, 89, 0.35)',
+              width: '40px', 
+              height: '40px', 
               borderRadius: '50%', 
               display: 'flex', 
               alignItems: 'center', 
@@ -180,11 +182,11 @@ export default function CustomerView({
           </div>
 
           <div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', fontWeight: '700', color: '#854D0E', marginBottom: '6px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11.5px', fontWeight: '700', color: '#854D0E', marginBottom: '6px' }}>
               <span>1250 Pts</span>
               <span>2000 Pts</span>
             </div>
-            <div style={{ width: '100%', height: '8px', backgroundColor: '#FEF3C7', borderRadius: '4px', overflow: 'hidden', border: '1px solid #FDE68A' }}>
+            <div style={{ width: '100%', height: '8px', backgroundColor: 'rgba(197, 160, 89, 0.15)', borderRadius: '4px', overflow: 'hidden', border: '1px solid rgba(197, 160, 89, 0.3)' }}>
               <div style={{ width: '62.5%', height: '100%', backgroundColor: '#D97706', borderRadius: '3px' }} />
             </div>
           </div>
@@ -192,7 +194,7 @@ export default function CustomerView({
 
         {/* --- RECENT ORDERS --- */}
         <div style={{ marginTop: '6px' }}>
-          <h3 style={{ margin: '0 0 10px 4px', color: activeTheme.text, fontSize: '15px', fontWeight: '700', textAlign: 'left', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+          <h3 style={{ margin: '0 0 10px 4px', color: activeTheme.text, fontSize: '16px', fontWeight: '700', textAlign: 'left', textTransform: 'uppercase', letterSpacing: '0.5px', fontFamily: "'Cormorant Garamond', serif" }}>
             Recent Orders
           </h3>
 
@@ -204,39 +206,40 @@ export default function CustomerView({
                   display: 'flex', 
                   alignItems: 'center', 
                   padding: '14px 16px', 
-                  backgroundColor: '#FFFBF2', 
-                  border: activeTheme.border, 
+                  background: 'linear-gradient(135deg, #FFFDF9 0%, #FAF4EB 100%)', 
+                  border: '1px solid rgba(197, 160, 89, 0.4)', 
                   borderRadius: activeTheme.radius, 
-                  boxShadow: '0 2px 8px rgba(0,0,0,0.03)',
+                  boxShadow: '0 8px 24px rgba(44, 34, 30, 0.06)',
                   boxSizing: 'border-box'
                 }}
               >
                 <div style={{ 
-                  backgroundColor: '#FFF8E7', 
-                  border: '1px solid #E5D6B5',
-                  width: '38px', 
-                  height: '38px', 
-                  borderRadius: '10px', 
+                  backgroundColor: 'rgba(197, 160, 89, 0.12)', 
+                  border: '1px solid rgba(197, 160, 89, 0.3)',
+                  width: '40px', 
+                  height: '40px', 
+                  borderRadius: '12px', 
                   marginRight: '14px', 
                   display: 'flex', 
                   alignItems: 'center', 
                   justifyContent: 'center', 
                   flexShrink: 0 
                 }}>
-                  <Package size={18} color="#776E62" />
+                  <Package size={18} color="#78716C" />
                 </div>
 
                 <div style={{ textAlign: 'left', flex: 1 }}>
-                  <h4 style={{ margin: '0 0 2px 0', color: activeTheme.text, fontSize: '14.5px', fontWeight: '700' }}>
+                  {/* Changed font to standard sans-serif for clear, legible order numbers */}
+                  <h4 style={{ margin: '0 0 2px 0', color: activeTheme.text, fontSize: '15px', fontWeight: '700', fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
                     {order.id || `ORD-${idx + 1}`}
                   </h4>
-                  <p style={{ margin: 0, color: '#776E62', fontSize: '12px', fontWeight: '500' }}>
+                  <p style={{ margin: 0, color: '#78716C', fontSize: '11.5px', fontWeight: '500' }}>
                     {order.date || 'Recent'} • {order.itemsCount || 1} {order.itemsCount === 1 ? 'Item' : 'Items'}
                   </p>
                 </div>
 
                 <div style={{ textAlign: 'right' }}>
-                  <div style={{ fontSize: '14.5px', fontWeight: '700', color: activeTheme.text, marginBottom: '4px' }}>
+                  <div style={{ fontSize: '15px', fontWeight: '700', color: activeTheme.text, marginBottom: '4px' }}>
                     ₹{order.total}
                   </div>
                   <span style={{ 

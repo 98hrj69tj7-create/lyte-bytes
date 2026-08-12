@@ -16,6 +16,7 @@ import AdminCustomerDashboard from './components/AdminCustomerDashboard';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import LimitedOfferModal from './components/LimitedOfferModal';
+import InstallPrompt from './components/InstallPrompt';
 import { trackAbandonedLead } from './components/leadTracker';
 import Papa from 'papaparse';
 
@@ -30,33 +31,58 @@ const resolveImagePath = (path, folder = '') => {
 
 // --- THEME ---
 const appTheme = {
-  bg: '#FDF6E3',
-  text: '#2B2B2B',
+  bg: '#FFFDF9',
+  text: '#1A1816',
   brand: '#FF5958',
-  buttonBg: '#4A443A',
-  border: '1px solid #D8C7A5',
-  radius: '12px'
+  buttonBg: '#FF5958',
+  border: '1px solid rgba(197, 160, 89, 0.4)',
+  radius: '20px'
 };
 
 // --- SHARED STYLES WITH FOCUS/TAP RESETS ---
 const actionButtonStyle = {
-  width: '100%', padding: '16px', marginBottom: '12px', backgroundColor: appTheme.buttonBg, color: appTheme.bg, border: 'none', borderRadius: appTheme.radius, fontWeight: '600', fontSize: '18px', cursor: 'pointer', textAlign: 'center', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '10px', outline: 'none', WebkitTapHighlightColor: 'transparent', userSelect: 'none'
+  width: '100%', 
+  padding: '14px', 
+  marginBottom: '12px', 
+  backgroundColor: '#FF5958', 
+  backgroundImage: 'linear-gradient(135deg, #FF5958 0%, #E11D48 100%)',
+  color: '#FFFFFF', 
+  border: '1px solid rgba(255, 255, 255, 0.2)', 
+  borderRadius: '14px', 
+  fontWeight: '600', 
+  fontSize: '15px', 
+  cursor: 'pointer', 
+  textAlign: 'center', 
+  display: 'flex', 
+  justifyContent: 'center', 
+  alignItems: 'center', 
+  gap: '10px', 
+  outline: 'none', 
+  WebkitTapHighlightColor: 'transparent', 
+  userSelect: 'none',
+  boxShadow: '0 4px 14px rgba(255, 89, 88, 0.3)',
+  fontFamily: "'Plus Jakarta Sans', sans-serif"
 };
 
 const secondaryButtonStyle = {
-  ...actionButtonStyle, backgroundColor: 'transparent', border: `1px solid ${appTheme.buttonBg}`, color: appTheme.buttonBg,
+  ...actionButtonStyle, 
+  backgroundColor: 'rgba(197, 160, 89, 0.1)', 
+  backgroundImage: 'none',
+  border: '1px solid rgba(197, 160, 89, 0.3)', 
+  color: '#1A1816',
+  boxShadow: 'none'
 };
 
 const backButtonStyle = {
-  display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'transparent', border: 'none', outline: 'none', boxShadow: 'none', padding: '4px 0', cursor: 'pointer', marginBottom: '20px', fontSize: '16px', color: appTheme.text, WebkitTapHighlightColor: 'transparent', userSelect: 'none'
+  display: 'inline-flex', alignItems: 'center', gap: '6px', background: 'rgba(255, 255, 255, 0.6)', border: '1px solid rgba(197, 160, 89, 0.3)', outline: 'none', boxShadow: 'none', padding: '6px 12px', borderRadius: '12px', cursor: 'pointer', marginBottom: '20px', fontSize: '13px', fontWeight: '600', color: '#1A1816', WebkitTapHighlightColor: 'transparent', userSelect: 'none', transition: 'all 0.2s ease', fontFamily: "'Plus Jakarta Sans', sans-serif"
 };
 
 const inputStyle = {
-  width: '100%', padding: '12px', marginBottom: '12px', borderRadius: appTheme.radius, border: appTheme.border, fontSize: '16px', boxSizing: 'border-box', outline: 'none'
+  width: '100%', padding: '12px 14px', marginBottom: '12px', borderRadius: '12px', border: '1px solid rgba(197, 160, 89, 0.4)', fontSize: '13px', fontWeight: '500', boxSizing: 'border-box', outline: 'none', background: '#FFFFFF', color: '#1A1816', fontFamily: "'Plus Jakarta Sans', sans-serif"
 };
 
 const accordionHeaderStyle = {
-  display: 'flex', alignItems: 'center', justifyContent: 'flex-start', gap: '10px', padding: '12px 15px', border: appTheme.border, borderRadius: appTheme.radius, cursor: 'pointer', color: appTheme.brand, fontWeight: 'bold', backgroundColor: 'transparent', marginBottom: '10px', outline: 'none', WebkitTapHighlightColor: 'transparent', userSelect: 'none'
+  display: 'flex', alignItems: 'center', justifyContent: 'flex-start', gap: '10px', padding: '12px 15px', border: '1px solid rgba(197, 160, 89, 0.4)', borderRadius: '14px', cursor: 'pointer', color: '#FF5958', fontWeight: '700', backgroundColor: '#FFFFFF', marginBottom: '10px', outline: 'none', WebkitTapHighlightColor: 'transparent', userSelect: 'none', fontFamily: "'Plus Jakarta Sans', sans-serif"
 };
 
 // --- HELPER FOR PERSISTENCE ---
@@ -101,6 +127,9 @@ export default function App() {
   const [upiApp, setUpiApp] = useState('');
   const [upiId, setUpiId] = useState('');
   
+  // Custom Back Warning Modal State
+  const [isBackModalOpen, setIsBackModalOpen] = useState(false);
+  
   // State to track whether the "Our Story & Our Promise" card is expanded
   const [isStoryExpanded, setIsStoryExpanded] = useState(false);
 
@@ -109,6 +138,23 @@ export default function App() {
     if (view !== 'home') {
       setIsStoryExpanded(false);
     }
+  }, [view]);
+
+  // --- PWA BROWSER BACK BUTTON CUSTOM MODAL INTERCEPTOR ---
+  useEffect(() => {
+    if (view !== 'home') {
+      window.history.pushState({ view }, '', window.location.href);
+    }
+
+    const handlePopState = (event) => {
+      if (view !== 'home') {
+        window.history.pushState({ view }, '', window.location.href);
+        setIsBackModalOpen(true);
+      }
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
   }, [view]);
   
   // Haptic Micro-Feedback State
@@ -128,12 +174,12 @@ export default function App() {
 
   // --- THEME ---
   const theme = {
-    bg: '#FDF6E3', // Warm Beige
-    text: '#2B2B2B', // Main text
-    brand: '#FF5958', // Brand Red
-    buttonBg: '#4A443A', // Deep Earthy Coffee
-    border: '1px solid #D8C7A5',
-    radius: '12px'
+    bg: '#FFFDF9',
+    text: '#1A1816',
+    brand: '#FF5958',
+    buttonBg: '#FF5958',
+    border: '1px solid rgba(197, 160, 89, 0.4)',
+    radius: '20px'
   };
 
   useEffect(() => {
@@ -299,12 +345,12 @@ export default function App() {
     window.location.href = upiLink;
   };
 
-  if (!menuData) return <div style={{ padding: '40px', textAlign: 'center' }}>Loading menu...</div>;
+  if (!menuData) return <div style={{ padding: '40px', textAlign: 'center', fontFamily: "'Plus Jakarta Sans', sans-serif" }}>Loading menu...</div>;
 
   const total = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
 
   return (
-    <div style={{ height: '100dvh', display: 'flex', flexDirection: 'column', position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: theme.bg, color: theme.text, fontFamily: 'system-ui, sans-serif' }}>
+    <div style={{ height: '100dvh', display: 'flex', flexDirection: 'column', position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: theme.bg, color: theme.text, fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
       <LimitedOfferModal theme={theme} setView={setView} />
       <Header theme={theme} setView={setView} />
       <main style={{ flex: 1, paddingTop: '5px', paddingLeft: '20px', paddingRight: '20px', paddingBottom: '80px', overflowY: 'auto' }}>
@@ -463,6 +509,9 @@ export default function App() {
         />
       )}
 
+      {/* PWA Install Prompt Banner */}
+      <InstallPrompt theme={theme} />
+
       {!isStoryExpanded && (
         <Footer view={view} setView={setView} theme={theme} cart={cart} />
       )}
@@ -483,6 +532,98 @@ export default function App() {
           setSelectedItem={(item) => setActiveModal({ type: item ? 'VARIANTS' : null, data: item })}
           addToCart={addToCart}
         />
+      )}
+
+      {/* ================= CUSTOM BRANDED BACK WARNING MODAL ================= */}
+      {isBackModalOpen && (
+        <div 
+          onClick={() => setIsBackModalOpen(false)}
+          style={{
+            position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+            backgroundColor: 'rgba(20, 15, 12, 0.82)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            zIndex: 9999, padding: '16px', boxSizing: 'border-box'
+          }}
+        >
+          <div 
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              background: 'linear-gradient(135deg, #FFFDF9 0%, #FAF4EB 100%)', 
+              borderRadius: '24px', 
+              padding: '24px',
+              maxWidth: '360px', 
+              width: '100%', 
+              boxSizing: 'border-box',
+              position: 'relative', 
+              boxShadow: '0 20px 40px rgba(0,0,0,0.3)',
+              border: '1px solid rgba(197, 160, 89, 0.4)',
+              textAlign: 'center', 
+              display: 'flex', 
+              flexDirection: 'column', 
+              gap: '16px',
+              fontFamily: "'Plus Jakarta Sans', sans-serif"
+            }}
+          >
+            <h3 style={{ 
+              fontFamily: "'Cormorant Garamond', serif", 
+              fontSize: '21px', 
+              fontWeight: '700', 
+              color: '#1A1816', 
+              margin: 0,
+              textTransform: 'uppercase',
+              letterSpacing: '0.5px'
+            }}>
+              Leave Current Page?
+            </h3>
+            <p style={{ 
+              fontSize: '12.5px', 
+              color: '#78716C', 
+              margin: 0, 
+              lineHeight: '1.45',
+              fontWeight: '500' 
+            }}>
+              Are you sure you want to go back? Your current order progress or form entries may be lost.
+            </p>
+            <div style={{ display: 'flex', gap: '10px', marginTop: '6px' }}>
+              <button 
+                onClick={() => setIsBackModalOpen(false)}
+                style={{
+                  flex: 1,
+                  backgroundColor: 'rgba(197, 160, 89, 0.1)',
+                  color: '#1A1816',
+                  border: '1px solid rgba(197, 160, 89, 0.3)',
+                  padding: '12px',
+                  fontSize: '14px',
+                  fontWeight: '600',
+                  borderRadius: '14px',
+                  cursor: 'pointer'
+                }}
+              >
+                Stay Here
+              </button>
+              <button 
+                onClick={() => {
+                  setIsBackModalOpen(false);
+                  setView('home');
+                }}
+                style={{
+                  flex: 1,
+                  border: '1px solid rgba(255, 255, 255, 0.2)',
+                  background: 'linear-gradient(135deg, #FF5958 0%, #E11D48 100%)',
+                  color: '#FFFFFF',
+                  padding: '12px',
+                  fontSize: '14px',
+                  fontWeight: '600',
+                  borderRadius: '14px',
+                  cursor: 'pointer',
+                  boxShadow: '0 4px 14px rgba(255, 89, 88, 0.3)'
+                }}
+              >
+                Yes, Leave
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

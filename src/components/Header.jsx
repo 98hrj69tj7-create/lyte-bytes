@@ -2,17 +2,17 @@ import React from 'react';
 
 export default function Header({ theme = {}, setView }) {
   const activeTheme = {
-    brand: theme?.brand || '#FF5958', // Perfectly matches your official logo coral red
+    brand: theme?.brand || '#FF5958', // Official logo coral red
     text: theme?.text || '#2C221E',
-    border: theme?.border || '1px solid rgba(216, 199, 165, 0.4)',
-    bg: theme?.bg || '#FFFBF2'
+    border: theme?.border || '1px solid #FF5958',
+    bg: theme?.bg || '#FFFDF9'
   };
 
   return (
     <header style={{ 
       padding: '10px 16px', 
       backgroundColor: activeTheme.bg,
-      borderBottom: activeTheme.border, 
+      borderBottom: '1px solid #FF5958', 
       display: 'flex', 
       alignItems: 'center',
       justifyContent: 'space-between',
@@ -20,7 +20,8 @@ export default function Header({ theme = {}, setView }) {
       width: '100%',
       position: 'sticky',
       top: 0,
-      zIndex: 900
+      zIndex: 900,
+      fontFamily: "'Plus Jakarta Sans', sans-serif"
     }}>
       {/* Brand Logo & Title Group (Strictly Left-Aligned) */}
       <div 
@@ -37,42 +38,60 @@ export default function Header({ theme = {}, setView }) {
             borderRadius: '50%', 
             objectFit: 'cover',
             border: activeTheme.border,
-            boxShadow: '0 2px 6px rgba(0,0,0,0.08)'
+            boxShadow: '0 2px 8px rgba(197, 160, 89, 0.15)'
           }} 
         />
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
-          <h2 style={{ fontSize: '25px', margin: 0, color: activeTheme.brand, fontWeight: '800', letterSpacing: '1px', lineHeight: '1.1' }}>
+          <h2 style={{ 
+            fontFamily: "'Cormorant Garamond', serif",
+            fontSize: '25px', 
+            margin: 0, 
+            color: activeTheme.brand, 
+            fontWeight: '700', 
+            letterSpacing: '1px', 
+            lineHeight: '1' 
+          }}>
             LYTE BYTES
           </h2>
-          {/* Tagline with Brand-Matching Highlight on "You" */}
-          <span style={{ fontSize: '11px', color: '#776E62', fontWeight: '500', letterSpacing: '0.5px', textTransform: 'uppercase', marginTop: '2px' }}>
+          <span style={{ fontSize: '10px', color: '#78716C', fontWeight: '500', letterSpacing: '0.5px', textTransform: 'uppercase', marginTop: '0px' }}>
             Freshly Crafted For <span style={{ color: activeTheme.brand, fontWeight: '800' }}>"YOU"</span>
           </span>
         </div>
       </div>
 
-      {/* Compliance & Certifications */}
+      {/* Compliance & Certifications (Without Pill Backgrounds) */}
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', justifyContent: 'center', gap: '1px' }}>
         {/* FSSAI Row */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+        <div style={{ 
+          display: 'flex', 
+          alignItems: 'center', 
+          gap: '4px',
+          padding: '0px'
+        }}>
           <img 
             src="/Fssai.png" 
             alt="FSSAI" 
-            style={{ width: '20px', height: '18px', objectFit: 'contain' }} 
+            style={{ width: '16px', height: '12px', objectFit: 'contain' }} 
           />
-          <span style={{ fontSize: '10px', fontWeight: '500', color: activeTheme.text, letterSpacing: '0.2px'}}>
+          <span style={{ fontSize: '9px', fontWeight: '600', color: '#8A6D2B', letterSpacing: '0.2px'}}>
             21225008002806
           </span>
         </div>
-        {/* Halal Row with Logo */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+        
+        {/* Halal Row */}
+        <div style={{ 
+          display: 'flex', 
+          alignItems: 'center', 
+          gap: '4px',
+          padding: '0px'
+        }}>
           <img 
             src="/halallogo.png" 
             alt="Halal" 
-            style={{ width: '20px', height: '15px', objectFit: 'contain' }} 
+            style={{ width: '16px', height: '12px', objectFit: 'contain' }} 
           />
-          <span style={{ fontSize: '10px', fontWeight: '500', color: activeTheme.text, letterSpacing: '0.2px'}}>
-            Halal compliant
+          <span style={{ fontSize: '9px', fontWeight: '600', color: '#8A6D2B', letterSpacing: '0.2px'}}>
+            HALAL COMPLIANT
           </span>
         </div>
       </div>

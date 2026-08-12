@@ -4,37 +4,37 @@ import { Flame, Sparkles, Award, Zap, Clock, Star, ChefHat } from 'lucide-react'
 const TAG_CONFIG = {
   BEST_SELLER: {
     label: 'Best Seller',
-    bg: 'linear-gradient(135deg, #FFD700 0%, #FFA500 100%)',
-    color: '#14120F',
+    bg: 'linear-gradient(135deg, #FCD34D 0%, #F59E0B 100%)', // Gold / Champagne
+    color: '#1A1816',
     icon: Award,
   },
   HOT: {
     label: 'Hot',
-    bg: 'linear-gradient(135deg, #FF5958 0%, #FF2A2A 100%)',
+    bg: 'linear-gradient(135deg, #FF5958 0%, #E11D48 100%)', // Coral Red
     color: '#FFFFFF',
     icon: Flame,
   },
   NEW: {
     label: 'New',
-    bg: 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
+    bg: 'linear-gradient(135deg, #10B981 0%, #059669 100%)', // Emerald Green
     color: '#FFFFFF',
     icon: Sparkles,
   },
   FAST_MOVING: {
     label: 'Fast Moving',
-    bg: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
+    bg: 'linear-gradient(135deg, #06B6D4 0%, #0891B2 100%)', // Ocean Cyan / Blue
     color: '#FFFFFF',
     icon: Zap,
   },
   CHEFS_SPECIAL: {
     label: "Chef's Special",
-    bg: 'linear-gradient(135deg, #8B5CF6 0%, #6D28D9 100%)',
+    bg: 'linear-gradient(135deg, #8B5CF6 0%, #6D28D9 100%)', // Royal Purple
     color: '#FFFFFF',
     icon: ChefHat,
   },
   LIMITED: {
     label: 'Limited',
-    bg: 'linear-gradient(135deg, #EF4444 0%, #991B1B 100%)',
+    bg: 'linear-gradient(135deg, #6366F1 0%, #4F46E5 100%)', // Rich Indigo
     color: '#FFFFFF',
     icon: Clock,
   }
@@ -43,7 +43,7 @@ const TAG_CONFIG = {
 export default function ProductBadge({ tagKey }) {
   const config = TAG_CONFIG[tagKey?.toUpperCase()] || {
     label: tagKey,
-    bg: '#FF5958',
+    bg: 'linear-gradient(135deg, #FF5958 0%, #E11D48 100%)',
     color: '#FFFFFF',
     icon: Star,
   };
@@ -64,9 +64,10 @@ export default function ProductBadge({ tagKey }) {
         fontWeight: '800',
         letterSpacing: '0.4px',
         textTransform: 'uppercase',
-        boxShadow: '0 4px 12px rgba(0, 0, 0, 0.2)',
+        boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
         whiteSpace: 'nowrap',
         backdropFilter: 'blur(4px)',
+        fontFamily: "'Plus Jakarta Sans', sans-serif"
       }}
     >
       {IconComponent && <IconComponent size={12} strokeWidth={2.5} />}

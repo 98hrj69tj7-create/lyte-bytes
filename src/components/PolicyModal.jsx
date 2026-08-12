@@ -6,7 +6,7 @@ import React from 'react';
  * Customisation Guide:
  * - Backdrop: Clicking anywhere outside the modal box triggers `onClose` to dismiss it.
  * - Card Container: Uses `stopPropagation()` to ensure interacting inside the modal doesn't accidentally close it.
- * - Header: The "X" button has been completely removed.
+ * - Header: Clean artisanal title header.
  * - Footer: The agreement section has been completely removed.
  */
 export default function PolicyModal({ 
@@ -19,13 +19,13 @@ export default function PolicyModal({
   // Return null if the modal is not active
   if (!isOpen) return null;
 
-  // Active theme configuration fallback values
+  // Active theme configuration fallback values matching the luxury boutique system
   const activeTheme = {
     brand: theme?.brand || '#FF5958',
-    text: theme?.text || '#2C221E',
-    bg: '#FFFBF2',
+    text: theme?.text || '#1A1816',
+    bg: '#FFFDF9',
     cardBg: '#FFFFFF',
-    border: '#EFECE6',
+    border: '1px solid rgba(197, 160, 89, 0.4)',
   };
 
   return (
@@ -38,45 +38,48 @@ export default function PolicyModal({
         left: 0, 
         right: 0, 
         bottom: 0,
-        background: 'rgba(46, 40, 40, 0.77)', 
+        backgroundColor: 'rgba(20, 15, 12, 0.82)', 
         zIndex: 1200, 
         display: 'flex',
-        backdropFilter: 'blur(15px)', 
-        WebkitBackdropFilter: 'blur(20px)',
+        backdropFilter: 'blur(8px)', 
+        WebkitBackdropFilter: 'blur(8px)',
         alignItems: 'center', 
         justifyContent: 'center', 
-        padding: '12px', 
+        padding: '16px', 
         boxSizing: 'border-box'
       }}
     >
-      {/* 2. Inner Modal Card: e.stopPropagation() prevents clicks inside from triggering the backdrop close */}
+      {/* 2. Inner Modal Card: e.stopPropagation() prevents clicks inside from triggering backdrop close */}
       <div 
         onClick={(e) => e.stopPropagation()}
         style={{
-          background: activeTheme.bg, 
+          background: 'linear-gradient(135deg, #FFFDF9 0%, #FAF4EB 100%)', 
           width: '100%', 
           maxWidth: '460px', 
           maxHeight: '85vh',
-          borderRadius: '16px', 
-          border: `2px solid ${activeTheme.brand}`, 
+          borderRadius: '24px', 
+          border: '1px solid rgba(197, 160, 89, 0.4)', 
           display: 'flex',
           flexDirection: 'column', 
           overflow: 'hidden', 
-          boxShadow: '0 16px 40px rgba(0,0,0,0.25)',
-          boxSizing: 'border-box'
+          boxShadow: '0 20px 40px rgba(0,0,0,0.3)',
+          boxSizing: 'border-box',
+          fontFamily: "'Plus Jakarta Sans', sans-serif"
         }}
       >
-        {/* Header (X button successfully removed) */}
+        {/* Header */}
         <div style={{
-          padding: '10px 20px', 
-          background: activeTheme.bg, 
+          padding: '16px 20px', 
+          background: 'transparent', 
+          borderBottom: '1px solid rgba(197, 160, 89, 0.25)',
           display: 'flex', 
           alignItems: 'center', 
           justifyContent: 'space-between'
         }}>
           <div style={{ 
-            fontWeight: '800', 
-            fontSize: '15px', 
+            fontFamily: "'Cormorant Garamond', serif",
+            fontWeight: '700', 
+            fontSize: '20px', 
             color: activeTheme.brand, 
             textTransform: 'uppercase', 
             letterSpacing: '0.8px' 
@@ -87,15 +90,15 @@ export default function PolicyModal({
 
         {/* Content Body with Elite Tight Spacing */}
         <div style={{ 
-          padding: '12px', 
+          padding: '16px 20px', 
           overflowY: 'auto', 
           display: 'flex', 
           flexDirection: 'column', 
-          gap: '8px',
+          gap: '12px',
           boxSizing: 'border-box',
           textAlign: 'left',
           fontSize: '12px',
-          color: '#665C52',
+          color: '#78716C',
           lineHeight: '1.5'
         }}>
           {/* Automatically styles any <p> tags passed from parent into clean micro-cards */}
@@ -106,10 +109,10 @@ export default function PolicyModal({
                   key={index}
                   style={{
                     background: activeTheme.cardBg,
-                    border: `1px solid ${activeTheme.border}`,
-                    borderRadius: '10px',
+                    border: '1px dashed #C5A059',
+                    borderRadius: '14px',
                     padding: '12px 14px',
-                    boxShadow: '0 2px 6px rgba(0,0,0,0.02)',
+                    boxShadow: '0 4px 16px rgba(44, 34, 30, 0.04)',
                     display: 'flex',
                     flexDirection: 'column',
                     gap: '4px'

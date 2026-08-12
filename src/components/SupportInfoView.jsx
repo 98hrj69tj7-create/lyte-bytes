@@ -41,17 +41,18 @@ function TestimonialCard({ item, onClick, renderWatermarkSvg, renderSourceLogo, 
         width: '260px',
         height: '124px',
         backgroundColor: '#FFFFFF',
-        border: isGroup2 ? '1px solid rgba(212, 175, 55, 0.25)' : '1px solid #D4AF37', 
-        borderRadius: '12px', 
-        padding: '8px 10px',
-        boxShadow: '0 4px 14px rgba(44, 34, 30, 0.03)', 
+        border: '1px solid rgba(197, 160, 89, 0.4)', 
+        borderRadius: '14px', 
+        padding: '10px 12px',
+        boxShadow: '0 4px 16px rgba(44, 34, 30, 0.04)', 
         display: 'flex', 
         flexDirection: 'column',
         justifyContent: 'space-between', 
         textAlign: 'left',
         boxSizing: 'border-box',
         position: 'relative',
-        overflow: 'hidden'
+        overflow: 'hidden',
+        fontFamily: "'Plus Jakarta Sans', sans-serif"
       }}
     >
       <div style={{
@@ -78,11 +79,12 @@ function TestimonialCard({ item, onClick, renderWatermarkSvg, renderSourceLogo, 
             className="testimonial-text-clamp" 
             style={{ 
               margin: 0, 
-              fontSize: isGroup2 ? '11px' : '12px', 
+              fontSize: isGroup2 ? '11.5px' : '12px', 
               color: activeTheme.text, 
-              lineHeight: '1.35', 
+              lineHeight: '1.4', 
               fontStyle: isGroup2 ? 'italic' : 'normal',
-              fontFamily: 'serif' 
+              fontFamily: "'Cormorant Garamond', serif",
+              fontWeight: '500'
             }}
           >
             "{item.text}"
@@ -94,7 +96,7 @@ function TestimonialCard({ item, onClick, renderWatermarkSvg, renderSourceLogo, 
           )}
         </div>
 
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '10.5px', borderTop: '1px solid rgba(216, 199, 165, 0.2)', paddingTop: '4px', marginTop: '2px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '10.5px', borderTop: '1px solid rgba(197, 160, 89, 0.25)', paddingTop: '6px', marginTop: '2px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
             <span style={{ fontWeight: isGroup2 ? '700' : '600', color: activeTheme.text }}>
               {isGroup2 ? `— ${item.author}` : item.author}
@@ -103,16 +105,16 @@ function TestimonialCard({ item, onClick, renderWatermarkSvg, renderSourceLogo, 
             {item.imageUrl && (
               <span style={{
                 fontSize: '9px',
-                color: '#B89728',
-                backgroundColor: 'rgba(212, 175, 55, 0.12)',
-                padding: '1px 5px',
+                color: '#C5A059',
+                backgroundColor: 'rgba(197, 160, 89, 0.12)',
+                padding: '1px 6px',
                 borderRadius: '6px',
                 fontWeight: '700',
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: '3px'
               }}>
-                <Camera size={10} color="#B89728" /> Photo
+                <Camera size={10} color="#C5A059" /> Photo
               </span>
             )}
           </div>
@@ -120,7 +122,7 @@ function TestimonialCard({ item, onClick, renderWatermarkSvg, renderSourceLogo, 
           <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
             {renderSourceLogo(item.source)}
             {isGroup2 && (
-              <span style={{ fontSize: '9px', color: '#8C8275', textTransform: 'capitalize', fontWeight: '600' }}>
+              <span style={{ fontSize: '9px', color: '#78716C', textTransform: 'capitalize', fontWeight: '600' }}>
                 {item.source}
               </span>
             )}
@@ -207,9 +209,9 @@ export default function SupportInfoView({
 
   const activeTheme = {
     brand: theme?.brand || '#FF5958',
-    text: theme?.text || '#2C221E',
-    border: theme?.border || '1px solid rgba(212, 175, 55, 0.25)',
-    bg: theme?.bg || '#FFFFFF',
+    text: theme?.text || '#1A1816',
+    border: theme?.border || '1px solid rgba(197, 160, 89, 0.4)',
+    bg: theme?.bg || '#FFFDF9',
     radius: theme?.radius || '20px'
   };
 
@@ -330,9 +332,10 @@ export default function SupportInfoView({
       overflowX: 'hidden', 
       flex: 1, 
       paddingBottom: '140px', 
-      paddingTop: '8px',
+      paddingTop: '6px',
       boxSizing: 'border-box',
-      width: '100%'
+      width: '100%',
+      fontFamily: "'Plus Jakarta Sans', sans-serif"
     }}>
       <style>{`
         @keyframes scrollTicker {
@@ -368,7 +371,7 @@ export default function SupportInfoView({
         .support-card:hover {
           transform: translateY(-3px);
           box-shadow: 0 12px 30px rgba(44, 34, 30, 0.08) !important;
-          border-color: rgba(212, 175, 55, 0.5) !important;
+          border-color: rgba(197, 160, 89, 0.6) !important;
         }
         .testimonial-text-clamp {
           display: -webkit-box;
@@ -395,11 +398,11 @@ export default function SupportInfoView({
         }
         .ticker-mask-container::before {
           left: 0;
-          background: linear-gradient(to right, #FFFBF2, rgba(255, 251, 242, 0));
+          background: linear-gradient(to right, #FFFDF9, rgba(255, 253, 249, 0));
         }
         .ticker-mask-container::after {
           right: 0;
-          background: linear-gradient(to left, #FFFBF2, rgba(255, 251, 242, 0));
+          background: linear-gradient(to left, #FFFDF9, rgba(255, 253, 249, 0));
         }
       `}</style>
 
@@ -408,28 +411,30 @@ export default function SupportInfoView({
         <button 
           onClick={() => setView('home')} 
           style={{ 
-            border: 'none', 
+            background: 'rgba(255, 255, 255, 0.6)', 
+            border: '1px solid rgba(197, 160, 89, 0.3)', 
             cursor: 'pointer', 
             display: 'flex', 
             alignItems: 'center', 
             gap: '6px', 
             color: activeTheme.text, 
-            fontSize: '14px', 
-            fontWeight: '700', 
-            padding: '4px 8px', 
-            borderRadius: '8px', 
-            backgroundColor: 'rgba(0,0,0,0.04)', 
-            zIndex: 1 
+            fontSize: '13px', 
+            fontWeight: '600', 
+            padding: '6px 12px', 
+            borderRadius: '12px', 
+            zIndex: 1,
+            transition: 'all 0.2s ease'
           }}
         >
-          <ArrowLeft size={16}/> Menu
+          <ArrowLeft size={15}/> Menu
         </button>
         <h2 style={{ 
           position: 'absolute', 
           left: 0, 
           right: 0, 
           textAlign: 'center', 
-          fontSize: '16px', 
+          fontFamily: "'Cormorant Garamond', serif",
+          fontSize: '21px', 
           color: '#FF5958', 
           margin: 0, 
           fontWeight: '700', 
@@ -443,10 +448,12 @@ export default function SupportInfoView({
 
       {/* Main Container Card */}
       <div style={{ 
-        border: '1px solid #FF5958', borderRadius: activeTheme.radius,
-        background: 'linear-gradient(145deg, #FFFBF2 0%, #F9F3E8 100%)', padding: '20px', 
-        boxShadow: '0 10px 35px rgba(44, 34, 30, 0.05)',
-        display: 'flex', flexDirection: 'column', gap: '12px', boxSizing: 'border-box', width: '100%'
+        border: '1px solid rgba(197, 160, 89, 0.4)', 
+        borderRadius: activeTheme.radius,
+        background: 'linear-gradient(135deg, #FFFDF9 0%, #FAF4EB 100%)', 
+        padding: '18px', 
+        boxShadow: '0 8px 24px rgba(44, 34, 30, 0.06)',
+        display: 'flex', flexDirection: 'column', gap: '14px', boxSizing: 'border-box', width: '100%'
       }}>
 
         {/* 🌟 Festive Gift Hampers / Bulk Order Callout Card */}
@@ -456,10 +463,10 @@ export default function SupportInfoView({
           style={{ 
             display: 'flex', 
             alignItems: 'center', 
-            justify: 'space-between',
-            padding: '12px 16px', 
-            background: 'linear-gradient(135deg, #FFF9EC 0%, #F3E6D0 100%)', 
-            border: '1px solid #FF5958', 
+            justifyContent: 'space-between',
+            padding: '14px 16px', 
+            background: 'linear-gradient(135deg, #FFFDF9 0%, #FAF4EB 100%)', 
+            border: '1px dashed #C5A059', 
             borderRadius: '16px', 
             boxShadow: '0 4px 16px rgba(44, 34, 30, 0.04)',
             boxSizing: 'border-box',
@@ -474,7 +481,7 @@ export default function SupportInfoView({
             left: '-150%',
             width: '150%',
             height: '100%',
-            background: 'linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.28), transparent)',
+            background: 'linear-gradient(90deg, transparent, rgba(197, 160, 89, 0.2), transparent)',
             transform: 'skewX(-20deg)',
             animation: 'prismSweep 4s infinite ease-in-out',
             pointerEvents: 'none',
@@ -483,27 +490,28 @@ export default function SupportInfoView({
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flex: 1, minWidth: 0, position: 'relative', zIndex: 2 }}>
             <div style={{ 
-              backgroundColor: 'rgba(212, 175, 55, 0.22)',
+              backgroundColor: 'rgba(197, 160, 89, 0.15)',
+              border: '1px solid rgba(197, 160, 89, 0.35)',
               borderRadius: '50%',
-              width: '38px',
-              height: '38px',
+              width: '40px',
+              height: '40px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               flexShrink: 0 
             }}>
-              <Gift size={20} color="#D4AF37" />
+              <Gift size={20} color="#C5A059" />
             </div>
             <div style={{ textAlign: 'left', minWidth: 0 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '1px' }}>
-                <span style={{ fontSize: '9px', fontWeight: '800', color: '#B89728', letterSpacing: '0.8px', textTransform: 'uppercase' }}>
+                <span style={{ fontSize: '10px', fontWeight: '800', color: '#8A6D2B', letterSpacing: '0.8px', textTransform: 'uppercase' }}>
                   ✦ Bespoke Gifting
                 </span>
               </div>
-              <h3 style={{ margin: '0 0 1px 0', color: activeTheme.text, fontSize: '13.5px', fontWeight: '700', letterSpacing: '-0.2px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+              <h3 style={{ margin: '0 0 2px 0', color: activeTheme.text, fontSize: '17px', fontWeight: '700', fontFamily: "'Cormorant Garamond', serif", whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                 Festive Bundles & Hampers
               </h3>
-              <p style={{ margin: 0, color: '#7A6F61', fontSize: '11px', fontWeight: '400', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+              <p style={{ margin: 0, color: '#78716C', fontSize: '11.5px', fontWeight: '500', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                 Curated gourmet boxes for celebrations
               </p>
             </div>
@@ -517,32 +525,32 @@ export default function SupportInfoView({
             position: 'relative',
             zIndex: 2
           }}>
-            <ChevronRight size={18} color="#D4AF37" strokeWidth={2.5} />
+            <ChevronRight size={18} color="#C5A059" strokeWidth={2.5} />
           </div>
         </div>
 
         {/* 1. Give Feedback Container */}
         <a href="https://g.page/r/CRodKxCU6unDEBM/review" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none', display: 'block', width: '100%' }}>
-          <div className="support-card" style={{ display: 'flex', alignItems: 'center', padding: '10px 18px', backgroundColor: '#FFFFFF', border: activeTheme.border, borderRadius: '14px', boxShadow: '0 4px 15px rgba(44, 34, 30, 0.03)' }}>
-            <div style={{width: '42px', height: '42px', borderRadius: '12px', marginRight: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: '0' }}>
-              <CheckCircle size={30} color="#D4AF37" />
+          <div className="support-card" style={{ display: 'flex', alignItems: 'center', padding: '14px 18px', backgroundColor: '#FFFFFF', border: '1px solid rgba(197, 160, 89, 0.4)', borderRadius: '14px', boxShadow: '0 4px 16px rgba(44, 34, 30, 0.04)' }}>
+            <div style={{ width: '40px', height: '40px', backgroundColor: 'rgba(197, 160, 89, 0.12)', border: '1px solid rgba(197, 160, 89, 0.3)', borderRadius: '12px', marginRight: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: '0' }}>
+              <CheckCircle size={22} color="#C5A059" />
             </div>
             <div style={{ textAlign: 'left', flex: 1 }}>
-              <h3 style={{ margin: '0 0 2px 0', color: activeTheme.text, fontSize: '14.5px', fontWeight: '700', letterSpacing: '0.2px' }}>Leave a Review</h3>
-              <p style={{ margin: 0, color: '#8C8275', fontSize: '12px', fontWeight: '500' }}>Share your experience</p>
+              <h3 style={{ margin: '0 0 2px 0', color: activeTheme.text, fontSize: '16px', fontWeight: '700', fontFamily: "'Cormorant Garamond', serif" }}>Leave a Review</h3>
+              <p style={{ margin: 0, color: '#78716C', fontSize: '11.5px', fontWeight: '500' }}>Share your experience</p>
             </div>
-            <ChevronRight size={16} color="#B5ACA1" />
+            <ChevronRight size={16} color="#78716C" />
           </div>
         </a>
 
         {/* 2. Wall of Love Section */}
-        <div style={{ borderTop: `1px dashed #D4AF37`, paddingTop: '12px', display: 'flex', flexDirection: 'column', gap: '10px', overflow: 'hidden' }}>
+        <div style={{ borderTop: '1px solid rgba(197, 160, 89, 0.35)', paddingTop: '14px', display: 'flex', flexDirection: 'column', gap: '10px', overflow: 'hidden' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <span style={{ fontSize: '12px', fontWeight: '800', color: '#776E62', textTransform: 'uppercase', letterSpacing: '1.5px', textAlign: 'left' }}>
+            <span style={{ fontSize: '11.5px', fontWeight: '800', color: '#78716C', textTransform: 'uppercase', letterSpacing: '1.2px', textAlign: 'left' }}>
               The Wall of Love
             </span>
-            <span style={{ fontSize: '12px', color: '#8C8275', display: 'flex', alignItems: 'center', gap: '4px', fontWeight: '600' }}>
-              <Star size={12} fill="#D4AF37" color="#D4AF37" /> Verified Curation
+            <span style={{ fontSize: '11.5px', color: '#8A6D2B', display: 'flex', alignItems: 'center', gap: '4px', fontWeight: '700' }}>
+              <Star size={12} fill="#C5A059" color="#C5A059" /> Verified Curation
             </span>
           </div>
 
@@ -582,31 +590,31 @@ export default function SupportInfoView({
         </div>
 
         {/* 3. Support & Terms Options Section */}
-        <div style={{ borderTop: `1px dashed #D4AF37`, paddingTop: '12px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+        <div style={{ borderTop: '1px solid rgba(197, 160, 89, 0.35)', paddingTop: '14px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
           
           <a href="https://wa.me/9108286886" onClick={handleWhatsAppClick} style={{ textDecoration: 'none', display: 'block', width: '100%' }}>
-            <div className="support-card" style={{ display: 'flex', alignItems: 'center', padding: '10px 18px', backgroundColor: '#FFFFFF', border: activeTheme.border, borderRadius: '14px', boxShadow: '0 4px 15px rgba(44, 34, 30, 0.03)' }}>
-              <div style={{width: '42px', height: '42px', borderRadius: '12px', marginRight: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: '0' }}>
-                <MessageCircle size={30} color="#25D366" />
+            <div className="support-card" style={{ display: 'flex', alignItems: 'center', padding: '14px 18px', backgroundColor: '#FFFFFF', border: '1px solid rgba(197, 160, 89, 0.4)', borderRadius: '14px', boxShadow: '0 4px 16px rgba(44, 34, 30, 0.04)' }}>
+              <div style={{ width: '40px', height: '40px', backgroundColor: 'rgba(37, 211, 102, 0.12)', border: '1px solid rgba(37, 211, 102, 0.3)', borderRadius: '12px', marginRight: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: '0' }}>
+                <MessageCircle size={22} color="#25D366" />
               </div>
               <div style={{ textAlign: 'left', flex: 1 }}>
-                <h3 style={{ margin: '0 0 2px 0', color: activeTheme.text, fontSize: '14.5px', fontWeight: '700', letterSpacing: '0.2px' }}>WhatsApp</h3>
-                <p style={{ margin: 0, color: '#8C8275', fontSize: '12px', fontWeight: '500' }}>Immediate bespoke assistance</p>
+                <h3 style={{ margin: '0 0 2px 0', color: activeTheme.text, fontSize: '16px', fontWeight: '700', fontFamily: "'Cormorant Garamond', serif" }}>WhatsApp</h3>
+                <p style={{ margin: 0, color: '#78716C', fontSize: '11.5px', fontWeight: '500' }}>Immediate bespoke assistance</p>
               </div>
-              <ChevronRight size={16} color="#B5ACA1" />
+              <ChevronRight size={16} color="#78716C" />
             </div>
           </a>
 
           <a href="mailto:lytebytesblr@gmail.com" style={{ textDecoration: 'none', display: 'block', width: '100%' }}>
-            <div className="support-card" style={{ display: 'flex', alignItems: 'center', padding: '10px 18px', backgroundColor: '#FFFFFF', border: activeTheme.border, borderRadius: '14px', boxShadow: '0 4px 15px rgba(44, 34, 30, 0.03)' }}>
-              <div style={{ width: '42px', height: '42px', borderRadius: '12px', marginRight: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: '0' }}>
-                <Mail size={30} color="#D4AF37" />
+            <div className="support-card" style={{ display: 'flex', alignItems: 'center', padding: '14px 18px', backgroundColor: '#FFFFFF', border: '1px solid rgba(197, 160, 89, 0.4)', borderRadius: '14px', boxShadow: '0 4px 16px rgba(44, 34, 30, 0.04)' }}>
+              <div style={{ width: '40px', height: '40px', backgroundColor: 'rgba(197, 160, 89, 0.12)', border: '1px solid rgba(197, 160, 89, 0.3)', borderRadius: '12px', marginRight: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: '0' }}>
+                <Mail size={22} color="#C5A059" />
               </div>
               <div style={{ textAlign: 'left', flex: 1 }}>
-                <h3 style={{ margin: '0 0 2px 0', color: activeTheme.text, fontSize: '14.5px', fontWeight: '700', letterSpacing: '0.2px' }}>Email</h3>
-                <p style={{ margin: 0, color: '#8C8275', fontSize: '12px', fontWeight: '500' }}>Detailed queries & bulk orders</p>
+                <h3 style={{ margin: '0 0 2px 0', color: activeTheme.text, fontSize: '16px', fontWeight: '700', fontFamily: "'Cormorant Garamond', serif" }}>Email</h3>
+                <p style={{ margin: 0, color: '#78716C', fontSize: '11.5px', fontWeight: '500' }}>Detailed queries & bulk orders</p>
               </div>
-              <ChevronRight size={16} color="#B5ACA1" />
+              <ChevronRight size={16} color="#78716C" />
             </div>
           </a>
 
@@ -614,18 +622,18 @@ export default function SupportInfoView({
             <div 
               className="support-card" 
               onClick={() => setTermsOpen(!termsOpen)}
-              style={{ display: 'flex', alignItems: 'center', padding: '14px 18px', backgroundColor: '#FFFFFF', border: activeTheme.border, borderRadius: '14px', boxShadow: '0 4px 15px rgba(44, 34, 30, 0.03)' }}
+              style={{ display: 'flex', alignItems: 'center', padding: '14px 18px', backgroundColor: '#FFFFFF', border: '1px solid rgba(197, 160, 89, 0.4)', borderRadius: '14px', boxShadow: '0 4px 16px rgba(44, 34, 30, 0.04)', cursor: 'pointer' }}
             >
-              <div style={{ width: '42px', height: '42px', borderRadius: '12px', marginRight: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: '0' }}>
-                <FileText size={30} color="#D4AF37" />
+              <div style={{ width: '40px', height: '40px', backgroundColor: 'rgba(197, 160, 89, 0.12)', border: '1px solid rgba(197, 160, 89, 0.3)', borderRadius: '12px', marginRight: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: '0' }}>
+                <FileText size={22} color="#C5A059" />
               </div>
               <div style={{ textAlign: 'left', flex: 1 }}>
-                <h3 style={{ margin: '0 0 2px 0', color: activeTheme.text, fontSize: '14.5px', fontWeight: '700', letterSpacing: '0.2px' }}>General Guidelines</h3>
-                <p style={{ margin: 0, color: '#8C8275', fontSize: '12px', fontWeight: '500' }}>Terms, shipping & privacy</p>
+                <h3 style={{ margin: '0 0 2px 0', color: activeTheme.text, fontSize: '16px', fontWeight: '700', fontFamily: "'Cormorant Garamond', serif" }}>General Guidelines</h3>
+                <p style={{ margin: 0, color: '#78716C', fontSize: '11.5px', fontWeight: '500' }}>Terms, shipping & privacy</p>
               </div>
               <ChevronRight 
                 size={16} 
-                color="#B5ACA1" 
+                color="#78716C" 
                 style={{ 
                   transform: termsOpen ? 'rotate(90deg)' : 'rotate(0deg)', 
                   transition: 'transform 0.25s cubic-bezier(0.16, 1, 0.3, 1)' 
@@ -635,7 +643,7 @@ export default function SupportInfoView({
 
             {termsOpen && (
               <div style={{ paddingTop: '4px', paddingBottom: '4px' }}>
-                <GeneralTermsModalContent brandColor="#D4AF37" />
+                <GeneralTermsModalContent brandColor="#C5A059" />
               </div>
             )}
           </div>
@@ -650,20 +658,30 @@ export default function SupportInfoView({
           onClick={() => setSelectedReview(null)}
           style={{
             position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
-            backgroundColor: 'rgba(44,34,30,0.6)', backdropFilter: 'blur(15px)',
+            backgroundColor: 'rgba(20, 15, 12, 0.82)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            zIndex: 9999, padding: '20px'
+            zIndex: 9999, padding: '16px', boxSizing: 'border-box'
           }}
         >
           <div 
             onClick={(e) => e.stopPropagation()}
             style={{
-              backgroundColor: '#FFFBF2', borderRadius: '20px', padding: '24px',
-              maxWidth: '380px', width: '100%', boxSizing: 'border-box',
-              position: 'relative', boxShadow: '0 20px 40px rgba(0,0,0,0.2)',
-              border: '1px solid rgba(212, 175, 55, 0.4)',
-              textAlign: 'left', display: 'flex', flexDirection: 'column', gap: '16px',
-              maxHeight: '85vh', overflowY: 'auto'
+              background: 'linear-gradient(135deg, #FFFDF9 0%, #FAF4EB 100%)', 
+              borderRadius: '24px', 
+              padding: '24px',
+              maxWidth: '380px', 
+              width: '100%', 
+              boxSizing: 'border-box',
+              position: 'relative', 
+              boxShadow: '0 20px 40px rgba(0,0,0,0.3)',
+              border: '1px solid rgba(197, 160, 89, 0.4)',
+              textAlign: 'left', 
+              display: 'flex', 
+              flexDirection: 'column', 
+              gap: '16px',
+              maxHeight: '85vh', 
+              overflowY: 'auto',
+              fontFamily: "'Plus Jakarta Sans', sans-serif"
             }}
           >
             <div style={{
@@ -686,16 +704,15 @@ export default function SupportInfoView({
             <div style={{ position: 'relative', zIndex: '1', display: 'flex', flexDirection: 'column', gap: '14px' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                  <Star size={12} fill="#D4AF37" color="#D4AF37" />
-                  <span style={{ fontSize: '12px', fontWeight: '800', color: '#D4AF37', textTransform: 'uppercase', letterSpacing: '1px' }}>
+                  <Star size={12} fill="#C5A059" color="#C5A059" />
+                  <span style={{ fontSize: '11px', fontWeight: '800', color: '#8A6D2B', textTransform: 'uppercase', letterSpacing: '1px' }}>
                     Verified {selectedReview.source} Review
                   </span>
                 </div>
                 <button 
                   onClick={() => setSelectedReview(null)}
                   style={{
-                    background: 'none', border: 'none', fontSize: '16px', color: '#8C8275',
-                    cursor: 'pointer', padding: '0 4px', lineHeight: '1'
+                    background: 'rgba(255, 255, 255, 0.6)', border: '1px solid rgba(197, 160, 89, 0.3)', borderRadius: '50%', width: '28px', height: '28px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', padding: 0
                   }}
                 >
                   ✕
@@ -706,9 +723,9 @@ export default function SupportInfoView({
               {selectedReview.imageUrl && (
                 <div style={{
                   width: '100%',
-                  borderRadius: '12px',
+                  borderRadius: '14px',
                   overflow: 'hidden',
-                  border: '1px solid rgba(212, 175, 55, 0.35)',
+                  border: '1px solid rgba(197, 160, 89, 0.4)',
                   boxShadow: '0 6px 16px rgba(0,0,0,0.08)',
                   backgroundColor: '#000'
                 }}>
@@ -725,12 +742,12 @@ export default function SupportInfoView({
                 </div>
               )}
 
-              <p style={{ margin: 0, fontSize: '12.5px', color: activeTheme.text, lineHeight: '1.65', fontFamily: 'serif' }}>
+              <p style={{ margin: 0, fontSize: '13.5px', color: activeTheme.text, lineHeight: '1.6', fontFamily: "'Cormorant Garamond', serif", fontWeight: '500' }}>
                 "{selectedReview.text}"
               </p>
 
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '10px', borderTop: '1px solid rgba(216, 199, 165, 0.3)' }}>
-                <span style={{ fontWeight: '700', color: activeTheme.text, fontSize: '14px' }}>{selectedReview.author}</span>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '10px', borderTop: '1px solid rgba(197, 160, 89, 0.3)' }}>
+                <span style={{ fontWeight: '700', color: activeTheme.text, fontSize: '15px', fontFamily: "'Cormorant Garamond', serif" }}>{selectedReview.author}</span>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                   {renderSourceLogo(selectedReview.source)}
                 </div>

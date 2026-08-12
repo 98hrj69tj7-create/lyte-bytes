@@ -75,7 +75,7 @@ const TAG_STYLES = {
    ========================================================================== */
 const STORAGE_DATA = {
   beverages: {
-    title: "Directions - Non-Alcoholic Wine",
+    title: "Directions: Non-Alcoholic Wine",
     shelfLife: "12 Months (Unopened) / 5 Days (Opened)",
     steps: [
       "Store unopened bottles in a cool, dark location away from direct sunlight.",
@@ -84,7 +84,7 @@ const STORAGE_DATA = {
     ]
   },
   dryBakery: {
-    title: "Directions - Cookies & Festive Treats",
+    title: "Directions: Cookies & Festive Treats",
     shelfLife: "30–40 Days",
     steps: [
       "Store in an airtight tin or glass container immediately after opening.",
@@ -93,7 +93,7 @@ const STORAGE_DATA = {
     ]
   },
   freshCakes: {
-    title: "Directions - Fresh Cakes & Loaves",
+    title: "Directions: Fresh Cakes & Loaves",
     shelfLife: "3–5 Days (Refrigerated)",
     steps: [
       "Store in a refrigerator inside an airtight container to retain soft sponge texture.",
@@ -102,7 +102,7 @@ const STORAGE_DATA = {
     ]
   },
   jamsSpreads: {
-    title: "Directions - Jams & Spreads",
+    title: "Directions: Jams & Spreads",
     shelfLife: "3 Months (Refrigerated)",
     steps: [
       "Refrigerate immediately after unsealing.",
@@ -111,7 +111,7 @@ const STORAGE_DATA = {
     ]
   },
   mealsBiryani: {
-    title: "Directions - Fresh Meals & Biryanis",
+    title: "Directions: Fresh Meals & Biryanis",
     shelfLife: "Consume within 2–4 Hours",
     steps: [
       "Best enjoyed hot immediately upon delivery.",
@@ -120,7 +120,7 @@ const STORAGE_DATA = {
     ]
   },
   pickles: {
-    title: "Directions - Ammi's Achar",
+    title: "Directions: Ammi's Achar",
     shelfLife: "6 Months",
     steps: [
       "Always use a fresh, completely dry spoon to avoid moisture-induced spoilage.",
@@ -130,7 +130,7 @@ const STORAGE_DATA = {
     ]
   },
   plumCake: {
-    title: "Directions - Traditional Rich Plum Cake",
+    title: "Directions: Traditional Rich Plum Cake",
     shelfLife: "25–30 Days",
     steps: [
       "Keep tightly wrapped in cling film or in an airtight container to preserve moisture.",
@@ -140,7 +140,7 @@ const STORAGE_DATA = {
     ]
   },
   sandwichesCutlets: {
-    title: "Directions - Sandwiches & Cutlets",
+    title: "Directions: Sandwiches & Cutlets",
     shelfLife: "Consume Fresh (Within 3 Hours)",
     steps: [
       "Best consumed fresh for maximum crunch and optimal flavor.",
@@ -154,9 +154,6 @@ const STORAGE_DATA = {
    UTILITY & HELPER FUNCTIONS
    ========================================================================== */
 
-/**
- * Maps menu items to their corresponding storage guidelines based on context keyword matching
- */
 function getStorageGuideline(item) {
   if (!item) return STORAGE_DATA.mealsBiryani;
   
@@ -190,7 +187,7 @@ function getStorageGuideline(item) {
     return STORAGE_DATA.mealsBiryani;
   }
 
-  return STORAGE_DATA.mealsBiryani; // Fallback default
+  return STORAGE_DATA.mealsBiryani;
 }
 
 function normalizeTagKey(tag) {
@@ -233,22 +230,16 @@ function InlineTagBadge({ tagKey }) {
     <span style={{
       display: 'inline-flex',
       alignItems: 'center',
-      
-      /* --- CUSTOMIZATION: Tag Badge Inner Gap & Padding --- */
       gap: '3px',
-      padding: '1px 6px',                     // Adjust top/bottom and left/right padding
-      borderRadius: '8px',                    // Badge corner rounding
-      
+      padding: '1px 6px',
+      borderRadius: '8px',
       backgroundColor: config.bg,
       border: `1px solid ${subtleBorder}`,
       color: config.text,
-      
-      /* --- CUSTOMIZATION: Tag Typography --- */
-      fontSize: '9.5px',                      // Font size for tags
+      fontSize: '9.5px',
       fontWeight: '500',
       lineHeight: '1.2',
       letterSpacing: '0.1px',
-      
       backdropFilter: 'blur(4px)',
       WebkitBackdropFilter: 'blur(4px)',
       width: 'fit-content'
@@ -319,23 +310,22 @@ export default function ItemCard({ item, openModal, addToCart, resolveImagePath,
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
         style={{ 
-          /* --- CUSTOMIZATION: Card Internal Padding & Layout Gap --- */
           padding: isGridView ? '10px' : '10px 12px', 
-          borderRadius: '16px',               // Corner rounding
+          borderRadius: '16px',               
           display: 'flex', 
           flexDirection: isGridView ? 'column' : 'row', 
-          gap: isGridView ? '10px' : '12px',    // Space between image & details
+          gap: isGridView ? '10px' : '12px',    
           overflow: 'hidden',
           
-          /* --- CUSTOMIZATION: Dark Glassmorphic Card Background & Borders --- */
+          /* Warm Luxury Dark Glassmorphic Card Styling */
           background: isHovered 
             ? 'linear-gradient(135deg, rgba(38, 33, 29, 0.96) 0%, rgba(22, 19, 16, 0.98) 100%)' 
             : 'linear-gradient(135deg, rgba(30, 26, 23, 0.92) 0%, rgba(18, 15, 13, 0.96) 100%)',
           backdropFilter: 'blur(16px)',
           WebkitBackdropFilter: 'blur(16px)',
           border: isHovered 
-            ? '1px solid rgba(255, 89, 88, 0.4)' // Border color on hover
-            : '1px solid rgba(255, 255, 255, 0.08)', // Normal state border
+            ? '1px solid rgba(255, 89, 88, 0.4)' 
+            : '1px solid rgba(197, 160, 89, 0.25)', // Subtle warm gold-tinted border matching home view
           
           boxShadow: isHovered 
             ? '0 8px 24px -4px rgba(0, 0, 0, 0.5), 0 0 16px rgba(255, 89, 88, 0.12)' 
@@ -346,7 +336,8 @@ export default function ItemCard({ item, openModal, addToCart, resolveImagePath,
           transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
           cursor: 'pointer',
           boxSizing: 'border-box',
-          width: '100%'
+          width: '100%',
+          fontFamily: "'Plus Jakarta Sans', sans-serif"
         }}
       >
         {/* 1. THUMBNAIL IMAGE CONTAINER */}
@@ -370,13 +361,10 @@ export default function ItemCard({ item, openModal, addToCart, resolveImagePath,
             position: 'relative', 
             cursor: 'pointer', 
             flexShrink: 0, 
-            borderRadius: '12px',             // Corner rounding for item image
+            borderRadius: '12px',             
             overflow: 'hidden',
-            
-            /* --- CUSTOMIZATION: Thumbnail Dimensions (Grid vs List View) --- */
             width: isGridView ? '100%' : '90px',
             height: isGridView ? '125px' : '90px',
-            
             backgroundColor: 'rgba(0, 0, 0, 0.4)',
             border: '1px solid rgba(255, 255, 255, 0.05)'
           }}
@@ -404,7 +392,7 @@ export default function ItemCard({ item, openModal, addToCart, resolveImagePath,
               backdropFilter: 'blur(6px)',
               WebkitBackdropFilter: 'blur(6px)',
               borderRadius: '5px',
-              padding: '2px 3px',
+              padding: '0px 0px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -430,21 +418,18 @@ export default function ItemCard({ item, openModal, addToCart, resolveImagePath,
             title="Storage & Care Guidelines"
             style={{
               position: 'absolute',
-              top: '5px',
+              top: '3px',
               right: '5px',
-              
-              /* --- CUSTOMIZATION: (i) Icon Circle Styling --- */
               backgroundColor: 'rgba(18, 15, 13, 0.85)',
-              border: '1px solid rgba(255, 215, 0, 0.5)', // Gold border
+              border: '1px solid rgba(197, 160, 89, 0.6)', // Luxury Gold border
               color: '#FFD700',                          // Gold icon color
               borderRadius: '50%',
-              width: '22px',
-              height: '22px',
-              
+              width: '15px',
+              height: '15px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              fontSize: '12px',
+              fontSize: '10px',
               fontWeight: '700',
               cursor: 'pointer',
               boxShadow: '0 2px 6px rgba(0, 0, 0, 0.6)',
@@ -497,7 +482,7 @@ export default function ItemCard({ item, openModal, addToCart, resolveImagePath,
           flex: 1, 
           display: 'flex', 
           flexDirection: 'column', 
-          justify: 'space-between', 
+          justifyContent: 'space-between', 
           alignItems: 'flex-start',
           minWidth: 0,
           width: '100%',
@@ -510,16 +495,17 @@ export default function ItemCard({ item, openModal, addToCart, resolveImagePath,
             flexDirection: 'column', 
             alignItems: 'flex-start', 
             textAlign: 'left', 
-            gap: '4px',
+            gap: '1px',
             width: '100%' 
           }}>
             <div style={{ 
-              /* --- CUSTOMIZATION: Item Title Typography --- */
-              fontWeight: '700', 
-              fontSize: '15px',                // Title font size
-              color: '#FFFFFF',                // Title color
-              lineHeight: '1.2',
-              letterSpacing: '0.1px',
+              /* Elevated Serif Product Title matching Home & Category aesthetics */
+              fontFamily: "'Cormorant Garamond', serif",
+              fontWeight: '600', 
+              fontSize: '20px',                
+              color: '#FFFFFF',                
+              lineHeight: '1',
+              letterSpacing: '0.4px',
               textAlign: 'left',
               width: '100%'
             }}>
@@ -531,9 +517,9 @@ export default function ItemCard({ item, openModal, addToCart, resolveImagePath,
               <div style={{ 
                 display: 'flex',
                 alignItems: 'center',
-                gap: '4px',
-                fontSize: '11px', 
-                lineHeight: '1.15',
+                gap: '6px',
+                fontSize: '14px', 
+                lineHeight: '1.1',
                 letterSpacing: '0.1px',
                 textAlign: 'left',
                 width: '100%',
@@ -541,17 +527,17 @@ export default function ItemCard({ item, openModal, addToCart, resolveImagePath,
               }}>
                 {displayUnit && (
                   <span style={{ 
-                    /* --- CUSTOMIZATION: Portion Unit Text Color --- */
-                    color: '#FF6B6B', 
+                    color: '#C5A059', // Refined gold text tone for units 
                     fontStyle: 'italic', 
-                    fontWeight: '400' 
+                    fontWeight: '400',
+                    fontFamily: "'Cormorant Garamond', serif"
                   }}>
                     {displayUnit}
                   </span>
                 )}
                 {isGridView && hasVariants && (
                   <span style={{ 
-                    fontSize: '9.5px', 
+                    fontSize: '10px', 
                     color: '#A1A1AA', 
                     fontWeight: '500',
                     fontStyle: 'normal'
@@ -564,7 +550,7 @@ export default function ItemCard({ item, openModal, addToCart, resolveImagePath,
 
             {/* Primary Tag Badge */}
             {primaryTag && (
-              <div style={{ marginTop: '2px', display: 'flex', justifyContent: 'flex-start', width: '100%' }}>
+              <div style={{ marginTop: '5px', display: 'flex', justifyContent: 'flex-start', width: '100%' }}>
                 <InlineTagBadge tagKey={primaryTag} />
               </div>
             )}
@@ -573,7 +559,7 @@ export default function ItemCard({ item, openModal, addToCart, resolveImagePath,
           {/* Price & Add Button Row */}
           <div style={{ 
             display: 'flex', 
-            justify: 'space-between', 
+            justifyContent: 'space-between', 
             alignItems: 'center', 
             width: '100%',
             marginTop: isGridView ? '8px' : '4px'
@@ -594,10 +580,9 @@ export default function ItemCard({ item, openModal, addToCart, resolveImagePath,
             }}>
               {/* Price Label */}
               <div style={{ 
-                /* --- CUSTOMIZATION: Price Styling --- */
-                color: '#FF5958',              // Price text color
+                color: '#FF5958',              // Coral Price text color
                 fontWeight: '600', 
-                fontSize: '16px',              // Price font size
+                fontSize: '15px',              
                 letterSpacing: '-0.2px',
                 lineHeight: '1',
                 textShadow: '0 0 10px rgba(255, 89, 88, 0.25)'
@@ -613,20 +598,16 @@ export default function ItemCard({ item, openModal, addToCart, resolveImagePath,
                 onTouchStart={() => setIsPressed(true)}
                 onTouchEnd={() => setIsPressed(false)}
                 style={{
-                  /* --- CUSTOMIZATION: Add Button Gradients --- */
                   background: isAddedRecently 
-                    ? 'linear-gradient(135deg, #10B981 0%, #059669 100%)' // Green gradient when added
-                    : 'linear-gradient(135deg, #FF5958 0%, #E11D48 100%)', // Default Coral gradient
+                    ? 'linear-gradient(135deg, #10B981 0%, #059669 100%)' 
+                    : 'linear-gradient(135deg, #FF5958 0%, #E11D48 100%)', // Coral Gradient matching search & buttons
                   
                   color: '#FFFFFF',
                   border: '1px solid rgba(255, 255, 255, 0.2)',
-                  
-                  /* --- CUSTOMIZATION: Button Padding & Corners --- */
                   padding: '4px 16px', 
                   borderRadius: '16px',
-                  
                   fontWeight: '600',
-                  fontSize: '12px',
+                  fontSize: '12.5px',
                   letterSpacing: '0.2px',
                   cursor: 'pointer',
                   boxShadow: isAddedRecently 
@@ -654,56 +635,51 @@ export default function ItemCard({ item, openModal, addToCart, resolveImagePath,
           style={{
             position: 'fixed',
             inset: 0,
-            
-            /* --- CUSTOMIZATION: Modal Backdrop Overlay --- */
             backgroundColor: 'rgba(0, 0, 0, 0.78)',
             backdropFilter: 'blur(12px)',
             WebkitBackdropFilter: 'blur(12px)',
-            
             zIndex: 9999,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            padding: '16px'
+            padding: '12px'
           }}
         >
           <div 
             onClick={(e) => e.stopPropagation()}
             style={{
-              /* --- CUSTOMIZATION: Modal Card Background & Border --- */
               background: 'linear-gradient(135deg, rgba(32, 27, 24, 0.98) 0%, rgba(18, 15, 13, 0.98) 100%)',
-              border: '1px solid rgba(255, 215, 0, 0.3)',
+              border: '1px solid rgba(197, 160, 89, 0.4)', // Warm gold border matching modal tone
               borderRadius: '20px',
-              
-              /* --- CUSTOMIZATION: Modal Dimensions & Padding --- */
               padding: '22px 20px',
               maxWidth: '380px',
               width: '100%',
-              
               boxShadow: '0 20px 40px rgba(0, 0, 0, 0.8), 0 0 20px rgba(255, 215, 0, 0.12)',
               color: '#FFFFFF',
               textAlign: 'left',
               display: 'flex',
               flexDirection: 'column',
-              alignItems: 'flex-start'
+              alignItems: 'flex-start',
+              fontFamily: "'Plus Jakarta Sans', sans-serif"
             }}
           >
             {/* Modal Header Row */}
             <div style={{ 
               display: 'flex', 
-              justify: 'space-between', 
+              justifyContent: 'space-between', 
               alignItems: 'flex-start', 
               width: '100%', 
               marginBottom: '10px' 
             }}>
               <h4 style={{ 
                 margin: 0, 
-                fontSize: '16px', 
+                fontSize: '17px', 
                 fontWeight: '700', 
-                color: '#FFD700',               // Modal title text color
+                color: '#FFD700',               
                 lineHeight: '1.3',
                 textAlign: 'left',
-                paddingRight: '10px'
+                paddingRight: '10px',
+                fontFamily: "'Cormorant Garamond', serif"
               }}>
                 {guideline.title}
               </h4>
@@ -734,8 +710,8 @@ export default function ItemCard({ item, openModal, addToCart, resolveImagePath,
             <div style={{
               display: 'inline-flex',
               alignItems: 'center',
-              gap: '6px',
-              fontSize: '11.5px',
+              gap: '4px',
+              fontSize: '11px',
               color: '#FF7372',
               marginBottom: '16px',
               backgroundColor: 'rgba(255, 89, 88, 0.12)',
@@ -755,10 +731,7 @@ export default function ItemCard({ item, openModal, addToCart, resolveImagePath,
               margin: '0 0 18px 0', 
               display: 'flex', 
               flexDirection: 'column', 
-              
-              /* --- CUSTOMIZATION: Step List Gap --- */
               gap: '10px',
-              
               fontSize: '12.5px',
               lineHeight: '1.5',
               color: '#E4E4E7',

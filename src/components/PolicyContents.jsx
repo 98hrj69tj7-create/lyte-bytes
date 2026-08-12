@@ -7,18 +7,18 @@ import {
 
 // ============================================================================
 // 🎨 GLOBAL DESIGN SYSTEM & STYLING CONFIGURATION
-// You can modify fonts, padding, spacing, and margins directly here.
 // ============================================================================
 
-// Controls the card container: border, background, inner padding, and spacing between cards
+// Controls the card container: golden ticket dashed border, warm cream gradient, and padding
 const cardStyle = {
-  border: '1px dashed #4A443A',            // Border style and color
-  borderRadius: '12px',                    // Rounded corners for the card
-  padding: '8px 8px',                    // Internal spacing (Top/Bottom, Left/Right)
+  border: '1px dashed #C5A059',                          // Golden ticket dashed border
+  borderRadius: '14px',                                  // Rounded corners for the card
+  padding: '12px 14px',                                  // Internal spacing (Top/Bottom, Left/Right)
+  background: 'linear-gradient(135deg, #FFFDF9 0%, #FAF4EB 100%)', // Rich warm cream gradient
   display: 'flex',
   flexDirection: 'column',
-  gap: '2px',                              // Spacing between the title row and paragraph text
-  boxShadow: '0 2px 8px rgba(44, 34, 30, 0.02)', // Subtle card shadow
+  gap: '4px',                                            // Spacing between the title row and body text
+  boxShadow: '0 4px 16px rgba(44, 34, 30, 0.04)',        // Subtle card shadow
   boxSizing: 'border-box'
 };
 
@@ -26,7 +26,7 @@ const cardStyle = {
 const headerRowStyle = {
   display: 'flex',
   alignItems: 'center',
-  gap: '4px'                               // Space between the icon box and the heading title text
+  gap: '8px'                                             // Space between the icon and heading title text
 };
 
 // Controls the background and sizing of the icon container
@@ -38,33 +38,35 @@ const iconBoxStyle = {
   justifyContent: 'center',
 };
 
-// Controls the typography of card titles (Font size, weight, letter spacing)
+// Controls the typography of card titles (Serif font, weight, letter spacing)
 const titleStyle = {
-  fontSize: '12px',                      // Adjust title font size here
-  fontWeight: '500',                       // Font boldness (e.g., 600, 700, 800)
-  letterSpacing: '0.2px',
-  color: '#2C221E',                        // Title text color
+  fontFamily: "'Cormorant Garamond', serif",
+  fontSize: '17px',                                      // Adjusted for elegant serif presence
+  fontWeight: '700',                                     // Bold serif weight
+  letterSpacing: '0.3px',
+  color: '#1A1816',                                      // Rich charcoal title text color
   margin: 0
 };
 
 // Controls the typography and line height of the policy description body text
 const textStyle = {
   margin: 0,
-  fontSize: '10.5px',                      // Adjust body text font size here
-  fontWeight: '400',
-  lineHeight: '1.45',                      // Line spacing for readability
-  color: '#665C52',                        // Body text color
+  fontSize: '12px',                                      // Clean readable body text size
+  fontWeight: '500',
+  lineHeight: '1.45',                                    // Line spacing for readability
+  color: '#78716C',                                      // Muted warm grey body text color
   textAlign: 'left',
-  paddingLeft: '1px'
+  paddingLeft: '0px'
 };
 
 // Controls the overall outer wrapper spacing between all cards in a modal
 const containerStyle = {
   display: 'flex',
   flexDirection: 'column',
-  gap: '6px',                              // Vertical gap/space between individual policy cards
+  gap: '12px',                                           // Vertical gap/space between individual policy cards
   width: '100%',
-  boxSizing: 'border-box'
+  boxSizing: 'border-box',
+  fontFamily: "'Plus Jakarta Sans', sans-serif"
 };
 
 // ==========================================
@@ -76,7 +78,7 @@ export function CartViewPolicyModalContent({ brandColor = '#FF5958' }) {
       <div style={cardStyle}>
         <div style={headerRowStyle}>
           <div style={iconBoxStyle}>
-            <Clock size={14} color={brandColor} />
+            <Clock size={16} color={brandColor} />
           </div>
           <h4 style={titleStyle}>Advance Ordering & Cut-Off</h4>
         </div>
@@ -88,7 +90,7 @@ export function CartViewPolicyModalContent({ brandColor = '#FF5958' }) {
       <div style={cardStyle}>
         <div style={headerRowStyle}>
           <div style={iconBoxStyle}>
-            <FileText size={14} color={brandColor} />
+            <FileText size={16} color={brandColor} />
           </div>
           <h4 style={titleStyle}>Order Confirmation</h4>
         </div>
@@ -100,7 +102,7 @@ export function CartViewPolicyModalContent({ brandColor = '#FF5958' }) {
       <div style={cardStyle}>
         <div style={headerRowStyle}>
           <div style={iconBoxStyle}>
-            <DollarSign size={14} color={brandColor} />
+            <DollarSign size={16} color={brandColor} />
           </div>
           <h4 style={titleStyle}>Payment Terms</h4>
         </div>
@@ -112,7 +114,7 @@ export function CartViewPolicyModalContent({ brandColor = '#FF5958' }) {
       <div style={cardStyle}>
         <div style={headerRowStyle}>
           <div style={iconBoxStyle}>
-            <CheckCircle2 size={14} color={brandColor} />
+            <CheckCircle2 size={16} color={brandColor} />
           </div>
           <h4 style={titleStyle}>Cancellations & Modifications</h4>
         </div>
@@ -124,7 +126,7 @@ export function CartViewPolicyModalContent({ brandColor = '#FF5958' }) {
       <div style={cardStyle}>
         <div style={headerRowStyle}>
           <div style={iconBoxStyle}>
-            <AlertCircle size={14} color={brandColor} />
+            <AlertCircle size={16} color={brandColor} />
           </div>
           <h4 style={titleStyle}>Fair Usage</h4>
         </div>
@@ -145,7 +147,7 @@ export function OfferPolicyModalContent({ brandColor = '#FF5958' }) {
       <div style={cardStyle}>
         <div style={headerRowStyle}>
           <div style={iconBoxStyle}>
-            <Tag size={14} color={brandColor} />
+            <Tag size={16} color={brandColor} />
           </div>
           <h4 style={titleStyle}>Coupon Stacking & Combination</h4>
         </div>
@@ -157,7 +159,7 @@ export function OfferPolicyModalContent({ brandColor = '#FF5958' }) {
       <div style={cardStyle}>
         <div style={headerRowStyle}>
           <div style={iconBoxStyle}>
-            <Percent size={14} color={brandColor} />
+            <Percent size={16} color={brandColor} />
           </div>
           <h4 style={titleStyle}>Loyalty Program Discounts</h4>
         </div>
@@ -169,7 +171,7 @@ export function OfferPolicyModalContent({ brandColor = '#FF5958' }) {
       <div style={cardStyle}>
         <div style={headerRowStyle}>
           <div style={iconBoxStyle}>
-            <Sparkles size={14} color={brandColor} />
+            <Sparkles size={16} color={brandColor} />
           </div>
           <h4 style={titleStyle}>Usage Limits & Expiry</h4>
         </div>
@@ -190,7 +192,7 @@ export function DeliveryPolicyModalContent({ brandColor = '#FF5958' }) {
       <div style={cardStyle}>
         <div style={headerRowStyle}>
           <div style={iconBoxStyle}>
-            <MapPin size={14} color={brandColor} />
+            <MapPin size={16} color={brandColor} />
           </div>
           <h4 style={titleStyle}>Service Radius</h4>
         </div>
@@ -202,7 +204,7 @@ export function DeliveryPolicyModalContent({ brandColor = '#FF5958' }) {
       <div style={cardStyle}>
         <div style={headerRowStyle}>
           <div style={iconBoxStyle}>
-            <Clock size={14} color={brandColor} />
+            <Clock size={16} color={brandColor} />
           </div>
           <h4 style={titleStyle}>Delivery Slots & Timelines</h4>
         </div>
@@ -214,7 +216,7 @@ export function DeliveryPolicyModalContent({ brandColor = '#FF5958' }) {
       <div style={cardStyle}>
         <div style={headerRowStyle}>
           <div style={iconBoxStyle}>
-            <Package size={14} color={brandColor} />
+            <Package size={16} color={brandColor} />
           </div>
           <h4 style={titleStyle}>Fees & Tracking</h4>
         </div>
@@ -226,7 +228,7 @@ export function DeliveryPolicyModalContent({ brandColor = '#FF5958' }) {
       <div style={cardStyle}>
         <div style={headerRowStyle}>
           <div style={iconBoxStyle}>
-            <ShieldAlert size={14} color={brandColor} />
+            <ShieldAlert size={16} color={brandColor} />
           </div>
           <h4 style={titleStyle}>Address Accuracy & Handover</h4>
         </div>
@@ -238,7 +240,7 @@ export function DeliveryPolicyModalContent({ brandColor = '#FF5958' }) {
       <div style={cardStyle}>
         <div style={headerRowStyle}>
           <div style={iconBoxStyle}>
-            <AlertCircle size={14} color={brandColor} />
+            <AlertCircle size={16} color={brandColor} />
           </div>
           <h4 style={titleStyle}>External Delays</h4>
         </div>
@@ -259,7 +261,7 @@ export function GeneralTermsModalContent({ brandColor = '#FF5958' }) {
       <div style={cardStyle}>
         <div style={headerRowStyle}>
           <div style={iconBoxStyle}>
-            <Sparkles size={14} color={brandColor} />
+            <Sparkles size={16} color={brandColor} />
           </div>
           <h4 style={titleStyle}>Introduction & Acceptance</h4>
         </div>
@@ -271,7 +273,7 @@ export function GeneralTermsModalContent({ brandColor = '#FF5958' }) {
       <div style={cardStyle}>
         <div style={headerRowStyle}>
           <div style={iconBoxStyle}>
-            <DollarSign size={14} color={brandColor} />
+            <DollarSign size={16} color={brandColor} />
           </div>
           <h4 style={titleStyle}>Pricing Transparency & Changes</h4>
         </div>
@@ -283,7 +285,7 @@ export function GeneralTermsModalContent({ brandColor = '#FF5958' }) {
       <div style={cardStyle}>
         <div style={headerRowStyle}>
           <div style={iconBoxStyle}>
-            <CheckCircle size={14} color={brandColor} />
+            <CheckCircle size={16} color={brandColor} />
           </div>
           <h4 style={titleStyle}>Quality Assurance & Returns</h4>
         </div>
@@ -295,7 +297,7 @@ export function GeneralTermsModalContent({ brandColor = '#FF5958' }) {
       <div style={cardStyle}>
         <div style={headerRowStyle}>
           <div style={iconBoxStyle}>
-            <Package size={14} color={brandColor} />
+            <Package size={16} color={brandColor} />
           </div>
           <h4 style={titleStyle}>Damaged or Incorrect Deliveries</h4>
         </div>
@@ -307,7 +309,7 @@ export function GeneralTermsModalContent({ brandColor = '#FF5958' }) {
       <div style={cardStyle}>
         <div style={headerRowStyle}>
           <div style={iconBoxStyle}>
-            <ShieldCheck size={14} color={brandColor} />
+            <ShieldCheck size={16} color={brandColor} />
           </div>
           <h4 style={titleStyle}>Limitation of Liability</h4>
         </div>
@@ -319,7 +321,7 @@ export function GeneralTermsModalContent({ brandColor = '#FF5958' }) {
        <div style={cardStyle}>
         <div style={headerRowStyle}>
           <div style={iconBoxStyle}>
-            <ShieldCheck size={14} color={brandColor} />
+            <ShieldCheck size={16} color={brandColor} />
           </div>
           <h4 style={titleStyle}>FSSAI & Food Safety</h4>
         </div>
@@ -331,9 +333,9 @@ export function GeneralTermsModalContent({ brandColor = '#FF5958' }) {
        <div style={cardStyle}>
         <div style={headerRowStyle}>
           <div style={iconBoxStyle}>
-            <ShieldCheck size={14} color={brandColor} />
+            <ShieldCheck size={16} color={brandColor} />
           </div>
-          <h4 style={titleStyle}>FSSAI & Food Safety</h4>
+          <h4 style={titleStyle}>Halal Compliance</h4>
         </div>
         <p style={textStyle}>
            <strong>Halal Compliance:</strong> Halal-certified ingredients are used in select products.
@@ -352,7 +354,7 @@ export function PrivacyPolicyModalContent({ brandColor = '#FF5958' }) {
       <div style={cardStyle}>
         <div style={headerRowStyle}>
           <div style={iconBoxStyle}>
-            <Database size={14} color={brandColor} />
+            <Database size={16} color={brandColor} />
           </div>
           <h4 style={titleStyle}>Data Collection</h4>
         </div>
@@ -364,7 +366,7 @@ export function PrivacyPolicyModalContent({ brandColor = '#FF5958' }) {
       <div style={cardStyle}>
         <div style={headerRowStyle}>
           <div style={iconBoxStyle}>
-            <Eye size={14} color={brandColor} />
+            <Eye size={16} color={brandColor} />
           </div>
           <h4 style={titleStyle}>Data Sharing & Security</h4>
         </div>

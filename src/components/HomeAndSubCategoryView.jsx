@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { 
-  List as ListIcon, Grid, ArrowLeft, ChevronRight, ChevronDown, 
+  List as ListIcon, Grid, ArrowLeft, ChevronRight, ChevronDown, BookOpen,
   Heart, Sparkles, ShieldCheck, ChefHat, Home, Gift, Award, 
   Badge,
-  BadgeCheck
+  BadgeCheck,
+  Clock,
+  CircleCheck,
+  Recycle,
+  HandHeart
 } from 'lucide-react';
 import ItemCard from './ItemCard';
 
@@ -178,7 +182,7 @@ function CategoryCard({ cat, resolveImagePath, theme, onClick }) {
         <div style={{ flex: 1, paddingRight: '12px' }}>
           <h3 style={{ 
             fontFamily: "'Cormorant Garamond', serif",
-            fontSize: '22px',
+            fontSize: '25px',
             fontWeight: '700',
             color: '#FFFFFF',
             margin: 0, 
@@ -289,7 +293,7 @@ function SubCategoryCard({ sub, resolveImagePath, activeCat, menuData, onClick }
         <div style={{ flex: 1, paddingRight: '12px' }}>
           <h3 style={{ 
             fontFamily: "'Cormorant Garamond', serif",
-            fontSize: '20px',
+            fontSize: '22px',
             fontWeight: '700',
             color: '#FFFFFF',
             margin: 0,
@@ -480,7 +484,7 @@ export default function HomeAndSubCategoryView({
             </div>
           </div>
 
-          {/* --- HERITAGE & CRAFT STORY CARD (ELITE LEFT-ALIGNED EDITION) --- */}
+ {/* --- HERITAGE & CRAFT STORY CARD (LEFT-ALIGNED EDITION) --- */}
 {!searchQuery.trim() && (
   <div 
     className="support-card"
@@ -488,7 +492,7 @@ export default function HomeAndSubCategoryView({
       background: 'linear-gradient(135deg, #FFFDF9 0%, #FAF4EB 100%)',
       borderRadius: '20px',
       border: '1px solid rgba(197, 160, 89, 0.45)',
-      padding: '10px 16px',
+      padding: '8px 18px',
       marginBottom: '12px',
       boxShadow: '0 4px 18px rgba(44, 34, 30, 0.04)',
       position: 'relative',
@@ -510,138 +514,125 @@ export default function HomeAndSubCategoryView({
       zIndex: 1
     }} />
 
-    {/* --- HEADER BLOCK (CENTER-ALIGNED & CLICKABLE) --- */}
-<div 
-  onClick={() => setShowStory(prev => !prev)}
-  style={{ 
-    display: 'flex', 
-    alignItems: 'center', 
-    justifyContent: 'space-between',
-    position: 'relative',
-    cursor: 'pointer',
-    zIndex: 2,
-    paddingBottom: '2px'
-  }}
->
-  {/* Elite Authenticated Shield Seal (Left - 50px) */}
-  <div style={{
-    width: '50px',
-    height: '50px',
-    borderRadius: '10px 10px 22px 22px', /* Shield Silhouette */
-    border: '2px solid #C5A059',
-    background: 'linear-gradient(180deg, #FFFFFF 0%, #FAF4EB 100%)',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    boxShadow: '0 3px 10px rgba(197, 160, 89, 0.18), inset 0 0 0 1.5px #FFFDF9',
-    flexShrink: 0
-  }}>
-    <BadgeCheck size={20} color="#C5A059" strokeWidth={2} />
-    <span style={{ 
-      fontSize: '10px', 
-      fontWeight: '700', 
-      color: '#8A6D2B', 
-      letterSpacing: '0.8px', 
-      marginTop: '1px',
-      fontFamily: "'Plus Jakarta Sans', sans-serif"
-    }}>
-      1995
-    </span>
-  </div>
-
-  {/* Perfectly Centered Typography Block */}
-  <div style={{ 
-    flex: 1, 
-    textAlign: 'center',
-    padding: '0 8px'
-  }}>
-    <span style={{ 
-      fontSize: '9px', 
-      textTransform: 'uppercase', 
-      letterSpacing: '1.5px', 
-      color: '#C5A059', 
-      fontWeight: '600',
-      display: 'block',
-      marginBottom: '2px'
-    }}>
-      ✦ HERITAGE & CRAFT ✦
-    </span>
-    <h2 style={{
-      fontFamily: "'Cormorant Garamond', serif",
-      fontSize: '18px',
-      fontWeight: '600',
-      color: '#FF5958',
-      margin: 0,
-      lineHeight: '1.15'
-    }}>
-      Our Origins & Our Promise
-    </h2>
-    <p style={{ 
-      fontSize: '12px', 
-      fontWeight: '500',
-      color: '#3f3c3a', 
-      margin: '3px 0 0 0', 
-      fontStyle: 'italic', 
-      fontFamily: "'Cormorant Garamond', serif" 
-    }}>
-      A legacy of warmth & authenticity
-    </p>
-  </div>
-
-  {/* Invisible Balance Spacer (Matches 50px Shield Width) */}
-  <div style={{ width: '50px', flexShrink: 0 }} />
-
-  {/* Story Toggle Pill Positioned Neat at Bottom-Right */}
-  <button 
-    onClick={(e) => {
-      e.stopPropagation();
-      setShowStory(prev => !prev);
-    }}
-    style={{
-      position: 'absolute',
-      bottom: '0px',
-      right: '0px',
-      border: '1px solid rgba(197, 160, 89, 0.45)',
-      backgroundColor: '#FFFFFF',
-      borderRadius: '16px',
-      padding: '4px 10px',
-      fontSize: '11px',
-      fontWeight: '600',
-      color: '#FF5958',
-      display: 'flex',
-      alignItems: 'center',
-      gap: '3px',
-      cursor: 'pointer',
-      boxShadow: '0 2px 6px rgba(0,0,0,0.03)',
-      transition: 'all 0.2s ease',
-      zIndex: 3
-    }}
-  >
-    <span>{showStory ? 'Less' : 'Story'}</span>
-    <ChevronDown 
-      size={13} 
+    {/* --- HEADER BLOCK (LEFT-ALIGNED WITH RIGHT TOGGLE) --- */}
+    <div 
+      onClick={() => setShowStory(prev => !prev)}
       style={{ 
-        transform: showStory ? 'rotate(180deg)' : 'rotate(0deg)', 
-        transition: 'transform 0.3s ease' 
-      }} 
-    />
-  </button>
-</div>
+        display: 'flex', 
+        alignItems: 'center', 
+        justifyContent: 'space-between',
+        position: 'relative',
+        cursor: 'pointer',
+        zIndex: 2,
+        paddingRight: '2px',
+      }}
+    >
+      {/* Sleek Left-Aligned Typography Block */}
+      <div style={{ flex: 1, textAlign: 'left' }}>
+        <span style={{ 
+          fontSize: '10px', 
+          textTransform: 'uppercase', 
+          letterSpacing: '1.6px', 
+          color: '#8A6D2B', 
+          fontWeight: '600',
+          display: 'block',
+          marginBottom: '0px'
+        }}>
+          ✦ HERITAGE & CRAFT ✦
+        </span>
+        <h2 style={{
+          fontFamily: "'Cormorant Garamond', serif",
+          fontSize: '20px',
+          fontWeight: '800',
+          color: '#FF5958',
+          margin: 0,
+          lineHeight: '1.15',
+          letterSpacing: '-0.2px'
+        }}>
+          Our Origins & Our Promise
+        </h2>
+        <p style={{ 
+          fontSize: '12px', 
+          fontWeight: '500',
+          color: '#524B47', 
+          margin: '0px 0 0 0', 
+          fontStyle: 'italic', 
+          fontFamily: "'Cormorant Garamond', serif" 
+        }}>
+          A legacy of warmth & authenticity
+        </p>
+      </div>
+
+      {/* Story Toggle Pill (Aligned on Right) */}
+      <button 
+        onClick={(e) => {
+          e.stopPropagation();
+          setShowStory(prev => !prev);
+        }}
+        style={{
+          border: '1px solid rgba(197, 160, 89, 0.45)',
+          backgroundColor: '#FFFFFF',
+          borderRadius: '20px',
+          padding: '5px 12px',
+          fontSize: '11px',
+          fontWeight: '600',
+          color: '#FF5958',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '4px',
+          cursor: 'pointer',
+          boxShadow: '0 2px 8px rgba(197, 160, 89, 0.12)',
+          transition: 'all 0.25s ease',
+          flexShrink: 0,
+          marginLeft: '12px'
+        }}
+      >
+        <span>{showStory ? 'Less' : 'Story'}</span>
+        <ChevronDown 
+          size={13} 
+          style={{ 
+            transform: showStory ? 'rotate(180deg)' : 'rotate(0deg)', 
+            transition: 'transform 0.3s ease' 
+          }} 
+        />
+      </button>
+    </div>
 
     {/* --- EXPANDED STORY DRAWER --- */}
     {showStory && (
-      <div style={{ marginTop: '16px', position: 'relative', zIndex: 2 }}>
-        <div style={{ height: '1px', backgroundColor: 'rgba(197, 160, 89, 0.25)', marginBottom: '12px' }} />
+      <div style={{ marginTop: '2px', position: 'relative', zIndex: 2 }}>
+        <div style={{ height: '1px', backgroundColor: 'rgba(197, 160, 89, 0.25)', marginBottom: '2px' }} />
 
-        {/* Section 1: Our Origins */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '8px' }}>
-          <Home size={13} color="#8B0000" />
-          <span style={{ fontSize: '10px', textTransform: 'uppercase', letterSpacing: '1.6px', color: '#8B0000', fontWeight: '800' }}>
+        {/* Section Header */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '2px', marginBottom: '2px' }}>
+          <span style={{ fontSize: '10px', textTransform: 'uppercase', letterSpacing: '1.6px', color: '#FF5958', fontWeight: '600' }}>
             Our Origins
           </span>
         </div>
 
+        {/* Story Paragraph 1 */}
+        <p style={{ 
+          fontSize: '12.5px', 
+          lineHeight: '1.65', 
+          color: '#44403C', 
+          fontWeight: '400', 
+          marginBottom: '8px',
+          textAlign: 'left'
+        }}>
+          I grew up in a home where food wasn’t just cooked, it was cherished. My connection to cooking began at a very young age, simply by being present in the kitchen and watching my family members prepare meals, savouries and desserts with quiet patience and care. Standing beside them, observing every movement with fascination and helping wherever I could were the first sparks of a passion I didn’t yet fully understand.</p>
+        {/* Story Paragraph 2 */}
+        <p style={{ 
+          fontSize: '12.5px', 
+          lineHeight: '1.65', 
+          color: '#44403C', 
+          fontWeight: '400', 
+          marginBottom: '8px',
+          textAlign: 'left'
+        }}>
+          Over time, that curiosity turned into a calling. Pursuing hotel management allowed me to master the professional science behind flavour, texture, aroma, and presentation while holding onto the soul of home cooking. Through constant experimentation and learning from mistakes, I began recreating dishes with my own twists. I realised cooking wasn’t merely a skill, it was a sacred way to bring joy to people. Watching someone truly enjoy a meal that I cooked made me feel deeply fulfilled.
+        </p>
+
+        {/* Story Paragraph 3 */}
         <p style={{ 
           fontSize: '12.5px', 
           lineHeight: '1.65', 
@@ -650,9 +641,42 @@ export default function HomeAndSubCategoryView({
           marginBottom: '10px',
           textAlign: 'left'
         }}>
-          Lyte Bytes is a culinary brand shaped by two generations: my mother’s treasured heritage recipes and my passion for elevating them for today’s food lovers. For nearly three decades, our kitchen has specialised in fresh, small-batch craftsmanship, where every dish reflects intention, precision, and family warmth.
+          That feeling pushed me further. I began baking orders of traditional Christmas cakes, taking orders from family and friends and also explored hand-brewing non‑alcoholic wines inspired by an old heirloom book filled with handwritten notes.</p>
+
+        {/* Editorial Naming Highlight Box */}
+        <div style={{
+          backgroundColor: '#FAF6F0',
+          borderRadius: '10px',
+          padding: '8px 14px',
+          marginBottom: '12px',
+          borderLeft: '3px solid #C5A059',
+          textAlign: 'left'
+        }}>
+          <p style={{
+            fontFamily: "'Cormorant Garamond', serif",
+            fontSize: '14px',
+            fontStyle: 'italic',
+            lineHeight: '1.45',
+            color: '#2C221E',
+            margin: 0
+          }}>
+            "Eventually, conversations with friends turned into a dream of creating an honest, home-grown brand. That is how <strong style={{ fontStyle: 'normal', color: '#8B0000' }}>LYTE BYTES</strong> was born." <p>(<strong style={{ fontStyle: 'normal', color: '#8B0000' }}>'Bytes'</strong> inspired by the tech pulse of Bengaluru, and <strong style={{ fontStyle: 'normal', color: '#8B0000' }}>'Bites'</strong> representing the heartfelt food we loved to make.)</p>
+          </p>
+        </div>
+
+        {/* Story Paragraph 4 */}
+        <p style={{ 
+          fontSize: '12.5px', 
+          lineHeight: '1.65', 
+          color: '#44403C', 
+          fontWeight: '400', 
+          marginBottom: '8px',
+          textAlign: 'left'
+        }}>
+          We participated in a few food exhibitions, set up food stalls and shared our creations with other vendors. Every experience taught us something new, and demand grew organically. Each returning customer and genuine smile reinforced why I started. From there, we expanded into handcrafted cookies, celebration cakes, small-event catering and preservative-free jams made entirely from scratch.
         </p>
 
+        {/* Story Paragraph 5 */}
         <p style={{ 
           fontSize: '12.5px', 
           lineHeight: '1.65', 
@@ -661,30 +685,30 @@ export default function HomeAndSubCategoryView({
           marginBottom: '16px',
           textAlign: 'left'
         }}>
-          What began with my mother’s catering and timeless techniques has evolved into a refined experience—from customized event menus to artisanal baking and signature pickles under <strong style={{ color: '#1A1816', fontWeight: '700' }}>Ammi’s Achar</strong>.
+          This journey naturally culminated in <strong style={{ color: '#1A1816' }}>Ammi’s Achar</strong>. Disappointed by commercial options laden with additives, I set out to craft rare, authentic meat-based and vegetarian pickles. Our philosophy remains uncompromising: premium ingredients, zero preservatives, and small-batch production where every single jar is prepared strictly to order and never stored or mass-produced.
         </p>
 
         {/* Micro-Pills Grid */}
         <div style={{ 
           display: 'grid', 
           gridTemplateColumns: '1fr 1fr', 
-          gap: '8px', 
+          gap: '6px', 
           marginBottom: '16px' 
         }}>
           {[
-            { icon: Sparkles, label: 'Fresh Batches' },
+            { icon: Clock, label: 'Made strictly to order' },
             { icon: ShieldCheck, label: 'Zero Preservatives' },
-            { icon: Heart, label: 'Zero Wastage' },
-            { icon: ChefHat, label: '100% Handcrafted' }
+            { icon: Recycle, label: 'Zero Wastage' },
+            { icon: HandHeart, label: '100% Handcrafted' }
           ].map((item, idx) => (
             <div key={idx} style={{
               backgroundColor: 'rgba(197, 160, 89, 0.08)',
               border: '1px solid rgba(197, 160, 89, 0.22)',
               borderRadius: '10px',
-              padding: '8px 10px',
+              padding: '6px 10px',
               display: 'flex',
               alignItems: 'center',
-              gap: '7px'
+              gap: '6px'
             }}>
               <item.icon size={13} color="#8A6D2B" />
               <span style={{ fontSize: '10.5px', fontWeight: '600', color: '#292524', letterSpacing: '0.2px' }}>
@@ -694,50 +718,69 @@ export default function HomeAndSubCategoryView({
           ))}
         </div>
 
-        {/* Editorial Quote Card */}
+        {/* --- OUR PROMISE BLOCK --- */}
         <div style={{
           backgroundColor: '#FAF6F0',
           borderRadius: '10px',
-          padding: '12px 14px',
-          marginBottom: '16px',
-          borderLeft: '3px solid #8B0000',
+          padding: '8px 14px',
+          marginBottom: '12px',
+          borderLeft: '3px solid #C5A059',
           textAlign: 'left'
         }}>
-          <p style={{
-            fontFamily: "'Cormorant Garamond', serif",
-            fontSize: '14.5px',
-            fontStyle: 'italic',
-            lineHeight: '1.45',
-            color: '#332F2E',
-            margin: 0
-          }}>
-            "Ammi’s Achar showcases authentic vegetarian and meat-based pickles prepared using age-old methods, premium ingredients, and meticulous attention to detail."
-          </p>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '2px', marginBottom: '2px' }}>
+          <span style={{ fontSize: '10px', textTransform: 'uppercase', letterSpacing: '1.6px', color: '#FF5958', fontWeight: '600' }}>
+            Our Promise
+          </span>
         </div>
 
-        {/* Our Promise Block */}
-        <div style={{
-          borderLeft: '2.5px solid #C5A059',
-          paddingLeft: '12px',
-          paddingTop: '2px',
-          paddingBottom: '2px',
-          textAlign: 'left'
-        }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#8A6D2B', marginBottom: '3px' }}>
-            <ShieldCheck size={13} color="#8A6D2B" />
-            <span style={{ fontSize: '10px', textTransform: 'uppercase', letterSpacing: '1.4px', fontWeight: '800' }}>
-              Our Promise
-            </span>
-          </div>
+          <p style={{
+            fontSize: '12.5px',
+            lineHeight: '1.6',
+            color: '#3C3633',
+            margin: '0 0 10px 0'
+          }}>
+            At Lyte Bytes, every dish is made with intention. We prepare food only when an order comes in, so what you receive is always fresh, never stored, and never rushed. This approach has guided us from the very beginning and remains at the heart of everything we do.
+          </p>
+
+          <p style={{
+            fontSize: '12.5px',
+            lineHeight: '1.6',
+            color: '#3C3633',
+            margin: '0 0 12px 0'
+          }}>
+            We choose premium ingredients, follow traditional methods, and craft in small batches to preserve authenticity and flavour. Whether it is a catered meal, a celebration cake, or a jar of Ammi’s Achar, we give each creation the same care and attention that shaped our journey.
+          </p>
+
           <p style={{
             fontFamily: "'Cormorant Garamond', serif",
             fontSize: '15.5px',
-            fontWeight: '600',
-            lineHeight: '1.35',
+            fontWeight: '700',
+            lineHeight: '1.4',
             color: '#1A1816',
-            margin: 0
+            margin: '0 0 8px 0',
+            fontStyle: 'italic'
           }}>
-            At Lyte Bytes, every batch is a promise: crafted with purpose, rooted in legacy, and refined for today’s palate.
+            "Food that is honest, handcrafted and freshly prepared for your indulgence."
+          </p>
+
+          <p style={{
+            fontSize: '12px',
+            lineHeight: '1.5',
+            color: '#524B47',
+            margin: '0 0 8px 0',
+            fontWeight: '500'
+          }}>
+            A pure, home‑grown goodness prepared with the same warmth that inspired us all those years ago.
+          </p>
+
+          <p style={{
+            fontSize: '11.5px',
+            color: '#FF5958',
+            margin: 0,
+            lineHeight: '1.5',
+            fontWeight: '600'
+          }}>
+            Every order is a commitment to quality, to legacy and to the joy we hope you feel in every bite.
           </p>
         </div>
       </div>
@@ -749,7 +792,7 @@ export default function HomeAndSubCategoryView({
           {searchQuery.trim() ? (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2px' }}>
-                <span style={{ fontSize: '13px', fontWeight: '600', color: theme.text }}>Search Results</span>
+                <span style={{ fontSize: '14px', fontWeight: '600', color: theme.text }}>Search Results</span>
                 <button onClick={() => setSearchQuery('')} style={{ background: 'none', border: 'none', color: '#C5A059', cursor: 'pointer', fontSize: '12px', fontWeight: 'bold' }}>
                   Clear
                 </button>

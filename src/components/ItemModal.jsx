@@ -50,12 +50,14 @@ function ModalTagBadge({ tagKey }) {
     <span style={{
       display: 'inline-flex',
       alignItems: 'center',
-      gap: '2px',
-      padding: '3px 6px',
+      gap: '3px',
+      padding: '2px 8px',
       borderRadius: '8px',
-      color: '#36281E',
+      backgroundColor: 'rgba(197, 160, 89, 0.12)',
+      border: '1px solid rgba(197, 160, 89, 0.3)',
+      color: '#8A6D2B',
       fontSize: '10px',
-      fontWeight: '500',
+      fontWeight: '600',
       lineHeight: '1.2'
     }}>
       <span>{config.emoji}</span>
@@ -122,21 +124,22 @@ export default function ItemModal({ selectedItem, setSelectedItem, resolveImageP
       }}
     >
       <div 
-        onClick={() => e.stopPropagation()}
+        onClick={(e) => e.stopPropagation()}
         style={{
           maxWidth: '460px', 
           width: '100%',
           maxHeight: '90vh', 
           borderRadius: '24px', 
-          backgroundColor: '#FFFBF2',
+          background: 'linear-gradient(135deg, #FFFDF9 0%, #FAF4EB 100%)',
           overflow: 'hidden',
           display: 'flex',
           flexDirection: 'column',
           boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.45)',
-          border: '1px solid rgba(255, 89, 88, 0.4)',
+          border: '1px solid rgba(197, 160, 89, 0.45)',
           position: 'relative',
           boxSizing: 'border-box',
-          cursor: 'default' 
+          cursor: 'default',
+          fontFamily: "'Plus Jakarta Sans', sans-serif"
         }}
       >
         {/* MAIN ITEM IMAGE HEADER */}
@@ -168,11 +171,12 @@ export default function ItemModal({ selectedItem, setSelectedItem, resolveImageP
               borderRadius: '20px', 
               backgroundColor: 'rgba(30, 24, 20, 0.85)',
               backdropFilter: 'blur(6px)',
-              border: '1px solid rgba(255,255,255,0.15)',
-              color: '#ffffff',
+              border: '1px solid rgba(197, 160, 89, 0.3)',
+              color: '#FFD700',
               fontSize: '12px',
               fontWeight: '600',
-              letterSpacing: '0.3px'
+              letterSpacing: '0.3px',
+              fontFamily: "'Cormorant Garamond', serif"
             }}>
               {selectedItem.unit}
             </div>
@@ -181,7 +185,7 @@ export default function ItemModal({ selectedItem, setSelectedItem, resolveImageP
 
         {/* SCROLLABLE CONTENT BODY */}
         <div style={{ 
-          padding: '18px', 
+          padding: '20px', 
           gap: '14px', 
           textAlign: 'left', 
           overflowY: 'auto', 
@@ -195,13 +199,14 @@ export default function ItemModal({ selectedItem, setSelectedItem, resolveImageP
             display: 'flex', 
             alignItems: 'center', 
             flexWrap: 'wrap', 
-            gap: '6px' 
+            gap: '8px' 
           }}>
             <h2 style={{ 
               margin: 0, 
-              fontSize: '20px', 
-              color: '#36281E', 
-              fontWeight: '600', 
+              fontFamily: "'Cormorant Garamond', serif",
+              fontSize: '24px', 
+              color: '#1A1816', 
+              fontWeight: '700', 
               letterSpacing: '0.2px', 
               lineHeight: '1.2' 
             }}>
@@ -213,8 +218,8 @@ export default function ItemModal({ selectedItem, setSelectedItem, resolveImageP
                 src={`/menu-items/${selectedItem.variation.trim().toLowerCase() === 'non-veg' ? 'non-veg' : selectedItem.variation.trim().toLowerCase()}.png`}
                 alt={selectedItem.variation}
                 style={{ 
-                  width: '20px', 
-                  height: '20px', 
+                  width: '18px', 
+                  height: '18px', 
                   objectFit: 'contain', 
                   flexShrink: 0 
                 }}
@@ -230,10 +235,10 @@ export default function ItemModal({ selectedItem, setSelectedItem, resolveImageP
           {/* DESCRIPTION TEXT */}
           {selectedItem.description && (
             <p style={{ 
-              color: '#5A4A3E', 
+              color: '#57534E', 
               margin: 0, 
-              fontSize: '14px', 
-              lineHeight: '1.5', 
+              fontSize: '13.5px', 
+              lineHeight: '1.6', 
               fontWeight: '400' 
             }}>
               {selectedItem.description}
@@ -243,15 +248,15 @@ export default function ItemModal({ selectedItem, setSelectedItem, resolveImageP
           {/* HIGHLIGHTS / ALLERGEN BOX */}
           {selectedItem.highlights && (
             <div style={{ 
-              padding: '8px 12px', 
-              borderLeft: '4px solid #FF5958', 
-              borderRadius: '0 8px 8px 0',
+              padding: '10px 14px', 
+              borderLeft: '3.5px solid #FF5958', 
+              borderRadius: '0 10px 10px 0',
               backgroundColor: 'rgba(255, 89, 88, 0.06)', 
-              fontSize: '13px', 
-              color: '#D32F2F', 
+              fontSize: '12.5px', 
+              color: '#C53030', 
               fontStyle: 'italic', 
               fontWeight: '500',
-              lineHeight: '1.4'
+              lineHeight: '1.45'
             }}>
               {selectedItem.highlights}
             </div>
@@ -259,23 +264,23 @@ export default function ItemModal({ selectedItem, setSelectedItem, resolveImageP
 
           {/* NUTRITIONAL FACTS CONTAINER */}
           <div style={{ 
-            padding: '12px', 
+            padding: '14px', 
             borderRadius: '16px', 
-            backgroundColor: '#F7E7D4', 
-            border: '1px solid rgba(255, 89, 88, 0.3)'
+            backgroundColor: 'rgba(197, 160, 89, 0.08)', 
+            border: '1px solid rgba(197, 160, 89, 0.3)'
           }}>
             <div style={{ 
               display: 'flex', 
               alignItems: 'center', 
               gap: '6px', 
-              marginBottom: '6px', 
+              marginBottom: '10px', 
               fontSize: '11px', 
               fontWeight: '700', 
-              color: '#36281E', 
+              color: '#8A6D2B', 
               textTransform: 'uppercase', 
               letterSpacing: '0.8px'
             }}>
-              <Flame size={16} color="#FF5958" /> Nutritional Information (Per Portion)
+              <Flame size={15} color="#FF5958" /> Nutritional Information (Per Portion)
             </div>
             
             {/* NUTRITIONAL GRID */}
@@ -285,30 +290,30 @@ export default function ItemModal({ selectedItem, setSelectedItem, resolveImageP
               gap: '8px', 
               textAlign: 'center' 
             }}>
-              <div style={{ padding: '6px 4px', borderRadius: '8px', backgroundColor: '#FFFBF2' }}>
-                <div style={{ fontSize: '10px', color: '#8C7A6B', fontWeight: '700' }}>CALORIES</div>
-                <div style={{ marginTop: '-5px', fontSize: '12px', color: '#36281E', fontWeight: '700' }}>
+              <div style={{ padding: '8px 4px', borderRadius: '10px', backgroundColor: '#FFFFFF', border: '1px solid rgba(197, 160, 89, 0.2)' }}>
+                <div style={{ fontSize: '9.5px', color: '#78716C', fontWeight: '700' }}>CALORIES</div>
+                <div style={{ marginTop: '2px', fontSize: '13px', color: '#1A1816', fontWeight: '700' }}>
                   {selectedItem.calories || '240'}
                 </div>
               </div>
 
-              <div style={{ padding: '6px 4px', borderRadius: '8px', backgroundColor: '#FFFBF2' }}>
-                <div style={{ fontSize: '10px', color: '#8C7A6B', fontWeight: '700' }}>PROTEIN</div>
-                <div style={{ marginTop: '-5px', fontSize: '12px', color: '#36281E', fontWeight: '700' }}>
+              <div style={{ padding: '8px 4px', borderRadius: '10px', backgroundColor: '#FFFFFF', border: '1px solid rgba(197, 160, 89, 0.2)' }}>
+                <div style={{ fontSize: '9.5px', color: '#78716C', fontWeight: '700' }}>PROTEIN</div>
+                <div style={{ marginTop: '2px', fontSize: '13px', color: '#1A1816', fontWeight: '700' }}>
                   {selectedItem.protein || '12g'}
                 </div>
               </div>
 
-              <div style={{ padding: '6px 4px', borderRadius: '8px', backgroundColor: '#FFFBF2' }}>
-                <div style={{ fontSize: '10px', color: '#8C7A6B', fontWeight: '700' }}>CARBS</div>
-                <div style={{ marginTop: '-5px', fontSize: '12px', color: '#36281E', fontWeight: '700' }}>
+              <div style={{ padding: '8px 4px', borderRadius: '10px', backgroundColor: '#FFFFFF', border: '1px solid rgba(197, 160, 89, 0.2)' }}>
+                <div style={{ fontSize: '9.5px', color: '#78716C', fontWeight: '700' }}>CARBS</div>
+                <div style={{ marginTop: '2px', fontSize: '13px', color: '#1A1816', fontWeight: '700' }}>
                   {selectedItem.carbs || '18g'}
                 </div>
               </div>
 
-              <div style={{ padding: '6px 4px', borderRadius: '8px', backgroundColor: '#FFFBF2' }}>
-                <div style={{ fontSize: '10px', color: '#8C7A6B', fontWeight: '700' }}>FAT</div>
-                <div style={{ marginTop: '-5px', fontSize: '12px', color: '#36281E', fontWeight: '700' }}>
+              <div style={{ padding: '8px 4px', borderRadius: '10px', backgroundColor: '#FFFFFF', border: '1px solid rgba(197, 160, 89, 0.2)' }}>
+                <div style={{ fontSize: '9.5px', color: '#78716C', fontWeight: '700' }}>FAT</div>
+                <div style={{ marginTop: '2px', fontSize: '13px', color: '#1A1816', fontWeight: '700' }}>
                   {selectedItem.fat || '8g'}
                 </div>
               </div>
@@ -316,11 +321,9 @@ export default function ItemModal({ selectedItem, setSelectedItem, resolveImageP
           </div>
 
           {/* VISUAL DISCLAIMER */}
-          <div style={{
-            paddingTop: '1px' 
-          }}>
-            <span style={{ fontSize: '11px', color: '#8C7A6B', fontStyle: 'italic' }}>
-              * Visuals are for illustration. The final product may vary
+          <div style={{ paddingTop: '2px' }}>
+            <span style={{ fontSize: '11px', color: '#78716C', fontStyle: 'italic' }}>
+              * Visuals are for illustration. The final product may vary.
             </span>
           </div>
 

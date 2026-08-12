@@ -7,10 +7,10 @@ export default function PaymentVerificationView({
 }) {
   const activeTheme = {
     brand: theme?.brand || '#FF5958',
-    text: theme?.text || '#2C221E',
-    border: theme?.border || '1px solid rgba(216, 199, 165, 0.4)',
-    bg: theme?.bg || '#FFFFFF',
-    radius: theme?.radius || '16px',
+    text: theme?.text || '#1A1816',
+    border: theme?.border || '1px solid rgba(197, 160, 89, 0.4)',
+    bg: theme?.bg || '#FFFDF9',
+    radius: theme?.radius || '20px',
   };
 
   useEffect(() => {
@@ -33,17 +33,18 @@ export default function PaymentVerificationView({
       textAlign: 'center',
       boxSizing: 'border-box',
       minHeight: '400px',
-      width: '100%'
+      width: '100%',
+      fontFamily: "'Plus Jakarta Sans', sans-serif"
     }}>
       {/* Secure Card Container */}
       <div style={{
-        background: '#FFFBF2',
-        border: activeTheme.border,
+        background: 'linear-gradient(135deg, #FFFDF9 0%, #FAF4EB 100%)',
+        border: '1px solid rgba(197, 160, 89, 0.4)',
         borderRadius: activeTheme.radius,
         padding: '36px 24px',
         width: '100%',
         maxWidth: '360px',
-        boxShadow: '0 8px 24px rgba(0,0,0,0.06)',
+        boxShadow: '0 8px 24px rgba(44, 34, 30, 0.06)',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
@@ -66,7 +67,8 @@ export default function PaymentVerificationView({
         {/* Text Details */}
         <div>
           <h3 style={{ 
-            fontSize: '17px', 
+            fontFamily: "'Cormorant Garamond', serif",
+            fontSize: '21px', 
             fontWeight: '700', 
             color: activeTheme.text, 
             margin: '0 0 6px 0',
@@ -76,10 +78,11 @@ export default function PaymentVerificationView({
             Verifying Payment
           </h3>
           <p style={{ 
-            fontSize: '13px', 
-            color: '#776E62', 
+            fontSize: '12.5px', 
+            color: '#78716C', 
             margin: 0, 
-            lineHeight: '1.4' 
+            lineHeight: '1.4',
+            fontWeight: '500' 
           }}>
             Communicating securely with your bank. Please do not close or refresh this page.
           </p>
