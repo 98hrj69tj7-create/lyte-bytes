@@ -212,9 +212,11 @@ export default function AdminCustomerDashboard({ theme = {}, onBack, setView }) 
     radius: theme?.radius || '22px'
   };
 
-  // Auto scroll to top on selection change or mount
+  // Force scroll to absolute top immediately when selection changes
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo(0, 0);
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
   }, [selectedCustomer]);
 
   useEffect(() => {
