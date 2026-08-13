@@ -204,7 +204,7 @@ export default function AdminCustomerDashboard({ theme = {}, onBack, setView }) 
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCustomer, setSelectedCustomer] = useState(null);
 
-  const containerRef = useRef(null);
+  const topRef = useRef(null);
 
   const activeTheme = {
     brand: theme?.brand || '#FF5958',
@@ -214,14 +214,12 @@ export default function AdminCustomerDashboard({ theme = {}, onBack, setView }) 
     radius: theme?.radius || '22px'
   };
 
-  // Force scroll to absolute top immediately when selection changes
+  // Bulletproof scroll anchor snap to top on selection change
   useEffect(() => {
-    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
-    document.documentElement.scrollTop = 0;
-    document.body.scrollTop = 0;
-    if (containerRef.current) {
-      containerRef.current.scrollTop = 0;
+    if (topRef.current) {
+      topRef.current.scrollIntoView({ behavior: 'auto', block: 'start' });
     }
+    window.scrollTo({ top: 0, left: 0 });
   }, [selectedCustomer]);
 
   useEffect(() => {
@@ -418,7 +416,6 @@ export default function AdminCustomerDashboard({ theme = {}, onBack, setView }) 
      ========================================================================== */
   return (
     <div 
-      ref={containerRef}
       style={{ 
         display: 'flex', 
         flexDirection: 'column', 
@@ -430,6 +427,8 @@ export default function AdminCustomerDashboard({ theme = {}, onBack, setView }) 
         fontFamily: "'Plus Jakarta Sans', sans-serif"
       }}
     >
+      {/* Scroll Anchor Target */}
+      <div ref={topRef} />
 
       {/* HEADER SECTION */}
       <div style={{ 
