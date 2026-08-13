@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
   Lock, 
   User, 
@@ -204,6 +204,8 @@ export default function AdminCustomerDashboard({ theme = {}, onBack, setView }) 
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCustomer, setSelectedCustomer] = useState(null);
 
+  const containerRef = useRef(null);
+
   const activeTheme = {
     brand: theme?.brand || '#FF5958',
     text: theme?.text || '#1A1816',
@@ -214,9 +216,12 @@ export default function AdminCustomerDashboard({ theme = {}, onBack, setView }) 
 
   // Force scroll to absolute top immediately when selection changes
   useEffect(() => {
-    window.scrollTo(0, 0);
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
     document.documentElement.scrollTop = 0;
     document.body.scrollTop = 0;
+    if (containerRef.current) {
+      containerRef.current.scrollTop = 0;
+    }
   }, [selectedCustomer]);
 
   useEffect(() => {
@@ -412,16 +417,19 @@ export default function AdminCustomerDashboard({ theme = {}, onBack, setView }) 
      RENDER: DASHBOARD MAIN CONTAINER
      ========================================================================== */
   return (
-    <div style={{ 
-      display: 'flex', 
-      flexDirection: 'column', 
-      width: '100%', 
-      maxWidth: '1000px', 
-      margin: '0 auto', 
-      padding: '16px 16px 88px 16px', 
-      boxSizing: 'border-box',
-      fontFamily: "'Plus Jakarta Sans', sans-serif"
-    }}>
+    <div 
+      ref={containerRef}
+      style={{ 
+        display: 'flex', 
+        flexDirection: 'column', 
+        width: '100%', 
+        maxWidth: '1000px', 
+        margin: '0 auto', 
+        padding: '16px 16px 88px 16px', 
+        boxSizing: 'border-box',
+        fontFamily: "'Plus Jakarta Sans', sans-serif"
+      }}
+    >
 
       {/* HEADER SECTION */}
       <div style={{ 
