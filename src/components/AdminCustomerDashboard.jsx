@@ -485,7 +485,7 @@ export default function AdminCustomerDashboard({ theme = {}, onBack, setView }) 
       ) : selectedCustomer ? (
         
         /* ==========================================================================
-           2. DETAILED CUSTOMER CONTAINER (Clean Standard Normal View)
+           2. DETAILED CUSTOMER CONTAINER (Left-Aligned Details & Clean Layout)
            ========================================================================== */
         <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', width: '100%' }}>
           
@@ -525,12 +525,13 @@ export default function AdminCustomerDashboard({ theme = {}, onBack, setView }) 
                 display: 'flex',
                 flexDirection: 'column',
                 gap: '16px',
-                position: 'relative'
+                position: 'relative',
+                textAlign: 'left'
               }}>
 
                 <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '14px', width: '100%' }}>
                   
-                  <div style={{ display: 'flex', alignItems: 'flex-start', gap: '14px', flex: '1 1 auto', minWidth: 0 }}>
+                  <div style={{ display: 'flex', alignItems: 'flex-start', gap: '14px', flex: '1 1 auto', minWidth: 0, textAlign: 'left' }}>
                     
                     <div style={{ 
                       backgroundColor: 'rgba(197, 160, 89, 0.12)', 
@@ -546,7 +547,7 @@ export default function AdminCustomerDashboard({ theme = {}, onBack, setView }) 
                       <User size={22} color={tierStyle.accentColor} />
                     </div>
 
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', flex: 1, minWidth: 0 }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '3px', flex: 1, minWidth: 0, alignItems: 'flex-start', textAlign: 'left' }}>
                       
                       <h3 style={{ 
                         margin: 0, 
@@ -555,7 +556,9 @@ export default function AdminCustomerDashboard({ theme = {}, onBack, setView }) 
                         fontWeight: '700', 
                         whiteSpace: 'nowrap',
                         overflow: 'hidden',
-                        textOverflow: 'ellipsis'
+                        textOverflow: 'ellipsis',
+                        textAlign: 'left',
+                        width: '100%'
                       }}>
                         {selectedCustomer.name}
                       </h3>
@@ -567,21 +570,24 @@ export default function AdminCustomerDashboard({ theme = {}, onBack, setView }) 
                         fontWeight: '500', 
                         display: 'flex', 
                         alignItems: 'center', 
-                        gap: '6px' 
+                        gap: '6px',
+                        textAlign: 'left'
                       }}>
                         <Phone size={12} color={tierStyle.accentColor} /> {selectedCustomer.phone}
                       </p>
 
                       {selectedCustomer.custCode && (
                         <div style={{ 
-                          marginTop: '4px', 
+                          marginTop: '2px', 
                           fontSize: '11.5px', 
                           fontWeight: '600', 
                           color: '#78716C', 
                           fontFamily: 'monospace, sans-serif',
                           whiteSpace: 'nowrap',
                           overflow: 'hidden',
-                          textOverflow: 'ellipsis'
+                          textOverflow: 'ellipsis',
+                          textAlign: 'left',
+                          width: '100%'
                         }}>
                           {selectedCustomer.custCode}
                         </div>
@@ -615,7 +621,8 @@ export default function AdminCustomerDashboard({ theme = {}, onBack, setView }) 
                   boxSizing: 'border-box',
                   display: 'flex',
                   flexDirection: 'column',
-                  gap: '6px'
+                  gap: '6px',
+                  textAlign: 'left'
                 }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
@@ -671,7 +678,8 @@ export default function AdminCustomerDashboard({ theme = {}, onBack, setView }) 
                     display: 'flex',
                     flexDirection: 'column',
                     justifyContent: 'center',
-                    boxSizing: 'border-box'
+                    boxSizing: 'border-box',
+                    textAlign: 'left'
                   }}>
                     <span style={{ fontSize: '10.5px', fontWeight: '800', color: '#78716C', textTransform: 'uppercase', letterSpacing: '0.6px' }}>
                       Lifetime Spend
@@ -689,7 +697,8 @@ export default function AdminCustomerDashboard({ theme = {}, onBack, setView }) 
                     display: 'flex',
                     flexDirection: 'column',
                     justifyContent: 'center',
-                    boxSizing: 'border-box'
+                    boxSizing: 'border-box',
+                    textAlign: 'left'
                   }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
                       <ShoppingBag size={11} color="#78716C" />
@@ -708,62 +717,66 @@ export default function AdminCustomerDashboard({ theme = {}, onBack, setView }) 
           })()}
 
           {/* ORDER HISTORY SECTION */}
-          <h3 style={{ margin: '6px 0 0 2px', color: activeTheme.text, fontSize: '14px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+          <h3 style={{ margin: '6px 0 0 2px', color: activeTheme.text, fontSize: '14px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.5px', textAlign: 'left' }}>
             Order History ({selectedCustomer.orders.length})
           </h3>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-            {selectedCustomer.orders.map((ord, i) => (
-              <div 
-                key={i}
-                style={{ 
-                  display: 'flex', 
-                  justifyContent: 'space-between', 
-                  alignItems: 'center', 
-                  border: '1px solid rgba(197, 160, 89, 0.4)',
-                  borderRadius: activeTheme.radius,            
-                  background: 'linear-gradient(135deg, #FFFDF9 0%, #FAF4EB 100%)',                         
-                  padding: '12px 16px',                          
-                  boxShadow: '0 4px 16px rgba(44, 34, 30, 0.04)',
-                  boxSizing: 'border-box'
-                }}
-              >
-                <div style={{ flex: 1, paddingRight: '12px', textAlign: 'left' }}>
-                  <div style={{ fontWeight: '700', fontSize: '14px', color: activeTheme.text }}>
-                    {ord.orderNo}
+            {selectedCustomer.orders.map((ord, i) => {
+              const isPaid = ord.status.toLowerCase() === 'paid';
+              return (
+                <div 
+                  key={i}
+                  style={{ 
+                    display: 'flex', 
+                    justifyContent: 'space-between', 
+                    alignItems: 'center', 
+                    border: '1px solid rgba(197, 160, 89, 0.4)',
+                    borderRadius: activeTheme.radius,            
+                    background: 'linear-gradient(135deg, #FFFDF9 0%, #FAF4EB 100%)',                         
+                    padding: '12px 16px',                          
+                    boxShadow: '0 4px 16px rgba(44, 34, 30, 0.04)',
+                    boxSizing: 'border-box'
+                  }}
+                >
+                  <div style={{ flex: 1, paddingRight: '12px', textAlign: 'left' }}>
+                    <div style={{ fontWeight: '700', fontSize: '14px', color: activeTheme.text, textAlign: 'left' }}>
+                      {ord.orderNo}
+                    </div>
+                    <div style={{ fontSize: '12.5px', color: activeTheme.brand, fontWeight: '600', marginTop: '2px', textAlign: 'left' }}>
+                      {ord.item}
+                    </div>
+                    <div style={{ fontSize: '11.5px', color: '#78716C', fontWeight: '500', marginTop: '3px', display: 'flex', alignItems: 'center', gap: '4px', textAlign: 'left' }}>
+                      <Calendar size={11} /> {ord.date} • Qty: {ord.qty}
+                    </div>
                   </div>
-                  <div style={{ fontSize: '12.5px', color: activeTheme.brand, fontWeight: '600', marginTop: '2px' }}>
-                    {ord.item}
-                  </div>
-                  <div style={{ fontSize: '11.5px', color: '#78716C', fontWeight: '500', marginTop: '3px', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                    <Calendar size={11} /> {ord.date} • Qty: {ord.qty}
-                  </div>
-                </div>
 
-                <div style={{ textAlign: 'right', flexShrink: 0 }}>
-                  <div style={{ fontWeight: '700', fontSize: '14.5px', color: activeTheme.text, marginBottom: '4px' }}>
-                    ₹{ord.total}
+                  <div style={{ textAlign: 'right', flexShrink: 0 }}>
+                    <div style={{ fontWeight: '700', fontSize: '14.5px', color: activeTheme.text, marginBottom: '4px' }}>
+                      ₹{ord.total}
+                    </div>
+                    <span style={{ 
+                      fontSize: '11px', 
+                      fontWeight: '700', 
+                      color: isPaid ? '#059669' : '#DC2626',
+                      backgroundColor: isPaid ? '#ECFDF5' : 'rgba(239, 68, 68, 0.1)',
+                      padding: '3px 8px',
+                      borderRadius: '6px',
+                      textTransform: 'uppercase',
+                      display: 'inline-block'
+                    }}>
+                      {ord.status}
+                    </span>
                   </div>
-                  <span style={{ 
-                    fontSize: '11px', 
-                    fontWeight: '700', 
-                    color: ord.status.toLowerCase() === 'paid' ? '#059669' : '#D97706',
-                    backgroundColor: ord.status.toLowerCase() === 'paid' ? '#ECFDF5' : '#FFFBEB',
-                    padding: '3px 8px',
-                    borderRadius: '6px',
-                    textTransform: 'uppercase'
-                  }}>
-                    {ord.status}
-                  </span>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       ) : (
         
         /* ==========================================================================
-           1. DIRECTORY LIST CONTAINER (Clean Normal List View)
+           1. DIRECTORY LIST CONTAINER (Clean Left-Aligned List View)
            ========================================================================== */
         <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', width: '100%' }}>
           
@@ -830,7 +843,7 @@ export default function AdminCustomerDashboard({ theme = {}, onBack, setView }) 
                       <User size={18} color="#78716C" />
                     </div>
 
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', minWidth: 0 }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', minWidth: 0, textAlign: 'left', alignItems: 'flex-start' }}>
                       
                       <h4 style={{ 
                         margin: 0, 
@@ -839,7 +852,8 @@ export default function AdminCustomerDashboard({ theme = {}, onBack, setView }) 
                         fontWeight: '700', 
                         whiteSpace: 'nowrap',
                         overflow: 'hidden', 
-                        textOverflow: 'ellipsis' 
+                        textOverflow: 'ellipsis',
+                        textAlign: 'left'
                       }}>
                         {customer.name}
                       </h4>
@@ -847,7 +861,8 @@ export default function AdminCustomerDashboard({ theme = {}, onBack, setView }) 
                       <div style={{ 
                         fontSize: '11.5px', 
                         color: '#78716C', 
-                        fontWeight: '500' 
+                        fontWeight: '500',
+                        textAlign: 'left'
                       }}>
                         {customer.phone}
                       </div>
