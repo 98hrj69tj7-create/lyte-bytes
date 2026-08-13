@@ -11,9 +11,15 @@ export default function InstallPrompt({ theme = {} }) {
     const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
     if (isStandalone) return;
 
-    // 2. Check if the user previously dismissed the install prompt
-    const hasDismissedInstall = localStorage.getItem('lyte_bytes_pwa_dismissed');
-    if (hasDismissedInstall) return;
+    // 2. Check 2-hour cooldown window for dismissal
+    const dismissedTime = localStorage.getItem('lyte_bytes_pwa_dismissed_time');
+    const now = new Date().getTime();
+    const twoHoursInMs = 2 * 60 * 60 * 1000;
+    
+    // If it was dismissed less than 2 hours ago, keep it hidden
+    if (dismissedTime && (now - parseInt(dismissedTime, 10)) < twoHoursInMs) {
+      return;
+    }
 
     // Detect iOS device
     const userAgent = window.navigator.userAgent.toLowerCase();
@@ -53,7 +59,8 @@ export default function InstallPrompt({ theme = {} }) {
 
   const handleDismiss = () => {
     setShowBanner(false);
-    localStorage.setItem('lyte_bytes_pwa_dismissed', 'true');
+    // Save current timestamp so it only reappears after 2 hours
+    localStorage.setItem('lyte_bytes_pwa_dismissed_time', new Date().getTime().toString());
   };
 
   const handleInstallClick = async () => {
@@ -165,7 +172,7 @@ export default function InstallPrompt({ theme = {} }) {
             fontWeight: '500' 
           }}>
             {isIos 
-              ? "To install our app on your device, tap the Share button (⎋) below and select 'Add to Home Screen'."
+              ? "To install our app on your device, tap the Share button (⎋) below and select 'Add to Home Screen' (➕)."
               : "Add Lyte Bytes to your home screen for quick ordering, instant access, and an app-like experience."}
           </p>
         </div>
