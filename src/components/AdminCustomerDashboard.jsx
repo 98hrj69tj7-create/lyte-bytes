@@ -609,7 +609,7 @@ export default function AdminCustomerDashboard({ theme = {}, onBack, setView }) 
                   <div style={{ 
                     background: tierStyle.badgeBg,
                     color: tierStyle.badgeText,
-                    padding: '6px 14px', 
+                    padding: '3px 10px', 
                     borderRadius: '12px', 
                     fontSize: '11px', 
                     fontWeight: '800',
@@ -696,7 +696,7 @@ export default function AdminCustomerDashboard({ theme = {}, onBack, setView }) 
                       <span style={{ color: tierStyle.accentColor, fontWeight: '800' }}>👑 Maximum Elite Tier Achieved! You rule the kitchen.</span>
                     ) : (
                       <span>
-                        Only <strong style={{ color: activeTheme.text, fontWeight: '800' }}>{milestone.ptsRemaining} Pts</strong> away from unlocking <strong style={{ color: tierStyle.accentColor, fontWeight: '800' }}>{milestone.nextTierName}</strong> privileges!
+                        <strong style={{ color: activeTheme.text, fontWeight: '800' }}>{milestone.ptsRemaining} Pts</strong> away from unlocking <strong style={{ color: tierStyle.accentColor, fontWeight: '600' }}>{milestone.nextTierName}</strong>!
                       </span>
                     )}
                   </div>
