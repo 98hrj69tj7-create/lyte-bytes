@@ -29,16 +29,6 @@ const resolveImagePath = (path, folder = '') => {
   return `${base}${cleanPath}`;
 };
 
-// --- THEME ---
-const appTheme = {
-  bg: '#FFFDF9',
-  text: '#1A1816',
-  brand: '#FF5958',
-  buttonBg: '#FF5958',
-  border: '1px solid rgba(197, 160, 89, 0.4)',
-  radius: '20px'
-};
-
 // --- SHARED STYLES WITH FOCUS/TAP RESETS ---
 const actionButtonStyle = {
   width: '100%', 
@@ -84,6 +74,34 @@ const inputStyle = {
 const accordionHeaderStyle = {
   display: 'flex', alignItems: 'center', justifyContent: 'flex-start', gap: '10px', padding: '12px 15px', border: '1px solid rgba(197, 160, 89, 0.4)', borderRadius: '14px', cursor: 'pointer', color: '#FF5958', fontWeight: '700', backgroundColor: '#FFFFFF', marginBottom: '10px', outline: 'none', WebkitTapHighlightColor: 'transparent', userSelect: 'none', fontFamily: "'Plus Jakarta Sans', sans-serif"
 };
+
+// --- PAGE TRANSITION WRAPPER FOR SMOOTH FLOW ---
+function PageTransition({ children, viewKey }) {
+  return (
+    <div key={viewKey} style={{
+      animation: 'fadeInUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+      width: '100%',
+      display: 'flex',
+      flexDirection: 'column',
+      flex: 1,
+      boxSizing: 'border-box'
+    }}>
+      <style>{`
+        @keyframes fadeInUp {
+          0% {
+            opacity: 0;
+            transform: translateY(8px);
+          }
+          100% {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+      `}</style>
+      {children}
+    </div>
+  );
+}
 
 // --- HELPER FOR PERSISTENCE ---
 function useLocalStorage(key, initialValue) {
@@ -353,152 +371,176 @@ export default function App() {
     <div style={{ height: '100dvh', display: 'flex', flexDirection: 'column', position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: theme.bg, color: theme.text, fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
       <LimitedOfferModal theme={theme} setView={setView} />
       <Header theme={theme} setView={setView} />
-      <main style={{ flex: 1, paddingTop: '5px', paddingLeft: '20px', paddingRight: '20px', paddingBottom: '80px', overflowY: 'auto' }}>
-        {view === 'offers' && <OffersTab theme={theme} />}
+      <main style={{ flex: 1, paddingTop: '5px', paddingLeft: '20px', paddingRight: '20px', paddingBottom: '80px', overflowY: 'auto', display: 'flex', flexDirection: 'column' }}>
+        {view === 'offers' && (
+          <PageTransition viewKey="offers">
+            <OffersTab theme={theme} />
+          </PageTransition>
+        )}
 
         {(view === 'home' || view === 'subcat') && (
-          <HomeAndSubCategoryView
-            view={view}
-            theme={theme}
-            searchQuery={searchQuery}
-            setSearchQuery={setSearchQuery}
-            layout={layout}
-            setLayout={setLayout}
-            menuData={menuData}
-            activeCat={activeCat}
-            setActiveCat={setActiveCat}
-            setActiveSub={setActiveSub}
-            setView={setView}
-            openModal={openModal}
-            addToCart={addToCart}
-            resolveImagePath={resolveImagePath}
-            onStoryToggle={setIsStoryExpanded}
-          />
+          <PageTransition viewKey={view}>
+            <HomeAndSubCategoryView
+              view={view}
+              theme={theme}
+              searchQuery={searchQuery}
+              setSearchQuery={setSearchQuery}
+              layout={layout}
+              setLayout={setLayout}
+              menuData={menuData}
+              activeCat={activeCat}
+              setActiveCat={setActiveCat}
+              setActiveSub={setActiveSub}
+              setView={setView}
+              openModal={openModal}
+              addToCart={addToCart}
+              resolveImagePath={resolveImagePath}
+              onStoryToggle={setIsStoryExpanded}
+            />
+          </PageTransition>
         )}
 
         {view === 'items' && (
-          <ItemsView
-            setView={setView}
-            backButtonStyle={backButtonStyle}
-            theme={theme}
-            searchQuery={searchQuery}
-            setSearchQuery={setSearchQuery}
-            isNonVeg={isNonVeg}
-            setIsNonVeg={setIsNonVeg}
-            layout={layout}
-            setLayout={setLayout}
-            menuData={menuData}
-            activeCat={activeCat}
-            activeSub={activeSub}
-            openModal={openModal}
-            addToCart={addToCart}
-            resolveImagePath={resolveImagePath}
-          />
+          <PageTransition viewKey="items">
+            <ItemsView
+              setView={setView}
+              backButtonStyle={backButtonStyle}
+              theme={theme}
+              searchQuery={searchQuery}
+              setSearchQuery={setSearchQuery}
+              isNonVeg={isNonVeg}
+              setIsNonVeg={setIsNonVeg}
+              layout={layout}
+              setLayout={setLayout}
+              menuData={menuData}
+              activeCat={activeCat}
+              activeSub={activeSub}
+              openModal={openModal}
+              addToCart={addToCart}
+              resolveImagePath={resolveImagePath}
+            />
+          </PageTransition>
         )}
 
         {view === 'cart' && (
-          <CartView
-            setView={setView}
-            backButtonStyle={backButtonStyle}
-            theme={theme}
-            cart={cart}
-            removeFromCart={removeFromCart}
-            addToCart={addToCart}
-            total={total}
-            handleProceedToDelivery={handleProceedToDelivery}
-            actionButtonStyle={actionButtonStyle}
-            secondaryButtonStyle={secondaryButtonStyle}
-          />
+          <PageTransition viewKey="cart">
+            <CartView
+              setView={setView}
+              backButtonStyle={backButtonStyle}
+              theme={theme}
+              cart={cart}
+              removeFromCart={removeFromCart}
+              addToCart={addToCart}
+              total={total}
+              handleProceedToDelivery={handleProceedToDelivery}
+              actionButtonStyle={actionButtonStyle}
+              secondaryButtonStyle={secondaryButtonStyle}
+            />
+          </PageTransition>
         )}
 
         {view === 'verifying' && (
-          <PaymentVerificationView
-            theme={theme}
-            onVerificationComplete={() => setView('track')}
-          />
+          <PageTransition viewKey="verifying">
+            <PaymentVerificationView
+              theme={theme}
+              onVerificationComplete={() => setView('track')}
+            />
+          </PageTransition>
         )}
 
         {view === 'track' && (
-          <TrackView
-            setView={setView}
-            currentStage={currentStage}
-            theme={theme}
-            backButtonStyle={backButtonStyle}
-            actionButtonStyle={actionButtonStyle}
-            secondaryButtonStyle={secondaryButtonStyle}
-            setCart={setCart}
-            cart={cart}
-          />
+          <PageTransition viewKey="track">
+            <TrackView
+              setView={setView}
+              currentStage={currentStage}
+              theme={theme}
+              backButtonStyle={backButtonStyle}
+              actionButtonStyle={actionButtonStyle}
+              secondaryButtonStyle={secondaryButtonStyle}
+              setCart={setCart}
+              cart={cart}
+            />
+          </PageTransition>
         )}
 
         {view === 'delivery' && (
-          <DeliveryView
-            theme={theme}
-            setView={setView}
-            customer={customer}
-            setCustomer={setCustomer}
-            deliveryDate={deliveryDate}
-            setDeliveryDate={setDeliveryDate}
-            deliveryTime={deliveryTime}
-            setDeliveryTime={setDeliveryTime}
-            showConditions={showConditions}
-            setShowConditions={setShowConditions}
-            handleProceedToPayment={handleProceedToPayment}
-            handleFieldBlur={handleFieldBlur}
-            setPressedBtn={setPressedBtn}
-            getPressStyle={getPressStyle}
-            backButtonStyle={backButtonStyle}
-            actionButtonStyle={actionButtonStyle}
-            secondaryButtonStyle={secondaryButtonStyle}
-            inputStyle={inputStyle}
-            accordionHeaderStyle={accordionHeaderStyle}
-          />
+          <PageTransition viewKey="delivery">
+            <DeliveryView
+              theme={theme}
+              setView={setView}
+              customer={customer}
+              setCustomer={setCustomer}
+              deliveryDate={deliveryDate}
+              setDeliveryDate={setDeliveryDate}
+              deliveryTime={deliveryTime}
+              setDeliveryTime={setDeliveryTime}
+              showConditions={showConditions}
+              setShowConditions={setShowConditions}
+              handleProceedToPayment={handleProceedToPayment}
+              handleFieldBlur={handleFieldBlur}
+              setPressedBtn={setPressedBtn}
+              getPressStyle={getPressStyle}
+              backButtonStyle={backButtonStyle}
+              actionButtonStyle={actionButtonStyle}
+              secondaryButtonStyle={secondaryButtonStyle}
+              inputStyle={inputStyle}
+              accordionHeaderStyle={accordionHeaderStyle}
+            />
+          </PageTransition>
         )}
 
         {view === 'payment' && (
-          <PaymentView
-            theme={theme}
-            setView={setView}
-            cart={cart}
-            total={total}
-            customer={customer}
-            payment={payment}
-            setPayment={setPayment}
-            upiApp={upiApp}
-            setUpiApp={setUpiApp}
-            upiId={upiId}
-            setUpiId={setUpiId}
-            upiMappings={UPI_MAPPINGS}
-            handleUPIPayment={handleUPIPayment}
-            handlePaymentComplete={handlePaymentComplete}
-            setPressedBtn={setPressedBtn}
-            getPressStyle={getPressStyle}
-            backButtonStyle={backButtonStyle}
-            actionButtonStyle={actionButtonStyle}
-            secondaryButtonStyle={secondaryButtonStyle}
-          />
+          <PageTransition viewKey="payment">
+            <PaymentView
+              theme={theme}
+              setView={setView}
+              cart={cart}
+              total={total}
+              customer={customer}
+              payment={payment}
+              setPayment={setPayment}
+              upiApp={upiApp}
+              setUpiApp={setUpiApp}
+              upiId={upiId}
+              setUpiId={setUpiId}
+              upiMappings={UPI_MAPPINGS}
+              handleUPIPayment={handleUPIPayment}
+              handlePaymentComplete={handlePaymentComplete}
+              setPressedBtn={setPressedBtn}
+              getPressStyle={getPressStyle}
+              backButtonStyle={backButtonStyle}
+              actionButtonStyle={actionButtonStyle}
+              secondaryButtonStyle={secondaryButtonStyle}
+            />
+          </PageTransition>
         )}
 
         {view?.toLowerCase() === 'info' && (
-          <SupportInfoView
-            theme={theme}
-            setView={setView}
-          />
+          <PageTransition viewKey="info">
+            <SupportInfoView
+              theme={theme}
+              setView={setView}
+            />
+          </PageTransition>
         )}
 
         {(view === 'account' || view === 'profile') && (
-          <CustomerView
-            onBack={() => setView('home')}
-            customer={customer}
-          />
+          <PageTransition viewKey={view}>
+            <CustomerView
+              onBack={() => setView('home')}
+              customer={customer}
+            />
+          </PageTransition>
         )}
 
         {view === 'admin-customers' && (
-          <AdminCustomerDashboard
-            theme={theme}
-            onBack={() => setView('home')}
-            setView={setView}
-          />
+          <PageTransition viewKey="admin-customers">
+            <AdminCustomerDashboard
+              theme={theme}
+              onBack={() => setView('home')}
+              setView={setView}
+            />
+          </PageTransition>
         )}
       </main>
 

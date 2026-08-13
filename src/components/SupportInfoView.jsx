@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { 
   ArrowLeft, MessageCircle, CheckCircle, Mail, Star, ChevronRight, 
-  FileText, Gift, Camera 
+  FileText, Gift, Camera, Heart, ChevronLeft 
 } from 'lucide-react';
 import { GeneralTermsModalContent } from './PolicyContents';
 
-function TestimonialCard({ item, onClick, renderWatermarkSvg, renderSourceLogo, activeTheme, isGroup2 = false }) {
+function TestimonialCard({ item, onClick, renderWatermarkSvg, renderSourceLogo, activeTheme, style = {} }) {
   const [hasMoreLines, setHasMoreLines] = useState(false);
   const textRef = useRef(null);
 
@@ -13,7 +13,7 @@ function TestimonialCard({ item, onClick, renderWatermarkSvg, renderSourceLogo, 
     const checkLines = () => {
       if (textRef.current) {
         const el = textRef.current;
-        const computedLineHeight = parseFloat(window.getComputedStyle(el).lineHeight) || (isGroup2 ? 14.85 : 16.2);
+        const computedLineHeight = parseFloat(window.getComputedStyle(el).lineHeight) || 16.8;
         
         el.style.display = 'block';
         el.style.webkitLineClamp = 'unset';
@@ -30,21 +30,20 @@ function TestimonialCard({ item, onClick, renderWatermarkSvg, renderSourceLogo, 
     checkLines();
     window.addEventListener('resize', checkLines);
     return () => window.removeEventListener('resize', checkLines);
-  }, [item.text, isGroup2]);
+  }, [item.text]);
 
   return (
     <div 
       onClick={onClick}
       className="support-card"
       style={{
-        flex: '0 0 260px',
-        width: '260px',
-        height: '124px',
-        backgroundColor: '#FFFFFF',
-        border: '1px solid rgba(197, 160, 89, 0.4)', 
-        borderRadius: '14px', 
-        padding: '10px 12px',
-        boxShadow: '0 4px 16px rgba(44, 34, 30, 0.04)', 
+        width: '100%',
+        height: '132px',
+        background: 'linear-gradient(135deg, #FFFFFF 0%, #FAF6EE 100%)',
+        border: '1px solid rgba(197, 160, 89, 0.45)',
+        borderRadius: '16px',
+        padding: '10px 16px',
+        boxShadow: '0 6px 20px rgba(44, 34, 30, 0.05)', 
         display: 'flex', 
         flexDirection: 'column',
         justifyContent: 'space-between', 
@@ -52,17 +51,17 @@ function TestimonialCard({ item, onClick, renderWatermarkSvg, renderSourceLogo, 
         boxSizing: 'border-box',
         position: 'relative',
         overflow: 'hidden',
-        fontFamily: "'Plus Jakarta Sans', sans-serif"
+        fontFamily: "'Plus Jakarta Sans', sans-serif",
+        ...style
       }}
     >
       <div style={{
         position: 'absolute',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%) rotate(-15deg)',
-        width: '100px',
-        height: '100px',
-        opacity: 0.035,
+        bottom: '10px',
+        right: '12px',
+        width: '32px',
+        height: '32px',
+        opacity: 0.15,
         pointerEvents: 'none',
         zIndex: 0,
         display: 'flex',
@@ -79,54 +78,47 @@ function TestimonialCard({ item, onClick, renderWatermarkSvg, renderSourceLogo, 
             className="testimonial-text-clamp" 
             style={{ 
               margin: 0, 
-              fontSize: isGroup2 ? '11.5px' : '12px', 
+              fontSize: '12px',
               color: activeTheme.text, 
-              lineHeight: '1.4', 
-              fontStyle: isGroup2 ? 'italic' : 'normal',
-              fontFamily: "'Cormorant Garamond', serif",
-              fontWeight: '500'
+              lineHeight: '1.45', 
+              fontFamily: "'Plus Jakarta Sans', sans-serif", 
+              fontWeight: '400'
             }}
           >
             "{item.text}"
           </p>
           {hasMoreLines && (
-            <span style={{ fontSize: isGroup2 ? '10px' : '10.5px', color: '#FF5958', fontWeight: '700', display: 'inline-block', marginTop: '1px', letterSpacing: '0.2px' }}>
-              Read more &rarr;
+            <span style={{ fontSize: '10.5px', color: '#FF5958', fontWeight: '500', display: 'inline-block', marginTop: '2px', letterSpacing: '0.2px' }}>
+              Read more...
             </span>
           )}
         </div>
 
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '10.5px', borderTop: '1px solid rgba(197, 160, 89, 0.25)', paddingTop: '6px', marginTop: '2px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <span style={{ fontWeight: isGroup2 ? '700' : '600', color: activeTheme.text }}>
-              {isGroup2 ? `— ${item.author}` : item.author}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '10.5px', paddingTop: '8px', marginTop: '4px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <span style={{ fontWeight: '600', color: activeTheme.text, fontFamily: "sans-serif", fontSize: '12px' }}>
+              {item.author}
             </span>
-            {/* Camera badge if image is attached */}
             {item.imageUrl && (
               <span style={{
-                fontSize: '9px',
-                color: '#C5A059',
-                backgroundColor: 'rgba(197, 160, 89, 0.12)',
-                padding: '1px 6px',
+                fontSize: '10px',
+                color: '#8A6D2B',
+                backgroundColor: 'rgba(197, 160, 89, 0.15)',
+                padding: '2px 6px',
                 borderRadius: '6px',
                 fontWeight: '700',
                 display: 'inline-flex',
                 alignItems: 'center',
-                gap: '3px'
+                gap: '3px',
+                border: '1px solid rgba(197, 160, 89, 0.3)'
               }}>
-                <Camera size={10} color="#C5A059" /> Photo
+                <Camera size={10} color="#8A6D2B" /> Photo
               </span>
             )}
           </div>
-
-          <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-            {renderSourceLogo(item.source)}
-            {isGroup2 && (
-              <span style={{ fontSize: '9px', color: '#78716C', textTransform: 'capitalize', fontWeight: '600' }}>
-                {item.source}
-              </span>
-            )}
-          </div>
+          <span style={{ fontSize: '10px', color: '#78716C', textTransform: 'capitalize', fontWeight: '600' }}>
+            {item.source}
+          </span>
         </div>
       </div>
     </div>
@@ -139,44 +131,36 @@ export default function SupportInfoView({
 }) {
   const [termsOpen, setTermsOpen] = useState(false);
   const [selectedReview, setSelectedReview] = useState(null);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [stackAnim, setStackAnim] = useState(false);
+  
+  const touchStartX = useRef(0);
+  const touchEndX = useRef(0);
 
-  const [testimonials, setTestimonials] = useState([
-    {
-      id: 1,
-      source: 'facebook',
-      text: 'This customised wedding cake made our day extra special because not just the cake ruled, but the taste was beyond comparison!',
-      author: 'Deborah Sarkar',
-      imageUrl: 'https://images.unsplash.com/photo-1535141192574-5d4897c13136?auto=format&fit=crop&q=80&w=600'
-    },
-    {
-      id: 2,
-      source: 'google',
-      text: 'The best pickles and homemade treats! Authentic taste and amazing packaging.',
-      author: 'Priya S.'
-    },
-    {
-      id: 3,
-      source: 'instagram',
-      text: 'Loved the Jam and pickles! Super quick delivery and top-notch quality.',
-      author: 'Lizy Priya',
-      imageUrl: 'https://images.unsplash.com/photo-1589135113942-8c10fae13460?auto=format&fit=crop&q=80&w=600'
-    },
-    {
-      id: 4,
-      source: 'whatsapp',
-      text: 'Received the order safely today. The tomato pickle reminds me of home!',
-      author: 'Angelina.'
-    },
-    {
-      id: 5,
-      source: 'whatsapp',
-      text: 'The gesture boxes and custom sweets arrived perfectly on time. Everyone loved them!',
-      author: 'Karthik R.'
+  const INITIAL_FALLBACK_REVIEWS = [
+    { id: 1, source: 'google', text: 'The best pickles and homemade treats! Authentic taste and amazing packaging.', author: 'Priya S.' },
+    { id: 2, source: 'facebook', text: 'This customised wedding cake made our day extra special because the taste was beyond comparison!', author: 'Deborah Sarkar' },
+    { id: 3, source: 'instagram', text: 'Loved the Jam and pickles! Super quick delivery and top-notch quality.', author: 'Lizy Priya' },
+    { id: 4, source: 'whatsapp', text: 'Received the order safely today. The tomato pickle reminds me of home!', author: 'Angelina.' }
+  ];
+
+  // Stale-While-Revalidate: Instant initialization from localStorage cache (0ms lag)
+  const [testimonials, setTestimonials] = useState(() => {
+    try {
+      const cached = localStorage.getItem('lytebytes_cached_reviews');
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      }
+    } catch (e) {
+      console.error('Error reading cache', e);
     }
-  ]);
+    return INITIAL_FALLBACK_REVIEWS;
+  });
 
+  // Stale-While-Revalidate: Background sync without UI jank or spinners
   useEffect(() => {
-    const fetchReviews = async () => {
+    const fetchFreshReviews = async () => {
       try {
         const SHEET_API_URL = 'https://script.google.com/macros/s/AKfycbxdXpaz1SsK_mPTIfYAWK_yXQnHNiAUDtQS8g6ZrgqgP0bR6cPbr-bnuS2whC-lG8T_/exec';
         if (SHEET_API_URL.includes('YOUR_GOOGLE_')) return;
@@ -187,25 +171,71 @@ export default function SupportInfoView({
         if (data && data.length > 0) {
           const normalizedReviews = data
             .map(item => ({
-              id: item.ID || item.id || Math.random(),
-              text: item.Text || item.text || '',
-              author: item.Author || item.author || 'Customer',
-              source: (item.Source || item.source || 'google').toLowerCase(),
-              imageUrl: item.Image || item.image || item.Photo || item.photo || item.imageUrl || item['Image URL'] || null
+              id: item.id || item.ID || Math.random(),
+              text: item.text || item.Text || '',
+              author: item.author || item.Author || 'Customer',
+              source: (item.source || item.Source || 'google').toLowerCase(),
+              imageUrl: item.image || item.Image || item.Photo || item.photo || item.imageUrl || item['Image URL'] || null
             }))
             .filter(item => item.text && item.text.trim().length > 0);
           
           if (normalizedReviews.length > 0) {
-            setTestimonials(normalizedReviews);
+            const freshString = JSON.stringify(normalizedReviews);
+            const cachedString = localStorage.getItem('lytebytes_cached_reviews');
+            
+            if (freshString !== cachedString) {
+              const shuffled = [...normalizedReviews];
+              for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+              }
+              setTestimonials(shuffled);
+              localStorage.setItem('lytebytes_cached_reviews', freshString);
+            }
           }
         }
       } catch (error) {
-        console.error('Failed to fetch live reviews, using fallback data:', error);
+        console.error('Background sync failed:', error);
       }
     };
 
-    fetchReviews();
+    fetchFreshReviews();
   }, []);
+
+  const handleNextCard = () => {
+    if (stackAnim) return;
+    setStackAnim(true);
+    setTimeout(() => {
+      setCurrentIndex((prev) => (prev === testimonials.length - 1 ? 0 : prev + 1));
+      setStackAnim(false);
+    }, 280);
+  };
+
+  const handlePrevCard = () => {
+    if (stackAnim) return;
+    setStackAnim(true);
+    setTimeout(() => {
+      setCurrentIndex((prev) => (prev === 0 ? testimonials.length - 1 : prev - 1));
+      setStackAnim(false);
+    }, 280);
+  };
+
+  const handleTouchStart = (e) => {
+    touchStartX.current = e.targetTouches[0].clientX;
+  };
+
+  const handleTouchMove = (e) => {
+    touchEndX.current = e.targetTouches[0].clientX;
+  };
+
+  const handleTouchEnd = () => {
+    const swipeDistance = touchStartX.current - touchEndX.current;
+    if (swipeDistance > 50) {
+      handleNextCard();
+    } else if (swipeDistance < -50) {
+      handlePrevCard();
+    }
+  };
 
   const activeTheme = {
     brand: theme?.brand || '#FF5958',
@@ -240,8 +270,8 @@ export default function SupportInfoView({
         );
       case 'whatsapp':
         return (
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="#25D366">
-            <path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0012.04 2z"/>
+          <svg viewBox="0 0 24 24" style={{ width: '100%', height: '100%' }}>
+            <path fill="#25D366" d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0012.04 2z"/>
           </svg>
         );
       default:
@@ -292,26 +322,6 @@ export default function SupportInfoView({
 
   const handleWhatsAppClick = (e) => {
     e.preventDefault();
-    const vcardData = [
-      'BEGIN:VCARD',
-      'VERSION:3.0',
-      'FN:Lyte Bytes',
-      'ORG:Lyte Bytes - Gourmet Delights',
-      'TEL;TYPE=WORK,VOICE:+919108286886',
-      'NOTE:Handcrafted Goodness & Gourmet Delights Since 1995',
-      'END:VCARD'
-    ].join('\n');
-
-    const blob = new Blob([vcardData], { type: 'text/vcard;charset=utf-8' });
-    const url = window.URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.setAttribute('download', 'Lyte_Bytes_Contact.vcf');
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    window.URL.revokeObjectURL(url);
-
     const message = "Hi, I would like to get assistance from Lyte Bytes Support.";
     const waUrl = `https://wa.me/9108286886?text=${encodeURIComponent(message)}`;
     window.open(waUrl, '_blank');
@@ -323,6 +333,8 @@ export default function SupportInfoView({
     const waUrl = `https://wa.me/9108286886?text=${encodeURIComponent(message)}`;
     window.open(waUrl, '_blank');
   };
+
+  const currentReview = testimonials[currentIndex] || testimonials[0];
 
   return (
     <div style={{ 
@@ -338,40 +350,23 @@ export default function SupportInfoView({
       fontFamily: "'Plus Jakarta Sans', sans-serif"
     }}>
       <style>{`
-        @keyframes scrollTicker {
-          0% { transform: translate3d(0, 0, 0); }
-          100% { transform: translate3d(-50%, 0, 0); }
-        }
         @keyframes prismSweep {
           0% { left: -150%; }
           30% { left: 150%; }
           100% { left: 150%; }
         }
-        .testimonial-track {
-          display: flex;
-          gap: 0;
-          width: max-content;
-          flex-shrink: 0;
-          will-change: transform;
-          transform: translate3d(0, 0, 0);
-          animation: scrollTicker 42s linear infinite;
-        }
-        .testimonial-group {
-          display: flex;
-          gap: 16px;
-          flex-shrink: 0;
-        }
-        .testimonial-track:hover {
-          animation-play-state: paused;
+        @keyframes slideOutCard {
+          0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+          100% { transform: translateY(35px) rotate(3deg); opacity: 0; }
         }
         .support-card {
-          transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+          transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s ease;
           cursor: pointer;
         }
         .support-card:hover {
-          transform: translateY(-3px);
-          box-shadow: 0 12px 30px rgba(44, 34, 30, 0.08) !important;
-          border-color: rgba(197, 160, 89, 0.6) !important;
+          transform: translateY(-4px);
+          box-shadow: 0 14px 34px rgba(44, 34, 30, 0.1) !important;
+          border-color: rgba(197, 160, 89, 0.8) !important;
         }
         .testimonial-text-clamp {
           display: -webkit-box;
@@ -380,39 +375,15 @@ export default function SupportInfoView({
           overflow: hidden;
           text-overflow: ellipsis;
         }
-        .ticker-mask-container {
-          position: relative;
-          width: 100%;
-          overflow: hidden;
-          box-sizing: border-box;
-        }
-        .ticker-mask-container::before,
-        .ticker-mask-container::after {
-          content: '';
-          position: absolute;
-          top: 0;
-          bottom: 0;
-          width: 45px;
-          z-index: 2;
-          pointer-events: none;
-        }
-        .ticker-mask-container::before {
-          left: 0;
-          background: linear-gradient(to right, #FFFDF9, rgba(255, 253, 249, 0));
-        }
-        .ticker-mask-container::after {
-          right: 0;
-          background: linear-gradient(to left, #FFFDF9, rgba(255, 253, 249, 0));
-        }
       `}</style>
 
-      {/* ================= UNIFORM HEADER SECTION ================= */}
+      {/* Header Navigation */}
       <div style={{ display: 'flex', alignItems: 'center', position: 'relative', marginBottom: '20px', padding: '6px 0' }}>
         <button 
           onClick={() => setView('home')} 
           style={{ 
-            background: 'rgba(255, 255, 255, 0.6)', 
-            border: '1px solid rgba(197, 160, 89, 0.3)', 
+            background: 'rgba(255, 255, 255, 0.7)', 
+            border: '1px solid rgba(197, 160, 89, 0.35)', 
             cursor: 'pointer', 
             display: 'flex', 
             alignItems: 'center', 
@@ -423,6 +394,7 @@ export default function SupportInfoView({
             padding: '6px 12px', 
             borderRadius: '12px', 
             zIndex: 1,
+            boxShadow: '0 2px 8px rgba(0,0,0,0.03)',
             transition: 'all 0.2s ease'
           }}
         >
@@ -434,11 +406,11 @@ export default function SupportInfoView({
           right: 0, 
           textAlign: 'center', 
           fontFamily: "'Cormorant Garamond', serif",
-          fontSize: '21px', 
+          fontSize: '22px', 
           color: '#FF5958', 
           margin: 0, 
           fontWeight: '700', 
-          letterSpacing: '0.5px', 
+          letterSpacing: '0.8px', 
           textTransform: 'uppercase', 
           pointerEvents: 'none' 
         }}>
@@ -446,17 +418,142 @@ export default function SupportInfoView({
         </h2>
       </div>
 
-      {/* Main Container Card */}
+      {/* Main Wrapper Card */}
       <div style={{ 
-        border: '1px solid rgba(197, 160, 89, 0.4)', 
+        border: '1.5px solid rgba(197, 160, 89, 0.45)', 
         borderRadius: activeTheme.radius,
-        background: 'linear-gradient(135deg, #FFFDF9 0%, #FAF4EB 100%)', 
-        padding: '18px', 
-        boxShadow: '0 8px 24px rgba(44, 34, 30, 0.06)',
-        display: 'flex', flexDirection: 'column', gap: '14px', boxSizing: 'border-box', width: '100%'
+        background: 'linear-gradient(135deg, #FFFDF9 0%, #FAF5EC 100%)', 
+        padding: '10px',
+        boxShadow: '0 12px 32px rgba(44, 34, 30, 0.07)',
+        display: 'flex', flexDirection: 'column', gap: '10px', boxSizing: 'border-box', width: '100%'
       }}>
 
-        {/* 🌟 Festive Gift Hampers / Bulk Order Callout Card */}
+        {/* ==========================================================
+           OPTION 3: The Boutique Postcard Stack (Stacked Flash Cards)
+           ========================================================== */}
+        <div style={{ paddingBottom: '2px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 2px' }}>
+            <span style={{ fontSize: '12px', fontWeight: '800', color: '#78716C', textTransform: 'uppercase', letterSpacing: '1.2px', textAlign: 'left', display: 'flex', alignItems: 'center', gap: '6px' }}>
+              Wall of Love
+            </span>
+            <span style={{ fontSize: '11px', color: '#8A6D2B', display: 'flex', alignItems: 'center', gap: '4px', fontWeight: '600', padding: '0px 6px', borderRadius: '10px' }}>
+              <Star size={11} fill="#C5A059" color="#C5A059" /> Verified Curation
+            </span>
+          </div>
+
+          <div 
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+            style={{ 
+              position: 'relative', 
+              width: '100%', 
+              height: '156px', 
+              display: 'flex', 
+              alignItems: 'center', 
+              justifyContent: 'center',
+              boxSizing: 'border-box'
+            }}
+          >
+            {/* 3rd Layer Background Peek */}
+            <div style={{
+              position: 'absolute',
+              top: '16px',
+              left: '12px',
+              right: '12px',
+              height: '132px',
+              background: 'linear-gradient(135deg, #F3EAD9 0%, #EADDC7 100%)',
+              border: '1px solid rgba(197, 160, 89, 0.2)',
+              borderRadius: '16px',
+              transform: 'scale(0.92)',
+              zIndex: 0,
+              boxShadow: '0 2px 6px rgba(44, 34, 30, 0.02)',
+              pointerEvents: 'none'
+            }} />
+
+            {/* 2nd Layer Background Peek */}
+            <div style={{
+              position: 'absolute',
+              top: '8px',
+              left: '6px',
+              right: '6px',
+              height: '132px',
+              background: 'linear-gradient(135deg, #FAF4EB 0%, #F3EAD9 100%)',
+              border: '1px solid rgba(197, 160, 89, 0.35)',
+              borderRadius: '16px',
+              transform: 'scale(0.96)',
+              zIndex: 1,
+              boxShadow: '0 4px 12px rgba(44, 34, 30, 0.04)',
+              pointerEvents: 'none'
+            }} />
+
+            {/* Top Active Stacked Postcard */}
+            <div 
+              onClick={() => setSelectedReview(currentReview)}
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                zIndex: 2,
+                animation: stackAnim ? 'slideOutCard 0.28s ease-in forwards' : 'none'
+              }}
+            >
+              <TestimonialCard 
+                item={currentReview}
+                onClick={() => setSelectedReview(currentReview)}
+                renderWatermarkSvg={renderWatermarkSvg}
+                renderSourceLogo={renderSourceLogo}
+                activeTheme={activeTheme}
+                style={{ width: '100%', flex: 'unset' }}
+              />
+            </div>
+          </div>
+
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 4px' }}>
+            <span style={{ fontSize: '11px', color: '#78716C', fontWeight: '600' }}>
+              Note {currentIndex + 1} of {testimonials.length} (Swipe or tap next)
+            </span>
+            <div style={{ display: 'flex', gap: '10px' }}>
+              <button 
+                onClick={handlePrevCard}
+                style={{
+                  background: 'rgba(255, 255, 255, 0.9)',
+                  border: '1px solid rgba(197, 160, 89, 0.4)',
+                  borderRadius: '50%',
+                  width: '28px',
+                  height: '28px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  cursor: 'pointer',
+                  boxShadow: '0 2px 6px rgba(0,0,0,0.04)'
+                }}
+              >
+                <ChevronLeft size={15} color="#C5A059" />
+              </button>
+              <button 
+                onClick={handleNextCard}
+                style={{
+                  background: 'rgba(255, 255, 255, 0.9)',
+                  border: '1px solid rgba(197, 160, 89, 0.4)',
+                  borderRadius: '50%',
+                  width: '28px',
+                  height: '28px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  cursor: 'pointer',
+                  boxShadow: '0 2px 6px rgba(0,0,0,0.04)'
+                }}
+              >
+                <ChevronRight size={15} color="#C5A059" />
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Festive Gift Hampers Callout */}
         <div 
           className="support-card" 
           onClick={handleWhatsAppGiftInquiry}
@@ -464,11 +561,11 @@ export default function SupportInfoView({
             display: 'flex', 
             alignItems: 'center', 
             justifyContent: 'space-between',
-            padding: '14px 16px', 
-            background: 'linear-gradient(135deg, #FFFDF9 0%, #FAF4EB 100%)', 
-            border: '1px dashed #C5A059', 
+            padding: '5px 8px', 
+            background: 'linear-gradient(135deg, #FFFFFF 0%, #FAF4EB 100%)', 
+            border: '1.5px dashed #C5A059', 
             borderRadius: '16px', 
-            boxShadow: '0 4px 16px rgba(44, 34, 30, 0.04)',
+            boxShadow: '0 6px 20px rgba(44, 34, 30, 0.05)',
             boxSizing: 'border-box',
             width: '100%',
             position: 'relative',
@@ -481,17 +578,15 @@ export default function SupportInfoView({
             left: '-150%',
             width: '150%',
             height: '100%',
-            background: 'linear-gradient(90deg, transparent, rgba(197, 160, 89, 0.2), transparent)',
+            background: 'linear-gradient(90deg, transparent, rgba(197, 160, 89, 0.25), transparent)',
             transform: 'skewX(-20deg)',
             animation: 'prismSweep 4s infinite ease-in-out',
             pointerEvents: 'none',
             zIndex: 1
           }} />
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flex: 1, minWidth: 0, position: 'relative', zIndex: 2 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flex: 1, minWidth: 0, position: 'relative', zIndex: 2 }}>
             <div style={{ 
-              backgroundColor: 'rgba(197, 160, 89, 0.15)',
-              border: '1px solid rgba(197, 160, 89, 0.35)',
               borderRadius: '50%',
               width: '40px',
               height: '40px',
@@ -500,19 +595,19 @@ export default function SupportInfoView({
               justifyContent: 'center',
               flexShrink: 0 
             }}>
-              <Gift size={20} color="#C5A059" />
+              <Gift size={30} color="#C5A059" />
             </div>
             <div style={{ textAlign: 'left', minWidth: 0 }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '1px' }}>
-                <span style={{ fontSize: '10px', fontWeight: '800', color: '#8A6D2B', letterSpacing: '0.8px', textTransform: 'uppercase' }}>
-                  ✦ Bespoke Gifting
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0px', marginBottom: '2px' }}>
+                <span style={{ fontSize: '10px', fontWeight: '800', color: '#8A6D2B', letterSpacing: '1px', textTransform: 'uppercase' }}>
+                  ✦ Bespoke Gifting ✦
                 </span>
               </div>
-              <h3 style={{ margin: '0 0 2px 0', color: activeTheme.text, fontSize: '17px', fontWeight: '700', fontFamily: "'Cormorant Garamond', serif", whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+              <h3 style={{ margin: '0 0 2px 0', color: activeTheme.text, fontSize: '18px', fontWeight: '700', fontFamily: "'Cormorant Garamond', serif", whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                 Festive Bundles & Hampers
               </h3>
-              <p style={{ margin: 0, color: '#78716C', fontSize: '11.5px', fontWeight: '500', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                Curated gourmet boxes for celebrations
+              <p style={{ margin: 0, color: '#78716C', fontSize: '11px', fontWeight: '500', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                Curated boxes for celebrations
               </p>
             </div>
           </div>
@@ -520,101 +615,65 @@ export default function SupportInfoView({
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
+            backgroundColor: 'rgba(197, 160, 89, 0.12)',
+            borderRadius: '50%',
+            width: '28px',
+            height: '28px',
             flexShrink: '0',
-            marginLeft: '10px',
+            marginLeft: '4px',
             position: 'relative',
             zIndex: 2
           }}>
-            <ChevronRight size={18} color="#C5A059" strokeWidth={2.5} />
+            <ChevronRight size={16} color="#C5A059" strokeWidth={2.5} />
           </div>
         </div>
 
-        {/* 1. Give Feedback Container */}
+        {/* Leave Review Container */}
         <a href="https://g.page/r/CRodKxCU6unDEBM/review" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none', display: 'block', width: '100%' }}>
-          <div className="support-card" style={{ display: 'flex', alignItems: 'center', padding: '14px 18px', backgroundColor: '#FFFFFF', border: '1px solid rgba(197, 160, 89, 0.4)', borderRadius: '14px', boxShadow: '0 4px 16px rgba(44, 34, 30, 0.04)' }}>
-            <div style={{ width: '40px', height: '40px', backgroundColor: 'rgba(197, 160, 89, 0.12)', border: '1px solid rgba(197, 160, 89, 0.3)', borderRadius: '12px', marginRight: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: '0' }}>
-              <CheckCircle size={22} color="#C5A059" />
+          <div className="support-card" style={{ display: 'flex', alignItems: 'center', padding: '14px 8px', border: '1px solid rgba(197, 160, 89, 0.4)', borderRadius: '16px', boxShadow: '0 6px 18px rgba(44, 34, 30, 0.04)' }}>
+            <div style={{ width: '40px', height: '40px', borderRadius: '50%', marginRight: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: '0' }}>
+              <CheckCircle size={30} color="#C5A059" />
             </div>
             <div style={{ textAlign: 'left', flex: 1 }}>
-              <h3 style={{ margin: '0 0 2px 0', color: activeTheme.text, fontSize: '16px', fontWeight: '700', fontFamily: "'Cormorant Garamond', serif" }}>Leave a Review</h3>
-              <p style={{ margin: 0, color: '#78716C', fontSize: '11.5px', fontWeight: '500' }}>Share your experience</p>
+              <h3 style={{ margin: '0 0 0px 0', color: activeTheme.text, fontSize: '18px', fontWeight: '700', fontFamily: "'Cormorant Garamond', serif" }}>Leave a Review</h3>
+              <p style={{ margin: 0, color: '#78716C', fontSize: '11px', fontWeight: '500' }}>Share your experience with us</p>
             </div>
-            <ChevronRight size={16} color="#78716C" />
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(197, 160, 89, 0.12)', borderRadius: '50%', width: '28px', height: '28px' }}>
+              <ChevronRight size={16} color="#C5A059" strokeWidth={2.5} />
+            </div>
           </div>
         </a>
 
-        {/* 2. Wall of Love Section */}
-        <div style={{ borderTop: '1px solid rgba(197, 160, 89, 0.35)', paddingTop: '14px', display: 'flex', flexDirection: 'column', gap: '10px', overflow: 'hidden' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <span style={{ fontSize: '11.5px', fontWeight: '800', color: '#78716C', textTransform: 'uppercase', letterSpacing: '1.2px', textAlign: 'left' }}>
-              The Wall of Love
-            </span>
-            <span style={{ fontSize: '11.5px', color: '#8A6D2B', display: 'flex', alignItems: 'center', gap: '4px', fontWeight: '700' }}>
-              <Star size={12} fill="#C5A059" color="#C5A059" /> Verified Curation
-            </span>
-          </div>
-
-          <div className="ticker-mask-container">
-            <div style={{ width: '100%', overflow: 'hidden', position: 'relative', padding: '6px 0' }}>
-              <div className="testimonial-track" key={testimonials.length}>
-                <div className="testimonial-group">
-                  {testimonials.map((item, index) => (
-                    <TestimonialCard 
-                      key={`g1-${index}`}
-                      item={item}
-                      onClick={() => setSelectedReview(item)}
-                      renderWatermarkSvg={renderWatermarkSvg}
-                      renderSourceLogo={renderSourceLogo}
-                      activeTheme={activeTheme}
-                      isGroup2={false}
-                    />
-                  ))}
-                </div>
-
-                <div className="testimonial-group">
-                  {testimonials.map((item, index) => (
-                    <TestimonialCard 
-                      key={`g2-${index}`}
-                      item={item}
-                      onClick={() => setSelectedReview(item)}
-                      renderWatermarkSvg={renderWatermarkSvg}
-                      renderSourceLogo={renderSourceLogo}
-                      activeTheme={activeTheme}
-                      isGroup2={true}
-                    />
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* 3. Support & Terms Options Section */}
-        <div style={{ borderTop: '1px solid rgba(197, 160, 89, 0.35)', paddingTop: '14px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+        {/* Support Options Section */}
+        <div style={{ paddingTop: '1px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
           
           <a href="https://wa.me/9108286886" onClick={handleWhatsAppClick} style={{ textDecoration: 'none', display: 'block', width: '100%' }}>
-            <div className="support-card" style={{ display: 'flex', alignItems: 'center', padding: '14px 18px', backgroundColor: '#FFFFFF', border: '1px solid rgba(197, 160, 89, 0.4)', borderRadius: '14px', boxShadow: '0 4px 16px rgba(44, 34, 30, 0.04)' }}>
-              <div style={{ width: '40px', height: '40px', backgroundColor: 'rgba(37, 211, 102, 0.12)', border: '1px solid rgba(37, 211, 102, 0.3)', borderRadius: '12px', marginRight: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: '0' }}>
-                <MessageCircle size={22} color="#25D366" />
+            <div className="support-card" style={{ display: 'flex', alignItems: 'center', padding: '14px 8px', border: '1px solid rgba(197, 160, 89, 0.4)', borderRadius: '16px', boxShadow: '0 6px 18px rgba(44, 34, 30, 0.04)' }}>
+              <div style={{ width: '40px', height: '40px', borderRadius: '50%', marginRight: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: '0' }}>
+                <MessageCircle size={30} color="#C5A059" />
               </div>
               <div style={{ textAlign: 'left', flex: 1 }}>
-                <h3 style={{ margin: '0 0 2px 0', color: activeTheme.text, fontSize: '16px', fontWeight: '700', fontFamily: "'Cormorant Garamond', serif" }}>WhatsApp</h3>
-                <p style={{ margin: 0, color: '#78716C', fontSize: '11.5px', fontWeight: '500' }}>Immediate bespoke assistance</p>
+                <h3 style={{ margin: '0 0 2px 0', color: activeTheme.text, fontSize: '18px', fontWeight: '700', fontFamily: "'Cormorant Garamond', serif" }}>WhatsApp</h3>
+                <p style={{ margin: 0, color: '#78716C', fontSize: '11px', fontWeight: '500' }}>Immediate bespoke assistance</p>
               </div>
-              <ChevronRight size={16} color="#78716C" />
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(197, 160, 89, 0.12)', borderRadius: '50%', width: '28px', height: '28px' }}>
+                <ChevronRight size={16} color="#C5A059" strokeWidth={2.5} />
+              </div>
             </div>
           </a>
 
           <a href="mailto:lytebytesblr@gmail.com" style={{ textDecoration: 'none', display: 'block', width: '100%' }}>
-            <div className="support-card" style={{ display: 'flex', alignItems: 'center', padding: '14px 18px', backgroundColor: '#FFFFFF', border: '1px solid rgba(197, 160, 89, 0.4)', borderRadius: '14px', boxShadow: '0 4px 16px rgba(44, 34, 30, 0.04)' }}>
-              <div style={{ width: '40px', height: '40px', backgroundColor: 'rgba(197, 160, 89, 0.12)', border: '1px solid rgba(197, 160, 89, 0.3)', borderRadius: '12px', marginRight: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: '0' }}>
-                <Mail size={22} color="#C5A059" />
+            <div className="support-card" style={{ display: 'flex', alignItems: 'center', padding: '14px 8px', border: '1px solid rgba(197, 160, 89, 0.4)', borderRadius: '16px', boxShadow: '0 6px 18px rgba(44, 34, 30, 0.04)' }}>
+              <div style={{ width: '40px', height: '40px', borderRadius: '50%', marginRight: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: '0' }}>
+                <Mail size={30} color="#C5A059" />
               </div>
               <div style={{ textAlign: 'left', flex: 1 }}>
-                <h3 style={{ margin: '0 0 2px 0', color: activeTheme.text, fontSize: '16px', fontWeight: '700', fontFamily: "'Cormorant Garamond', serif" }}>Email</h3>
-                <p style={{ margin: 0, color: '#78716C', fontSize: '11.5px', fontWeight: '500' }}>Detailed queries & bulk orders</p>
+                <h3 style={{ margin: '0 0 2px 0', color: activeTheme.text, fontSize: '18px', fontWeight: '700', fontFamily: "'Cormorant Garamond', serif" }}>Email</h3>
+                <p style={{ margin: 0, color: '#78716C', fontSize: '11px', fontWeight: '500' }}>Detailed queries & bulk orders</p>
               </div>
-              <ChevronRight size={16} color="#78716C" />
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(197, 160, 89, 0.12)', borderRadius: '50%', width: '28px', height: '28px' }}>
+                <ChevronRight size={16} color="#C5A059" strokeWidth={2.5} />
+              </div>
             </div>
           </a>
 
@@ -622,27 +681,26 @@ export default function SupportInfoView({
             <div 
               className="support-card" 
               onClick={() => setTermsOpen(!termsOpen)}
-              style={{ display: 'flex', alignItems: 'center', padding: '14px 18px', backgroundColor: '#FFFFFF', border: '1px solid rgba(197, 160, 89, 0.4)', borderRadius: '14px', boxShadow: '0 4px 16px rgba(44, 34, 30, 0.04)', cursor: 'pointer' }}
+              style={{ display: 'flex', alignItems: 'center', padding: '14px 8px', border: '1px solid rgba(197, 160, 89, 0.4)', borderRadius: '16px', boxShadow: '0 6px 18px rgba(44, 34, 30, 0.04)', cursor: 'pointer' }}
             >
-              <div style={{ width: '40px', height: '40px', backgroundColor: 'rgba(197, 160, 89, 0.12)', border: '1px solid rgba(197, 160, 89, 0.3)', borderRadius: '12px', marginRight: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: '0' }}>
-                <FileText size={22} color="#C5A059" />
+              <div style={{ width: '40px', height: '40px', borderRadius: '50%', marginRight: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: '0' }}>
+                <FileText size={30} color="#C5A059" />
               </div>
               <div style={{ textAlign: 'left', flex: 1 }}>
-                <h3 style={{ margin: '0 0 2px 0', color: activeTheme.text, fontSize: '16px', fontWeight: '700', fontFamily: "'Cormorant Garamond', serif" }}>General Guidelines</h3>
-                <p style={{ margin: 0, color: '#78716C', fontSize: '11.5px', fontWeight: '500' }}>Terms, shipping & privacy</p>
+                <h3 style={{ margin: '0 0 2px 0', color: activeTheme.text, fontSize: '18px', fontWeight: '700', fontFamily: "'Cormorant Garamond', serif" }}>General Guidelines</h3>
+                <p style={{ margin: 0, color: '#78716C', fontSize: '11px', fontWeight: '500' }}>Terms, shipping & privacy</p>
               </div>
-              <ChevronRight 
-                size={16} 
-                color="#78716C" 
-                style={{ 
-                  transform: termsOpen ? 'rotate(90deg)' : 'rotate(0deg)', 
-                  transition: 'transform 0.25s cubic-bezier(0.16, 1, 0.3, 1)' 
-                }} 
-              />
+              <div style={{ 
+                display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(197, 160, 89, 0.12)', borderRadius: '50%', width: '28px', height: '28px',
+                transform: termsOpen ? 'rotate(90deg)' : 'rotate(0deg)', 
+                transition: 'transform 0.25s cubic-bezier(0.16, 1, 0.3, 1)' 
+              }}>
+                <ChevronRight size={16} color="#C5A059" strokeWidth={2.5} />
+              </div>
             </div>
 
             {termsOpen && (
-              <div style={{ paddingTop: '4px', paddingBottom: '4px' }}>
+              <div style={{ paddingTop: '6px', paddingBottom: '6px' }}>
                 <GeneralTermsModalContent brandColor="#C5A059" />
               </div>
             )}
@@ -652,7 +710,7 @@ export default function SupportInfoView({
 
       </div>
 
-      {/* ================= EXPANDED REVIEW MODAL (WITH PHOTO) ================= */}
+      {/* Expanded Review Modal */}
       {selectedReview && (
         <div 
           onClick={() => setSelectedReview(null)}
@@ -668,17 +726,17 @@ export default function SupportInfoView({
             style={{
               background: 'linear-gradient(135deg, #FFFDF9 0%, #FAF4EB 100%)', 
               borderRadius: '24px', 
-              padding: '24px',
+              padding: '26px',
               maxWidth: '380px', 
               width: '100%', 
               boxSizing: 'border-box',
               position: 'relative', 
               boxShadow: '0 20px 40px rgba(0,0,0,0.3)',
-              border: '1px solid rgba(197, 160, 89, 0.4)',
+              border: '1.5px solid #FF5958',
               textAlign: 'left', 
               display: 'flex', 
               flexDirection: 'column', 
-              gap: '16px',
+              gap: '6px',
               maxHeight: '85vh', 
               overflowY: 'auto',
               fontFamily: "'Plus Jakarta Sans', sans-serif"
@@ -688,7 +746,7 @@ export default function SupportInfoView({
               position: 'absolute',
               top: '50%',
               left: '50%',
-              transform: 'translate(-50%, -50%) rotate(-15deg)',
+              transform: 'translate(-50%, -50%)',
               width: '180px',
               height: '180px',
               opacity: 0.035,
@@ -704,22 +762,13 @@ export default function SupportInfoView({
             <div style={{ position: 'relative', zIndex: '1', display: 'flex', flexDirection: 'column', gap: '14px' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                  <Star size={12} fill="#C5A059" color="#C5A059" />
+                  <Star size={13} fill="#C5A059" color="#C5A059" />
                   <span style={{ fontSize: '11px', fontWeight: '800', color: '#8A6D2B', textTransform: 'uppercase', letterSpacing: '1px' }}>
                     Verified {selectedReview.source} Review
                   </span>
                 </div>
-                <button 
-                  onClick={() => setSelectedReview(null)}
-                  style={{
-                    background: 'rgba(255, 255, 255, 0.6)', border: '1px solid rgba(197, 160, 89, 0.3)', borderRadius: '50%', width: '28px', height: '28px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', padding: 0
-                  }}
-                >
-                  ✕
-                </button>
               </div>
 
-              {/* Display Image ONLY in expanded mode if present */}
               {selectedReview.imageUrl && (
                 <div style={{
                   width: '100%',
@@ -742,12 +791,12 @@ export default function SupportInfoView({
                 </div>
               )}
 
-              <p style={{ margin: 0, fontSize: '13.5px', color: activeTheme.text, lineHeight: '1.6', fontFamily: "'Cormorant Garamond', serif", fontWeight: '500' }}>
+              <p style={{ margin: 0, fontSize: '12px', color: activeTheme.text, lineHeight: '1.6', fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: '500' }}>
                 "{selectedReview.text}"
               </p>
 
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '10px', borderTop: '1px solid rgba(197, 160, 89, 0.3)' }}>
-                <span style={{ fontWeight: '700', color: activeTheme.text, fontSize: '15px', fontFamily: "'Cormorant Garamond', serif" }}>{selectedReview.author}</span>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '10px'}}>
+                <span style={{ fontWeight: '600', color: activeTheme.text, fontSize: '14px', fontFamily: "sans-serif" }}>{selectedReview.author}</span>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                   {renderSourceLogo(selectedReview.source)}
                 </div>
