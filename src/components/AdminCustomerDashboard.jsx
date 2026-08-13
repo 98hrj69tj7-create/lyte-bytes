@@ -123,7 +123,6 @@ function getTierStyles(tierName) {
     };
   }
   
-  // DEFAULT: Blue Tier
   return {
     bg: 'rgba(37, 99, 235, 0.12)',
     border: 'rgba(37, 99, 235, 0.35)',
@@ -219,9 +218,8 @@ export default function AdminCustomerDashboard({ theme = {}, onBack, setView }) 
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCustomer, setSelectedCustomer] = useState(null);
 
-  // Filter & Sort States
   const [selectedTierFilter, setSelectedTierFilter] = useState('ALL');
-  const [sortBy, setSortBy] = useState('orders_desc'); // 'orders_desc', 'spend_desc', 'highest_order_desc', 'score_desc'
+  const [sortBy, setSortBy] = useState('orders_desc');
 
   const containerRef = useRef(null);
 
@@ -233,7 +231,7 @@ export default function AdminCustomerDashboard({ theme = {}, onBack, setView }) 
     radius: theme?.radius || '22px'
   };
 
-  // True full-page reset to absolute top of window & container on state/selection changes
+  // Full page scroll reset
   useEffect(() => {
     window.scrollTo(0, 0);
     document.documentElement.scrollTop = 0;
@@ -415,35 +413,64 @@ export default function AdminCustomerDashboard({ theme = {}, onBack, setView }) 
     <div 
       ref={containerRef}
       style={{ 
-        display: 'flex', flexDirection: 'column', width: '100%', maxWidth: '1000px', 
-        margin: '0 auto', padding: '16px 16px 88px 16px', boxSizing: 'border-box',
+        display: 'flex', 
+        flexDirection: 'column', 
+        width: '100%', 
+        maxWidth: '1000px', 
+        margin: '0 auto', 
+        /* 💡 [CUSTOMIZE CONTAINER]: 
+           This 'padding' property controls the outer gap on the left and right sides of the entire dashboard.
+           Current setting: '4px' (Very sleek, near the edges). 
+           Change to '0px' if you want it to physically touch the edges of the screen, or '8px' if you want a tiny bit more margin. */
+        padding: '16px 0px 88px 0px', 
+        boxSizing: 'border-box',
         fontFamily: "'Plus Jakarta Sans', sans-serif"
       }}
     >
       {/* HEADER SECTION */}
       <div style={{ 
-        display: 'grid', gridTemplateColumns: '90px 1fr 90px', alignItems: 'center', 
-        width: '100%', position: 'relative', marginBottom: '10px'
+        display: 'flex', 
+        alignItems: 'center', 
+        justifyContent: 'center', 
+        width: '100%', 
+        position: 'relative', 
+        marginBottom: '12px',
+        minHeight: '30px'
       }}>
         <button 
           onClick={handleBack} 
           style={{ 
-            background: 'rgba(255, 255, 255, 0.8)', border: '1px solid rgba(197, 160, 89, 0.35)', 
-            cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px', color: activeTheme.text, 
-            fontSize: '13px', fontWeight: '600', padding: '8px 14px', borderRadius: '12px', zIndex: 1,
+            position: 'absolute',
+            left: '2px',
+            background: 'rgba(255, 255, 255, 0.9)', 
+            border: '1px solid rgba(197, 160, 89, 0.2)', 
+            cursor: 'pointer', 
+            display: 'flex', 
+            alignItems: 'center', 
+            gap: '1px', 
+            color: activeTheme.text, 
+            fontSize: '13px', 
+            fontWeight: '600', 
+            padding: '4px 12px', 
+            borderRadius: '12px', 
+            zIndex: 1,
             boxShadow: '0 2px 8px rgba(0,0,0,0.02)'
           }}
         >
-          <ArrowLeft size={15}/> Home
+          <ArrowLeft size={13}/> Home
         </button>
 
         <h2 style={{ 
-          position: 'absolute', left: 0, right: 0, textAlign: 'center', fontSize: '15px', 
-          color: '#FF5958', margin: 0, fontWeight: '800', letterSpacing: '1px', textTransform: 'uppercase', pointerEvents: 'none'
+          fontSize: '15px', 
+          color: '#FF5958', 
+          margin: 0, 
+          fontWeight: '800', 
+          letterSpacing: '1px', 
+          textTransform: 'uppercase', 
+          textAlign: 'center'
         }}>
           CUSTOMERS ({filteredCustomers.length})
         </h2>
-        <div /> 
       </div>
 
       {isLoading ? (
@@ -460,45 +487,87 @@ export default function AdminCustomerDashboard({ theme = {}, onBack, setView }) 
           <button 
             onClick={() => setSelectedCustomer(null)}
             style={{
-              alignSelf: 'flex-start', background: 'rgba(197, 160, 89, 0.12)', border: '1px solid rgba(197, 160, 89, 0.35)',
-              cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '6px', color: activeTheme.text,
-              fontSize: '13px', fontWeight: '600', padding: '8px 14px', borderRadius: '12px', boxShadow: '0 2px 8px rgba(0,0,0,0.02)'
+              alignSelf: 'flex-start', 
+              background: 'rgba(197, 160, 89, 0.12)', 
+              border: '1px solid rgba(197, 160, 89, 0.2)',
+              cursor: 'pointer', 
+              display: 'inline-flex', 
+              alignItems: 'center', 
+              gap: '1px', 
+              color: activeTheme.text,
+              fontSize: '13px', 
+              fontWeight: '600', 
+              padding: '4px 12px', 
+              borderRadius: '12px', 
+              boxShadow: '0 2px 8px rgba(0,0,0,0.02)',
+              marginLeft: '2px' 
             }}
           >
-            <ArrowLeft size={15} /> Back to Directory
+            <ArrowLeft size={15} /> Directory
           </button>
 
           {(() => {
             const tierStyle = getTierStyles(selectedCustomer.tier);
             const milestone = getMilestoneInfo(selectedCustomer.loyaltyScore, selectedCustomer.tier);
             const TierIconComponent = tierStyle.icon;
+            
+            // 💡 Get next tier style for target-color accenting
+            const nextTierStyle = getTierStyles(milestone.nextTierName);
 
             return (
               <div style={{ 
                 background: 'linear-gradient(135deg, #FFFDF9 0%, #FAF4EB 100%)',
-                border: '1px solid rgba(197, 160, 89, 0.45)', boxShadow: '0 12px 32px rgba(44, 34, 30, 0.08)',
-                borderRadius: activeTheme.radius, padding: '24px', boxSizing: 'border-box',
-                display: 'flex', flexDirection: 'column', gap: '20px', position: 'relative', textAlign: 'left'
+                border: '1px solid rgba(197, 160, 89, 0.45)', 
+                boxShadow: '0 12px 32px rgba(44, 34, 30, 0.08)',
+                borderRadius: activeTheme.radius, 
+                /* 💡 [CUSTOMIZE CARD PADDING]: Internal breathing room for the detail card */
+                padding: '12px 12px', 
+                boxSizing: 'border-box',
+                display: 'flex', 
+                flexDirection: 'column', 
+                gap: '18px', 
+                position: 'relative', 
+                textAlign: 'left', 
+                width: '100%'
               }}>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '16px', width: '100%' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '16px', flex: '1 1 auto', minWidth: 0 }}>
+                <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '8px', width: '100%' }}>
+                  <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px', flex: '1 1 auto', minWidth: 0 }}>
                     <div style={{ 
-                      backgroundColor: tierStyle.bg, border: `1px solid ${tierStyle.border}`,
-                      width: '56px', height: '56px', borderRadius: '18px', display: 'flex', 
-                      alignItems: 'center', justifyContent: 'center', flexShrink: 0
+                      backgroundColor: tierStyle.bg, 
+                      border: `1px solid ${tierStyle.border}`,
+                      width: '40px', 
+                      height: '40px', 
+                      borderRadius: '16px', 
+                      display: 'flex', 
+                      alignItems: 'center', 
+                      justifyContent: 'center', 
+                      flexShrink: 0 
                     }}>
-                      <User size={26} color={tierStyle.accentColor} />
+                      <User size={24} color={tierStyle.accentColor} />
                     </div>
 
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', flex: 1, minWidth: 0, textAlign: 'left' }}>
-                      <h3 style={{ margin: 0, color: activeTheme.text, fontSize: '16px', fontWeight: '600', lineHeight: '1.25', wordBreak: 'break-word' }}>
+                      <h3 style={{ margin: 0, color: activeTheme.text, fontSize: '15px', fontWeight: '700', lineHeight: '1.25', wordBreak: 'break-word' }}>
                         {selectedCustomer.name}
                       </h3>
                       <p style={{ margin: 0, color: '#78716C', fontSize: '12px', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '6px' }}>
                         <Phone size={13} color={tierStyle.accentColor} /> {selectedCustomer.phone}
                       </p>
                       {selectedCustomer.custCode && (
-                        <div style={{ fontSize: '10px', fontWeight: '600', color: '#78716C', fontFamily: 'monospace, sans-serif', letterSpacing: '0.4px', marginTop: '2px' }}>
+                        /* 💡 [CUSTOMIZE CUSTOMER CODE TEXT]: 
+                           Removed truncation (ellipsis/nowrap). Added wordBreak: 'break-all' so it naturally wraps without breaking the layout. */
+                        <div style={{ 
+                          fontSize: '12px', 
+                          fontWeight: '700', 
+                          color: '#78716C', 
+                          fontFamily: 'monospace, sans-serif', 
+                          letterSpacing: '0.2px', 
+                          marginTop: '0px',
+                          marginLeft: '-50px', 
+                          wordBreak: 'break-all',
+                          whiteSpace: 'normal',
+                          lineHeight: '1.4'
+                        }}>
                           {selectedCustomer.custCode}
                         </div>
                       )}
@@ -506,12 +575,23 @@ export default function AdminCustomerDashboard({ theme = {}, onBack, setView }) 
                   </div>
 
                   <div style={{ 
-                    background: tierStyle.badgeBg, color: tierStyle.badgeText,
-                    padding: '6px 14px', borderRadius: '12px', fontSize: '11px', fontWeight: '800',
-                    letterSpacing: '0.8px', textTransform: 'uppercase', flexShrink: 0, alignSelf: 'center',
-                    boxShadow: '0 4px 12px rgba(0,0,0,0.1)', display: 'flex', alignItems: 'center', gap: '6px'
+                    background: tierStyle.badgeBg, 
+                    color: tierStyle.badgeText,
+                    /* 💡 Sleeker, minimized loyalty badge that aligns to the top right */
+                    padding: '4px 10px', 
+                    borderRadius: '10px', 
+                    fontSize: '10.5px', 
+                    fontWeight: '800',
+                    letterSpacing: '0.5px', 
+                    textTransform: 'uppercase', 
+                    flexShrink: 0, 
+                    boxShadow: '0 4px 10px rgba(0,0,0,0.1)', 
+                    display: 'flex', 
+                    marginTop: '32px',
+                    alignItems: 'center', 
+                    gap: '8px' 
                   }}>
-                    <TierIconComponent size={14} color="#FFFFFF" />
+                    <TierIconComponent size={12} color="#FFFFFF" />
                     {selectedCustomer.tier}
                   </div>
                 </div>
@@ -519,22 +599,28 @@ export default function AdminCustomerDashboard({ theme = {}, onBack, setView }) 
                 {/* LOYALTY SECTION */}
                 <div style={{ 
                   background: 'linear-gradient(135deg, #FFFFFF 0%, #FAF6ED 100%)',
-                  border: `1.5px solid ${tierStyle.accentColor}40`, borderRadius: '16px', padding: '16px 18px',
-                  display: 'flex', flexDirection: 'column', gap: '10px', boxShadow: tierStyle.glow
+                  border: `1.5px solid ${tierStyle.accentColor}40`, 
+                  borderRadius: '16px', 
+                  padding: '10px 10px',
+                  display: 'flex', 
+                  flexDirection: 'column', 
+                  gap: '10px', 
+                  boxShadow: tierStyle.glow, 
+                  boxSizing: 'border-box' 
                 }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      <div style={{ background: tierStyle.bg, border: `1px solid ${tierStyle.border}`, borderRadius: '10px', padding: '6px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        <Award size={18} color={tierStyle.accentColor} />
+                      <div style={{ borderRadius: '10px', padding: '6px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <Medal size={30} color={tierStyle.accentColor} />
                       </div>
                       <div>
-                        <span style={{ fontSize: '10.5px', fontWeight: '800', color: '#78716C', textTransform: 'uppercase', letterSpacing: '0.9px', display: 'block' }}>Loyalty Quest</span>
-                        <span style={{ fontSize: '13px', fontWeight: '700', color: activeTheme.text }}>{selectedCustomer.tier} Tier Status</span>
+                        <span style={{ fontSize: '10.5px', fontWeight: '800', color: tierStyle.accentColor, textTransform: 'uppercase', letterSpacing: '0.9px', display: 'block' }}>Loyalty Quest</span>
+                        <span style={{ fontSize: '13px', fontWeight: '700', color: tierStyle.accentColor }}>{selectedCustomer.tier} Tier Status</span>
                       </div>
                     </div>
                     <div style={{ textAlign: 'right' }}>
                       <span style={{ fontSize: '20px', fontWeight: '900', color: tierStyle.accentColor }}>{selectedCustomer.loyaltyScore}</span>
-                      <span style={{ fontSize: '11px', fontWeight: '800', color: '#78716C', marginLeft: '3px', textTransform: 'uppercase' }}>Pts</span>
+                      <span style={{ fontSize: '11px', fontWeight: '800', color: tierStyle.accentColor, marginLeft: '3px', textTransform: 'uppercase' }}>Pts</span>
                     </div>
                   </div>
 
@@ -542,23 +628,23 @@ export default function AdminCustomerDashboard({ theme = {}, onBack, setView }) 
                     <div style={{ height: '100%', width: `${milestone.progressPercent}%`, background: tierStyle.progressFill, borderRadius: '5px', boxShadow: `0 0 8px ${tierStyle.accentColor}`, transition: 'width 0.8s ease' }} />
                   </div>
 
-                  <div style={{ fontSize: '12px', color: '#78716C', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <div style={{ fontSize: '12px', color: tierStyle.accentColor, fontWeight: '600', display: 'flex', alignItems: 'center', gap: '6px' }}>
                     <Zap size={14} color={tierStyle.accentColor} fill={tierStyle.accentColor} />
                     {milestone.isMax ? (
                       <span style={{ color: tierStyle.accentColor, fontWeight: '800' }}>👑 Maximum Elite Tier Achieved!</span>
                     ) : (
-                      <span>Only <strong style={{ color: activeTheme.text, fontWeight: '800' }}>{milestone.ptsRemaining} Pts</strong> away from <strong style={{ color: tierStyle.accentColor, fontWeight: '800' }}>{milestone.nextTierName}</strong>!</span>
+                      <span>Only <strong style={{ color: tierStyle.accentColor, fontWeight: '800' }}>{milestone.ptsRemaining} Pts</strong> away from <strong style={{ color: nextTierStyle.accentColor, fontWeight: '700' }}>{milestone.nextTierName}</strong>!</span>
                     )}
                   </div>
                 </div>
 
                 {/* STATS GRID */}
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
-                  <div style={{ background: '#FFFFFF', border: '1px solid rgba(197, 160, 89, 0.4)', padding: '14px 16px', borderRadius: '16px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+                  <div style={{ background: '#FFFFFF', border: '1px solid rgba(197, 160, 89, 0.4)', padding: '14px 12px', borderRadius: '16px', display: 'flex', flexDirection: 'column', justifyContent: 'center', boxSizing: 'border-box' }}>
                     <span style={{ fontSize: '11px', fontWeight: '800', color: '#78716C', textTransform: 'uppercase', letterSpacing: '0.8px' }}>Lifetime Spend</span>
                     <div style={{ fontSize: '19px', fontWeight: '800', color: activeTheme.text, marginTop: '4px' }}>₹{selectedCustomer.totalSpent.toLocaleString()}</div>
                   </div>
-                  <div style={{ background: '#FFFFFF', border: '1px solid rgba(197, 160, 89, 0.4)', padding: '14px 16px', borderRadius: '16px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                  <div style={{ background: '#FFFFFF', border: '1px solid rgba(197, 160, 89, 0.4)', padding: '14px 12px', borderRadius: '16px', display: 'flex', flexDirection: 'column', justifyContent: 'center', boxSizing: 'border-box' }}>
                     <span style={{ fontSize: '11px', fontWeight: '800', color: '#78716C', textTransform: 'uppercase', letterSpacing: '0.8px' }}>Highest Order</span>
                     <div style={{ fontSize: '19px', fontWeight: '800', color: activeTheme.text, marginTop: '4px' }}>₹{selectedCustomer.highestOrder.toLocaleString()}</div>
                   </div>
@@ -571,20 +657,21 @@ export default function AdminCustomerDashboard({ theme = {}, onBack, setView }) 
             Order History ({selectedCustomer.orders.length})
           </h3>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', width: '100%' }}>
             {selectedCustomer.orders.map((ord, i) => {
               const isPaid = ord.status.toLowerCase() === 'paid';
               return (
                 <div key={i} style={{ 
                   display: 'flex', justifyContent: 'space-between', alignItems: 'center', 
                   border: '1px solid rgba(197, 160, 89, 0.4)', borderRadius: activeTheme.radius,            
-                  background: 'linear-gradient(135deg, #FFFDF9 0%, #FAF4EB 100%)', padding: '16px 20px',                          
-                  boxShadow: '0 6px 20px rgba(44, 34, 30, 0.05)', boxSizing: 'border-box'
+                  background: 'linear-gradient(135deg, #FFFDF9 0%, #FAF4EB 100%)', 
+                  padding: '14px 12px',                          
+                  boxShadow: '0 6px 20px rgba(44, 34, 30, 0.05)', boxSizing: 'border-box', width: '100%'
                 }}>
-                  <div style={{ flex: 1, paddingRight: '14px', textAlign: 'left' }}>
-                    <div style={{ fontWeight: '700', fontSize: '14.5px', color: activeTheme.text }}>{ord.orderNo}</div>
+                  <div style={{ flex: 1, paddingRight: '10px', textAlign: 'left', minWidth: 0 }}>
+                    <div style={{ fontWeight: '700', fontSize: '14.5px', color: activeTheme.text, wordBreak: 'break-all' }}>{ord.orderNo}</div>
                     <div style={{ fontSize: '13px', color: activeTheme.brand, fontWeight: '700', marginTop: '3px' }}>{ord.item}</div>
-                    <div style={{ fontSize: '12px', color: '#78716C', fontWeight: '600', marginTop: '5px', display: 'flex', alignItems: 'center', gap: '5px' }}>
+                    <div style={{ fontSize: '12px', color: '#78716C', fontWeight: '600', marginTop: '5px', display: 'flex', alignItems: 'center', gap: '5px', flexWrap: 'wrap' }}>
                       <Calendar size={12} /> {ord.date} • Qty: {ord.qty}
                     </div>
                   </div>
@@ -606,20 +693,21 @@ export default function AdminCustomerDashboard({ theme = {}, onBack, setView }) 
       ) : (
         
         /* ==========================================================================
-           1. DIRECTORY LIST CONTAINER (Full Name, Sleek Icon-only Medal at Bottom Corner)
+           1. DIRECTORY LIST CONTAINER
            ========================================================================== */
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', width: '100%' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', width: '100%' }}>
           
           {/* SEARCH & SORT HEADER ROW */}
-          <div style={{ display: 'flex', gap: '10px', width: '100%', boxSizing: 'border-box' }}>
+          <div style={{ display: 'flex', gap: '8px', width: '100%', boxSizing: 'border-box' }}>
             <div style={{ position: 'relative', flex: 1 }}>
+              <Search size={16} color="#78716C" style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)' }} />
               <input 
                 type="text"
                 placeholder="Search name, phone..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 style={{
-                  width: '105%', padding: '12px 16px 12px 10px', borderRadius: '14px',              
+                  width: '100%', padding: '13px 14px 13px 40px', borderRadius: '14px',              
                   border: '1px solid rgba(197, 160, 89, 0.45)', backgroundColor: '#FFFFFF',                    
                   fontSize: '13px', outline: 'none', color: activeTheme.text, fontWeight: '600',
                   boxShadow: '0 4px 16px rgba(0,0,0,0.02)', boxSizing: 'border-box'
@@ -627,14 +715,14 @@ export default function AdminCustomerDashboard({ theme = {}, onBack, setView }) 
               />
             </div>
 
-            <div style={{ position: 'relative', width: '165px', flexShrink: 0 }}>
+            <div style={{ position: 'relative', width: '150px', flexShrink: 0 }}>
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
                 style={{
-                  width: '85%', padding: '12px 16px 12px 10px', borderRadius: '14px',
+                  width: '100%', padding: '13px 10px', borderRadius: '14px',
                   border: '1px solid rgba(197, 160, 89, 0.45)', backgroundColor: '#FFFFFF',
-                  color: activeTheme.text, fontSize: '12.5px', fontWeight: '600',
+                  color: activeTheme.text, fontSize: '12px', fontWeight: '700',
                   outline: 'none', appearance: 'none', cursor: 'pointer',
                   boxShadow: '0 4px 16px rgba(0,0,0,0.02)', boxSizing: 'border-box'
                 }}
@@ -644,12 +732,12 @@ export default function AdminCustomerDashboard({ theme = {}, onBack, setView }) 
                 <option value="highest_order_desc">Highest Order</option>
                 <option value="score_desc">Loyalty Score</option>
               </select>
-              <ArrowUpDown size={14} color="#78716C" style={{ position: 'absolute', right: '30px', top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }} />
+              <ArrowUpDown size={14} color="#78716C" style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }} />
             </div>
           </div>
 
           {/* TIER FILTER PILLS */}
-          <div style={{ display: 'flex', gap: '8px', overflowX: 'auto', paddingBottom: '2px', scrollbarWidth: 'none' }}>
+          <div style={{ display: 'flex', gap: '6px', overflowX: 'auto', paddingBottom: '2px', scrollbarWidth: 'none' }}>
             {[
               { label: 'All Tiers', value: 'ALL' },
               { label: 'Platinum', value: 'PLATINUM' },
@@ -664,7 +752,7 @@ export default function AdminCustomerDashboard({ theme = {}, onBack, setView }) 
                   key={tier.value}
                   onClick={() => setSelectedTierFilter(tier.value)}
                   style={{
-                    padding: '8px 14px', borderRadius: '12px',
+                    padding: '8px 12px', borderRadius: '12px',
                     border: active ? '1px solid #FF5958' : '1px solid rgba(197, 160, 89, 0.4)',
                     background: active ? '#FF5958' : '#FFFFFF', color: active ? '#FFFFFF' : '#78716C',
                     fontSize: '12px', fontWeight: '800', cursor: 'pointer', whiteSpace: 'nowrap',
@@ -679,7 +767,7 @@ export default function AdminCustomerDashboard({ theme = {}, onBack, setView }) 
           </div>
 
           {/* CUSTOMER LIST CARDS */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', width: '100%' }}>
             {filteredCustomers.length === 0 ? (
               <div style={{ textAlign: 'center', padding: '50px 20px', color: '#78716C', fontSize: '13.5px', fontWeight: '600' }}>
                 No customer records found matching your filter criteria.
@@ -694,22 +782,35 @@ export default function AdminCustomerDashboard({ theme = {}, onBack, setView }) 
                     key={customer.id}
                     onClick={() => setSelectedCustomer(customer)}
                     style={{ 
-                      display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                      border: '1px solid rgba(197, 160, 89, 0.4)', borderRadius: activeTheme.radius,            
+                      display: 'flex', 
+                      alignItems: 'center', 
+                      justifyContent: 'space-between',
+                      border: '1px solid rgba(197, 160, 89, 0.4)', 
+                      borderRadius: activeTheme.radius,            
                       background: 'linear-gradient(135deg, #FFFDF9 0%, #FAF4EB 100%)',                       
-                      padding: '16px 20px', cursor: 'pointer', boxShadow: '0 8px 24px rgba(44, 34, 30, 0.05)',      
-                      gap: '14px', boxSizing: 'border-box', transition: 'transform 0.2s ease, box-shadow 0.2s ease'
+                      padding: '14px 12px', 
+                      cursor: 'pointer', 
+                      boxShadow: '0 8px 24px rgba(44, 34, 30, 0.05)',      
+                      gap: '12px', 
+                      boxSizing: 'border-box', 
+                      width: '100%', 
+                      transition: 'transform 0.2s ease, box-shadow 0.2s ease'
                     }}
                   >
                     {/* Left: Avatar with Icon-only Tier Medal badge at bottom corner, Name fully wrapped/visible */}
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '16px', flex: 1, minWidth: 0, textAlign: 'left' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flex: 1, minWidth: 0, textAlign: 'left' }}>
                       <div style={{ position: 'relative', flexShrink: 0 }}>
                         <div style={{ 
-                          backgroundColor: tierStyle.bg, border: `1px solid ${tierStyle.border}`,
-                          width: '48px', height: '48px', borderRadius: '15px', display: 'flex', 
-                          alignItems: 'center', justifyContent: 'center' 
+                          backgroundColor: tierStyle.bg, 
+                          border: `1px solid ${tierStyle.border}`,
+                          width: '46px', 
+                          height: '46px', 
+                          borderRadius: '14px', 
+                          display: 'flex', 
+                          alignItems: 'center', 
+                          justifyContent: 'center' 
                         }}>
-                          <User size={22} color={tierStyle.accentColor} />
+                          <User size={20} color={tierStyle.accentColor} />
                         </div>
                         {/* Icon-only Tier Medal at bottom corner with premium glow/shadow */}
                         <div 
@@ -728,8 +829,13 @@ export default function AdminCustomerDashboard({ theme = {}, onBack, setView }) 
 
                       <div style={{ display: 'flex', flexDirection: 'column', gap: '3px', flex: 1, minWidth: 0, textAlign: 'left' }}>
                         <h4 style={{ 
-                          margin: 0, color: activeTheme.text, fontSize: '15.5px', fontWeight: '700', 
-                          whiteSpace: 'normal', wordBreak: 'break-word', lineHeight: '1.3'
+                          margin: 0, 
+                          color: activeTheme.text, 
+                          fontSize: '15px', 
+                          fontWeight: '700', 
+                          whiteSpace: 'normal', 
+                          wordBreak: 'break-word', 
+                          lineHeight: '1.3' 
                         }}>
                           {customer.name}
                         </h4>
@@ -741,11 +847,16 @@ export default function AdminCustomerDashboard({ theme = {}, onBack, setView }) 
                     </div>
 
                     {/* Right: Dynamic Metric & Chevron */}
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexShrink: 0 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
                       <div style={{ 
-                        fontSize: '12px', fontWeight: '800', color: activeTheme.brand, 
-                        backgroundColor: 'rgba(255, 89, 88, 0.09)', padding: '7px 12px', 
-                        borderRadius: '10px', whiteSpace: 'nowrap', letterSpacing: '0.3px',
+                        fontSize: '11.5px', 
+                        fontWeight: '800', 
+                        color: activeTheme.brand, 
+                        backgroundColor: 'rgba(255, 89, 88, 0.09)', 
+                        padding: '6px 10px', 
+                        borderRadius: '10px', 
+                        whiteSpace: 'nowrap', 
+                        letterSpacing: '0.3px',
                         boxShadow: '0 2px 6px rgba(255,89,88,0.1)'
                       }}>
                         {sortBy === 'orders_desc' && `${customer.ordersCount} ${customer.ordersCount === 1 ? 'Order' : 'Orders'}`}
@@ -754,7 +865,7 @@ export default function AdminCustomerDashboard({ theme = {}, onBack, setView }) 
                         {sortBy === 'score_desc' && `${customer.loyaltyScore} Pts`}
                       </div>
 
-                      <ChevronRight size={17} color="#78716C" style={{ opacity: 0.8 }} />
+                      <ChevronRight size={16} color="#78716C" style={{ opacity: 0.8 }} />
                     </div>
 
                   </div>
