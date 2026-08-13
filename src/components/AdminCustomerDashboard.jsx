@@ -10,7 +10,9 @@ import {
   Search,
   Sparkles,
   ShoppingBag,
-  Medal
+  Medal,
+  Award,
+  Zap
 } from 'lucide-react';
 
 /* ==========================================================================
@@ -76,7 +78,8 @@ function getTierStyles(tierName) {
       badgeBg: '#4F46E5',
       badgeText: '#FFFFFF',
       accentColor: '#4F46E5',
-      progressFill: '#4F46E5'
+      progressFill: 'linear-gradient(90deg, #4F46E5 0%, #6366F1 100%)',
+      glow: '0 0 12px rgba(79, 70, 229, 0.3)'
     };
   }
   if (t.includes('gold')) {
@@ -86,7 +89,8 @@ function getTierStyles(tierName) {
       badgeBg: '#D97706',
       badgeText: '#FFFFFF',
       accentColor: '#D97706',
-      progressFill: '#D97706'
+      progressFill: 'linear-gradient(90deg, #D97706 0%, #F59E0B 100%)',
+      glow: '0 0 12px rgba(217, 119, 6, 0.3)'
     };
   }
   if (t.includes('silver')) {
@@ -96,7 +100,8 @@ function getTierStyles(tierName) {
       badgeBg: '#4B5563',
       badgeText: '#FFFFFF',
       accentColor: '#4B5563',
-      progressFill: '#4B5563'
+      progressFill: 'linear-gradient(90deg, #4B5563 0%, #6B7280 100%)',
+      glow: '0 0 12px rgba(75, 85, 99, 0.3)'
     };
   }
   if (t.includes('bronze')) {
@@ -106,7 +111,8 @@ function getTierStyles(tierName) {
       badgeBg: '#EA580C',
       badgeText: '#FFFFFF',
       accentColor: '#EA580C',
-      progressFill: '#EA580C'
+      progressFill: 'linear-gradient(90deg, #EA580C 0%, #F97316 100%)',
+      glow: '0 0 12px rgba(234, 88, 12, 0.3)'
     };
   }
   
@@ -117,7 +123,8 @@ function getTierStyles(tierName) {
     badgeBg: '#2563EB',
     badgeText: '#FFFFFF',
     accentColor: '#2563EB',
-    progressFill: '#2563EB'
+    progressFill: 'linear-gradient(90deg, #2563EB 0%, #3B82F6 100%)',
+    glow: '0 0 12px rgba(37, 99, 235, 0.3)'
   };
 }
 
@@ -550,6 +557,7 @@ export default function AdminCustomerDashboard({ theme = {}, onBack, setView }) 
                       <User size={24} color={tierStyle.accentColor} />
                     </div>
 
+                    {/* Customer Info Column: Expanded width & natural wrapping for code */}
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', flex: 1, minWidth: 0, alignItems: 'flex-start', textAlign: 'left' }}>
                       
                       <h3 style={{ 
@@ -582,16 +590,18 @@ export default function AdminCustomerDashboard({ theme = {}, onBack, setView }) 
                       {selectedCustomer.custCode && (
                         <div style={{ 
                           marginTop: '2px', 
-                          fontSize: '12px', 
-                          fontWeight: '600', 
-                          color: '#78716C', 
+                          fontSize: '11.5px', 
+                          fontWeight: '700', 
+                          color: '#57534E', 
                           fontFamily: 'monospace, sans-serif',
-                          whiteSpace: 'nowrap',
-                          overflow: 'hidden',
-                          textOverflow: 'ellipsis',
+                          wordBreak: 'break-all',
+                          whiteSpace: 'normal',
                           textAlign: 'left',
                           width: '100%',
-                          opacity: 0.85
+                          background: 'rgba(197, 160, 89, 0.1)',
+                          padding: '2px 8px',
+                          borderRadius: '6px',
+                          border: '1px solid rgba(197, 160, 89, 0.25)'
                         }}>
                           {selectedCustomer.custCode}
                         </div>
@@ -617,55 +627,79 @@ export default function AdminCustomerDashboard({ theme = {}, onBack, setView }) 
 
                 </div>
 
-                {/* GAMIFIED LOYALTY MILESTONE SECTION */}
+                {/* GAMIFIED ELITE LOYALTY SECTION */}
                 <div style={{ 
-                  background: '#FFFFFF',
-                  border: '1px solid rgba(197, 160, 89, 0.4)',
+                  background: 'linear-gradient(135deg, #FFFFFF 0%, #FAF6ED 100%)',
+                  border: `1.5px solid ${tierStyle.accentColor}40`,
                   borderRadius: '16px',
-                  padding: '14px 16px',
+                  padding: '16px 18px',
                   boxSizing: 'border-box',
                   display: 'flex',
                   flexDirection: 'column',
-                  gap: '8px',
+                  gap: '10px',
                   textAlign: 'left',
-                  boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.01)'
+                  boxShadow: tierStyle.glow
                 }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                      <Medal size={16} color={tierStyle.accentColor} />
-                      <span style={{ fontSize: '11px', fontWeight: '800', color: '#78716C', textTransform: 'uppercase', letterSpacing: '0.8px' }}>
-                        Loyalty Score
-                      </span>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <div style={{
+                        background: tierStyle.bg,
+                        border: `1px solid ${tierStyle.border}`,
+                        borderRadius: '10px',
+                        padding: '6px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center'
+                      }}>
+                        <Award size={18} color={tierStyle.accentColor} />
+                      </div>
+                      <div>
+                        <span style={{ fontSize: '10.5px', fontWeight: '800', color: '#78716C', textTransform: 'uppercase', letterSpacing: '0.9px', display: 'block' }}>
+                          Loyalty Quest
+                        </span>
+                        <span style={{ fontSize: '13px', fontWeight: '700', color: activeTheme.text }}>
+                          {selectedCustomer.tier} Tier Status
+                        </span>
+                      </div>
                     </div>
 
-                    <div style={{ fontSize: '17px', fontWeight: '800', color: tierStyle.accentColor }}>
-                      {selectedCustomer.loyaltyScore} <span style={{ fontSize: '12px', fontWeight: '700' }}>Pts</span>
+                    <div style={{ textAlign: 'right' }}>
+                      <span style={{ fontSize: '20px', fontWeight: '900', color: tierStyle.accentColor, letterSpacing: '-0.5px' }}>
+                        {selectedCustomer.loyaltyScore}
+                      </span>
+                      <span style={{ fontSize: '11px', fontWeight: '800', color: '#78716C', marginLeft: '3px', textTransform: 'uppercase' }}>
+                        Pts
+                      </span>
                     </div>
                   </div>
 
+                  {/* Gamified Glowing Progress Bar */}
                   <div style={{
                     width: '100%',
-                    height: '8px',
+                    height: '10px',
                     backgroundColor: 'rgba(197, 160, 89, 0.15)',
-                    borderRadius: '4px',
+                    borderRadius: '6px',
                     overflow: 'hidden',
-                    border: '1px solid rgba(197, 160, 89, 0.3)'
+                    border: '1px solid rgba(197, 160, 89, 0.3)',
+                    padding: '1px'
                   }}>
                     <div style={{
                       height: '100%',
                       width: `${milestone.progressPercent}%`,
                       background: tierStyle.progressFill,
-                      borderRadius: '4px',
-                      transition: 'width 0.6s ease'
+                      borderRadius: '5px',
+                      boxShadow: `0 0 8px ${tierStyle.accentColor}`,
+                      transition: 'width 0.8s cubic-bezier(0.16, 1, 0.3, 1)'
                     }} />
                   </div>
 
-                  <div style={{ fontSize: '12px', color: '#78716C', fontWeight: '600' }}>
+                  <div style={{ fontSize: '12px', color: '#78716C', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '6px', marginTop: '2px' }}>
+                    <Zap size={14} color={tierStyle.accentColor} fill={tierStyle.accentColor} />
                     {milestone.isMax ? (
-                      <span>🎉 Maximum Elite Loyalty Tier Reached!</span>
+                      <span style={{ color: tierStyle.accentColor, fontWeight: '800' }}>👑 Maximum Elite Tier Achieved! You rule the kitchen.</span>
                     ) : (
                       <span>
-                        🔥 Need <strong style={{ color: activeTheme.text }}>{milestone.ptsRemaining} Pts</strong> to unlock <strong style={{ color: tierStyle.accentColor }}>{milestone.nextTierName} Tier</strong>
+                        Only <strong style={{ color: activeTheme.text, fontWeight: '800' }}>{milestone.ptsRemaining} Pts</strong> away from unlocking <strong style={{ color: tierStyle.accentColor, fontWeight: '800' }}>{milestone.nextTierName}</strong> privileges!
                       </span>
                     )}
                   </div>
