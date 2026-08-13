@@ -530,46 +530,46 @@ export default function AdminCustomerDashboard({ theme = {}, onBack, setView }) 
                 border: '1px solid rgba(197, 160, 89, 0.45)',
                 boxShadow: '0 12px 32px rgba(44, 34, 30, 0.08)',
                 borderRadius: activeTheme.radius,
-                padding: '22px 24px',
+                padding: '24px',
                 boxSizing: 'border-box',
                 display: 'flex',
                 flexDirection: 'column',
-                gap: '18px',
+                gap: '20px',
                 position: 'relative',
                 textAlign: 'left'
               }}>
 
-                <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '16px', width: '100%' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '16px', width: '100%' }}>
                   
-                  <div style={{ display: 'flex', alignItems: 'flex-start', gap: '16px', flex: '1 1 auto', minWidth: 0, textAlign: 'left' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '16px', flex: '1 1 auto', minWidth: 0, textAlign: 'left' }}>
                     
                     <div style={{ 
                       backgroundColor: tierStyle.bg, 
                       border: `1px solid ${tierStyle.border}`,
-                      width: '52px', 
-                      height: '52px', 
-                      borderRadius: '16px', 
+                      width: '56px', 
+                      height: '56px', 
+                      borderRadius: '18px', 
                       display: 'flex', 
                       alignItems: 'center',
                       justifyContent: 'center',
                       flexShrink: 0
                     }}>
-                      <User size={22} color={tierStyle.accentColor} />
+                      <User size={26} color={tierStyle.accentColor} />
                     </div>
 
-                    {/* Customer Info Column: Expanded width & natural wrapping for code */}
+                    {/* Customer Info Column: Full name and code completely in one line, zero padding box */}
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', flex: 1, minWidth: 0, alignItems: 'flex-start', textAlign: 'left' }}>
                       
                       <h3 style={{ 
                         margin: 0, 
                         color: activeTheme.text, 
                         fontSize: '18px', 
-                        fontWeight: '700', 
-                        whiteSpace: 'nowrap',
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
+                        fontWeight: '800', 
+                        whiteSpace: 'normal',
+                        wordBreak: 'break-word',
                         textAlign: 'left',
-                        width: '100%'
+                        width: '100%',
+                        lineHeight: '1.25'
                       }}>
                         {selectedCustomer.name}
                       </h3>
@@ -584,24 +584,21 @@ export default function AdminCustomerDashboard({ theme = {}, onBack, setView }) 
                         gap: '6px',
                         textAlign: 'left'
                       }}>
-                        <Phone size={12} color={tierStyle.accentColor} /> {selectedCustomer.phone}
+                        <Phone size={13} color={tierStyle.accentColor} /> {selectedCustomer.phone}
                       </p>
 
                       {selectedCustomer.custCode && (
                         <div style={{ 
-                          marginTop: '2px', 
-                          fontSize: '10px', 
+                          fontSize: '12px', 
                           fontWeight: '700', 
-                          color: '#57534E', 
+                          color: '#78716C', 
                           fontFamily: 'monospace, sans-serif',
-                          wordBreak: 'break-all',
-                          whiteSpace: 'normal',
+                          whiteSpace: 'nowrap',
+                          overflow: 'visible',
                           textAlign: 'left',
                           width: '100%',
-                          background: 'rgba(197, 160, 89, 0.1)',
-                          padding: '2px 10px',
-                          borderRadius: '6px',
-                          border: '1px solid rgba(197, 160, 89, 0.25)'
+                          letterSpacing: '0.4px',
+                          marginTop: '2px'
                         }}>
                           {selectedCustomer.custCode}
                         </div>
@@ -612,14 +609,14 @@ export default function AdminCustomerDashboard({ theme = {}, onBack, setView }) 
                   <div style={{ 
                     background: tierStyle.badgeBg,
                     color: tierStyle.badgeText,
-                    padding: '5px 12px', 
-                    borderRadius: '10px', 
+                    padding: '6px 14px', 
+                    borderRadius: '12px', 
                     fontSize: '11px', 
                     fontWeight: '800',
                     letterSpacing: '0.8px',
                     textTransform: 'uppercase',
                     flexShrink: 0,
-                    alignSelf: 'flex-start',
+                    alignSelf: 'center',
                     boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
                   }}>
                     {selectedCustomer.tier}
@@ -699,7 +696,7 @@ export default function AdminCustomerDashboard({ theme = {}, onBack, setView }) 
                       <span style={{ color: tierStyle.accentColor, fontWeight: '800' }}>👑 Maximum Elite Tier Achieved! You rule the kitchen.</span>
                     ) : (
                       <span>
-                         <strong style={{ color: activeTheme.text, fontWeight: '800' }}>{milestone.ptsRemaining} Pts</strong> away from unlocking <strong style={{ color: tierStyle.accentColor, fontWeight: '800' }}>{milestone.nextTierName}</strong>!
+                        Only <strong style={{ color: activeTheme.text, fontWeight: '800' }}>{milestone.ptsRemaining} Pts</strong> away from unlocking <strong style={{ color: tierStyle.accentColor, fontWeight: '800' }}>{milestone.nextTierName}</strong> privileges!
                       </span>
                     )}
                   </div>
@@ -714,7 +711,7 @@ export default function AdminCustomerDashboard({ theme = {}, onBack, setView }) 
                   <div style={{ 
                     background: '#FFFFFF',
                     border: '1px solid rgba(197, 160, 89, 0.4)',
-                    padding: '12px 16px', 
+                    padding: '14px 16px', 
                     borderRadius: '16px',
                     display: 'flex',
                     flexDirection: 'column',
@@ -725,7 +722,7 @@ export default function AdminCustomerDashboard({ theme = {}, onBack, setView }) 
                     <span style={{ fontSize: '11px', fontWeight: '800', color: '#78716C', textTransform: 'uppercase', letterSpacing: '0.8px' }}>
                       Lifetime Spend
                     </span>
-                    <div style={{ fontSize: '18px', fontWeight: '800', color: activeTheme.text, marginTop: '4px' }}>
+                    <div style={{ fontSize: '19px', fontWeight: '800', color: activeTheme.text, marginTop: '4px' }}>
                       ₹{selectedCustomer.totalSpent.toLocaleString()}
                     </div>
                   </div>
@@ -733,7 +730,7 @@ export default function AdminCustomerDashboard({ theme = {}, onBack, setView }) 
                   <div style={{
                     background: '#FFFFFF',
                     border: '1px solid rgba(197, 160, 89, 0.4)',
-                    padding: '12px 16px', 
+                    padding: '14px 16px', 
                     borderRadius: '16px',
                     display: 'flex',
                     flexDirection: 'column',
@@ -747,7 +744,7 @@ export default function AdminCustomerDashboard({ theme = {}, onBack, setView }) 
                         Total Orders
                       </span>
                     </div>
-                    <div style={{ fontSize: '18px', fontWeight: '800', color: activeTheme.text, marginTop: '4px' }}>
+                    <div style={{ fontSize: '19px', fontWeight: '800', color: activeTheme.text, marginTop: '4px' }}>
                       {selectedCustomer.ordersCount} {selectedCustomer.ordersCount === 1 ? 'Order' : 'Orders'}
                     </div>
                   </div>

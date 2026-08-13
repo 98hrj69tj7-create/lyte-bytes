@@ -2,7 +2,7 @@ import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { 
   ArrowLeft, MapPin, Info, ChevronUp, ChevronDown, 
   ShoppingBag, Calendar, Clock, Search, X, Crosshair,
-  Bike, Navigation, CheckCircle2, AlertCircle, MessageCircle
+  Bike, Navigation, CheckCircle2, AlertCircle, MessageCircle, Loader2
 } from 'lucide-react';
 import PolicyModal from './PolicyModal';
 import { DeliveryPolicyModalContent, GeneralTermsModalContent, PrivacyPolicyModalContent } from './PolicyContents';
@@ -10,6 +10,63 @@ import { DeliveryPolicyModalContent, GeneralTermsModalContent, PrivacyPolicyModa
 const KITCHEN_LAT = 13.0232;
 const KITCHEN_LNG = 77.6492;
 const GOOGLE_MAPS_API_KEY = 'AIzaSyB4OBzhmYFyGxikNk6ROGQk1pLBrP28QD8';
+const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQscxfQpCFZxTywvO12f0PAEG9RJ2SmGsTvuZKCYMdd2RNyhu9cPfzJXJpS7NXegFW9y8ajDK32CRs_/pub?gid=0&single=true&output=csv";
+
+// CSV Parsing Helpers for Auto-Lookup
+function parseCSV(text) {
+  const lines = text.split(/\r?\n/);
+  if (lines.length === 0) return [];
+  let headerRowIndex = 0;
+  for (let i = 0; i < Math.min(lines.length, 5); i++) {
+    const testLine = parseCSVLine(lines[i]).map(h => h.toLowerCase());
+    if (testLine.includes('cust_mobile') || testLine.includes('mobile') || testLine.includes('cust_name')) {
+      headerRowIndex = i;
+      break;
+    }
+  }
+  const headers = parseCSVLine(lines[headerRowIndex]).map((h, i) => 
+    i === 0 ? h.replace(/^\uFEFF/, '').trim() : h.trim()
+  );
+  const result = [];
+  for (let i = headerRowIndex + 1; i < lines.length; i++) {
+    if (!lines[i].trim()) continue;
+    const currentLine = parseCSVLine(lines[i]);
+    const obj = {};
+    headers.forEach((header, index) => {
+      obj[header] = currentLine[index]?.trim() || '';
+    });
+    result.push(obj);
+  }
+  return result;
+}
+
+function parseCSVLine(text) {
+  const result = [];
+  let current = '';
+  let inQuotes = false;
+  for (let i = 0; i < text.length; i++) {
+    const char = text[i];
+    if (char === '"') {
+      inQuotes = !inQuotes;
+    } else if (char === ',' && !inQuotes) {
+      result.push(current);
+      current = '';
+    } else {
+      current += char;
+    }
+  }
+  result.push(current);
+  return result.map(item => item.replace(/^"|"$/g, '').trim());
+}
+
+function getField(row, possibleKeys) {
+  for (const key of possibleKeys) {
+    if (row[key] !== undefined && row[key] !== '') return row[key];
+    const foundKey = Object.keys(row).find(k => k.toLowerCase() === key.toLowerCase());
+    if (foundKey && row[foundKey] !== undefined && row[foundKey] !== '') return row[foundKey];
+  }
+  return '';
+}
 
 const calculateDeliveryFare = (distKm) => {
   if (distKm <= 5) return 50;
@@ -161,6 +218,7 @@ export default function DeliveryView({
 }) {
   const [isDeliveryPolicyOpen, setIsDeliveryPolicyOpen] = useState(false);
   const [isPrivacyPolicyOpen, setIsPrivacyPolicyOpen] = useState(false);
+  const [isLookingUp, setIsLookingUp] = useState(false);
   
   const [isMapModalOpen, setIsMapModalOpen] = useState(false);
   const [mapLoaded, setMapLoaded] = useState(false);
@@ -176,6 +234,44 @@ export default function DeliveryView({
 
   const currentMode = customer.fulfillmentType || 'DELIVERY';
   const whatsappNumber = "9108286886";
+
+  // Auto-Lookup Effect: When phone number hits 10 digits, query Orders Engine to auto-correct/fill name & details
+  useEffect(() => {
+    const phoneTrimmed = (customer.phone || '').trim();
+    if (phoneTrimmed.length === 10) {
+      async function lookupCustomer() {
+        setIsLookingUp(true);
+        try {
+          const response = await fetch(CSV_URL);
+          const csvText = await response.text();
+          const rows = parseCSV(csvText);
+
+          let foundName = '';
+          rows.forEach(row => {
+            const p = getField(row, ['Cust_Mobile', 'Customer_Mobile', 'Mobile', 'Phone', 'Cust Mobile']);
+            if (p === phoneTrimmed) {
+              const n = getField(row, ['Cust_Name', 'Customer_Name', 'Name', 'Customer', 'Cust Name']);
+              if (n && n !== 'Unknown' && n !== 'Valued Customer') {
+                foundName = n;
+              }
+            }
+          });
+
+          if (foundName) {
+            setCustomer(prev => ({
+              ...prev,
+              name: foundName
+            }));
+          }
+        } catch (err) {
+          console.error("Auto-lookup error:", err);
+        } finally {
+          setIsLookingUp(false);
+        }
+      }
+      lookupCustomer();
+    }
+  }, [customer.phone]);
 
   const handleChatAndSave = (customText) => {
     const vcardData = [
@@ -449,8 +545,9 @@ export default function DeliveryView({
         {/* Contact Info */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', textAlign: 'left' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <div style={{ fontSize: '11px', fontWeight: '800', color: '#78716C', textTransform: 'uppercase', letterSpacing: '0.8px' }}>
+            <div style={{ fontSize: '11px', fontWeight: '800', color: '#78716C', textTransform: 'uppercase', letterSpacing: '0.8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
               1. Contact Info <span style={{ color: activeTheme.brand }}>*</span>
+              {isLookingUp && <Loader2 size={12} className="animate-spin" color={activeTheme.brand} />}
             </div>
             <span 
               onClick={() => setIsPrivacyPolicyOpen(true)}
@@ -461,13 +558,6 @@ export default function DeliveryView({
           </div>
 
           <input 
-            type="text" 
-            placeholder="Full Name *" 
-            style={sleekInput} 
-            value={customer.name || ''} 
-            onChange={(e) => setCustomer({ ...customer, name: e.target.value })} 
-          />
-          <input 
             type="tel" 
             maxLength="10" 
             placeholder="Mobile Number (10 digits) *" 
@@ -475,6 +565,15 @@ export default function DeliveryView({
             value={customer.phone || ''} 
             onChange={(e) => setCustomer({ ...customer, phone: e.target.value.replace(/[^0-9]/g, '') })} 
           />
+
+          <input 
+            type="text" 
+            placeholder="Full Name *" 
+            style={sleekInput} 
+            value={customer.name || ''} 
+            onChange={(e) => setCustomer({ ...customer, name: e.target.value })} 
+          />
+
           <input 
             type="email" 
             placeholder="Email Address (Optional)" 
