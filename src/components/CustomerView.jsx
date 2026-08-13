@@ -234,7 +234,7 @@ export default function CustomerView({
           textTransform: 'uppercase', 
           pointerEvents: 'none' 
         }}>
-          Account & Rewards
+          My Account
         </h2>
       </div>
 
@@ -307,9 +307,8 @@ export default function CustomerView({
 
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '14px', position: 'relative', zIndex: 1 }}>
               <div style={{ textAlign: 'left' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-                  <Sparkles size={13} color="#D97706" />
-                  <span style={{ fontSize: '10.5px', fontWeight: '800', color: '#8A6D2B', letterSpacing: '0.9px', textTransform: 'uppercase' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '2px' }}>
+                  <span style={{ fontSize: '11px', fontWeight: '800', color: '#8A6D2B', letterSpacing: '0.9px', textTransform: 'uppercase' }}>
                     ELITE REWARD TIER
                   </span>
                 </div>

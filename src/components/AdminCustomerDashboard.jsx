@@ -554,7 +554,7 @@ export default function AdminCustomerDashboard({ theme = {}, onBack, setView }) 
                       justifyContent: 'center',
                       flexShrink: 0
                     }}>
-                      <User size={24} color={tierStyle.accentColor} />
+                      <User size={22} color={tierStyle.accentColor} />
                     </div>
 
                     {/* Customer Info Column: Expanded width & natural wrapping for code */}
@@ -584,13 +584,13 @@ export default function AdminCustomerDashboard({ theme = {}, onBack, setView }) 
                         gap: '6px',
                         textAlign: 'left'
                       }}>
-                        <Phone size={13} color={tierStyle.accentColor} /> {selectedCustomer.phone}
+                        <Phone size={12} color={tierStyle.accentColor} /> {selectedCustomer.phone}
                       </p>
 
                       {selectedCustomer.custCode && (
                         <div style={{ 
                           marginTop: '2px', 
-                          fontSize: '11.5px', 
+                          fontSize: '10px', 
                           fontWeight: '700', 
                           color: '#57534E', 
                           fontFamily: 'monospace, sans-serif',
@@ -599,7 +599,7 @@ export default function AdminCustomerDashboard({ theme = {}, onBack, setView }) 
                           textAlign: 'left',
                           width: '100%',
                           background: 'rgba(197, 160, 89, 0.1)',
-                          padding: '2px 8px',
+                          padding: '2px 10px',
                           borderRadius: '6px',
                           border: '1px solid rgba(197, 160, 89, 0.25)'
                         }}>
@@ -699,7 +699,7 @@ export default function AdminCustomerDashboard({ theme = {}, onBack, setView }) 
                       <span style={{ color: tierStyle.accentColor, fontWeight: '800' }}>👑 Maximum Elite Tier Achieved! You rule the kitchen.</span>
                     ) : (
                       <span>
-                        Only <strong style={{ color: activeTheme.text, fontWeight: '800' }}>{milestone.ptsRemaining} Pts</strong> away from unlocking <strong style={{ color: tierStyle.accentColor, fontWeight: '800' }}>{milestone.nextTierName}</strong> privileges!
+                         <strong style={{ color: activeTheme.text, fontWeight: '800' }}>{milestone.ptsRemaining} Pts</strong> away from unlocking <strong style={{ color: tierStyle.accentColor, fontWeight: '800' }}>{milestone.nextTierName}</strong>!
                       </span>
                     )}
                   </div>
