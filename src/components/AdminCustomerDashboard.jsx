@@ -471,7 +471,7 @@ export default function AdminCustomerDashboard({ theme = {}, onBack, setView }) 
           textTransform: 'uppercase', 
           pointerEvents: 'none'
         }}>
-          DATA ({customersData.length})
+          CUSTOMERS ({customersData.length})
         </h2>
 
         <div /> 
