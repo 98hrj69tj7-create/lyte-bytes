@@ -28,7 +28,7 @@ import FlavorStampsRewards from './FlavorStampsRewards';
    ========================================================================== */
 
 const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQscxfQpCFZxTywvO12f0PAEG9RJ2SmGsTvuZKCYMdd2RNyhu9cPfzJXJpS7NXegFW9y8ajDK32CRs_/pub?gid=0&single=true&output=csv";
-const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwBJYxfp38CPadj3ruHW7eeLLa_Q__91jL-Grr6kkFm/dev";
+const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwjR5KBDf8iB9e5Dh4ye5TxmIsbcirJsevDjMWma6B_Ine3HCYwC1ImeXgmr0XdVI9FZg/exec";
 
 function getMilestoneInfo(score = 0, currentTier = 'Blue') {
   const t = (currentTier || 'Blue').toLowerCase();
