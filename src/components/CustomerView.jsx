@@ -372,7 +372,7 @@ function MemberAuthModal({ isOpen, onClose, initialPhone = '', csvRows = [], onL
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <Sparkles size={18} color="#C5A059" />
             <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '20px', fontWeight: '700', color: activeTheme.text, textTransform: 'uppercase', letterSpacing: '1px' }}>
-              Member Portal
+              My Account
             </span>
           </div>
         </div>
