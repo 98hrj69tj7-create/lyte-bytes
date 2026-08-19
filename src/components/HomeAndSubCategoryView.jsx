@@ -7,9 +7,11 @@ import {
   Clock,
   CircleCheck,
   Recycle,
-  HandHeart
+  HandHeart,
+  Users
 } from 'lucide-react';
 import ItemCard from './ItemCard';
+import BulkOrdersModal from './BulkOrdersModal'; // <--- Imports your separate modal file properly
 
 /* ==========================================================================
    CONFIG & UTILITY HELPERS
@@ -345,6 +347,7 @@ export default function HomeAndSubCategoryView({
   onStoryToggle
 }) {
   const [showStory, setShowStory] = useState(false);
+  const [isBulkModalOpen, setIsBulkModalOpen] = useState(false);
   const currentCategoryData = findCategoryData(menuData, activeCat);
 
   useEffect(() => {
@@ -354,33 +357,6 @@ export default function HomeAndSubCategoryView({
   }, [showStory, onStoryToggle]);
 
   const isCateringCategory = activeCat && activeCat.toLowerCase().includes('catering');
-  const whatsappNumber = "9108286886"; 
-  const whatsappMessage = encodeURIComponent("Hi Lyte Bytes, I would like to inquire about your catering services and customized menu packages!");
-
-  const handleChatAndSave = () => {
-    const vcardData = [
-      'BEGIN:VCARD',
-      'VERSION:3.0',
-      'FN:Lyte Bytes',
-      'ORG:Lyte Bytes - Gourmet Delights',
-      'TEL;TYPE=WORK,VOICE:+919108286886',
-      'NOTE:Handcrafted Goodness & Gourmet Delights Since 1995',
-      'END:VCARD'
-    ].join('\n');
-
-    const blob = new Blob([vcardData], { type: 'text/vcard;charset=utf-8' });
-    const url = window.URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.setAttribute('download', 'Lyte_Bytes_Contact.vcf');
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    window.URL.revokeObjectURL(url);
-
-    const waUrl = `https://wa.me/${whatsappNumber}?text=${whatsappMessage}`;
-    window.open(waUrl, '_blank');
-  };
 
   /* ------------------------------------------------------------------------
      ALPHABETICAL SORTING (A to Z) LOGIC FOR CATEGORIES AND SUBCATEGORIES
@@ -431,22 +407,37 @@ export default function HomeAndSubCategoryView({
           fontFamily: "'Plus Jakarta Sans', sans-serif" 
         }}>
           
-          {/* --- TOP BRAND SLOGAN BAR --- */}
-          <div style={{ 
-            textAlign: 'center', 
-            margin: '2px 0 10px 0'
-          }}>
-            <span style={{ 
-              fontSize: '10px', 
-              color: '#8A6D2B', 
-              fontWeight: '600', 
-              letterSpacing: '2px', 
-              textTransform: 'uppercase',
-              display: 'inline-block'
-            }}>
-              ✦ Home‑Made Heart ✦ Gourmet Delights ✦ <p>✦ Handcrafted Goodness ✦</p>
-            </span>
-          </div>
+          {/* --- TOP SCROLLING BRAND SLOGAN BAR --- */}
+<div style={{ 
+  margin: '2px 0 8px 0', 
+  overflow: 'hidden', 
+  width: '100%',
+  maskImage: 'linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent)' // Soft fade on edges
+}}>
+  <div className="marquee-wrapper">
+    <div className="marquee-track">
+      {[...Array(2)].map((_, i) => (
+        <span key={i} style={{ 
+          fontSize: '12px', 
+          color: '#8A6D2B', 
+          fontWeight: '600', 
+          letterSpacing: '2px', 
+          textTransform: 'uppercase',
+          display: 'inline-flex',
+          alignItems: 'center',
+          gap: '10px',
+          whiteSpace: 'nowrap'
+        }}>
+          <span>✦</span> Home-Made Heart
+          <span>✦</span> Strictly Made to Order
+          <span>✦</span> Gourmet Delights 
+          <span>✦</span> Handcrafted Goodness 
+          <span>✦</span> Small-Batch Perfection
+        </span>
+      ))}
+    </div>
+  </div>
+</div>
 
           {/* --- CORAL RED GLOW SEARCH BAR --- */}
           <div style={{ marginBottom: '12px' }}>
@@ -929,7 +920,7 @@ export default function HomeAndSubCategoryView({
           {isCateringCategory && (
             <div 
               className="support-card" 
-              onClick={handleChatAndSave}
+              onClick={() => setIsBulkModalOpen(true)}
               style={{ 
                 display: 'flex', 
                 alignItems: 'center', 
@@ -970,7 +961,7 @@ export default function HomeAndSubCategoryView({
                   justifyContent: 'center',
                   flexShrink: 0 
                 }}>
-                  <Gift size={20} color="#8A6D2B" />
+                  <Users size={20} color="#8A6D2B" />
                 </div>
                 <div style={{ textAlign: 'left', minWidth: 0 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '1px' }}>
@@ -1020,6 +1011,12 @@ export default function HomeAndSubCategoryView({
           </div>
         </div>
       )}
+
+      {/* Bulk Orders Popup Modal */}
+      <BulkOrdersModal 
+        isOpen={isBulkModalOpen} 
+        onClose={() => setIsBulkModalOpen(false)} 
+      />
     </>
   );
 }

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { createPortal } from 'react-dom'; // <--- NEW: Teleports modal to full screen
+import { createPortal } from 'react-dom';
 import { 
   Sparkles,
   FileText,
@@ -26,10 +26,9 @@ export default function MemberAuthModal({ isOpen, onClose, initialPhone = '', cs
   const activeTheme = {
     brand: '#FF5958',
     text: '#1A1816',
-    radius: '24px' // Matched to Install Prompt rounding
+    radius: '24px'
   };
 
-  // Bulletproof viewport lock specifically designed for iOS/Android PWAs
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
@@ -74,9 +73,11 @@ export default function MemberAuthModal({ isOpen, onClose, initialPhone = '', cs
 
     if (matchingRows.length > 0) {
       const latestRow = matchingRows[matchingRows.length - 1];
-      const uniqueCode = latestRow['Final_Order_Code'] || latestRow['Cust_Code'] || latestRow['Order_No'] || '';
-      if (uniqueCode.length >= 17) {
-        return uniqueCode.substring(9, 17);
+      const custCode = latestRow['Cust_Code'] || '';
+      
+      // Explicitly extract characters 10 to 17 (index 9 to 17) from Cust_Code
+      if (custCode.length >= 17) {
+        return custCode.substring(9, 17);
       }
     }
     return targetPhone.length >= 4 ? targetPhone.slice(-4) : '1234';
@@ -176,7 +177,6 @@ export default function MemberAuthModal({ isOpen, onClose, initialPhone = '', cs
     }
   };
 
-  // The modal UI variable
   const modalContent = (
     <div 
       onClick={onClose}
@@ -187,13 +187,13 @@ export default function MemberAuthModal({ isOpen, onClose, initialPhone = '', cs
         left: 0,
         right: 0,
         bottom: 0,
-        backgroundColor: 'rgba(20, 15, 12, 0.75)', // Matched identically to InstallPrompt
-        backdropFilter: 'blur(6px)', // Matched identically to InstallPrompt
+        backgroundColor: 'rgba(20, 15, 12, 0.75)', 
+        backdropFilter: 'blur(6px)', 
         WebkitBackdropFilter: 'blur(6px)',
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        zIndex: 999999, // Guaranteed to sit above all navigation bars
+        zIndex: 999999, 
         padding: '16px',
         cursor: 'pointer',
         boxSizing: 'border-box'
@@ -216,7 +216,7 @@ export default function MemberAuthModal({ isOpen, onClose, initialPhone = '', cs
           maxWidth: '380px',
           display: 'flex',
           flexDirection: 'column',
-          boxShadow: '0 20px 40px rgba(0,0,0,0.3)', // Matched identically to InstallPrompt
+          boxShadow: '0 20px 40px rgba(0,0,0,0.3)', 
           overflow: 'hidden',
           position: 'relative',
           animation: 'modalScaleIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards',
@@ -225,7 +225,6 @@ export default function MemberAuthModal({ isOpen, onClose, initialPhone = '', cs
           fontFamily: "'Plus Jakarta Sans', sans-serif"
         }}
       >
-        {/* Close Button */}
         <button 
           type="button"
           onClick={onClose}
@@ -238,7 +237,6 @@ export default function MemberAuthModal({ isOpen, onClose, initialPhone = '', cs
           <X size={16} />
         </button>
 
-        {/* Modal Header */}
         <div style={{
           display: 'flex',
           alignItems: 'center',
@@ -255,7 +253,6 @@ export default function MemberAuthModal({ isOpen, onClose, initialPhone = '', cs
           </div>
         </div>
 
-        {/* Modal Body Card Wrapper */}
         <div style={{ padding: '14px 20px 20px 20px', position: 'relative', boxSizing: 'border-box' }}>
           
           <div 
@@ -537,6 +534,5 @@ export default function MemberAuthModal({ isOpen, onClose, initialPhone = '', cs
     </div>
   );
 
-  // THIS IS THE CRITICAL FIX: We render the modal directly onto the document body
   return createPortal(modalContent, document.body);
 }

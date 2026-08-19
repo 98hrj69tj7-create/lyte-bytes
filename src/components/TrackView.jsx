@@ -267,7 +267,7 @@ export default function TrackView({
         {!searchedOrder ? (
           <>
             <div style={{ width: '56px', height: '56px', borderRadius: '50%', background: '#FFFFFF', border: '1px solid rgba(197, 160, 89, 0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: activeTheme.brand, boxShadow: '0 4px 12px rgba(255, 89, 88, 0.1)' }}>
-              <Package size={26} color={activeTheme.brand} />
+              <Package size={30} color={activeTheme.brand} />
             </div>
 
             <div>

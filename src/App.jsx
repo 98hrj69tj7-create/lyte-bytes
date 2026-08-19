@@ -9,8 +9,10 @@ import CartView from './components/CartView';
 import DeliveryView from './components/DeliveryView';
 import PaymentView from './components/PaymentView';
 import PaymentVerificationView from './components/PaymentVerificationView';
+import ConciergeChatView from './components/ConciergeChatView';
 import TrackView from './components/TrackView';
 import SupportInfoView from './components/SupportInfoView';
+import WallOfLoveView from './components/WallOfLoveView';
 import CustomerView from './components/CustomerView';
 import AdminCustomerDashboard from './components/AdminCustomerDashboard';
 import Header from './components/Header';
@@ -19,6 +21,7 @@ import LimitedOfferModal from './components/LimitedOfferModal';
 import InstallPrompt from './components/InstallPrompt';
 import { trackAbandonedLead } from './components/leadTracker';
 import Papa from 'papaparse';
+import { Star, X } from 'lucide-react';
 
 // --- IMAGE RESOLVER ---
 const resolveImagePath = (path, folder = '') => {
@@ -145,13 +148,70 @@ export default function App() {
   const [upiApp, setUpiApp] = useState('');
   const [upiId, setUpiId] = useState('');
   
+  // Wall of Love Review State with Randomization
+  const [selectedReview, setSelectedReview] = useState(null);
+  const INITIAL_FALLBACK_REVIEWS = [
+    { id: 1, source: 'google', text: 'The best pickles and homemade treats! Authentic taste and amazing packaging.', author: 'Priya S.', rating: 5 },
+    { id: 2, source: 'facebook', text: 'This customised wedding cake made our day extra special because the taste was beyond comparison!', author: 'Deborah Sarkar', rating: 5 },
+    { id: 3, source: 'instagram', text: 'Loved the Jam and pickles! Super quick delivery and top-notch quality.', author: 'Lizy Priya', rating: 5 },
+    { id: 4, source: 'whatsapp', text: 'Received the order safely today. The tomato pickle reminds me of home!', author: 'Angelina.', rating: 5 },
+    { id: 5, source: 'email', text: 'Inquired about a bulk corporate hamper through email, and the response and curation were flawless!', author: 'Rahul V.', rating: 5 }
+  ];
+
+  const [testimonials, setTestimonials] = useState(() => {
+    try {
+      const cached = localStorage.getItem('lytebytes_cached_reviews');
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          return [...parsed].sort(() => Math.random() - 0.5);
+        }
+      }
+    } catch (e) {
+      console.error('Error reading cache', e);
+    }
+    return [...INITIAL_FALLBACK_REVIEWS].sort(() => Math.random() - 0.5);
+  });
+
+  // Fetch reviews background sync & randomise
+  useEffect(() => {
+    const fetchFreshReviews = async () => {
+      try {
+        const SHEET_API_URL = 'https://script.google.com/macros/s/AKfycbxdXpaz1SsK_mPTIfYAWK_yXQnHNiAUDtQS8g6ZrgqgP0bR6cPbr-bnuS2whC-lG8T_/exec';
+        if (SHEET_API_URL.includes('YOUR_GOOGLE_')) return;
+        
+        const response = await fetch(SHEET_API_URL);
+        const data = await response.json();
+        
+        if (data && data.length > 0) {
+          const normalizedReviews = data
+            .map(item => ({
+              id: item.id || item.ID || Math.random(),
+              text: item.text || item.Text || '',
+              author: item.author || item.Author || 'Customer',
+              source: (item.source || item.Source || 'google').toLowerCase(),
+              rating: parseInt(item.rating || item.Rating || 5),
+              imageUrl: item.image || item.Image || item.Photo || item.photo || item.imageUrl || item['Image URL'] || null
+            }))
+            .filter(item => item.text && item.text.trim().length > 0);
+          
+          if (normalizedReviews.length > 0) {
+            const randomized = [...normalizedReviews].sort(() => Math.random() - 0.5);
+            setTestimonials(randomized);
+            localStorage.setItem('lytebytes_cached_reviews', JSON.stringify(normalizedReviews));
+          }
+        }
+      } catch (error) {
+        console.error('Background sync failed:', error);
+      }
+    };
+    fetchFreshReviews();
+  }, []);
+
   // Custom Back Warning Modal State
   const [isBackModalOpen, setIsBackModalOpen] = useState(false);
-  
-  // State to track whether the "Our Story & Our Promise" card is expanded
   const [isStoryExpanded, setIsStoryExpanded] = useState(false);
 
-  // Reset story expansion when navigating away from home view
   useEffect(() => {
     if (view !== 'home') {
       setIsStoryExpanded(false);
@@ -175,7 +235,6 @@ export default function App() {
     return () => window.removeEventListener('popstate', handlePopState);
   }, [view]);
   
-  // Haptic Micro-Feedback State
   const [pressedBtn, setPressedBtn] = useState(null);
   const getPressStyle = (id) => ({
     transform: pressedBtn === id ? 'scale(0.96)' : 'scale(1)',
@@ -190,7 +249,6 @@ export default function App() {
 
   const [currentStage] = useState(1);
 
-  // --- THEME ---
   const theme = {
     bg: '#FFFDF9',
     text: '#1A1816',
@@ -230,7 +288,6 @@ export default function App() {
     trackAbandonedLead(fieldName, value, customer, cart, GOOGLE_SCRIPT_URL);
   };
 
-  // --- GOOGLE SHEET DATA FETCHING ---
   const [menuData, setMenuData] = useState(null);
 
   useEffect(() => {
@@ -515,10 +572,41 @@ export default function App() {
           </PageTransition>
         )}
 
-        {view?.toLowerCase() === 'info' && (
+        {view === 'info' && (
           <PageTransition viewKey="info">
             <SupportInfoView
               theme={theme}
+              setView={setView}
+            />
+          </PageTransition>
+        )}
+
+        {view === 'wall_of_love' && (
+          <PageTransition viewKey="wall_of_love">
+            <WallOfLoveView
+              theme={theme}
+              setView={setView}
+              testimonials={testimonials}
+              onSelectReview={(item) => setSelectedReview(item)}
+            />
+          </PageTransition>
+        )}
+
+        {view === 'chatbot' && (
+          <PageTransition viewKey="chatbot">
+            <ConciergeChatView 
+              theme={theme}
+              onBack={() => setView('info')}
+              setView={setView}
+            />
+          </PageTransition>
+        )}
+
+        {view === 'concierge' && (
+          <PageTransition viewKey="concierge">
+            <ConciergeChatView 
+              theme={theme}
+              onBack={() => setView('home')}
               setView={setView}
             />
           </PageTransition>
@@ -544,7 +632,7 @@ export default function App() {
         )}
       </main>
 
-      {!['cart', 'delivery', 'payment', 'verifying', 'track', 'profile', 'account', 'admin-customers'].includes(view) && !isStoryExpanded && (
+      {!['cart', 'delivery', 'payment', 'verifying', 'track', 'profile', 'account', 'admin-customers', 'concierge', 'chatbot', 'wall_of_love'].includes(view) && !isStoryExpanded && (
         <StickyCartBar
           cart={cart}
           onViewCart={() => setView('cart')}
@@ -574,6 +662,59 @@ export default function App() {
           setSelectedItem={(item) => setActiveModal({ type: item ? 'VARIANTS' : null, data: item })}
           addToCart={addToCart}
         />
+      )}
+
+      {/* ================= SINGLE REVIEW DETAILS POPUP MODAL ================= */}
+      {selectedReview && (
+        <div 
+          onClick={() => setSelectedReview(null)}
+          style={{
+            position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+            backgroundColor: 'rgba(20, 15, 12, 0.85)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            zIndex: 100000, padding: '16px', boxSizing: 'border-box'
+          }}
+        >
+          <div 
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              background: 'linear-gradient(135deg, #FFFDF9 0%, #FAF4EB 100%)', 
+              borderRadius: '24px', padding: '26px', maxWidth: '380px', width: '100%', boxSizing: 'border-box',
+              position: 'relative', boxShadow: '0 20px 40px rgba(0,0,0,0.3)', border: '1.5px solid #FF5958',
+              textAlign: 'left', display: 'flex', flexDirection: 'column', gap: '12px', maxHeight: '85vh', overflowY: 'auto',
+              fontFamily: "'Plus Jakarta Sans', sans-serif"
+            }}
+          >
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <Star size={13} fill="#C5A059" color="#C5A059" />
+                <span style={{ fontSize: '11px', fontWeight: '800', color: '#8A6D2B', textTransform: 'uppercase', letterSpacing: '1px' }}>
+                  Verified {selectedReview.source} Review
+                </span>
+              </div>
+              <button 
+                onClick={() => setSelectedReview(null)}
+                style={{ background: 'rgba(197, 160, 89, 0.12)', border: 'none', borderRadius: '50%', width: '28px', height: '28px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: '#8A6D2B' }}
+              >
+                <X size={14} />
+              </button>
+            </div>
+
+            {selectedReview.imageUrl && (
+              <div style={{ width: '100%', borderRadius: '14px', overflow: 'hidden', border: '1px solid rgba(197, 160, 89, 0.4)', backgroundColor: '#000' }}>
+                <img src={selectedReview.imageUrl} alt={`Review by ${selectedReview.author}`} style={{ width: '100%', maxHeight: '230px', objectFit: 'cover', display: 'block' }} />
+              </div>
+            )}
+
+            <p style={{ margin: 0, fontSize: '13px', color: theme.text, lineHeight: '1.6', fontWeight: '500' }}>
+              "{selectedReview.text}"
+            </p>
+
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '10px', borderTop: '1px solid rgba(197, 160, 89, 0.2)' }}>
+              <span style={{ fontWeight: '700', color: '#FF5958', fontSize: '13px' }}>{selectedReview.author}</span>
+            </div>
+          </div>
+        </div>
       )}
 
       {/* ================= CUSTOM BRANDED BACK WARNING MODAL ================= */}

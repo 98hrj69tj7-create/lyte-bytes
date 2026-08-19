@@ -146,3 +146,28 @@ code {
   transform: scale(1.01);
   box-shadow: 0 0 15px rgba(255, 89, 88, 0.6) !important;
 }
+
+/* --- Top Marquee Slogan Bar Animation --- */
+@keyframes slowMarquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.marquee-wrapper {
+  overflow: hidden;
+  white-space: nowrap;
+  width: 100%;
+  position: relative;
+  display: flex;
+}
+
+.marquee-track {
+  display: inline-flex;
+  gap: 24px;
+  animation: slowMarquee 22s linear infinite;
+  will-change: transform;
+}
+
+.marquee-track:hover {
+  animation-play-state: paused;
+}

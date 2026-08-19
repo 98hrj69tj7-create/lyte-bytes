@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { Stamp, Crown, Sparkles, Flame, Check, Trophy } from 'lucide-react';
+import { Stamp, Crown, Flame, Check, Trophy, Award } from 'lucide-react';
 
 const getStampDetails = (count) => {
-  if (count >= 12) return { name: "The Culinary Emperor", icon: Crown, color: "#B45309" };
-  if (count >= 9) return { name: "Glaze Grandmaster", icon: Trophy, color: "#7C3AED" };
-  if (count >= 6) return { name: "Sponge Sovereign", icon: Crown, color: "#D97706" };
-  if (count >= 3) return { name: "Whisk Aristocrat", icon: Sparkles, color: "#4F46E5" };
-  return { name: "Crumbs Bandit", icon: Stamp, color: "#64748B" };
+  if (count >= 12) return { name: "The Culinary Emperor", icon: Crown, color: "#B45309", level: "Level 5" };
+  if (count >= 9) return { name: "Glaze Grandmaster", icon: Trophy, color: "#7C3AED", level: "Level 4" };
+  if (count >= 6) return { name: "Sponge Sovereign", icon: Crown, color: "#D97706", level: "Level 3" };
+  if (count >= 3) return { name: "Whisk Aristocrat", icon: Award, color: "#8A6D2B", level: "Level 2" };
+  return { name: "Crumbs Bandit", icon: Stamp, color: "#64748B", level: "Level 1" };
 };
 
 const getStreakDetails = (orders = []) => {
   if (!orders || orders.length === 0) {
-    return { title: "Flat Batter", subtitle: "Standard", color: "#64748B" };
+    return { title: "Flat Batter", subtitle: "Standard", color: "#64748B", level: "Tier 0" };
   }
   let latestDate = null;
   orders.forEach(o => {
@@ -22,20 +22,20 @@ const getStreakDetails = (orders = []) => {
   });
 
   if (!latestDate) {
-    return { title: "Flat Batter", subtitle: "Standard", color: "#64748B" };
+    return { title: "Flat Batter", subtitle: "Standard", color: "#64748B", level: "Tier 0" };
   }
 
   const now = new Date();
   const diffDays = Math.floor((now - latestDate) / (1000 * 60 * 60 * 24));
 
   if (diffDays <= 6) {
-    return { title: "The Endless Bake", subtitle: "Elite Frequency", color: "#DC2626" };
+    return { title: "The Endless Bake", subtitle: "Elite Frequency", color: "#DC2626", level: "Tier 3" };
   } else if (diffDays >= 7 && diffDays <= 13) {
-    return { title: "Rapid Rise", subtitle: "Consistent Ordering", color: "#D97706" };
+    return { title: "Rapid Rise", subtitle: "Consistent Ordering", color: "#D97706", level: "Tier 2" };
   } else if (diffDays >= 14 && diffDays <= 20) {
-    return { title: "Rising Dough", subtitle: "Active Streak", color: "#EA580C" };
+    return { title: "Rising Dough", subtitle: "Active Streak", color: "#EA580C", level: "Tier 1" };
   } else {
-    return { title: "Flat Batter", subtitle: "Standard", color: "#64748B" };
+    return { title: "Flat Batter", subtitle: "Standard", color: "#64748B", level: "Tier 0" };
   }
 };
 
@@ -44,6 +44,7 @@ export default function FlavorStampsRewards({
   theme = {}, 
   customerPhone = '', 
   webAppUrl = '',
+  tier = '', 
   initialWhiskClaimed = false,
   initialSovereignClaimed = false,
   initialGrandmasterClaimed = false,
@@ -54,13 +55,15 @@ export default function FlavorStampsRewards({
   const StampIcon = stamp.icon;
   const streak = getStreakDetails(orders);
 
+  const isBronzeTier = tier?.trim().toLowerCase() === 'bronze';
+  const minOrdersForFirstMilestone = 2;
+
   const [whiskClaimed, setWhiskClaimed] = useState(initialWhiskClaimed);
   const [sovereignClaimed, setSovereignClaimed] = useState(initialSovereignClaimed);
   const [grandmasterClaimed, setGrandmasterClaimed] = useState(initialGrandmasterClaimed);
   const [emperorClaimed, setEmperorClaimed] = useState(initialEmperorClaimed);
   const [isClaiming, setIsClaiming] = useState(null);
 
-  // Sync state when initial props update from CSV data fetch
   useEffect(() => {
     setWhiskClaimed(initialWhiskClaimed);
     setSovereignClaimed(initialSovereignClaimed);
@@ -99,36 +102,97 @@ export default function FlavorStampsRewards({
   const textColor = theme.text || '#1A1816';
   const radius = theme.radius || '20px';
 
+  const hasBronzeMilestoneUnlocked = isBronzeTier && orderCount >= minOrdersForFirstMilestone;
+  const hasOtherMilestonesUnlocked = orderCount >= 6;
+  const showMilestonesSection = hasBronzeMilestoneUnlocked || hasOtherMilestonesUnlocked;
+
+  // Tight, compact, and sleek card styling
+  const cardStyle = {
+    background: '#FFFDF9',
+    border: '1px solid rgba(197, 160, 89, 0.4)',
+    borderRadius: radius,
+    padding: '12px',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '6px',
+    boxSizing: 'border-box',
+    boxShadow: '0 4px 16px rgba(44, 34, 30, 0.04)',
+    width: '100%'
+  };
+
+  const iconBoxStyle = {
+    padding: '5px',
+    borderRadius: '8px',
+    background: '#FFFFFF',
+    border: '1px solid rgba(197, 160, 89, 0.3)',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    boxShadow: '0 2px 5px rgba(0,0,0,0.02)'
+  };
+
+  const badgeStyle = {
+    fontSize: '9.5px',
+    fontWeight: '800',
+    backgroundColor: '#FFFFFF',
+    padding: '1px 6px',
+    borderRadius: '8px',
+    border: '1px solid rgba(197, 160, 89, 0.3)',
+    whiteSpace: 'nowrap',
+    letterSpacing: '0.3px'
+  };
+
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', width: '100%', boxSizing: 'border-box' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', width: '100%', boxSizing: 'border-box', fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
       
       {/* Flavor Stamps + Streak Grid */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
-        <div style={{ background: '#FFFDF9', border: '1px solid rgba(197, 160, 89, 0.4)', borderRadius: radius, padding: '16px 12px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', boxSizing: 'border-box' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-            <div style={{ padding: '2px', borderRadius: '8px', display: 'flex' }}><StampIcon size={20} color={stamp.color} /></div>
-            <span style={{ fontSize: '11px', fontWeight: '800', color: textColor, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Flavor Stamps</span>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', width: '100%' }}>
+        
+        {/* Flavor Stamps Card */}
+        <div style={cardStyle}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <div style={iconBoxStyle}>
+                <StampIcon size={18} color={stamp.color} />
+              </div>
+              <span style={{ fontSize: '11px', fontWeight: '800', color: textColor, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Stamps</span>
+            </div>
+            <span style={{ ...badgeStyle, color: stamp.color }}>
+              {stamp.level}
+            </span>
           </div>
           <div>
-            <div style={{ fontSize: '16px', fontWeight: '800', color: stamp.color }}>{orderCount} Stamps</div>
-            <div style={{ fontSize: '11px', color: '#78716C', fontWeight: '600', marginTop: '2px' }}>{orderCount >= 3 ? `🎖️ ${stamp.name}` : `Collect ${3 - orderCount} more`}</div>
+            <div style={{ fontSize: '18px', fontWeight: '900', color: stamp.color, letterSpacing: '-0.3px', lineHeight: '1.2' }}>
+              {orderCount} Stamps
+            </div>
+            <div style={{ fontSize: '10px', color: '#78716C', fontWeight: '700', marginTop: '1px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+              {orderCount >= minOrdersForFirstMilestone ? `🎖️ ${stamp.name}` : `Collect ${minOrdersForFirstMilestone - orderCount} more`}
+            </div>
           </div>
         </div>
 
-        <div style={{ background: '#FFFDF9', border: '1px solid rgba(197, 160, 89, 0.35)', borderRadius: radius, padding: '16px 12px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', boxSizing: 'border-box' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-            <div style={{ padding: '2px', borderRadius: '8px', display: 'flex' }}><Flame size={20} color={streak.color} /></div>
-            <span style={{ fontSize: '11px', fontWeight: '800', color: textColor, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Order Streak</span>
+        {/* Order Streak Card */}
+        <div style={cardStyle}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <div style={iconBoxStyle}>
+                <Flame size={16} color={streak.color} />
+              </div>
+              <span style={{ fontSize: '10px', fontWeight: '800', color: textColor, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Streak</span>
+            </div>
+            <span style={{ ...badgeStyle, color: streak.color }}>
+              {streak.level}
+            </span>
           </div>
           <div>
-            <div style={{ fontSize: '15px', fontWeight: '800', color: streak.color }}>{streak.title}</div>
-            <div style={{ fontSize: '11px', color: '#78716C', fontWeight: '600', marginTop: '2px' }}>{streak.subtitle}</div>
+            <div style={{ fontSize: '16px', fontWeight: '800', color: streak.color, letterSpacing: '-0.3px', lineHeight: '1.2', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{streak.title}</div>
+            <div style={{ fontSize: '10px', color: '#78716C', fontWeight: '600', marginTop: '1px' }}>{streak.subtitle}</div>
           </div>
         </div>
       </div>
 
       {/* Milestone Unlocks Section */}
-      {orderCount >= 3 && (
+      {showMilestonesSection && (
         <div style={{ 
           background: 'linear-gradient(135deg, #FFFFFF 0%, #FAF6ED 100%)', 
           border: '1.5px solid rgba(197, 160, 89, 0.45)', 
@@ -140,12 +204,12 @@ export default function FlavorStampsRewards({
           boxSizing: 'border-box',
           boxShadow: '0 6px 20px rgba(44, 34, 30, 0.04)'
         }}>
-          <div style={{ fontSize: '11px', fontWeight: '800', color: '#78716C', textTransform: 'uppercase', letterSpacing: '0.8px' }}>
+          <div style={{ fontSize: '10.5px', fontWeight: '800', color: '#78716C', textTransform: 'uppercase', letterSpacing: '0.8px' }}>
             🎁 Milestone Reward Unlocks
           </div>
 
-          {/* 3 Stamps: Sample */}
-          {orderCount >= 3 && (
+          {/* First Milestone: Bronze Tier + At least 2 Orders Completed */}
+          {hasBronzeMilestoneUnlocked && (
             <div style={{ 
               padding: '12px 14px', 
               background: '#FFFDF9', 
@@ -159,10 +223,10 @@ export default function FlavorStampsRewards({
             }}>
               <div style={{ textAlign: 'left' }}>
                 <div style={{ fontSize: '13px', fontWeight: '700', color: textColor }}>Sugar Spark</div>
-                <div style={{ fontSize: '11px', color: '#78716C', fontWeight: '500', marginTop: '1px' }}>Aristocrat Perk (3 Stamps)</div>
+                <div style={{ fontSize: '11px', color: '#78716C', fontWeight: '500', marginTop: '1px' }}>Bronze Milestone (2 Orders Completed)</div>
               </div>
               {whiskClaimed ? (
-                <div style={{ display: 'flex', alignItems: 'center', gap: '2px', fontSize: '11px', fontWeight: '600', color: '#059669', background: '#ECFDF5', padding: '0px 4px', borderRadius: '10px', flexShrink: 0, border: '1px solid rgba(5, 150, 105, 0.2)', marginTop:'-22px'}}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '11px', fontWeight: '600', color: '#059669', background: '#ECFDF5', padding: '4px 10px', borderRadius: '10px', flexShrink: 0, border: '1px solid rgba(5, 150, 105, 0.2)' }}>
                   <Check size={13} strokeWidth={3} /> Claimed
                 </div>
               ) : (
@@ -173,11 +237,10 @@ export default function FlavorStampsRewards({
                     background: brandColor, 
                     color: '#FFF', 
                     border: 'none', 
-                    padding: '5px 10px', 
-                    marginTop:'-15px',
+                    padding: '6px 14px', 
                     borderRadius: '10px', 
                     fontWeight: '700', 
-                    fontSize: '11px', 
+                    fontSize: '11.5px', 
                     cursor: 'pointer', 
                     flexShrink: 0,
                     boxShadow: '0 4px 12px rgba(255, 89, 88, 0.25)',
@@ -208,7 +271,7 @@ export default function FlavorStampsRewards({
                 <div style={{ fontSize: '11px', color: '#78716C', fontWeight: '500', marginTop: '1px' }}>Sovereign Perk (6 Stamps)</div>
               </div>
               {sovereignClaimed ? (
-                <div style={{ display: 'flex', alignItems: 'center', gap: '2px', fontSize: '11px', fontWeight: '600', color: '#059669', background: '#ECFDF5', padding: '0px 4px', borderRadius: '10px', flexShrink: 0, border: '1px solid rgba(5, 150, 105, 0.2)', marginTop:'-22px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '11px', fontWeight: '600', color: '#059669', background: '#ECFDF5', padding: '4px 10px', borderRadius: '10px', flexShrink: 0, border: '1px solid rgba(5, 150, 105, 0.2)' }}>
                   <Check size={13} strokeWidth={3} /> Claimed
                 </div>
               ) : (
@@ -219,11 +282,10 @@ export default function FlavorStampsRewards({
                     background: brandColor, 
                     color: '#FFF', 
                     border: 'none', 
-                    padding: '5px 10px', 
-                    marginTop:'-15px',
+                    padding: '6px 14px', 
                     borderRadius: '10px', 
                     fontWeight: '700', 
-                    fontSize: '11px', 
+                    fontSize: '11.5px', 
                     cursor: 'pointer', 
                     flexShrink: 0,
                     boxShadow: '0 4px 12px rgba(255, 89, 88, 0.25)',
@@ -236,7 +298,7 @@ export default function FlavorStampsRewards({
             </div>
           )}
 
-          {/* 9 Stamps: Free Delivery (up to 10km) & 10% Off */}
+          {/* 9 Stamps: Free Delivery & 10% Off */}
           {orderCount >= 9 && (
             <div style={{ 
               padding: '12px 14px', 
@@ -254,7 +316,7 @@ export default function FlavorStampsRewards({
                 <div style={{ fontSize: '10.5px', color: '#78716C', fontWeight: '500', marginTop: '1px' }}>Grandmaster Perk (9 Stamps)</div>
               </div>
               {grandmasterClaimed ? (
-                <div style={{ display: 'flex', alignItems: 'center', gap: '2px', fontSize: '11px', fontWeight: '600', color: '#059669', background: '#ECFDF5', padding: '0px 4px', borderRadius: '10px', flexShrink: 0, border: '1px solid rgba(5, 150, 105, 0.2)', marginTop:'-22px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '11px', fontWeight: '600', color: '#059669', background: '#ECFDF5', padding: '4px 10px', borderRadius: '10px', flexShrink: 0, border: '1px solid rgba(5, 150, 105, 0.2)' }}>
                   <Check size={13} strokeWidth={3} /> Claimed
                 </div>
               ) : (
@@ -265,11 +327,10 @@ export default function FlavorStampsRewards({
                     background: brandColor, 
                     color: '#FFF', 
                     border: 'none', 
-                    padding: '5px 10px', 
-                    marginTop:'-15px',
+                    padding: '6px 14px', 
                     borderRadius: '10px', 
                     fontWeight: '700', 
-                    fontSize: '11px', 
+                    fontSize: '11.5px', 
                     cursor: 'pointer', 
                     flexShrink: 0,
                     boxShadow: '0 4px 12px rgba(255, 89, 88, 0.25)',
@@ -300,7 +361,7 @@ export default function FlavorStampsRewards({
                 <div style={{ fontSize: '11px', color: '#78716C', fontWeight: '500', marginTop: '1px' }}>Emperor Perk (12 Stamps)</div>
               </div>
               {emperorClaimed ? (
-                <div style={{ display: 'flex', alignItems: 'center', gap: '2px', fontSize: '11px', fontWeight: '600', color: '#059669', background: '#ECFDF5', padding: '0px 4px', borderRadius: '10px', flexShrink: 0, border: '1px solid rgba(5, 150, 105, 0.2)', marginTop:'-22px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '11px', fontWeight: '600', color: '#059669', background: '#ECFDF5', padding: '4px 10px', borderRadius: '10px', flexShrink: 0, border: '1px solid rgba(5, 150, 105, 0.2)' }}>
                   <Check size={13} strokeWidth={3} /> Claimed
                 </div>
               ) : (
@@ -311,11 +372,10 @@ export default function FlavorStampsRewards({
                     background: brandColor, 
                     color: '#FFF', 
                     border: 'none', 
-                    padding: '5px 10px', 
-                    marginTop:'-15px',
+                    padding: '6px 14px', 
                     borderRadius: '10px', 
                     fontWeight: '700', 
-                    fontSize: '11px', 
+                    fontSize: '11.5px', 
                     cursor: 'pointer', 
                     flexShrink: 0,
                     boxShadow: '0 4px 12px rgba(255, 89, 88, 0.25)',

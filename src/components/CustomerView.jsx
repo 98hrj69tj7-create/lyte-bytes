@@ -177,7 +177,7 @@ export default function CustomerView({
     text: theme?.text || '#1A1816',
     border: theme?.border || '1px solid rgba(197, 160, 89, 0.4)',
     bg: theme?.bg || '#FFFDF9',
-    radius: theme?.radius || '18px'
+    radius: theme?.radius || '20px'
   };
 
   const handleBack = onBack || (() => setView && setView('home'));
@@ -292,47 +292,47 @@ export default function CustomerView({
   };
 
   const tierStyle = getTierStyles(liveCustomerData.tier);
-  const milestone = getMilestoneInfo(liveCustomerData.loyaltyScore, liveCustomerData.tier);
+  const milestone = getMilestoneInfo(liveCustomerData.loyaltyScore);
   const nextTierStyle = getTierStyles(milestone.nextTierName);
 
   return (
     <div style={{ 
       display: 'flex', 
       flexDirection: 'column', 
+      overflowY: 'auto', 
+      overflowX: 'hidden',
+      flex: 1, 
+      paddingBottom: '140px', 
+      paddingTop: '6px',
+      boxSizing: 'border-box',
       width: '100%',
-      paddingBottom: '100px',
-      boxSizing: 'border-box', 
-      fontFamily: "'Plus Jakarta Sans', sans-serif"
+      fontFamily: "'Plus Jakarta Sans', sans-serif" 
     }}>
 
-      {/* Header - Styled identically to SubCategoryView */}
-      <div style={{ 
-        display: 'flex', 
-        alignItems: 'center', 
-        position: 'relative', 
-        marginBottom: '16px', 
-        padding: '4px 0' 
-      }}>
+      {/* Header - Uniform across Client Care, Bag, and Account Views */}
+      <div style={{ display: 'flex', alignItems: 'center', position: 'relative', marginBottom: '20px', padding: '6px 0' }}>
         <button 
           type="button"
           onClick={handleBack} 
           style={{ 
-            background: 'rgba(0,0,0,0.04)', 
-            border: 'none', 
+            background: 'rgba(255, 255, 255, 0.7)', 
+            border: '1px solid rgba(197, 160, 89, 0.35)', 
             cursor: 'pointer', 
             display: 'flex', 
             alignItems: 'center', 
-            gap: '4px', 
+            gap: '6px', 
             color: activeTheme.text, 
             fontSize: '13px', 
-            fontWeight: '700', 
+            fontWeight: '600', 
             padding: '6px 12px', 
-            borderRadius: '20px', 
+            borderRadius: '12px', 
             zIndex: 1,
+            boxShadow: '0 2px 8px rgba(0,0,0,0.03)',
+            transition: 'all 0.2s ease',
             ...backButtonStyle
           }}
         >
-          <ArrowLeft size={15}/> Back
+          <ArrowLeft size={15}/> Menu
         </button>
         <h2 style={{ 
           position: 'absolute', 
@@ -340,11 +340,11 @@ export default function CustomerView({
           right: 0, 
           textAlign: 'center', 
           fontFamily: "'Cormorant Garamond', serif",
-          fontSize: '20px', 
-          color: '#1A1816', 
+          fontSize: '22px', 
+          color: '#FF5958', 
           margin: 0, 
           fontWeight: '700', 
-          letterSpacing: '0.5px', 
+          letterSpacing: '0.8px', 
           textTransform: 'uppercase', 
           pointerEvents: 'none' 
         }}>
@@ -358,34 +358,51 @@ export default function CustomerView({
           <p style={{ fontSize: '12px', color: '#78716C', fontWeight: '600' }}>Syncing data from Orders Engine...</p>
         </div>
       ) : (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', width: '100%', boxSizing: 'border-box' }}>
+        <div style={{ 
+          border: '1.5px solid rgba(197, 160, 89, 0.45)', 
+          borderRadius: activeTheme.radius,
+          background: 'linear-gradient(135deg, #FFFDF9 0%, #FAF5EC 100%)', 
+          padding: '12px',
+          boxShadow: '0 12px 32px rgba(44, 34, 30, 0.07)',
+          display: 'flex', 
+          flexDirection: 'column', 
+          gap: '12px', 
+          boxSizing: 'border-box', 
+          width: '100%'
+        }}>
           
           {/* USER ACCOUNT CARD */}
           <div style={{ 
-            display: 'flex', flexDirection: 'column', gap: '10px', padding: '14px 12px', 
-            background: 'linear-gradient(135deg, #FFFDF9 0%, #FAF4EB 100%)', border: '1px solid rgba(197, 160, 89, 0.45)', 
-            borderRadius: activeTheme.radius, boxShadow: '0 6px 18px rgba(44, 34, 30, 0.05)', boxSizing: 'border-box'
+            background: '#FFFFFF',
+            border: '1px solid rgba(197, 160, 89, 0.4)',
+            borderRadius: '16px',
+            padding: '14px',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '12px',
+            boxShadow: '0 4px 16px rgba(44, 34, 30, 0.04)',
+            boxSizing: 'border-box'
           }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                 <div style={{ 
-                  backgroundColor: tierStyle.bg, border: `1px solid ${tierStyle.border}`, width: '40px', height: '40px', 
-                  borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 
+                  backgroundColor: tierStyle.bg, border: `1px solid ${tierStyle.border}`, width: '44px', height: '44px', 
+                  borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 
                 }}>
-                  <User size={20} color={tierStyle.accentColor} />
+                  <User size={22} color={tierStyle.accentColor} />
                 </div>
                 <div style={{ textAlign: 'left' }}>
-                  <h3 style={{ margin: '0 0 1px 0', color: activeTheme.text, fontSize: '16px', fontWeight: '600'}}>
+                  <h3 style={{ margin: 0, fontFamily: "sans-serif", fontSize: '16px', fontWeight: '700', color: activeTheme.text }}>
                     {liveCustomerData.name}
                   </h3>
-                  <p style={{ margin: 0, color: '#78716C', fontSize: '11.5px', fontWeight: '500' }}>
+                  <span style={{ fontSize: '11.5px', color: '#78716C', fontWeight: '500' }}>
                     {liveCustomerData.phone || 'No phone registered'}
-                  </p>
+                  </span>
                 </div>
               </div>
               <div style={{ textAlign: 'right' }}>
-                <span style={{ fontSize: '9.5px', color: '#78716C', fontWeight: '800', textTransform: 'uppercase', display: 'block', letterSpacing: '0.3px' }}>Total Spend</span>
-                <span style={{ fontSize: '15px', fontWeight: '800', color: activeTheme.text }}>₹{liveCustomerData.totalSpent.toLocaleString()}</span>
+                <span style={{ fontSize: '9.5px', color: '#8A6D2B', fontWeight: '800', textTransform: 'uppercase', display: 'block', letterSpacing: '0.8px' }}>Total Spend</span>
+                <span style={{ fontSize: '16px', fontWeight: '800', color: activeTheme.text, fontFamily: "sans-serif" }}>₹{liveCustomerData.totalSpent.toLocaleString()}</span>
               </div>
             </div>
 
@@ -393,18 +410,18 @@ export default function CustomerView({
             {(!liveCustomerData.phone || liveCustomerData.orders.length === 0) ? (
               <div style={{ 
                 background: 'rgba(197, 160, 89, 0.1)', border: '1px dashed rgba(197, 160, 89, 0.5)', 
-                borderRadius: '10px', padding: '8px 10px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px' 
+                borderRadius: '12px', padding: '10px 12px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px' 
               }}>
                 <div style={{ textAlign: 'left', flex: 1 }}>
-                  <div style={{ fontSize: '11.5px', fontWeight: '700', color: '#8A6D2B' }}>Have past orders or want rewards?</div>
-                  <div style={{ fontSize: '10.5px', color: '#78716C' }}>Link your mobile number to view history.</div>
+                  <div style={{ fontSize: '12px', fontWeight: '700', color: '#8A6D2B' }}>Have past orders or want rewards?</div>
+                  <div style={{ fontSize: '11px', color: '#78716C' }}>Link your mobile number to view history.</div>
                 </div>
                 <button 
                   type="button"
                   onClick={() => setIsAuthModalOpen(true)}
                   style={{
-                    background: '#C5A059', color: '#FFF', border: 'none', padding: '6px 10px',
-                    borderRadius: '8px', fontSize: '11px', fontWeight: '700', cursor: 'pointer', whiteSpace: 'nowrap'
+                    background: '#C5A059', color: '#FFF', border: 'none', padding: '6px 14px',
+                    borderRadius: '10px', fontSize: '11.5px', fontWeight: '700', cursor: 'pointer', whiteSpace: 'nowrap'
                   }}
                 >
                   Sign In
@@ -412,19 +429,20 @@ export default function CustomerView({
               </div>
             ) : liveCustomerData.isRecognizedGuest && (
               <div style={{ 
-                background: 'rgba(5, 150, 105, 0.08)', border: '1px solid rgba(5, 150, 105, 0.25)', 
-                borderRadius: '10px', padding: '8px 10px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' 
+                background: 'linear-gradient(135deg, #ECFDF5 0%, #D1FAE5 100%)', border: '1px solid #059669', 
+                borderRadius: '12px', padding: '10px 12px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' 
               }}>
                 <div style={{ textAlign: 'left', flex: 1 }}>
-                  <div style={{ fontSize: '11.5px', fontWeight: '700', color: '#047857' }}>History Found! Claim Account</div>
-                  <div style={{ fontSize: '10.5px', color: '#78716C' }}>Sign in to secure your profile.</div>
+                  <div style={{ fontSize: '12.5px', fontWeight: '700', color: '#065F46' }}>History Found! Claim Account</div>
+                  <div style={{ fontSize: '11px', color: '#047857', fontWeight: '500' }}>Sign in to secure your profile.</div>
                 </div>
                 <button 
                   type="button"
                   onClick={() => setIsAuthModalOpen(true)}
                   style={{
-                    background: '#059669', color: '#FFF', border: 'none', padding: '5px 9px',
-                    borderRadius: '8px', fontSize: '11px', fontWeight: '700', cursor: 'pointer', whiteSpace: 'nowrap'
+                    backgroundColor: '#059669', color: '#FFF', border: 'none', padding: '6px 14px',
+                    borderRadius: '10px', fontSize: '11.5px', fontWeight: '700', cursor: 'pointer', whiteSpace: 'nowrap',
+                    boxShadow: '0 2px 8px rgba(5, 150, 105, 0.3)'
                   }}
                 >
                   Sign In
@@ -435,56 +453,64 @@ export default function CustomerView({
 
           {/* Loyalty Status Card */}
           <div style={{ 
-            padding: '14px 12px', background: 'linear-gradient(135deg, #FFFFFF 0%, #FAF6ED 100%)', 
-            border: `1.5px solid ${tierStyle.accentColor}40`, borderRadius: activeTheme.radius, boxShadow: tierStyle.glow,
-            boxSizing: 'border-box', position: 'relative', overflow: 'hidden', display: 'flex', flexDirection: 'column', gap: '10px'
+            background: '#FFFFFF',
+            border: '1px solid rgba(197, 160, 89, 0.4)',
+            borderRadius: '16px',
+            padding: '14px',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '10px',
+            boxShadow: '0 4px 16px rgba(44, 34, 30, 0.04)',
+            boxSizing: 'border-box',
+            textAlign: 'left'
           }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <Medal size={24} color={tierStyle.accentColor} />
-                <div>
-                  <span style={{ fontSize: '9.5px', fontWeight: '800', color: tierStyle.accentColor, textTransform: 'uppercase', letterSpacing: '0.8px', display: 'block' }}>Loyalty Quest</span>
-                  <span style={{ fontSize: '12.5px', fontWeight: '700', color: tierStyle.accentColor, fontFamily: "'Cormorant Garamond', serif" }}>{liveCustomerData.tier} Tier Status</span>
+              <div>
+                <span style={{ fontSize: '11px', fontWeight: '800', color: '#8A6D2B', letterSpacing: '0.8px', textTransform: 'uppercase' }}>
+                  Loyalty Quest
+                </span>
+                <div style={{ fontSize: '12px', fontWeight: '700', color: activeTheme.text, fontFamily: "sans-serif", marginTop: '1px' }}>
+                {liveCustomerData.tier} Tier
                 </div>
               </div>
-              <div style={{ textAlign: 'right' }}>
-                <span style={{ fontSize: '18px', fontWeight: '900', color: tierStyle.accentColor }}>{liveCustomerData.loyaltyScore}</span>
-                <span style={{ fontSize: '10px', fontWeight: '800', color: tierStyle.accentColor, marginLeft: '2px', textTransform: 'uppercase' }}>Pts</span>
-              </div>
+              <span style={{ fontSize: '14px', fontWeight: '800', color: '#2563EB', fontFamily: "sans-serif" }}>
+                {liveCustomerData.loyaltyScore} <span style={{ fontSize: '11px', fontWeight: '700' }}>PTS</span>
+              </span>
             </div>
 
-            <div style={{ width: '100%', height: '8px', backgroundColor: 'rgba(197, 160, 89, 0.15)', borderRadius: '4px', overflow: 'hidden', border: '1px solid rgba(197, 160, 89, 0.3)', padding: '1px' }}>
-              <div style={{ height: '100%', width: `${milestone.progressPercent}%`, background: tierStyle.progressFill, borderRadius: '3px', transition: 'width 0.8s ease' }} />
+            <div style={{ width: '100%', height: '6px', backgroundColor: '#F3F4F6', borderRadius: '4px', overflow: 'hidden', border: '1px solid rgba(197, 160, 89, 0.2)' }}>
+              <div style={{ height: '100%', width: `${milestone.progressPercent}%`, background: tierStyle.progressFill, borderRadius: '4px', transition: 'width 0.8s ease' }} />
             </div>
 
-            <div style={{ fontSize: '11.5px', color: tierStyle.accentColor, fontWeight: '600', display: 'flex', alignItems: 'center', gap: '5px' }}>
-              <Zap size={13} color={tierStyle.accentColor} fill={tierStyle.accentColor} />
+            <div style={{ fontSize: '11.5px', color: '#1E40AF', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '5px' }}>
+              <Zap size={13} color="#2563EB" fill="#2563EB" />
               {milestone.isMax ? (
                 <span style={{ color: tierStyle.accentColor, fontWeight: '800' }}>👑 Maximum Elite Tier Achieved!</span>
               ) : (
-                <span>Only <strong style={{ color: tierStyle.accentColor, fontWeight: '800' }}>{milestone.ptsRemaining} Pts</strong> away from <strong style={{ color: nextTierStyle.accentColor, fontWeight: '800' }}>{milestone.nextTierName}</strong>!</span>
+                <span>Only <strong style={{ color: '#2563EB', fontWeight: '800' }}>{milestone.ptsRemaining} Pts</strong> away from <strong style={{ color: '#B45309', fontWeight: '800' }}>{milestone.nextTierName}</strong>!</span>
               )}
             </div>
           </div>
 
-          {/* Flavor Stamps & Rewards Component Integration */}
+          {/* Flavor Stamps & Rewards Component Integration (Tier passed for strict milestone control) */}
           <FlavorStampsRewards 
             orders={liveCustomerData.orders} 
             theme={activeTheme} 
             customerPhone={liveCustomerData.phone} 
             webAppUrl={WEB_APP_URL} 
+            tier={liveCustomerData.tier}
           />
 
           {/* Birthday Vault */}
           <div style={{ 
             background: 'linear-gradient(135deg, #FAF4EB 0%, #FFFDF9 100%)', border: '1.5px dashed rgba(197, 160, 89, 0.6)',
-            borderRadius: activeTheme.radius, padding: '10px 12px', display: 'flex', flexDirection: 'column', gap: '8px', boxSizing: 'border-box'
+            borderRadius: '16px', padding: '12px 14px', display: 'flex', flexDirection: 'column', gap: '8px', boxSizing: 'border-box'
           }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                 <Gift size={22} color={activeTheme.brand} />
                 <div style={{ textAlign: 'left' }}>
-                  <span style={{ fontSize: '9.5px', fontWeight: '800', color: '#78716C', textTransform: 'uppercase', letterSpacing: '0.7px', display: 'block' }}>Mystery Vault</span>
+                  <span style={{ fontSize: '10px', fontWeight: '800', color: '#78716C', textTransform: 'uppercase', letterSpacing: '0.7px', display: 'block' }}>Mystery Vault</span>
                   <span style={{ fontSize: '11.5px', fontWeight: '600', color: activeTheme.text }}>
                     {liveCustomerData.dob ? `🎂 Birthday Registered: ${liveCustomerData.dob}` : 'Unlock Your Treat'}
                   </span>
@@ -498,7 +524,7 @@ export default function CustomerView({
                   value={selectedDob} 
                   onChange={(e) => setSelectedDob(e.target.value)}
                   style={{ 
-                    flex: 1, padding: '8px 30px 8px 10px', borderRadius: '8px', 
+                    flex: 1, padding: '8px 30px 8px 10px', borderRadius: '10px', 
                     border: '1px solid rgba(197, 160, 89, 0.5)', backgroundColor: '#FFFFFF', 
                     fontSize: '11.5px', outline: 'none', color: activeTheme.text, fontWeight: '600', cursor: 'pointer',
                     appearance: 'none', 
@@ -516,8 +542,8 @@ export default function CustomerView({
                   onClick={handleSaveDob} 
                   disabled={isSavingDob || !selectedDob}
                   style={{ 
-                    background: activeTheme.brand, color: '#FFFFFF', border: 'none', padding: '6px 12px', 
-                    borderRadius: '8px', fontWeight: '700', fontSize: '11.5px', cursor: 'pointer' 
+                    background: activeTheme.brand, color: '#FFFFFF', border: 'none', padding: '8px 14px', 
+                    borderRadius: '10px', fontWeight: '700', fontSize: '11.5px', cursor: 'pointer' 
                   }}
                 >
                   {isSavingDob ? 'Saving...' : 'Save'}
@@ -538,15 +564,15 @@ export default function CustomerView({
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
               {liveCustomerData.orders.length === 0 ? (
-                <div style={{ textAlign: 'center', padding: '30px 16px', color: '#78716C', fontSize: '12px', fontWeight: '600' }}>
+                <div style={{ textAlign: 'center', padding: '30px 16px', color: '#78716C', fontSize: '12px', fontWeight: '600', background: '#FFFFFF', borderRadius: '16px', border: '1px solid rgba(197, 160, 89, 0.4)' }}>
                   No historical orders found for this account. Sign in to load past orders.
                 </div>
               ) : (
                 liveCustomerData.orders.map((order, idx) => (
                   <div key={idx} style={{ 
-                    display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 10px', 
-                    background: 'linear-gradient(135deg, #FFFDF9 0%, #FAF4EB 100%)', border: '1px solid rgba(197, 160, 89, 0.4)', 
-                    borderRadius: activeTheme.radius, boxShadow: '0 4px 15px rgba(44, 34, 30, 0.04)', boxSizing: 'border-box', width: '100%'
+                    display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 14px', 
+                    background: '#FFFFFF', border: '1px solid rgba(197, 160, 89, 0.4)', 
+                    borderRadius: '16px', boxShadow: '0 4px 16px rgba(44, 34, 30, 0.04)', boxSizing: 'border-box', width: '100%'
                   }}>
                     <div style={{ textAlign: 'left', flex: 1, paddingRight: '8px', minWidth: 0 }}>
                       <div style={{ fontWeight: '700', fontSize: '13.5px', color: activeTheme.text, wordBreak: 'break-all' }}>{order.id}</div>
