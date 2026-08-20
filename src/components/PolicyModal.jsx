@@ -1,13 +1,10 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import ReactDOM from 'react-dom';
+import { X } from 'lucide-react';
 
 /**
  * PolicyModal Component
- * 
- * Customisation Guide:
- * - Backdrop: Clicking anywhere outside the modal box triggers `onClose` to dismiss it.
- * - Card Container: Uses `stopPropagation()` to ensure interacting inside the modal doesn't accidentally close it.
- * - Header: Clean artisanal title header.
- * - Footer: The agreement section has been completely removed.
+ * Elite luxury modal rendered via Portal for edge-to-edge screen immersion.
  */
 export default function PolicyModal({ 
   isOpen = false, 
@@ -16,116 +13,124 @@ export default function PolicyModal({
   theme = {},
   children 
 }) {
-  // Return null if the modal is not active
+  // Lock background body scroll when modal is active
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isOpen]);
+
   if (!isOpen) return null;
 
-  // Active theme configuration fallback values matching the luxury boutique system
   const activeTheme = {
     brand: theme?.brand || '#FF5958',
     text: theme?.text || '#1A1816',
-    bg: '#FFFDF9',
-    cardBg: '#FFFFFF',
-    border: '1px solid rgba(197, 160, 89, 0.4)',
   };
 
-  return (
-    /* 1. Backdrop Overlay: Click anywhere outside the modal content box to close */
+  const modalContent = (
+    /* 1. Full-Viewport Edge-to-Edge Backdrop */
     <div 
       onClick={onClose}
       style={{
         position: 'fixed', 
-        top: 0, 
-        left: 0, 
-        right: 0, 
-        bottom: 0,
-        backgroundColor: 'rgba(20, 15, 12, 0.82)', 
-        zIndex: 1200, 
-        display: 'flex',
+        inset: 0,
+        width: '100vw',
+        height: '100dvh',
+        backgroundColor: 'rgba(20, 15, 12, 0.8)', 
         backdropFilter: 'blur(8px)', 
         WebkitBackdropFilter: 'blur(8px)',
+        display: 'flex', 
         alignItems: 'center', 
-        justifyContent: 'center', 
-        padding: '16px', 
-        boxSizing: 'border-box'
+        justifyContent: 'center',
+        zIndex: 99999, 
+        padding: '20px', 
+        boxSizing: 'border-box',
+        fontFamily: "'Plus Jakarta Sans', sans-serif"
       }}
     >
-      {/* 2. Inner Modal Card: e.stopPropagation() prevents clicks inside from triggering backdrop close */}
+      {/* 2. Luxury Modal Card Container */}
       <div 
         onClick={(e) => e.stopPropagation()}
         style={{
           background: 'linear-gradient(135deg, #FFFDF9 0%, #FAF4EB 100%)', 
+          borderRadius: '28px', 
+          padding: '20px',
+          maxWidth: '520px', 
           width: '100%', 
-          maxWidth: '460px', 
-          maxHeight: '85vh',
-          borderRadius: '24px', 
-          border: '1px solid rgba(197, 160, 89, 0.4)', 
-          display: 'flex',
-          flexDirection: 'column', 
-          overflow: 'hidden', 
-          boxShadow: '0 20px 40px rgba(0,0,0,0.3)',
+          maxHeight: '82vh',
           boxSizing: 'border-box',
-          fontFamily: "'Plus Jakarta Sans', sans-serif"
+          position: 'relative', 
+          boxShadow: '0 25px 50px rgba(0,0,0,0.35)',
+          border: '1px solid rgba(197, 160, 89, 0.5)',
+          display: 'flex', 
+          flexDirection: 'column', 
+          overflow: 'hidden'
         }}
       >
-        {/* Header */}
+        {/* Header with Title & Polished Close Button */}
         <div style={{
-          padding: '16px 20px', 
-          background: 'transparent', 
-          borderBottom: '1px solid rgba(197, 160, 89, 0.25)',
           display: 'flex', 
           alignItems: 'center', 
-          justifyContent: 'space-between'
+          justifyContent: 'space-between',
+          paddingBottom: '16px',
+          marginBottom: '2px',
+          flexShrink: 0
         }}>
-          <div style={{ 
-            fontFamily: "'Cormorant Garamond', serif",
-            fontWeight: '700', 
+          <h3 style={{ 
+            fontFamily: "'Cormorant Garamond', serif", 
             fontSize: '20px', 
+            fontWeight: '700', 
             color: activeTheme.brand, 
-            textTransform: 'uppercase', 
-            letterSpacing: '0.8px' 
+            margin: 5,
+            textTransform: 'uppercase',
+            letterSpacing: '1px'
           }}>
             {title}
-          </div>
+          </h3>
+          <button
+            onClick={onClose}
+            style={{
+              background: 'rgba(197, 160, 89, 0.15)',
+              border: '1px solid rgba(197, 160, 89, 0.3)',
+              borderRadius: '50%',
+              width: '25px',
+              height: '25px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              cursor: 'pointer',
+              color: '#1A1816',
+              transition: 'all 0.2s ease'
+            }}
+          >
+            <X size={16} />
+          </button>
         </div>
 
-        {/* Content Body with Elite Tight Spacing */}
+        {/* Clean Editorial Content Body */}
         <div style={{ 
-          padding: '16px 20px', 
           overflowY: 'auto', 
           display: 'flex', 
           flexDirection: 'column', 
-          gap: '12px',
+          gap: '10px',
           boxSizing: 'border-box',
           textAlign: 'left',
-          fontSize: '12px',
-          color: '#78716C',
-          lineHeight: '1.5'
+          fontSize: '13px',
+          color: '#57534E',
+          lineHeight: '1',
+          paddingRight: '6px'
         }}>
-          {/* Automatically styles any <p> tags passed from parent into clean micro-cards */}
-          {React.Children.map(children, (child, index) => {
-            if (React.isValidElement(child) && child.type === 'p') {
-              return (
-                <div 
-                  key={index}
-                  style={{
-                    background: activeTheme.cardBg,
-                    border: '1px dashed #C5A059',
-                    borderRadius: '14px',
-                    padding: '12px 14px',
-                    boxShadow: '0 4px 16px rgba(44, 34, 30, 0.04)',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '4px'
-                  }}
-                >
-                  {child}
-                </div>
-              );
-            }
-            return child;
-          })}
+          {children}
         </div>
       </div>
     </div>
   );
+
+  // Portal renders modal directly into document.body, escaping app container clipping
+  return ReactDOM.createPortal(modalContent, document.body);
 }

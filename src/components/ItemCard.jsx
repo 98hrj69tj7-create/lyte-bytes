@@ -504,7 +504,7 @@ export default function ItemCard({ item, openModal, addToCart, resolveImagePath,
               fontWeight: '600', 
               fontSize: '20px',                
               color: '#FFFFFF',                
-              lineHeight: '1',
+              lineHeight: '1.1',
               letterSpacing: '0.4px',
               textAlign: 'left',
               width: '100%'
@@ -517,9 +517,9 @@ export default function ItemCard({ item, openModal, addToCart, resolveImagePath,
               <div style={{ 
                 display: 'flex',
                 alignItems: 'center',
-                gap: '6px',
-                fontSize: '14px', 
-                lineHeight: '1.1',
+                gap: '8px',
+                fontSize: '12px', 
+                lineHeight: '1.3',
                 letterSpacing: '0.1px',
                 textAlign: 'left',
                 width: '100%',
@@ -530,7 +530,7 @@ export default function ItemCard({ item, openModal, addToCart, resolveImagePath,
                     color: '#C5A059', // Refined gold text tone for units 
                     fontStyle: 'italic', 
                     fontWeight: '400',
-                    fontFamily: "'Cormorant Garamond', serif"
+                    fontFamily: "sans-serif"
                   }}>
                     {displayUnit}
                   </span>

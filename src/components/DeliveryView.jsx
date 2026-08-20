@@ -985,7 +985,7 @@ export default function DeliveryView({
       <PolicyModal 
         isOpen={isPrivacyPolicyOpen} 
         onClose={() => setIsPrivacyPolicyOpen(false)} 
-        title="Privacy & Compliance" 
+        title="Data Privacy" 
         theme={activeTheme}
       >
         <PrivacyPolicyModalContent brandColor={activeTheme.brand} />

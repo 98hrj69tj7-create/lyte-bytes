@@ -17,6 +17,12 @@
   --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
   --mono: ui-monospace, Consolas, monospace;
 
+  /* --- FLUID TYPOGRAPHY SCALES (Prevents Clumping on Small Screens) --- */
+  --font-h1: clamp(1.25rem, 4vw + 0.5rem, 1.75rem);
+  --font-h2: clamp(1.1rem, 3vw + 0.4rem, 1.4rem);
+  --font-body: clamp(0.8rem, 1.5vw + 0.3rem, 0.95rem);
+  --font-caption: clamp(0.7rem, 1.2vw + 0.2rem, 0.85rem);
+
   font: 18px/145% var(--sans);
   letter-spacing: 0.18px;
   color-scheme: light dark;
@@ -58,6 +64,7 @@ html {
 
 body {
   margin: 0;
+  overflow-x: hidden;
 }
 
 /* --- Prevent Mobile Browser Auto-Zoom on Focus --- */
@@ -72,39 +79,40 @@ input, select, textarea {
   margin: 0 auto;
   text-align: center;
   border-inline: 1px solid var(--border);
-  min-height: 100svh;
+  min-height: 100dvh; /* Mobile safe dynamic height */
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
+  position: relative;
 }
 
+/* --- GLOBAL FLUID HEADINGS & TEXT --- */
 h1,
-h2 {
+h2,
+h3,
+h4 {
   font-family: var(--heading);
   font-weight: 500;
   color: var(--text-h);
+  word-break: break-word; /* Prevents text overflow on narrow Android screens */
 }
 
 h1 {
-  font-size: 56px;
+  font-size: var(--font-h1);
   letter-spacing: -1.68px;
-  margin: 32px 0;
-  @media (max-width: 1024px) {
-    font-size: 36px;
-    margin: 20px 0;
-  }
+  margin: 20px 0;
 }
+
 h2 {
-  font-size: 24px;
+  font-size: var(--font-h2);
   line-height: 118%;
   letter-spacing: -0.24px;
   margin: 0 0 8px;
-  @media (max-width: 1024px) {
-    font-size: 20px;
-  }
 }
+
 p {
   margin: 0;
+  word-break: break-word;
 }
 
 code,

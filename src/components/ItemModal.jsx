@@ -124,7 +124,7 @@ export default function ItemModal({ selectedItem, setSelectedItem, resolveImageP
       }}
     >
       <div 
-        onClick={(e) => e.stopPropagation()}
+        onClick={() => e.stopPropagation()}
         style={{
           maxWidth: '460px', 
           width: '100%',
@@ -176,7 +176,7 @@ export default function ItemModal({ selectedItem, setSelectedItem, resolveImageP
               fontSize: '12px',
               fontWeight: '600',
               letterSpacing: '0.3px',
-              fontFamily: "'Cormorant Garamond', serif"
+              fontFamily: "sans-serif"
             }}>
               {selectedItem.unit}
             </div>
@@ -185,8 +185,8 @@ export default function ItemModal({ selectedItem, setSelectedItem, resolveImageP
 
         {/* SCROLLABLE CONTENT BODY */}
         <div style={{ 
-          padding: '20px', 
-          gap: '14px', 
+          padding: '22px', 
+          gap: '12px', 
           textAlign: 'left', 
           overflowY: 'auto', 
           display: 'flex', 
@@ -194,7 +194,7 @@ export default function ItemModal({ selectedItem, setSelectedItem, resolveImageP
           flex: 1
         }}>
           
-          {/* TITLE, VEG/NON-VEG ICON, AND ALL INLINE TAGS (ZOOMED-IN VIEW) */}
+          {/* TITLE, VEG/NON-VEG ICON, AND ALL INLINE TAGS */}
           <div style={{ 
             display: 'flex', 
             alignItems: 'center', 
@@ -204,11 +204,11 @@ export default function ItemModal({ selectedItem, setSelectedItem, resolveImageP
             <h2 style={{ 
               margin: 0, 
               fontFamily: "'Cormorant Garamond', serif",
-              fontSize: '24px', 
+              fontSize: '22px', 
               color: '#1A1816', 
               fontWeight: '700', 
               letterSpacing: '0.2px', 
-              lineHeight: '1.2' 
+              lineHeight: '1' 
             }}>
               {selectedItem.name}
             </h2>
@@ -226,7 +226,7 @@ export default function ItemModal({ selectedItem, setSelectedItem, resolveImageP
               />
             )}
 
-            {/* SHOWS ALL TAGS WHEN ZOOMED IN */}
+            {/* SHOWS ALL TAGS */}
             {parsedTags.map((tag, idx) => (
               <ModalTagBadge key={idx} tagKey={tag} />
             ))}
@@ -262,9 +262,9 @@ export default function ItemModal({ selectedItem, setSelectedItem, resolveImageP
             </div>
           )}
 
-          {/* NUTRITIONAL FACTS CONTAINER */}
+          {/* NUTRITIONAL FACTS CONTAINER (Optimized Compact Grid) */}
           <div style={{ 
-            padding: '14px', 
+            padding: '12px 14px', 
             borderRadius: '16px', 
             backgroundColor: 'rgba(197, 160, 89, 0.08)', 
             border: '1px solid rgba(197, 160, 89, 0.3)'
@@ -273,47 +273,51 @@ export default function ItemModal({ selectedItem, setSelectedItem, resolveImageP
               display: 'flex', 
               alignItems: 'center', 
               gap: '6px', 
-              marginBottom: '10px', 
+              marginBottom: '8px', 
               fontSize: '11px', 
               fontWeight: '700', 
               color: '#8A6D2B', 
               textTransform: 'uppercase', 
               letterSpacing: '0.8px'
             }}>
-              <Flame size={15} color="#FF5958" /> Nutritional Information (Per Portion)
+              <Flame size={18} color="#FF5958" /> Nutritional Info. (Per Portion)
             </div>
             
-            {/* NUTRITIONAL GRID */}
+            {/* NUTRITIONAL GRID - Slimmed down padding and spacing */}
             <div style={{ 
               display: 'grid', 
               gridTemplateColumns: 'repeat(4, 1fr)', 
-              gap: '8px', 
+              gap: '6px', 
               textAlign: 'center' 
             }}>
-              <div style={{ padding: '8px 4px', borderRadius: '10px', backgroundColor: '#FFFFFF', border: '1px solid rgba(197, 160, 89, 0.2)' }}>
-                <div style={{ fontSize: '9.5px', color: '#78716C', fontWeight: '700' }}>CALORIES</div>
-                <div style={{ marginTop: '2px', fontSize: '13px', color: '#1A1816', fontWeight: '700' }}>
+              {/* CALORIES BOX */}
+              <div style={{ padding: '5px 4px', borderRadius: '10px', backgroundColor: '#FFFFFF', border: '1px solid rgba(197, 160, 89, 0.22)' }}>
+                <div style={{ fontSize: '9px', color: '#78716C', fontWeight: '700', letterSpacing: '0.3px' }}>CALORIES</div>
+                <div style={{ marginTop: '1px', fontSize: '12px', color: '#1A1816', fontWeight: '600' }}>
                   {selectedItem.calories || '240'}
                 </div>
               </div>
 
-              <div style={{ padding: '8px 4px', borderRadius: '10px', backgroundColor: '#FFFFFF', border: '1px solid rgba(197, 160, 89, 0.2)' }}>
-                <div style={{ fontSize: '9.5px', color: '#78716C', fontWeight: '700' }}>PROTEIN</div>
-                <div style={{ marginTop: '2px', fontSize: '13px', color: '#1A1816', fontWeight: '700' }}>
+              {/* PROTEIN BOX */}
+              <div style={{ padding: '5px 4px', borderRadius: '10px', backgroundColor: '#FFFFFF', border: '1px solid rgba(197, 160, 89, 0.22)' }}>
+                <div style={{ fontSize: '9px', color: '#78716C', fontWeight: '700', letterSpacing: '0.3px' }}>PROTEIN</div>
+                <div style={{ marginTop: '1px', fontSize: '12px', color: '#1A1816', fontWeight: '600' }}>
                   {selectedItem.protein || '12g'}
                 </div>
               </div>
 
-              <div style={{ padding: '8px 4px', borderRadius: '10px', backgroundColor: '#FFFFFF', border: '1px solid rgba(197, 160, 89, 0.2)' }}>
-                <div style={{ fontSize: '9.5px', color: '#78716C', fontWeight: '700' }}>CARBS</div>
-                <div style={{ marginTop: '2px', fontSize: '13px', color: '#1A1816', fontWeight: '700' }}>
+              {/* CARBS BOX */}
+              <div style={{ padding: '5px 4px', borderRadius: '10px', backgroundColor: '#FFFFFF', border: '1px solid rgba(197, 160, 89, 0.22)' }}>
+                <div style={{ fontSize: '9px', color: '#78716C', fontWeight: '700', letterSpacing: '0.3px' }}>CARBS</div>
+                <div style={{ marginTop: '1px', fontSize: '12px', color: '#1A1816', fontWeight: '600' }}>
                   {selectedItem.carbs || '18g'}
                 </div>
               </div>
 
-              <div style={{ padding: '8px 4px', borderRadius: '10px', backgroundColor: '#FFFFFF', border: '1px solid rgba(197, 160, 89, 0.2)' }}>
-                <div style={{ fontSize: '9.5px', color: '#78716C', fontWeight: '700' }}>FAT</div>
-                <div style={{ marginTop: '2px', fontSize: '13px', color: '#1A1816', fontWeight: '700' }}>
+              {/* FAT BOX */}
+              <div style={{ padding: '5px 4px', borderRadius: '10px', backgroundColor: '#FFFFFF', border: '1px solid rgba(197, 160, 89, 0.22)' }}>
+                <div style={{ fontSize: '9px', color: '#78716C', fontWeight: '700', letterSpacing: '0.3px' }}>FAT</div>
+                <div style={{ marginTop: '1px', fontSize: '12px', color: '#1A1816', fontWeight: '600' }}>
                   {selectedItem.fat || '8g'}
                 </div>
               </div>
@@ -321,8 +325,8 @@ export default function ItemModal({ selectedItem, setSelectedItem, resolveImageP
           </div>
 
           {/* VISUAL DISCLAIMER */}
-          <div style={{ paddingTop: '2px' }}>
-            <span style={{ fontSize: '11px', color: '#78716C', fontStyle: 'italic' }}>
+          <div style={{ paddingTop: '0px' }}>
+            <span style={{ fontSize: '10px', color: '#78716C', fontStyle: 'italic' }}>
               * Visuals are for illustration. The final product may vary.
             </span>
           </div>
