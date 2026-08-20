@@ -130,6 +130,27 @@ function useLocalStorage(key, initialValue) {
 }
 
 export default function App() {
+  // --- 12-HOUR GAP CACHE REFRESH GUARD FOR ANDROID / iOS PWA ---
+  useEffect(() => {
+    const LAST_OPEN_KEY = 'lyte_last_open_timestamp';
+    const TWELVE_HOURS_MS = 12 * 60 * 60 * 1000; // 12 hours in milliseconds
+    const now = Date.now();
+    const lastOpenTime = localStorage.getItem(LAST_OPEN_KEY);
+
+    if (lastOpenTime) {
+      const timeDifference = now - parseInt(lastOpenTime, 10);
+      
+      // If user opens the PWA after a 12+ hour gap, refresh cache while keeping cart safe
+      if (timeDifference > TWELVE_HOURS_MS) {
+        localStorage.setItem(LAST_OPEN_KEY, now.toString());
+        window.location.reload();
+        return;
+      }
+    } else {
+      localStorage.setItem(LAST_OPEN_KEY, now.toString());
+    }
+  }, []);
+
   const [view, setView] = useState('home');
   const [activeModal, setActiveModal] = useState({ type: null, data: null });
   const openModal = (type, data) => setActiveModal({ type, data });

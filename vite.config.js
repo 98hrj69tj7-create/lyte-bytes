@@ -7,13 +7,33 @@ export default defineConfig({
   plugins: [
     react(),
     VitePWA({
-      registerType: 'autoUpdate', // Automatically activates new service worker on deploy
-      injectRegister: 'auto',
+      registerType: 'autoUpdate', // Automatically updates service worker in background
+      includeAssets: ['favicon.ico', 'robots.txt', 'apple-touch-icon.png'],
+      manifest: {
+        name: 'Lyte Bytes',
+        short_name: 'LyteBytes',
+        description: 'Freshly Crafted For You',
+        theme_color: '#FF5958',
+        background_color: '#FFFDF9',
+        display: 'standalone',
+        icons: [
+          {
+            src: '/pwa-192x192.png',
+            sizes: '192x192',
+            type: 'image/png'
+          },
+          {
+            src: '/pwa-512x512.png',
+            sizes: '512x512',
+            type: 'image/png'
+          }
+        ]
+      },
       workbox: {
-        cleanupOutdatedCaches: true, // Automatically deletes old hashed chunk caches
-        skipWaiting: true,           // Forces newly installed SW to take control immediately
-        clientsClaim: true,          // Makes SW take control of all open client tabs instantly
-        globPatterns: ['**/*.{js,css,html,ico,png,svg,webp}']
+        // Ensures old cache is cleared out when a new build is deployed
+        cleanupOutdatedCaches: true,
+        clientsClaim: true,
+        skipWaiting: true
       }
     })
   ]

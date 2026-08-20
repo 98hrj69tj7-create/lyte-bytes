@@ -45,7 +45,7 @@ export function getAllOffers(currentOrderNumber = 1) {
         minOrder: 0,
         themeColor: "#8B4513"
       });
-    } else if (currentOrderNumber > 25 && ENABLE_OFFERS.anniversaryStandard) {
+    } else if (currentOrderNumber > 0 && ENABLE_OFFERS.anniversaryStandard) {
       // Tier 2: Standard anniversary perk for order 26 onwards (Controlled by anniversaryStandard flag)
       offersList.push({
         id: 'anniv_std',
@@ -123,19 +123,19 @@ export function getAllOffers(currentOrderNumber = 1) {
   }
 
   // ==========================================================================
-  // 6. EVERGREEN DEFAULT STORE OFFER
-  // Controlled by the welcomePerk boolean flag
+  // 6. EVERGREEN DEFAULT STORE OFFER (First Order Only)
+  // Controlled by the welcomePerk boolean flag and restricted to the first order
   // ==========================================================================
-  if (ENABLE_OFFERS.welcomePerk) {
+  if (ENABLE_OFFERS.welcomePerk && currentOrderNumber === 1) {
     offersList.push({
       id: 'welcome_perk',
       tag: "WELCOME",
-      title: "Welcome Wholesome Offer",
-      description: "Enjoy handcrafted freshness delivered to you.",
+      title: "Welcome Offer",
+      description: "Try our handcrafted freshness.",
       code: "APPFIRST",
       discount: "10% OFF",
-      condition: "No minimum order required",
-      minOrder: 0,
+      condition: "Min. order value ₹250",
+      minOrder: 250,
       themeColor: "#FF5958"
     });
   }
