@@ -309,7 +309,7 @@ export default function CustomerView({
       fontFamily: "'Plus Jakarta Sans', sans-serif" 
     }}>
 
-      {/* Header - Uniform across Client Care, Bag, and Account Views */}
+      {/* Header */}
       <div style={{ display: 'flex', alignItems: 'center', position: 'relative', marginBottom: '20px', padding: '6px 0' }}>
         <button 
           type="button"
@@ -362,7 +362,7 @@ export default function CustomerView({
           border: '1.5px solid rgba(197, 160, 89, 0.45)', 
           borderRadius: activeTheme.radius,
           background: 'linear-gradient(135deg, #FFFDF9 0%, #FAF5EC 100%)', 
-          padding: '12px',
+          padding: '14px',
           boxShadow: '0 12px 32px rgba(44, 34, 30, 0.07)',
           display: 'flex', 
           flexDirection: 'column', 
@@ -409,7 +409,7 @@ export default function CustomerView({
             {/* Smart Sign Up Banner */}
             {(!liveCustomerData.phone || liveCustomerData.orders.length === 0) ? (
               <div style={{ 
-                background: 'rgba(197, 160, 89, 0.1)', border: '1px dashed rgba(197, 160, 89, 0.5)', 
+                background: 'rgba(197, 160, 89, 0.1)', border: '1px solid rgba(197, 160, 89, 0.3)', 
                 borderRadius: '12px', padding: '10px 12px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px' 
               }}>
                 <div style={{ textAlign: 'left', flex: 1 }}>
@@ -429,7 +429,7 @@ export default function CustomerView({
               </div>
             ) : liveCustomerData.isRecognizedGuest && (
               <div style={{ 
-                background: 'linear-gradient(135deg, #ECFDF5 0%, #D1FAE5 100%)', border: '1px solid #059669', 
+                background: '#ECFDF5', border: '1px solid #059669', 
                 borderRadius: '12px', padding: '10px 12px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' 
               }}>
                 <div style={{ textAlign: 'left', flex: 1 }}>
@@ -470,7 +470,7 @@ export default function CustomerView({
                   Loyalty Quest
                 </span>
                 <div style={{ fontSize: '12px', fontWeight: '700', color: activeTheme.text, fontFamily: "sans-serif", marginTop: '1px' }}>
-                {liveCustomerData.tier} Tier
+                  {liveCustomerData.tier} Tier
                 </div>
               </div>
               <span style={{ fontSize: '14px', fontWeight: '800', color: '#2563EB', fontFamily: "sans-serif" }}>
@@ -492,7 +492,7 @@ export default function CustomerView({
             </div>
           </div>
 
-          {/* Flavor Stamps & Rewards Component Integration (Tier passed for strict milestone control) */}
+          {/* Flavor Stamps & Rewards Component Integration */}
           <FlavorStampsRewards 
             orders={liveCustomerData.orders} 
             theme={activeTheme} 
@@ -503,8 +503,9 @@ export default function CustomerView({
 
           {/* Birthday Vault */}
           <div style={{ 
-            background: 'linear-gradient(135deg, #FAF4EB 0%, #FFFDF9 100%)', border: '1.5px dashed rgba(197, 160, 89, 0.6)',
-            borderRadius: '16px', padding: '12px 14px', display: 'flex', flexDirection: 'column', gap: '8px', boxSizing: 'border-box'
+            background: '#FFFFFF', border: '1px solid rgba(197, 160, 89, 0.4)',
+            borderRadius: '16px', padding: '14px', display: 'flex', flexDirection: 'column', gap: '10px', boxSizing: 'border-box',
+            boxShadow: '0 4px 16px rgba(44, 34, 30, 0.04)'
           }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
@@ -525,7 +526,7 @@ export default function CustomerView({
                   onChange={(e) => setSelectedDob(e.target.value)}
                   style={{ 
                     flex: 1, padding: '8px 30px 8px 10px', borderRadius: '10px', 
-                    border: '1px solid rgba(197, 160, 89, 0.5)', backgroundColor: '#FFFFFF', 
+                    border: '1px solid rgba(197, 160, 89, 0.4)', backgroundColor: '#FFFFFF', 
                     fontSize: '11.5px', outline: 'none', color: activeTheme.text, fontWeight: '600', cursor: 'pointer',
                     appearance: 'none', 
                     backgroundImage: `url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%2378716C' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><path d='m6 9 6 6 6-6'/></svg>")`,
