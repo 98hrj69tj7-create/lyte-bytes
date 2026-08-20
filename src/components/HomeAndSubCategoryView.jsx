@@ -625,13 +625,13 @@ export default function HomeAndSubCategoryView({
             <p style={{ margin: '0 0 12px 0', color: '#3C3633', lineHeight: '1.6' }}>
               We choose premium ingredients, follow traditional methods, and craft in small batches to preserve authenticity and flavour. Whether it is a catered meal, a celebration cake, or a jar of Ammi’s Achar, we give each creation the same care and attention that shaped our journey.
             </p>
-            <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '18px', fontWeight: '500', lineHeight: '1.4', color: '#1A1816', margin: '0 0 8px 0', fontStyle: 'italic' }}>
+            <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '18px', fontWeight: '800', lineHeight: '1.4', color: '#8B0000', margin: '0 0 8px 0', fontStyle: 'italic' }}>
               "Food that is honest, handcrafted and freshly prepared for your indulgence."
             </p>
             <p style={{ margin: '0 0 8px 0', color: '#524B47', lineHeight: '1.5', fontWeight: '500' }}>
               A pure, home‑grown goodness prepared with the same warmth that inspired us all those years ago.
             </p>
-            <p style={{ color: '#FF5958', margin: 0, lineHeight: '1.5', fontWeight: '600' }}>
+            <p style={{ color: '#FF5958', margin: 0, lineHeight: '1.5', fontWeight: '500' }}>
               Every order is a commitment to quality, to legacy and to the joy we hope you feel in every bite.
             </p>
           </div>
