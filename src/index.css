@@ -1,23 +1,30 @@
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Raleway:wght@300;400;600&display=swap');
 
 :root {
+  /* --- 1. CORE COLORS (Light Mode) --- */
   --text: #6b6375;
   --text-h: #08060d;
-  --bg: #fff;
+  --bg: #fcf9f2; /* Updated to match your theme background */
+  --card-bg: #ffffff;
   --border: #e5e4e7;
   --code-bg: #f4f3ec;
   --accent: #aa3bff;
   --accent-bg: rgba(170, 59, 255, 0.1);
   --accent-border: rgba(170, 59, 255, 0.5);
   --social-bg: rgba(244, 243, 236, 0.5);
-  --shadow:
-    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
+  --shadow: rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
 
+  /* --- 2. MASTER SPACING & LAYOUT CONTROL (Change here to affect all pages) --- */
+  --element-gap: 1.75rem;          /* Vertical gap between elements inside containers */
+  --container-padding-v: 2rem;     /* Top/Bottom padding for main content */
+  --container-padding-h: 1.25rem;  /* Left/Right padding for main content */
+  --nav-height: 7rem;              /* Height reserved for bottom navigation bar */
+
+  /* --- 3. TYPOGRAPHY & FONTS --- */
   --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
   --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
   --mono: ui-monospace, Consolas, monospace;
 
-  /* --- FLUID TYPOGRAPHY SCALES (Prevents Clumping on Small Screens) --- */
   --font-h1: clamp(1.25rem, 4vw + 0.5rem, 1.75rem);
   --font-h2: clamp(1.1rem, 3vw + 0.4rem, 1.4rem);
   --font-body: clamp(0.8rem, 1.5vw + 0.3rem, 0.95rem);
@@ -38,19 +45,20 @@
   }
 }
 
+/* --- Dark Mode Override Tokens --- */
 @media (prefers-color-scheme: dark) {
   :root {
     --text: #9ca3af;
     --text-h: #f3f4f6;
     --bg: #16171d;
+    --card-bg: #1f2028;
     --border: #2e303a;
     --code-bg: #1f2028;
     --accent: #c084fc;
     --accent-bg: rgba(192, 132, 252, 0.15);
     --accent-border: rgba(192, 132, 252, 0.5);
     --social-bg: rgba(47, 48, 58, 0.5);
-    --shadow:
-      rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
+    --shadow: rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
   }
 
   #social .button-icon {
@@ -64,7 +72,10 @@ html {
 
 body {
   margin: 0;
+  padding: 0;
   overflow-x: hidden;
+  background-color: var(--bg);
+  overscroll-behavior-y: none; /* Prevents iOS elastic bounce artifacting */
 }
 
 /* --- Prevent Mobile Browser Auto-Zoom on Focus --- */
@@ -79,22 +90,53 @@ input, select, textarea {
   margin: 0 auto;
   text-align: center;
   border-inline: 1px solid var(--border);
-  min-height: 100dvh; /* Mobile safe dynamic height */
+  min-height: 100dvh;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
   position: relative;
 }
 
+/* --- UNIVERSAL MASTER LAYOUT CLASSES (Controlled by :root variables above) --- */
+
+/* Main content wrapper ensuring spacing and safe room for bottom bars */
+.main-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--element-gap);
+  padding: var(--container-padding-v) var(--container-padding-h);
+  padding-bottom: calc(var(--nav-height) + env(safe-area-inset-bottom));
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Universal Header Spacing for Android Status Bar & iOS Dynamic Island */
+.app-header {
+  padding-top: max(1rem, env(safe-area-inset-top));
+  padding-left: var(--container-padding-h);
+  padding-right: var(--container-padding-h);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Fixed Bottom Navigation Bar aligned safely for iOS home bar & Android gesture bars */
+.bottom-nav-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: var(--nav-height);
+  padding-bottom: max(1rem, env(safe-area-inset-bottom));
+  z-index: 1000;
+}
+
 /* --- GLOBAL FLUID HEADINGS & TEXT --- */
-h1,
-h2,
-h3,
-h4 {
+h1, h2, h3, h4 {
   font-family: var(--heading);
   font-weight: 500;
   color: var(--text-h);
-  word-break: break-word; /* Prevents text overflow on narrow Android screens */
+  word-break: break-word;
 }
 
 h1 {
@@ -115,8 +157,7 @@ p {
   word-break: break-word;
 }
 
-code,
-.counter {
+code, .counter {
   font-family: var(--mono);
   display: inline-flex;
   border-radius: 4px;
@@ -130,19 +171,11 @@ code {
   background: var(--code-bg);
 }
 
+/* --- Animations & Utilities --- */
 @keyframes searchPulse {
-  0% {
-    border-color: #ff5958;
-    box-shadow: 0 0 0 0 rgba(255, 89, 88, 0.4);
-  }
-  70% {
-    border-color: #ff5958;
-    box-shadow: 0 0 0 8px rgba(255, 89, 88, 0);
-  }
-  100% {
-    border-color: #ff5958;
-    box-shadow: 0 0 0 0 rgba(255, 89, 88, 0);
-  }
+  0% { border-color: #ff5958; box-shadow: 0 0 0 0 rgba(255, 89, 88, 0.4); }
+  70% { border-color: #ff5958; box-shadow: 0 0 0 8px rgba(255, 89, 88, 0); }
+  100% { border-color: #ff5958; box-shadow: 0 0 0 0 rgba(255, 89, 88, 0); }
 }
 
 .catchy-search-input {
@@ -155,7 +188,6 @@ code {
   box-shadow: 0 0 15px rgba(255, 89, 88, 0.6) !important;
 }
 
-/* --- Top Marquee Slogan Bar Animation --- */
 @keyframes slowMarquee {
   0% { transform: translateX(0); }
   100% { transform: translateX(-50%); }

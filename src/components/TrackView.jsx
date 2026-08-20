@@ -227,7 +227,7 @@ export default function TrackView({
     return (
       <div style={{ display: 'flex', flexDirection: 'column', overflowY: 'auto', flex: 1, paddingBottom: '140px', paddingTop: '6px', boxSizing: 'border-box', width: '100%', position: 'relative', fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
         <div style={{ display: 'flex', alignItems: 'center', position: 'relative', marginBottom: '20px', padding: '6px 0', gap: '8px' }}>
-          <button onClick={() => setView('home')} style={{ background: 'rgba(255, 255, 255, 0.6)', border: '1px solid rgba(197, 160, 89, 0.3)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px', color: activeTheme.text, fontSize: 'clamp(11.5px, 3.2vw, 13px)', fontWeight: '600', padding: '6px 12px', borderRadius: '12px', zIndex: 1, flexShrink: 0 }}>
+          <button onClick={() => setView('home')} style={{ background: 'rgba(255, 255, 255, 0.6)', border: '1px solid rgba(197, 160, 89, 0.3)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px', color: activeTheme.text, fontSize: 'clamp(11.5px, 3.2vw, 13px)', fontWeight: '600', padding: '6px 10px', borderRadius: '12px', zIndex: 1, flexShrink: 0 }}>
             <ArrowLeft size={15} style={{ flexShrink: 0 }}/> Home
           </button>
           <h2 style={{ position: 'absolute', left: 0, right: 0, textAlign: 'center', fontFamily: "'Cormorant Garamond', serif", fontSize: 'clamp(18px, 5vw, 21px)', color: '#FF5958', margin: 0, fontWeight: '700', letterSpacing: '0.5px', textTransform: 'uppercase', pointerEvents: 'none', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', paddingLeft: '75px', paddingRight: '75px' }}>
@@ -282,16 +282,22 @@ export default function TrackView({
             <form onSubmit={handleManualSearch} style={{ display: 'flex', gap: '8px', width: '100%', marginTop: '4px', boxSizing: 'border-box', minWidth: 0 }}>
               <input 
                 type="text"
-                placeholder="Enter Order ID (e.g. LB017-SH95)"
+                placeholder="Order ID (e.g. LB017-SH95)"
                 value={searchCode}
                 onChange={(e) => setSearchCode(e.target.value)}
                 style={{ flex: 1, padding: '12px 14px', borderRadius: '14px', border: '1px solid rgba(197, 160, 89, 0.5)', background: '#FFFFFF', fontSize: 'clamp(11.5px, 3.2vw, 13px)', color: activeTheme.text, fontWeight: '600', outline: 'none', minWidth: 0, boxSizing: 'border-box' }}
               />
-              <button type="submit" disabled={isSearching} style={{ background: activeTheme.brand, color: '#FFFFFF', border: 'none', padding: '0 16px', borderRadius: '14px', fontWeight: '700', fontSize: 'clamp(11.5px, 3.2vw, 13px)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px', boxShadow: '0 4px 12px rgba(255, 89, 88, 0.25)', flexShrink: 0, whiteSpace: 'nowrap' }}>
-                {isSearching ? <Loader2 size={16} className="animate-spin" style={{ flexShrink: 0 }} /> : <Search size={16} style={{ flexShrink: 0 }} />}
-                <span>Track</span>
-              </button>
-            </form>
+              <button 
+                type="submit" 
+                disabled={isSearching} 
+                style={{ background: activeTheme.brand, color: '#FFFFFF', border: 'none', padding: '0 14px', borderRadius: '14px', fontWeight: '700', fontSize: 'clamp(11.5px, 3.2vw, 13px)', cursor: 'pointer', 
+                        display: 'flex', alignItems: 'center', gap: '6px', boxShadow: '0 4px 12px rgba(255, 89, 88, 0.25)', flexShrink: 0, whiteSpace: 'nowrap', height: '100%'
+                          }}
+                            >
+                          {isSearching && <Loader2 size={16} className="animate-spin" style={{ flexShrink: 0 }} />}
+                          <span>Track</span>
+                </button>
+                </form>
 
             {searchError && (
               <div style={{ fontSize: 'clamp(11px, 3vw, 12px)', color: '#DC2626', fontWeight: '600', minWidth: 0 }}>

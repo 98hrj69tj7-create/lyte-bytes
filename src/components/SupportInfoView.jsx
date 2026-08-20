@@ -106,7 +106,7 @@ export default function SupportInfoView({
             color: activeTheme.text, 
             fontSize: 'clamp(11.5px, 3.2vw, 13px)', // 💡 FLUID TYPOGRAPHY
             fontWeight: '600', 
-            padding: '6px 12px', 
+            padding: '6px 10px', 
             borderRadius: '12px', 
             zIndex: 1,
             boxShadow: '0 2px 8px rgba(0,0,0,0.03)',

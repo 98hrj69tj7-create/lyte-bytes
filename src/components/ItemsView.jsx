@@ -35,7 +35,7 @@ export default function ItemsView({
             color: theme.text, 
             fontSize: 'var(--font-caption)', // 💡 FLUID TYPOGRAPHY
             fontWeight: '600', 
-            padding: '6px 12px', 
+            padding: '6px 10px', 
             borderRadius: '12px', 
             backgroundColor: 'rgba(255, 255, 255, 0.05)', 
             zIndex: 1,

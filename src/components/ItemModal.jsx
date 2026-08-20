@@ -129,7 +129,7 @@ export default function ItemModal({ selectedItem, setSelectedItem, resolveImageP
       }}
     >
       <div 
-        onClick={(e) => e.stopPropagation()}
+        onClick={() => e.stopPropagation()}
         style={{
           maxWidth: '460px', 
           width: '100%',

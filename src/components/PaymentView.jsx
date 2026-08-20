@@ -173,7 +173,7 @@ export default function PaymentView({
             color: activeTheme.text, 
             fontSize: 'var(--font-caption)', // 💡 FLUID TYPOGRAPHY
             fontWeight: '600', 
-            padding: '6px 12px', 
+            padding: '6px 10px', 
             borderRadius: '12px', 
             zIndex: 1,
             transition: 'all 0.2s ease',

@@ -140,7 +140,7 @@ export default function ConciergeChatView({ theme = {}, onBack }) {
             color: activeTheme.text, 
             fontSize: 'var(--font-caption)', // 💡 FLUID TYPOGRAPHY
             fontWeight: '600', 
-            padding: '6px 12px', 
+            padding: '6px 10px', 
             borderRadius: '12px', 
             zIndex: 1,
             boxShadow: '0 2px 8px rgba(0,0,0,0.03)',

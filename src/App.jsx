@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import HomeAndSubCategoryView from './components/HomeAndSubCategoryView';
 import ItemModal from './components/ItemModal';
 import MultiVariantDrawer from './components/MultiVariantDrawer';
@@ -179,6 +179,22 @@ function useLocalStorage(key, initialValue) {
 }
 
 export default function App() {
+  // --- 1. VIEW STATE DECLARED FIRST (Prevents ReferenceError) ---
+  const [view, setView] = useState('home');
+
+  // --- SCROLL TO TOP ON VIEW / TAB CHANGE ---
+  const mainContainerRef = useRef(null);
+
+  useEffect(() => {
+    if (mainContainerRef.current) {
+      mainContainerRef.current.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    }
+    window.scrollTo(0, 0);
+  }, [view]);
+
   // --- 12-HOUR GAP CACHE REFRESH GUARD FOR ANDROID / iOS PWA ---
   useEffect(() => {
     const LAST_OPEN_KEY = 'lyte_last_open_timestamp';
@@ -199,7 +215,6 @@ export default function App() {
     }
   }, []);
 
-  const [view, setView] = useState('home');
   const [activeModal, setActiveModal] = useState({ type: null, data: null });
   const openModal = (type, data) => setActiveModal({ type, data });
   const closeModal = () => setActiveModal({ type: null, data: null });
@@ -497,7 +512,9 @@ export default function App() {
     <div style={{ height: '100dvh', display: 'flex', flexDirection: 'column', position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: theme.bg, color: theme.text, fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
       <LimitedOfferModal theme={theme} setView={setView} />
       <Header theme={theme} setView={setView} />
-      <main style={{ flex: 1, paddingTop: '5px', paddingLeft: '20px', paddingRight: '20px', paddingBottom: '80px', overflowY: 'auto', display: 'flex', flexDirection: 'column' }}>
+      
+      {/* Scrollable Main Viewport with Ref attached */}
+      <main ref={mainContainerRef} style={{ flex: 1, paddingTop: '5px', paddingLeft: '20px', paddingRight: '20px', paddingBottom: '80px', overflowY: 'auto', display: 'flex', flexDirection: 'column' }}>
         {view === 'offers' && (
           <PageTransition viewKey="offers">
             <OffersTab theme={theme} />

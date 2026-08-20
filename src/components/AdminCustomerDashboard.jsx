@@ -448,7 +448,7 @@ export default function AdminCustomerDashboard({ theme = {}, onBack, setView }) 
             color: activeTheme.text, 
             fontSize: 'var(--font-caption)', // 💡 FLUID TYPOGRAPHY
             fontWeight: '600', 
-            padding: '4px 12px', 
+            padding: '6px 10px',  
             borderRadius: '12px', 
             zIndex: 1,
             boxShadow: '0 2px 8px rgba(0,0,0,0.02)'
@@ -458,13 +458,18 @@ export default function AdminCustomerDashboard({ theme = {}, onBack, setView }) 
         </button>
 
         <h2 style={{ 
+          position: 'absolute', 
+          left: 0, 
+          right: 0, 
+          textAlign: 'center', 
+          fontFamily: "'sans-serif",
           fontSize: 'var(--font-h2)', // 💡 FLUID TYPOGRAPHY
           color: '#FF5958', 
           margin: 0, 
-          fontWeight: '800', 
-          letterSpacing: '1px', 
+          fontWeight: '700', 
+          letterSpacing: '0.5px', 
           textTransform: 'uppercase', 
-          textAlign: 'center'
+          pointerEvents: 'none' 
         }}>
           CUSTOMERS ({filteredCustomers.length})
         </h2>
