@@ -100,6 +100,14 @@ export default function WallOfLoveView({
     { id: 'email', label: 'Email' }
   ];
 
+  // 💡 Helper to format category name nicely in empty state
+  const getCategoryDisplayName = (tab) => {
+    if (tab === 'all') return 'this category';
+    if (tab === 'whatsapp') return 'WhatsApp';
+    if (tab === 'email') return 'Email';
+    return tab.charAt(0).toUpperCase() + tab.slice(1);
+  };
+
   return (
     <div style={{ 
       display: 'flex', 
@@ -161,37 +169,46 @@ export default function WallOfLoveView({
 
       {/* Filter Tabs */}
       <div style={{ display: 'flex', gap: '6px', overflowX: 'auto', paddingBottom: '12px', marginBottom: '4px', minWidth: 0, boxSizing: 'border-box' }}>
-        {tabs.map((tab) => (
-          <button
-            key={tab.id}
-            onClick={() => setActiveTab(tab.id)}
-            style={{
-              background: activeTab === tab.id ? 'linear-gradient(135deg, #C5A059 0%, #A3803F 100%)' : '#FFFFFF',
-              color: activeTab === tab.id ? '#FFF' : activeTheme.text,
-              border: '1px solid rgba(197, 160, 89, 0.4)',
-              borderRadius: '10px',
-              padding: tab.id === 'all' ? '6px 10px' : '6px 10px',
-              fontSize: 'clamp(10.5px, 2.8vw, 11.5px)',
-              fontWeight: '700',
-              cursor: 'pointer',
-              whiteSpace: 'nowrap',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              boxShadow: activeTab === tab.id ? '0 4px 12px rgba(197, 160, 89, 0.3)' : 'none',
-              flexShrink: 0
-            }}
-          >
-            {tab.id === 'all' ? tab.label : renderSourceLogo(tab.id)}
-          </button>
-        ))}
+        {tabs.map((tab) => {
+          const isActive = activeTab === tab.id;
+          const isAllTab = tab.id === 'all';
+
+          return (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              style={{
+                background: isAllTab 
+                  ? (isActive ? 'linear-gradient(135deg, #C5A059 0%, #A3803F 100%)' : '#FFFFFF') 
+                  : '#FFFFFF',
+                color: isAllTab && isActive ? '#FFF' : activeTheme.text,
+                border: isActive && !isAllTab 
+                  ? '2px solid #C5A059' 
+                  : '1px solid rgba(197, 160, 89, 0.4)',
+                borderRadius: '10px',
+                padding: '6px 10px',
+                fontSize: 'clamp(10.5px, 2.8vw, 11.5px)',
+                fontWeight: '700',
+                cursor: 'pointer',
+                whiteSpace: 'nowrap',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                boxShadow: isActive && isAllTab ? '0 4px 12px rgba(197, 160, 89, 0.3)' : 'none',
+                flexShrink: 0
+              }}
+            >
+              {isAllTab ? tab.label : renderSourceLogo(tab.id)}
+            </button>
+          );
+        })}
       </div>
 
       {/* Reviews List */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', minWidth: 0, boxSizing: 'border-box' }}>
         {filteredReviews.length === 0 ? (
           <div style={{ textAlign: 'center', padding: '40px 20px', color: '#78716C', fontSize: 'clamp(12px, 3.5vw, 13px)' }}>
-            No reviews found for this category yet.
+            No reviews found on {getCategoryDisplayName(activeTab)} yet.
           </div>
         ) : (
           filteredReviews.map((item, idx) => (

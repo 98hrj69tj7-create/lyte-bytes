@@ -35,7 +35,7 @@ const SPACING = {
   btnIconSize: 16,              
 };
 
-export default function StickyCartBar({ cart = [], onViewCart }) {
+export default function StickyCartBar({ cart = [], view, onViewCart }) {
   const theme = PALETTES.obsidianGold;
 
   const [isVisible, setIsVisible] = useState(true);
@@ -93,7 +93,8 @@ export default function StickyCartBar({ cart = [], onViewCart }) {
     return () => window.removeEventListener('scroll', handleScroll, true);
   }, []);
 
-  if (totalItems === 0) return null;
+  // 💡 Hide bar if cart is empty OR if user is on concierge, chatbot, chat, or info views
+  if (totalItems === 0 || ['concierge', 'chatbot', 'chat', 'info'].includes(view)) return null;
 
   return (
     <>

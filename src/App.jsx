@@ -182,17 +182,29 @@ export default function App() {
   // --- 1. VIEW STATE DECLARED FIRST (Prevents ReferenceError) ---
   const [view, setView] = useState('home');
 
-  // --- SCROLL TO TOP ON VIEW / TAB CHANGE ---
+  // --- UNIVERSAL CROSS-OS SCROLL-TO-TOP ENGINE ---
   const mainContainerRef = useRef(null);
 
   useEffect(() => {
+    // 1. Instant window scroll reset
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+
+    // 2. Instant container scroll reset
     if (mainContainerRef.current) {
-      mainContainerRef.current.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-      });
+      mainContainerRef.current.scrollTop = 0;
+      mainContainerRef.current.scrollTo({ top: 0, left: 0, behavior: 'instant' });
     }
-    window.scrollTo(0, 0);
+
+    // 3. Micro-timeout fallback for mobile WebKit / iOS Safari layout paints
+    const timer = setTimeout(() => {
+      window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+      if (mainContainerRef.current) {
+        mainContainerRef.current.scrollTop = 0;
+        mainContainerRef.current.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+      }
+    }, 15);
+
+    return () => clearTimeout(timer);
   }, [view]);
 
   // --- 12-HOUR GAP CACHE REFRESH GUARD FOR ANDROID / iOS PWA ---
@@ -718,12 +730,14 @@ export default function App() {
         )}
       </main>
 
-      {!['cart', 'delivery', 'payment', 'verifying', 'track', 'profile', 'account', 'admin-customers', 'concierge', 'chatbot', 'wall_of_love'].includes(view) && !isStoryExpanded && (
-        <StickyCartBar
-          cart={cart}
-          onViewCart={() => setView('cart')}
-        />
-      )}
+    {/* 💡 StickyCartBar only shows on allowed shopping and tracking tabs */}
+{['home', 'subcat', 'items', 'offers', 'track'].includes(view) && !isStoryExpanded && (
+  <StickyCartBar
+    cart={cart}
+    view={view}
+    onViewCart={() => setView('cart')}
+  />
+)}
 
       {/* PWA Install Prompt Banner */}
       <InstallPrompt theme={theme} />

@@ -327,8 +327,8 @@ export default function SupportInfoView({
             )}
           </div>
 
-          <p style={{ margin: 0, fontSize: 'clamp(11px, 3vw, 12px)', color: '#78716C', lineHeight: '1.4', textAlign: 'left', minWidth: 0 }}>
-            Have a question about our menu, ingredients, or custom catering? Tap a topic below or type your own to start chatting with Chef Lyte!
+          <p style={{ marginTop: '-10px', fontSize: 'clamp(11px, 3vw, 12px)', color: '#78716C', lineHeight: '1.4', textAlign: 'left', minWidth: 0 }}>
+            Have a question about our menu, ingredients, or custom catering? <br />Tap a topic below or type your own to start chatting with Chef Lyte!
           </p>
 
           {/* Elite 2x2 Grid Layout for All 4 Questions */}

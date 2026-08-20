@@ -813,6 +813,7 @@ export default function DeliveryView({
               fontWeight: '600',
               borderRadius: '14px', 
               width: '100%', 
+              marginBottom:10,
               opacity: isFormValid ? 1 : 0.5,
               cursor: isFormValid ? 'pointer' : 'not-allowed',
               boxSizing: 'border-box',

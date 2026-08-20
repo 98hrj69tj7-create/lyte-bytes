@@ -51,7 +51,7 @@ export function getAllOffers(currentOrderNumber = 1) {
         id: 'anniv_std',
         tag: "ANNIVERSARY",
         title: "Anniversary Standard Perk",
-        description: "Enjoy our standard anniversary reward.",
+        description: "Enjoy our anniversary reward.",
         code: "ANNI15",
         discount: "15% OFF",
         condition: "Min. order value ₹499",

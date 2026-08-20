@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useEffect, useRef } from 'react';
+import React, { useState, useLayoutEffect, useEffect, useRef } from 'react';
 import { ArrowLeft, ShieldCheck, ExternalLink } from 'lucide-react';
 
 const APP_CONFIG = {
@@ -43,6 +43,20 @@ export default function PaymentView({
 }) {
   const containerRef = useRef(null);
   const topAnchorRef = useRef(null);
+
+  // 💡 Retrieve applied checkout discount state
+  const [checkoutSummary, setCheckoutSummary] = useState({ discountAmount: 0, couponCode: null });
+
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem('lyte_checkout_summary');
+      if (stored) {
+        setCheckoutSummary(JSON.parse(stored));
+      }
+    } catch(e) {
+      console.error("Failed to parse checkout summary", e);
+    }
+  }, []);
 
   const activeTheme = {
     brand: theme?.brand || '#FF5958',
@@ -94,9 +108,11 @@ export default function PaymentView({
     return Number(deliveryFee) || Number(customer?.deliveryFee) || 0;
   })();
 
-  const calculatedGrandTotal = (orderTotal !== undefined && orderTotal > 0 && orderTotal > calculatedItemsTotal) 
-    ? orderTotal 
-    : (Number(calculatedItemsTotal) + Number(calculatedDeliveryFee));
+  // 💡 Accurately include discount in Grand Total calculation
+  const appliedDiscount = checkoutSummary.discountAmount || 0;
+  const rawGrandTotal = Number(calculatedItemsTotal) - Number(appliedDiscount) + Number(calculatedDeliveryFee);
+  
+  const calculatedGrandTotal = Math.max(0, rawGrandTotal);
 
   const handleAppLaunch = (app) => {
     const targetApp = app || 'Google Pay';
@@ -131,6 +147,9 @@ export default function PaymentView({
   const handlePaymentSubmit = () => {
     const selectedApp = upiApp || 'Google Pay';
     setPayment('UPI');
+
+    // Clean up summary upon submission
+    localStorage.removeItem('lyte_checkout_summary');
 
     if (typeof onPlaceOrder === 'function') {
       onPlaceOrder();
@@ -230,6 +249,14 @@ export default function PaymentView({
             <span style={{ whiteSpace: 'nowrap' }}>Items Total</span>
             <span style={{ color: activeTheme.text, fontWeight: '600', whiteSpace: 'nowrap' }}>₹{Number(calculatedItemsTotal).toFixed(2)}</span>
           </div>
+
+          {/* 💡 Display discount row if applied */}
+          {appliedDiscount > 0 && (
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 'var(--font-caption)', color: '#059669', fontWeight: '600', marginBottom: '8px', minWidth: 0, gap: '8px' }}>
+              <span style={{ whiteSpace: 'nowrap' }}>Coupon Discount {checkoutSummary.couponCode ? `(${checkoutSummary.couponCode})` : ''}</span>
+              <span style={{ whiteSpace: 'nowrap' }}>-₹{Number(appliedDiscount).toFixed(2)}</span>
+            </div>
+          )}
 
           <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 'var(--font-caption)', color: '#78716C', fontWeight: '500', marginBottom: '8px', minWidth: 0, gap: '8px' }}>
             <span style={{ whiteSpace: 'nowrap' }}>Delivery Charges</span>
@@ -333,7 +360,7 @@ export default function PaymentView({
               border: '1px solid rgba(255, 255, 255, 0.2)', 
               background: 'linear-gradient(135deg, #FF5958 0%, #E11D48 100%)',
               color: '#FFFFFF',
-              marginBottom: 0, 
+              marginBottom: 10, 
               padding: '14px', 
               fontSize: 'var(--font-body)', // 💡 FLUID TYPOGRAPHY
               fontWeight: '600',
