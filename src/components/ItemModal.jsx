@@ -56,12 +56,13 @@ function ModalTagBadge({ tagKey }) {
       backgroundColor: 'rgba(197, 160, 89, 0.12)',
       border: '1px solid rgba(197, 160, 89, 0.3)',
       color: '#8A6D2B',
-      fontSize: '10px',
+      fontSize: 'var(--font-caption)', // 💡 FLUID TYPOGRAPHY
       fontWeight: '600',
-      lineHeight: '1.2'
+      lineHeight: '1.2',
+      flexShrink: 0
     }}>
-      <span>{config.emoji}</span>
-      {config.label}
+      <span style={{ flexShrink: 0 }}>{config.emoji}</span>
+      <span style={{ whiteSpace: 'nowrap' }}>{config.label}</span>
     </span>
   );
 }
@@ -102,6 +103,10 @@ export default function ItemModal({ selectedItem, setSelectedItem, resolveImageP
     return `/menu-items/${selectedItem.imageUrl}`;
   };
 
+  const activeTheme = {
+    radius: 'clamp(20px, 5vw, 24px)' // 💡 FLUID RADIUS
+  };
+
   return (
     <div 
       onClick={handleClose}
@@ -124,12 +129,12 @@ export default function ItemModal({ selectedItem, setSelectedItem, resolveImageP
       }}
     >
       <div 
-        onClick={() => e.stopPropagation()}
+        onClick={(e) => e.stopPropagation()}
         style={{
           maxWidth: '460px', 
           width: '100%',
           maxHeight: '90vh', 
-          borderRadius: '24px', 
+          borderRadius: activeTheme.radius, // 💡 FLUID RADIUS
           background: 'linear-gradient(135deg, #FFFDF9 0%, #FAF4EB 100%)',
           overflow: 'hidden',
           display: 'flex',
@@ -145,7 +150,7 @@ export default function ItemModal({ selectedItem, setSelectedItem, resolveImageP
         {/* MAIN ITEM IMAGE HEADER */}
         <div style={{ 
           width: '100%', 
-          height: '240px', 
+          height: 'clamp(200px, 50vw, 240px)', // 💡 FLUID HEIGHT
           backgroundColor: '#1a1a1a', 
           position: 'relative',
           flexShrink: 0
@@ -173,10 +178,11 @@ export default function ItemModal({ selectedItem, setSelectedItem, resolveImageP
               backdropFilter: 'blur(6px)',
               border: '1px solid rgba(197, 160, 89, 0.3)',
               color: '#FFD700',
-              fontSize: '12px',
+              fontSize: 'var(--font-caption)', // 💡 FLUID TYPOGRAPHY
               fontWeight: '600',
               letterSpacing: '0.3px',
-              fontFamily: "sans-serif"
+              fontFamily: "sans-serif",
+              whiteSpace: 'nowrap'
             }}>
               {selectedItem.unit}
             </div>
@@ -185,13 +191,15 @@ export default function ItemModal({ selectedItem, setSelectedItem, resolveImageP
 
         {/* SCROLLABLE CONTENT BODY */}
         <div style={{ 
-          padding: '22px', 
+          padding: 'clamp(16px, 4vw, 22px)', // 💡 FLUID PADDING
           gap: '12px', 
           textAlign: 'left', 
           overflowY: 'auto', 
           display: 'flex', 
           flexDirection: 'column',
-          flex: 1
+          flex: 1,
+          boxSizing: 'border-box',
+          minWidth: 0
         }}>
           
           {/* TITLE, VEG/NON-VEG ICON, AND ALL INLINE TAGS */}
@@ -199,16 +207,21 @@ export default function ItemModal({ selectedItem, setSelectedItem, resolveImageP
             display: 'flex', 
             alignItems: 'center', 
             flexWrap: 'wrap', 
-            gap: '8px' 
+            gap: '8px',
+            minWidth: 0
           }}>
             <h2 style={{ 
               margin: 0, 
               fontFamily: "'Cormorant Garamond', serif",
-              fontSize: '22px', 
+              fontSize: 'var(--font-h2)', // 💡 FLUID TYPOGRAPHY
               color: '#1A1816', 
               fontWeight: '700', 
               letterSpacing: '0.2px', 
-              lineHeight: '1' 
+              lineHeight: '1',
+              minWidth: 0,
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap'
             }}>
               {selectedItem.name}
             </h2>
@@ -237,7 +250,7 @@ export default function ItemModal({ selectedItem, setSelectedItem, resolveImageP
             <p style={{ 
               color: '#57534E', 
               margin: 0, 
-              fontSize: '13.5px', 
+              fontSize: 'var(--font-body)', // 💡 FLUID TYPOGRAPHY
               lineHeight: '1.6', 
               fontWeight: '400' 
             }}>
@@ -252,11 +265,12 @@ export default function ItemModal({ selectedItem, setSelectedItem, resolveImageP
               borderLeft: '3.5px solid #FF5958', 
               borderRadius: '0 10px 10px 0',
               backgroundColor: 'rgba(255, 89, 88, 0.06)', 
-              fontSize: '12.5px', 
+              fontSize: 'var(--font-caption)', // 💡 FLUID TYPOGRAPHY
               color: '#C53030', 
               fontStyle: 'italic', 
               fontWeight: '500',
-              lineHeight: '1.45'
+              lineHeight: '1.45',
+              boxSizing: 'border-box'
             }}>
               {selectedItem.highlights}
             </div>
@@ -267,57 +281,60 @@ export default function ItemModal({ selectedItem, setSelectedItem, resolveImageP
             padding: '12px 14px', 
             borderRadius: '16px', 
             backgroundColor: 'rgba(197, 160, 89, 0.08)', 
-            border: '1px solid rgba(197, 160, 89, 0.3)'
+            border: '1px solid rgba(197, 160, 89, 0.3)',
+            boxSizing: 'border-box'
           }}>
             <div style={{ 
               display: 'flex', 
               alignItems: 'center', 
               gap: '6px', 
               marginBottom: '8px', 
-              fontSize: '11px', 
+              fontSize: 'clamp(9.5px, 2.5vw, 11px)', 
               fontWeight: '700', 
               color: '#8A6D2B', 
               textTransform: 'uppercase', 
-              letterSpacing: '0.8px'
+              letterSpacing: '0.8px',
+              minWidth: 0
             }}>
-              <Flame size={18} color="#FF5958" /> Nutritional Info. (Per Portion)
+              <Flame size={18} color="#FF5958" style={{ flexShrink: 0 }} /> <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>Nutritional Info. (Per Portion)</span>
             </div>
             
-            {/* NUTRITIONAL GRID - Slimmed down padding and spacing */}
+            {/* NUTRITIONAL GRID */}
             <div style={{ 
               display: 'grid', 
               gridTemplateColumns: 'repeat(4, 1fr)', 
               gap: '6px', 
-              textAlign: 'center' 
+              textAlign: 'center',
+              boxSizing: 'border-box'
             }}>
               {/* CALORIES BOX */}
-              <div style={{ padding: '5px 4px', borderRadius: '10px', backgroundColor: '#FFFFFF', border: '1px solid rgba(197, 160, 89, 0.22)' }}>
-                <div style={{ fontSize: '9px', color: '#78716C', fontWeight: '700', letterSpacing: '0.3px' }}>CALORIES</div>
-                <div style={{ marginTop: '1px', fontSize: '12px', color: '#1A1816', fontWeight: '600' }}>
+              <div style={{ padding: '5px 4px', borderRadius: '10px', backgroundColor: '#FFFFFF', border: '1px solid rgba(197, 160, 89, 0.22)', minWidth: 0 }}>
+                <div style={{ fontSize: '9px', color: '#78716C', fontWeight: '700', letterSpacing: '0.3px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>CALORIES</div>
+                <div style={{ marginTop: '1px', fontSize: 'var(--font-caption)', color: '#1A1816', fontWeight: '600', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                   {selectedItem.calories || '240'}
                 </div>
               </div>
 
               {/* PROTEIN BOX */}
-              <div style={{ padding: '5px 4px', borderRadius: '10px', backgroundColor: '#FFFFFF', border: '1px solid rgba(197, 160, 89, 0.22)' }}>
-                <div style={{ fontSize: '9px', color: '#78716C', fontWeight: '700', letterSpacing: '0.3px' }}>PROTEIN</div>
-                <div style={{ marginTop: '1px', fontSize: '12px', color: '#1A1816', fontWeight: '600' }}>
+              <div style={{ padding: '5px 4px', borderRadius: '10px', backgroundColor: '#FFFFFF', border: '1px solid rgba(197, 160, 89, 0.22)', minWidth: 0 }}>
+                <div style={{ fontSize: '9px', color: '#78716C', fontWeight: '700', letterSpacing: '0.3px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>PROTEIN</div>
+                <div style={{ marginTop: '1px', fontSize: 'var(--font-caption)', color: '#1A1816', fontWeight: '600', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                   {selectedItem.protein || '12g'}
                 </div>
               </div>
 
               {/* CARBS BOX */}
-              <div style={{ padding: '5px 4px', borderRadius: '10px', backgroundColor: '#FFFFFF', border: '1px solid rgba(197, 160, 89, 0.22)' }}>
-                <div style={{ fontSize: '9px', color: '#78716C', fontWeight: '700', letterSpacing: '0.3px' }}>CARBS</div>
-                <div style={{ marginTop: '1px', fontSize: '12px', color: '#1A1816', fontWeight: '600' }}>
+              <div style={{ padding: '5px 4px', borderRadius: '10px', backgroundColor: '#FFFFFF', border: '1px solid rgba(197, 160, 89, 0.22)', minWidth: 0 }}>
+                <div style={{ fontSize: '9px', color: '#78716C', fontWeight: '700', letterSpacing: '0.3px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>CARBS</div>
+                <div style={{ marginTop: '1px', fontSize: 'var(--font-caption)', color: '#1A1816', fontWeight: '600', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                   {selectedItem.carbs || '18g'}
                 </div>
               </div>
 
               {/* FAT BOX */}
-              <div style={{ padding: '5px 4px', borderRadius: '10px', backgroundColor: '#FFFFFF', border: '1px solid rgba(197, 160, 89, 0.22)' }}>
-                <div style={{ fontSize: '9px', color: '#78716C', fontWeight: '700', letterSpacing: '0.3px' }}>FAT</div>
-                <div style={{ marginTop: '1px', fontSize: '12px', color: '#1A1816', fontWeight: '600' }}>
+              <div style={{ padding: '5px 4px', borderRadius: '10px', backgroundColor: '#FFFFFF', border: '1px solid rgba(197, 160, 89, 0.22)', minWidth: 0 }}>
+                <div style={{ fontSize: '9px', color: '#78716C', fontWeight: '700', letterSpacing: '0.3px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>FAT</div>
+                <div style={{ marginTop: '1px', fontSize: 'var(--font-caption)', color: '#1A1816', fontWeight: '600', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                   {selectedItem.fat || '8g'}
                 </div>
               </div>
@@ -326,7 +343,7 @@ export default function ItemModal({ selectedItem, setSelectedItem, resolveImageP
 
           {/* VISUAL DISCLAIMER */}
           <div style={{ paddingTop: '0px' }}>
-            <span style={{ fontSize: '10px', color: '#78716C', fontStyle: 'italic' }}>
+            <span style={{ fontSize: 'clamp(9px, 2.5vw, 10px)', color: '#78716C', fontStyle: 'italic' }}>
               * Visuals are for illustration. The final product may vary.
             </span>
           </div>

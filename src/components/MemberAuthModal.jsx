@@ -26,7 +26,7 @@ export default function MemberAuthModal({ isOpen, onClose, initialPhone = '', cs
   const activeTheme = {
     brand: '#FF5958',
     text: '#1A1816',
-    radius: '24px'
+    radius: 'clamp(20px, 5vw, 24px)' // 💡 FLUID RADIUS
   };
 
   useEffect(() => {
@@ -75,7 +75,6 @@ export default function MemberAuthModal({ isOpen, onClose, initialPhone = '', cs
       const latestRow = matchingRows[matchingRows.length - 1];
       const custCode = latestRow['Cust_Code'] || '';
       
-      // Explicitly extract characters 10 to 17 (index 9 to 17) from Cust_Code
       if (custCode.length >= 17) {
         return custCode.substring(9, 17);
       }
@@ -231,7 +230,7 @@ export default function MemberAuthModal({ isOpen, onClose, initialPhone = '', cs
           style={{
             position: 'absolute', top: '16px', right: '16px', background: 'rgba(197, 160, 89, 0.12)',
             border: 'none', borderRadius: '50%', width: '32px', height: '32px',
-            display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: '#8A6D2B', zIndex: 10
+            display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: '#8A6D2B', zIndex: 10, flexShrink: 0
           }}
         >
           <X size={16} />
@@ -245,21 +244,31 @@ export default function MemberAuthModal({ isOpen, onClose, initialPhone = '', cs
           boxSizing: 'border-box',
           position: 'relative'
         }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <Lock size={18} color="#C5A059" />
-            <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '20px', fontWeight: '700', color: activeTheme.text, textTransform: 'uppercase', letterSpacing: '1px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', minWidth: 0 }}>
+            <Lock size={18} color="#C5A059" style={{ flexShrink: 0 }} />
+            <span style={{ 
+              fontFamily: "'Cormorant Garamond', serif", 
+              fontSize: 'var(--font-h2)', // 💡 FLUID TYPOGRAPHY
+              fontWeight: '700', 
+              color: activeTheme.text, 
+              textTransform: 'uppercase', 
+              letterSpacing: '1px',
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis'
+            }}>
               My Account
             </span>
           </div>
         </div>
 
-        <div style={{ padding: '14px 20px 20px 20px', position: 'relative', boxSizing: 'border-box' }}>
+        <div style={{ padding: 'clamp(12px, 3.5vw, 14px) clamp(16px, 5vw, 20px) clamp(16px, 5vw, 20px) clamp(16px, 5vw, 20px)', position: 'relative', boxSizing: 'border-box' }}>
           
           <div 
             style={{
               background: 'linear-gradient(135deg, #FFFDF9 0%, #FAF4EB 100%)',
               borderRadius: '16px',
-              padding: '18px 20px',
+              padding: 'clamp(14px, 4vw, 18px) clamp(16px, 4.5vw, 20px)', // 💡 FLUID PADDING
               color: activeTheme.text,
               boxShadow: '0 8px 24px rgba(44, 34, 30, 0.06)',
               position: 'relative',
@@ -271,14 +280,14 @@ export default function MemberAuthModal({ isOpen, onClose, initialPhone = '', cs
             }}
           >
             {showTermsPopup ? (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', textAlign: 'left' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#8A6D2B' }}>
-                  <FileText size={18} />
-                  <h3 style={{ margin: 0, fontFamily: "'Cormorant Garamond', serif", fontSize: '18px', fontWeight: '700', color: '#1A1816' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', textAlign: 'left', minWidth: 0 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#8A6D2B', minWidth: 0 }}>
+                  <FileText size={18} style={{ flexShrink: 0 }} />
+                  <h3 style={{ margin: 0, fontFamily: "'Cormorant Garamond', serif", fontSize: 'var(--font-h2)', fontWeight: '700', color: '#1A1816', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                     General Guidelines
                   </h3>
                 </div>
-                <div style={{ fontSize: '11px', color: '#555', lineHeight: '1.45', textAlign: 'left' }}>
+                <div style={{ fontSize: 'var(--font-caption)', color: '#555', lineHeight: '1.45', textAlign: 'left' }}>
                   <p style={{ margin: '0 0 6px 0' }}><strong>1. Account Verification:</strong> Tracking and reward point allocations are securely tied to your verified mobile number and order records.</p>
                   <p style={{ margin: '0 0 6px 0' }}><strong>2. Loyalty Tiers:</strong> Elite tiers upgrade automatically based on your cumulative spend and frequency.</p>
                   <p style={{ margin: '0 0 0 0' }}><strong>3. Privacy:</strong> Data and customer records are fully confidential and used exclusively for your order fulfillment.</p>
@@ -289,8 +298,8 @@ export default function MemberAuthModal({ isOpen, onClose, initialPhone = '', cs
                   style={{
                     background: 'linear-gradient(135deg, #C5A059 0%, #A3803F 100%)',
                     color: '#FFF', border: 'none', borderRadius: '12px', padding: '10px',
-                    fontSize: '13px', fontWeight: '700', cursor: 'pointer', marginTop: '4px',
-                    boxShadow: '0 4px 12px rgba(197, 160, 89, 0.3)'
+                    fontSize: 'var(--font-body)', fontWeight: '700', cursor: 'pointer', marginTop: '4px',
+                    boxShadow: '0 4px 12px rgba(197, 160, 89, 0.3)', width: '100%', boxSizing: 'border-box'
                   }}
                 >
                   Back to Sign In
@@ -298,14 +307,14 @@ export default function MemberAuthModal({ isOpen, onClose, initialPhone = '', cs
               </div>
             ) : (
               <>
-                <div style={{ marginBottom: '14px', textAlign: 'left' }}>
-                  <h3 style={{ margin: '0 0 4px 0', fontFamily: "'Cormorant Garamond', serif", fontSize: '22px', color: '#1A1816', fontWeight: '700' }}>
+                <div style={{ marginBottom: '14px', textAlign: 'left', minWidth: 0 }}>
+                  <h3 style={{ margin: '0 0 4px 0', fontFamily: "'Cormorant Garamond', serif", fontSize: 'clamp(18px, 5vw, 22px)', color: '#1A1816', fontWeight: '700', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                     {step === 'phone' && 'Unlock Your Rewards'}
                     {step === 'temp_code' && 'Enter Unique PIN'}
                     {step === 'set_password' && 'Create Password'}
                     {step === 'enter_password' && 'Welcome Back'}
                   </h3>
-                  <p style={{ margin: 0, fontSize: '12px', color: '#78716C', fontWeight: '500', lineHeight: '1.4' }}>
+                  <p style={{ margin: 0, fontSize: 'var(--font-caption)', color: '#78716C', fontWeight: '500', lineHeight: '1.4' }}>
                     {step === 'phone' && 'Enter your mobile number'}
                     {step === 'temp_code' && 'If you are unaware of your Unique PIN, Email Us.'}
                     {step === 'set_password' && 'Set a secure password for future quick sign-in.'}
@@ -314,9 +323,9 @@ export default function MemberAuthModal({ isOpen, onClose, initialPhone = '', cs
                 </div>
 
                 {step === 'phone' && (
-                  <form onSubmit={handlePhoneSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                    <div style={{ position: 'relative' }}>
-                      <span style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)', color: '#8A6D2B', fontSize: '13.5px', fontWeight: '600' }}>
+                  <form onSubmit={handlePhoneSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '12px', width: '100%', boxSizing: 'border-box' }}>
+                    <div style={{ position: 'relative', width: '100%', boxSizing: 'border-box' }}>
+                      <span style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)', color: '#8A6D2B', fontSize: 'var(--font-body)', fontWeight: '600' }}>
                         +91
                       </span>
                       <input 
@@ -328,13 +337,13 @@ export default function MemberAuthModal({ isOpen, onClose, initialPhone = '', cs
                         style={{
                           width: '100%', padding: '12px 14px 12px 48px', borderRadius: '12px',
                           border: '1px solid rgba(197, 160, 89, 0.5)', backgroundColor: '#FFF',
-                          fontSize: '13.5px', boxSizing: 'border-box', outline: 'none', color: '#1A1816',
+                          fontSize: 'var(--font-body)', boxSizing: 'border-box', outline: 'none', color: '#1A1816',
                           boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.02)'
                         }}
                       />
                     </div>
 
-                    <div style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', textAlign: 'left' }}>
+                    <div style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', textAlign: 'left', minWidth: 0 }}>
                       <input 
                         type="checkbox" 
                         id="termsCheck"
@@ -342,7 +351,7 @@ export default function MemberAuthModal({ isOpen, onClose, initialPhone = '', cs
                         onChange={(e) => setAgreedToTerms(e.target.checked)}
                         style={{ marginTop: '2px', accentColor: '#C5A059', cursor: 'pointer', flexShrink: 0 }}
                       />
-                      <label htmlFor="termsCheck" style={{ fontSize: '11px', color: '#78716C', lineHeight: '1.4', cursor: 'pointer' }}>
+                      <label htmlFor="termsCheck" style={{ fontSize: 'var(--font-caption)', color: '#78716C', lineHeight: '1.4', cursor: 'pointer' }}>
                         I agree to the{' '}
                         <span 
                           onClick={(e) => {
@@ -362,18 +371,18 @@ export default function MemberAuthModal({ isOpen, onClose, initialPhone = '', cs
                       style={{
                         background: 'linear-gradient(135deg, #C5A059 0%, #A3803F 100%)',
                         color: '#FFF', border: 'none', borderRadius: '12px', padding: '12px',
-                        fontSize: '13.5px', fontWeight: '700', cursor: 'pointer', display: 'flex',
+                        fontSize: 'var(--font-body)', fontWeight: '700', cursor: 'pointer', display: 'flex',
                         alignItems: 'center', justifyContent: 'center', gap: '6px',
-                        boxShadow: '0 6px 16px rgba(197, 160, 89, 0.35)', marginTop: '2px'
+                        boxShadow: '0 6px 16px rgba(197, 160, 89, 0.35)', marginTop: '2px', width: '100%', boxSizing: 'border-box'
                       }}
                     >
-                      {loading ? 'Checking...' : 'Continue'} <ChevronRight size={16} />
+                      {loading ? 'Checking...' : 'Continue'} <ChevronRight size={16} style={{ flexShrink: 0 }} />
                     </button>
                   </form>
                 )}
 
                 {step === 'temp_code' && (
-                  <form onSubmit={handleVerifyTempCode} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                  <form onSubmit={handleVerifyTempCode} style={{ display: 'flex', flexDirection: 'column', gap: '12px', width: '100%', boxSizing: 'border-box' }}>
                     <input 
                       type="text"
                       placeholder="Enter PIN"
@@ -393,25 +402,25 @@ export default function MemberAuthModal({ isOpen, onClose, initialPhone = '', cs
                       style={{
                         background: 'linear-gradient(135deg, #C5A059 0%, #A3803F 100%)',
                         color: '#FFF', border: 'none', borderRadius: '12px', padding: '12px',
-                        fontSize: '13.5px', fontWeight: '700', cursor: 'pointer', display: 'flex',
+                        fontSize: 'var(--font-body)', fontWeight: '700', cursor: 'pointer', display: 'flex',
                         alignItems: 'center', justifyContent: 'center', gap: '6px',
-                        boxShadow: '0 6px 16px rgba(197, 160, 89, 0.35)'
+                        boxShadow: '0 6px 16px rgba(197, 160, 89, 0.35)', width: '100%', boxSizing: 'border-box'
                       }}
                     >
-                      {loading ? 'Verifying...' : 'Verify Code'} <ShieldCheck size={16} />
+                      {loading ? 'Verifying...' : 'Verify Code'} <ShieldCheck size={16} style={{ flexShrink: 0 }} />
                     </button>
 
-                    <div style={{ textAlign: 'center', borderTop: '1px dashed rgba(197, 160, 89, 0.35)', paddingTop: '10px', marginTop: '2px' }}>
+                    <div style={{ textAlign: 'center', borderTop: '1px dashed rgba(197, 160, 89, 0.35)', paddingTop: '10px', marginTop: '2px', width: '100%', boxSizing: 'border-box' }}>
                       {emailSentStatus ? (
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', alignItems: 'center' }}>
-                          <div style={{ fontSize: '11px', color: '#059669', fontWeight: '700' }}>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', alignItems: 'center', width: '100%', boxSizing: 'border-box' }}>
+                          <div style={{ fontSize: 'var(--font-caption)', color: '#059669', fontWeight: '700' }}>
                             ✉️ PIN successfully sent to your inbox!
                           </div>
                           <button 
                             type="button"
                             onClick={() => setEmailSentStatus(false)}
                             style={{
-                              background: 'none', border: 'none', color: '#C5A059', fontSize: '11px',
+                              background: 'none', border: 'none', color: '#C5A059', fontSize: 'var(--font-caption)',
                               fontWeight: '700', cursor: 'pointer', textDecoration: 'underline'
                             }}
                           >
@@ -423,11 +432,11 @@ export default function MemberAuthModal({ isOpen, onClose, initialPhone = '', cs
                           type="button"
                           onClick={handleAutomatedEmailRequest}
                           style={{
-                            background: 'none', border: 'none', color: '#C5A059', fontSize: '11.5px',
+                            background: 'none', border: 'none', color: '#C5A059', fontSize: 'var(--font-caption)',
                             fontWeight: '700', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '5px'
                           }}
                         >
-                          <Mail size={13} /> Send PIN via Email
+                          <Mail size={13} style={{ flexShrink: 0 }} /> Send PIN via Email
                         </button>
                       )}
                     </div>
@@ -435,7 +444,7 @@ export default function MemberAuthModal({ isOpen, onClose, initialPhone = '', cs
                 )}
 
                 {step === 'set_password' && (
-                  <form onSubmit={handleSavePassword} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                  <form onSubmit={handleSavePassword} style={{ display: 'flex', flexDirection: 'column', gap: '12px', width: '100%', boxSizing: 'border-box' }}>
                     <input 
                       type="password"
                       placeholder="Create Password (min 4 chars)"
@@ -444,7 +453,7 @@ export default function MemberAuthModal({ isOpen, onClose, initialPhone = '', cs
                       style={{
                         width: '100%', padding: '12px 14px', borderRadius: '12px',
                         border: '1px solid rgba(197, 160, 89, 0.5)', backgroundColor: '#FFF',
-                        fontSize: '13px', boxSizing: 'border-box', outline: 'none', color: '#1A1816'
+                        fontSize: 'var(--font-caption)', boxSizing: 'border-box', outline: 'none', color: '#1A1816'
                       }}
                     />
                     <input 
@@ -455,7 +464,7 @@ export default function MemberAuthModal({ isOpen, onClose, initialPhone = '', cs
                       style={{
                         width: '100%', padding: '12px 14px', borderRadius: '12px',
                         border: '1px solid rgba(197, 160, 89, 0.5)', backgroundColor: '#FFF',
-                        fontSize: '13px', boxSizing: 'border-box', outline: 'none', color: '#1A1816'
+                        fontSize: 'var(--font-caption)', boxSizing: 'border-box', outline: 'none', color: '#1A1816'
                       }}
                     />
 
@@ -465,18 +474,18 @@ export default function MemberAuthModal({ isOpen, onClose, initialPhone = '', cs
                       style={{
                         background: 'linear-gradient(135deg, #C5A059 0%, #A3803F 100%)',
                         color: '#FFF', border: 'none', borderRadius: '12px', padding: '12px',
-                        fontSize: '13.5px', fontWeight: '700', cursor: 'pointer', display: 'flex',
+                        fontSize: 'var(--font-body)', fontWeight: '700', cursor: 'pointer', display: 'flex',
                         alignItems: 'center', justifyContent: 'center', gap: '6px',
-                        boxShadow: '0 6px 16px rgba(197, 160, 89, 0.35)'
+                        boxShadow: '0 6px 16px rgba(197, 160, 89, 0.35)', width: '100%', boxSizing: 'border-box'
                       }}
                     >
-                      {loading ? 'Saving...' : 'Save & Login'} <KeyRound size={16} />
+                      {loading ? 'Saving...' : 'Save & Login'} <KeyRound size={16} style={{ flexShrink: 0 }} />
                     </button>
                   </form>
                 )}
 
                 {step === 'enter_password' && (
-                  <form onSubmit={handleLoginWithPassword} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                  <form onSubmit={handleLoginWithPassword} style={{ display: 'flex', flexDirection: 'column', gap: '12px', width: '100%', boxSizing: 'border-box' }}>
                     <input 
                       type="password"
                       placeholder="Enter your password"
@@ -485,7 +494,7 @@ export default function MemberAuthModal({ isOpen, onClose, initialPhone = '', cs
                       style={{
                         width: '100%', padding: '12px 14px', borderRadius: '12px',
                         border: '1px solid rgba(197, 160, 89, 0.5)', backgroundColor: '#FFF',
-                        fontSize: '13px', boxSizing: 'border-box', outline: 'none', color: '#1A1816'
+                        fontSize: 'var(--font-caption)', boxSizing: 'border-box', outline: 'none', color: '#1A1816'
                       }}
                     />
 
@@ -495,19 +504,19 @@ export default function MemberAuthModal({ isOpen, onClose, initialPhone = '', cs
                       style={{
                         background: 'linear-gradient(135deg, #C5A059 0%, #A3803F 100%)',
                         color: '#FFF', border: 'none', borderRadius: '12px', padding: '12px',
-                        fontSize: '13.5px', fontWeight: '700', cursor: 'pointer', display: 'flex',
+                        fontSize: 'var(--font-body)', fontWeight: '700', cursor: 'pointer', display: 'flex',
                         alignItems: 'center', justifyContent: 'center', gap: '6px',
-                        boxShadow: '0 6px 16px rgba(197, 160, 89, 0.35)'
+                        boxShadow: '0 6px 16px rgba(197, 160, 89, 0.35)', width: '100%', boxSizing: 'border-box'
                       }}
                     >
-                      {loading ? 'Signing In...' : 'Sign In'} <Lock size={16} />
+                      {loading ? 'Signing In...' : 'Sign In'} <Lock size={16} style={{ flexShrink: 0 }} />
                     </button>
 
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '2px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '2px', width: '100%', boxSizing: 'border-box', gap: '8px' }}>
                       <button 
                         type="button" 
                         onClick={() => setStep('phone')}
-                        style={{ background: 'none', border: 'none', color: '#8A6D2B', fontSize: '11.5px', fontWeight: '600', cursor: 'pointer' }}
+                        style={{ background: 'none', border: 'none', color: '#8A6D2B', fontSize: 'var(--font-caption)', fontWeight: '600', cursor: 'pointer', whiteSpace: 'nowrap' }}
                       >
                         Change Number
                       </button>
@@ -518,7 +527,7 @@ export default function MemberAuthModal({ isOpen, onClose, initialPhone = '', cs
                           setDynamicExpectedCode(extractedPin);
                           setStep('temp_code');
                         }}
-                        style={{ background: 'none', border: 'none', color: '#C5A059', fontSize: '11.5px', fontWeight: '700', cursor: 'pointer' }}
+                        style={{ background: 'none', border: 'none', color: '#C5A059', fontSize: 'var(--font-caption)', fontWeight: '700', cursor: 'pointer', whiteSpace: 'nowrap' }}
                       >
                         Forgot Password?
                       </button>

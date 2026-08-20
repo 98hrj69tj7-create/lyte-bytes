@@ -235,7 +235,6 @@ export default function DeliveryView({
   const currentMode = customer.fulfillmentType || 'DELIVERY';
   const whatsappNumber = "9108286886";
 
-  // Auto-Lookup Effect: When phone number hits 10 digits, query Orders Engine to auto-correct/fill name & details
   useEffect(() => {
     const phoneTrimmed = (customer.phone || '').trim();
     if (phoneTrimmed.length === 10) {
@@ -304,7 +303,7 @@ export default function DeliveryView({
     text: theme?.text || '#1A1816',
     border: theme?.border || '1px solid rgba(197, 160, 89, 0.4)',
     bg: theme?.bg || '#FFFDF9',
-    radius: theme?.radius || '20px',
+    radius: 'clamp(16px, 4vw, 20px)', // 💡 FLUID RADIUS
     buttonBg: theme?.buttonBg || '#FF5958'
   };
 
@@ -465,12 +464,12 @@ export default function DeliveryView({
 
   const sleekInput = {
     width: '100%',
-    padding: '12px 14px',
+    padding: 'clamp(10px, 3vw, 12px) clamp(12px, 3.5vw, 14px)', // 💡 FLUID PADDING
     borderRadius: '12px',
     border: '1px solid rgba(197, 160, 89, 0.4)',
     background: '#FFFFFF',
     color: activeTheme.text,
-    fontSize: '13px',
+    fontSize: 'var(--font-body)', // 💡 FLUID TYPOGRAPHY
     fontWeight: '500',
     outline: 'none',
     boxSizing: 'border-box',
@@ -500,7 +499,7 @@ export default function DeliveryView({
             alignItems: 'center', 
             gap: '6px', 
             color: activeTheme.text, 
-            fontSize: '13px', 
+            fontSize: 'var(--font-caption)', // 💡 FLUID TYPOGRAPHY
             fontWeight: '600', 
             padding: '6px 12px', 
             borderRadius: '12px', 
@@ -516,7 +515,7 @@ export default function DeliveryView({
           right: 0, 
           textAlign: 'center', 
           fontFamily: "'Cormorant Garamond', serif",
-          fontSize: '21px', 
+          fontSize: 'var(--font-h2)', // 💡 FLUID TYPOGRAPHY
           color: '#FF5958', 
           margin: 0, 
           fontWeight: '700', 
@@ -533,7 +532,7 @@ export default function DeliveryView({
         border: '1px solid rgba(197, 160, 89, 0.4)', 
         borderRadius: activeTheme.radius, 
         background: 'linear-gradient(135deg, #FFFDF9 0%, #FAF4EB 100%)', 
-        padding: '18px',
+        padding: 'clamp(14px, 4vw, 18px)', // 💡 FLUID PADDING
         boxShadow: '0 8px 24px rgba(44, 34, 30, 0.06)',
         display: 'flex',
         flexDirection: 'column',
@@ -545,13 +544,13 @@ export default function DeliveryView({
         {/* Contact Info */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', textAlign: 'left' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <div style={{ fontSize: '11px', fontWeight: '800', color: '#78716C', textTransform: 'uppercase', letterSpacing: '0.8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <div style={{ fontSize: 'clamp(9px, 2.5vw, 11px)', fontWeight: '800', color: '#78716C', textTransform: 'uppercase', letterSpacing: '0.8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
               1. Contact Info <span style={{ color: activeTheme.brand }}>*</span>
-              {isLookingUp && <Loader2 size={12} className="animate-spin" color={activeTheme.brand} />}
+              {isLookingUp && <Loader2 size={12} className="animate-spin" color={activeTheme.brand} style={{ flexShrink: 0 }} />}
             </div>
             <span 
               onClick={() => setIsPrivacyPolicyOpen(true)}
-              style={{ fontSize: '10.5px', color: activeTheme.brand, fontWeight: '700', cursor: 'pointer', textDecoration: 'underline' }}
+              style={{ fontSize: 'clamp(9.5px, 2.5vw, 10.5px)', color: activeTheme.brand, fontWeight: '700', cursor: 'pointer', textDecoration: 'underline' }}
             >
               Privacy & Compliance
             </span>
@@ -586,12 +585,12 @@ export default function DeliveryView({
         {/* Delivery Mode Switcher */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', textAlign: 'left' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <div style={{ fontSize: '11px', fontWeight: '800', color: '#78716C', textTransform: 'uppercase', letterSpacing: '0.8px' }}>
+            <div style={{ fontSize: 'clamp(9px, 2.5vw, 11px)', fontWeight: '800', color: '#78716C', textTransform: 'uppercase', letterSpacing: '0.8px' }}>
               2. Delivery Mode
             </div>
             <span 
               onClick={() => setIsDeliveryPolicyOpen(true)}
-              style={{ fontSize: '10.5px', color: activeTheme.brand, fontWeight: '700', cursor: 'pointer', textDecoration: 'underline' }}
+              style={{ fontSize: 'clamp(9.5px, 2.5vw, 10.5px)', color: activeTheme.brand, fontWeight: '700', cursor: 'pointer', textDecoration: 'underline' }}
             >
               Delivery Conditions
             </span>
@@ -609,7 +608,7 @@ export default function DeliveryView({
                 background: currentMode === 'DELIVERY' ? '#FFFFFF' : 'transparent',
                 color: currentMode === 'DELIVERY' ? activeTheme.brand : '#78716C',
                 fontWeight: '800',
-                fontSize: '12px',
+                fontSize: 'var(--font-caption)', // 💡 FLUID TYPOGRAPHY
                 cursor: 'pointer',
                 display: 'flex',
                 flexDirection: 'column',
@@ -617,13 +616,15 @@ export default function DeliveryView({
                 justifyContent: 'center',
                 gap: '2px',
                 boxShadow: currentMode === 'DELIVERY' ? '0 2px 8px rgba(0,0,0,0.06)' : 'none',
-                transition: 'all 0.2s ease'
+                transition: 'all 0.2s ease',
+                minWidth: 0
               }}
             >
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <Bike size={15} /> Delivery
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', minWidth: 0 }}>
+                <Bike size={15} style={{ flexShrink: 0 }} /> 
+                <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Delivery</span>
               </div>
-              <span style={{ fontSize: '9.5px', color: currentMode === 'DELIVERY' ? activeTheme.brand : '#78716C', fontWeight: '700' }}>
+              <span style={{ fontSize: 'clamp(8.5px, 2.5vw, 9.5px)', color: currentMode === 'DELIVERY' ? activeTheme.brand : '#78716C', fontWeight: '700', whiteSpace: 'nowrap' }}>
                 Est. ₹{distanceInfo.fee}
               </span>
             </button>
@@ -639,7 +640,7 @@ export default function DeliveryView({
                 background: currentMode === 'PICKUP' ? '#FFFFFF' : 'transparent',
                 color: currentMode === 'PICKUP' ? activeTheme.brand : '#78716C',
                 fontWeight: '800',
-                fontSize: '12px',
+                fontSize: 'var(--font-caption)', // 💡 FLUID TYPOGRAPHY
                 cursor: 'pointer',
                 display: 'flex',
                 flexDirection: 'column',
@@ -647,13 +648,15 @@ export default function DeliveryView({
                 justifyContent: 'center',
                 gap: '2px',
                 boxShadow: currentMode === 'PICKUP' ? '0 2px 8px rgba(0,0,0,0.06)' : 'none',
-                transition: 'all 0.2s ease'
+                transition: 'all 0.2s ease',
+                minWidth: 0
               }}
             >
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <ShoppingBag size={15} /> Self Pickup
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', minWidth: 0 }}>
+                <ShoppingBag size={15} style={{ flexShrink: 0 }} /> 
+                <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Self Pickup</span>
               </div>
-              <span style={{ fontSize: '9.5px', background: '#ECFDF5', color: '#059669', padding: '1px 6px', borderRadius: '6px', fontWeight: '800' }}>
+              <span style={{ fontSize: 'clamp(8.5px, 2.5vw, 9.5px)', background: '#ECFDF5', color: '#059669', padding: '1px 6px', borderRadius: '6px', fontWeight: '800', whiteSpace: 'nowrap' }}>
                 FREE (₹0)
               </span>
             </button>
@@ -661,8 +664,8 @@ export default function DeliveryView({
 
           {currentMode === 'DELIVERY' && (
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingLeft: '2px', paddingRight: '2px' }}>
-              <div style={{ fontSize: '11px', color: '#78716C', fontStyle: 'italic', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                <Navigation size={11} color={activeTheme.brand} />
+              <div style={{ fontSize: 'var(--font-caption)', color: '#78716C', fontStyle: 'italic', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                <Navigation size={11} color={activeTheme.brand} style={{ flexShrink: 0 }} />
                 Bengaluru deliveries only (Up to 30 km).
               </div>
             </div>
@@ -688,26 +691,27 @@ export default function DeliveryView({
               }} 
               style={{ 
                 width: '100%', padding: '11px', borderRadius: '12px', border: '1.5px dashed rgba(197, 160, 89, 0.6)',
-                background: '#FFFFFF', color: activeTheme.brand, cursor: 'pointer', fontWeight: '700', fontSize: '12px',
+                background: '#FFFFFF', color: activeTheme.brand, cursor: 'pointer', fontWeight: '700', fontSize: 'var(--font-body)',
                 display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '7px', boxSizing: 'border-box',
                 transition: 'all 0.2s ease'
               }}
             >
-              <MapPin size={16} /> Choose Location on Google Map
+              <MapPin size={16} style={{ flexShrink: 0 }} /> Choose Location on Google Map
             </button>
 
             <div style={{ 
               background: distanceInfo.invalid ? '#FEF2F2' : (distanceInfo.source === 'gps' ? '#ECFDF5' : 'rgba(197, 160, 89, 0.1)'), 
               border: `1px solid ${distanceInfo.invalid ? '#DC2626' : (distanceInfo.source === 'gps' ? '#059669' : 'rgba(197, 160, 89, 0.4)')}`, 
               borderRadius: '10px', padding: '10px 14px', display: 'flex', alignItems: 'center', 
-              justifyContent: 'space-between', fontSize: '12px', color: activeTheme.text, boxSizing: 'border-box'
+              justifyContent: 'space-between', fontSize: 'var(--font-body)', color: activeTheme.text, boxSizing: 'border-box', gap: '8px'
             }}>
-              <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                {distanceInfo.invalid && <AlertCircle size={14} color="#DC2626" />}
-                {distanceInfo.source === 'gps' && !distanceInfo.invalid && <CheckCircle2 size={14} color="#059669" />}
-                <strong>{distanceInfo.invalid ? 'Notice:' : 'Est. Distance:'}</strong> {distanceInfo.km}
+              <span style={{ display: 'flex', alignItems: 'center', gap: '6px', minWidth: 0 }}>
+                {distanceInfo.invalid && <AlertCircle size={14} color="#DC2626" style={{ flexShrink: 0 }} />}
+                {distanceInfo.source === 'gps' && !distanceInfo.invalid && <CheckCircle2 size={14} color="#059669" style={{ flexShrink: 0 }} />}
+                <strong style={{ whiteSpace: 'nowrap' }}>{distanceInfo.invalid ? 'Notice:' : 'Est. Distance:'}</strong> 
+                <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{distanceInfo.km}</span>
               </span>
-              <span style={{ fontWeight: '800', color: distanceInfo.invalid ? '#DC2626' : (distanceInfo.source === 'gps' ? '#059669' : activeTheme.brand) }}>
+              <span style={{ fontWeight: '800', color: distanceInfo.invalid ? '#DC2626' : (distanceInfo.source === 'gps' ? '#059669' : activeTheme.brand), flexShrink: 0, whiteSpace: 'nowrap' }}>
                 {distanceInfo.invalid ? 'Not Deliverable' : `Fee: ₹${distanceInfo.fee}`}
               </span>
             </div>
@@ -724,32 +728,33 @@ export default function DeliveryView({
                 marginTop: '2px',
                 boxSizing: 'border-box'
               }}>
-                <div style={{ fontSize: '11.5px', color: '#DC2626', fontWeight: '500', lineHeight: '1.4' }}>
+                <div style={{ fontSize: 'var(--font-caption)', color: '#DC2626', fontWeight: '500', lineHeight: '1.4' }}>
                   This location is outside our delivery zone. You can switch to **Self Pickup** or reach out to us directly via WhatsApp to coordinate special arrangements.
                 </div>
-                <div style={{ display: 'flex', gap: '8px', marginTop: '2px' }}>
+                {/* 💡 BULLETPROOF FLEX: minWidth: 0 ensures buttons wrap or scale nicely */}
+                <div style={{ display: 'flex', gap: '8px', marginTop: '2px', width: '100%', boxSizing: 'border-box' }}>
                   <button
                     type="button"
                     onClick={() => setFulfillmentMode('PICKUP')}
                     style={{
-                      flex: 1, padding: '9px 10px', background: activeTheme.brand, color: '#FFFFFF',
-                      border: 'none', borderRadius: '10px', fontSize: '11.5px', fontWeight: '800',
+                      flex: 1, minWidth: 0, padding: '9px 10px', background: activeTheme.brand, color: '#FFFFFF',
+                      border: 'none', borderRadius: '10px', fontSize: 'var(--font-caption)', fontWeight: '800',
                       cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '5px'
                     }}
                   >
-                    <ShoppingBag size={13} /> Switch to Pickup
+                    <ShoppingBag size={13} style={{ flexShrink: 0 }} /> <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>Switch to Pickup</span>
                   </button>
 
                   <button
                     type="button"
                     onClick={() => handleChatAndSave("Hi, I am trying to order from an out-of-coverage location and would like to discuss options.")}
                     style={{
-                      flex: 1, padding: '9px 10px', background: '#25D366', color: '#FFFFFF',
-                      border: 'none', borderRadius: '10px', fontSize: '11.5px', fontWeight: '800',
+                      flex: 1, minWidth: 0, padding: '9px 10px', background: '#25D366', color: '#FFFFFF',
+                      border: 'none', borderRadius: '10px', fontSize: 'var(--font-caption)', fontWeight: '800',
                       cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '5px'
                     }}
                   >
-                    <MessageCircle size={13} /> Chat on WhatsApp
+                    <MessageCircle size={13} style={{ flexShrink: 0 }} /> <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>Chat on WhatsApp</span>
                   </button>
                 </div>
               </div>
@@ -757,13 +762,13 @@ export default function DeliveryView({
           </div>
         ) : (
           <div style={{ background: '#FFFFFF', padding: '14px', borderRadius: '14px', border: '1px solid rgba(197, 160, 89, 0.4)', display: 'flex', alignItems: 'center', gap: '12px', textAlign: 'left', boxSizing: 'border-box' }}>
-            <div style={{ background: 'rgba(255, 89, 88, 0.08)', padding: '10px', borderRadius: '10px' }}>
+            <div style={{ background: 'rgba(255, 89, 88, 0.08)', padding: '10px', borderRadius: '10px', flexShrink: 0 }}>
               <MapPin size={22} color={activeTheme.brand} />
             </div>
-            <div>
-              <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '17px', fontWeight: '700', color: activeTheme.text }}>Lyte Bytes Kitchen</div>
-              <div style={{ fontSize: '11.5px', color: '#78716C', marginTop: '2px' }}>
-                Prakruti Township, Babusahibpalya, Bengaluru • <strong style={{ color: '#059669' }}>₹0 Delivery Fee</strong>
+            <div style={{ minWidth: 0, flex: 1 }}>
+              <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 'clamp(16px, 4vw, 18px)', fontWeight: '700', color: activeTheme.text }}>Lyte Bytes Kitchen</div>
+              <div style={{ fontSize: 'var(--font-caption)', color: '#78716C', marginTop: '2px', wordBreak: 'break-word' }}>
+                Prakruti Township, Babusahibpalya, Bengaluru • <strong style={{ color: '#059669', whiteSpace: 'nowrap' }}>₹0 Delivery Fee</strong>
               </div>
             </div>
           </div>
@@ -771,23 +776,23 @@ export default function DeliveryView({
 
         {/* Schedule Container */}
         <div style={{ borderTop: '1px solid rgba(197, 160, 89, 0.35)', paddingTop: '14px', width: '100%', boxSizing: 'border-box' }}>
-          <div style={{ fontSize: '11.5px', fontWeight: '700', color: '#78716C', letterSpacing: '0.8px', textTransform: 'uppercase', marginBottom: '8px', textAlign: 'center' }}>
+          <div style={{ fontSize: 'clamp(9.5px, 2.5vw, 11px)', fontWeight: '700', color: '#78716C', letterSpacing: '0.8px', textTransform: 'uppercase', marginBottom: '8px', textAlign: 'center' }}>
             {currentMode === 'DELIVERY' ? 'Preferred Delivery Time (Optional)' : 'Preferred Pickup Time (Optional)'}
           </div>
 
           <div style={{ border: '1px solid rgba(197, 160, 89, 0.4)', borderRadius: '12px', background: '#FFFFFF', padding: '10px 14px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', width: '100%', alignItems: 'center', boxSizing: 'border-box' }}>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', borderRight: '1px solid rgba(197, 160, 89, 0.3)', paddingRight: '8px', textAlign: 'left' }}>
-              <label style={{ fontSize: '11px', fontWeight: '600', color: '#78716C', textTransform: 'uppercase', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                <Calendar size={13} /> Date
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', borderRight: '1px solid rgba(197, 160, 89, 0.3)', paddingRight: '8px', textAlign: 'left', minWidth: 0 }}>
+              <label style={{ fontSize: 'clamp(9px, 2.5vw, 11px)', fontWeight: '600', color: '#78716C', textTransform: 'uppercase', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                <Calendar size={13} style={{ flexShrink: 0 }} /> Date
               </label>
-              <input type="date" value={deliveryDate || ''} onChange={(e) => setDeliveryDate(e.target.value)} style={{ border: 'none', background: 'transparent', color: activeTheme.text, fontSize: '12px', fontWeight: '600', outline: 'none', width: '100%', fontFamily: 'inherit' }} />
+              <input type="date" value={deliveryDate || ''} onChange={(e) => setDeliveryDate(e.target.value)} style={{ border: 'none', background: 'transparent', color: activeTheme.text, fontSize: 'var(--font-caption)', fontWeight: '600', outline: 'none', width: '100%', fontFamily: 'inherit' }} />
             </div>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', paddingLeft: '4px', textAlign: 'left' }}>
-              <label style={{ fontSize: '11px', fontWeight: '600', color: '#78716C', textTransform: 'uppercase', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                <Clock size={13} /> Slot / Time
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', paddingLeft: '4px', textAlign: 'left', minWidth: 0 }}>
+              <label style={{ fontSize: 'clamp(9px, 2.5vw, 11px)', fontWeight: '600', color: '#78716C', textTransform: 'uppercase', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                <Clock size={13} style={{ flexShrink: 0 }} /> Slot / Time
               </label>
-              <input type="time" value={deliveryTime || ''} onChange={(e) => setDeliveryTime(e.target.value)} style={{ border: 'none', background: 'transparent', color: activeTheme.text, fontSize: '12px', fontWeight: '600', outline: 'none', width: '100%', fontFamily: 'inherit' }} />
+              <input type="time" value={deliveryTime || ''} onChange={(e) => setDeliveryTime(e.target.value)} style={{ border: 'none', background: 'transparent', color: activeTheme.text, fontSize: 'var(--font-caption)', fontWeight: '600', outline: 'none', width: '100%', fontFamily: 'inherit' }} />
             </div>
           </div>
         </div>
@@ -803,8 +808,8 @@ export default function DeliveryView({
               background: 'linear-gradient(135deg, #FF5958 0%, #E11D48 100%)',
               border: '1px solid rgba(255, 255, 255, 0.2)',
               color: '#FFFFFF',
-              padding: '14px', 
-              fontSize: '15px', 
+              padding: 'clamp(12px, 3.5vw, 15px)', 
+              fontSize: 'var(--font-body)', 
               fontWeight: '600',
               borderRadius: '14px', 
               width: '100%', 
@@ -825,8 +830,8 @@ export default function DeliveryView({
               backgroundColor: 'rgba(197, 160, 89, 0.1)', 
               border: '1px solid rgba(197, 160, 89, 0.3)', 
               color: activeTheme.text,
-              padding: '12px', 
-              fontSize: '14px', 
+              padding: 'clamp(10px, 3vw, 12px)', 
+              fontSize: 'var(--font-body)', 
               fontWeight: '600',
               borderRadius: '14px', 
               width: '100%',
@@ -853,19 +858,19 @@ export default function DeliveryView({
           }}>
             <div style={{
               padding: '16px 20px', background: 'transparent', borderBottom: '1px solid rgba(197, 160, 89, 0.25)',
-              display: 'flex', alignItems: 'center', justifyContent: 'space-between'
+              display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px'
             }}>
-              <div style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: '700', fontSize: '20px', color: '#FF5958', flex: 1 }}>Select Delivery Location</div>
+              <div style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: '700', fontSize: 'var(--font-h2)', color: '#FF5958', flex: 1, minWidth: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Select Delivery Location</div>
               <button 
                 onClick={() => setIsMapModalOpen(false)}
-                style={{ background: 'rgba(255, 255, 255, 0.6)', border: '1px solid rgba(197, 160, 89, 0.3)', borderRadius: '50%', width: '28px', height: '28px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', padding: 0 }}
+                style={{ background: 'rgba(255, 255, 255, 0.6)', border: '1px solid rgba(197, 160, 89, 0.3)', borderRadius: '50%', width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', padding: 0, flexShrink: 0 }}
               >
                 <X size={16} color={activeTheme.text} />
               </button>
             </div>
 
-            <div style={{ padding: '12px 16px', background: 'rgba(197, 160, 89, 0.06)', borderBottom: '1px solid rgba(197, 160, 89, 0.2)', display: 'flex', gap: '8px', alignItems: 'center' }}>
-              <div style={{ position: 'relative', flex: 1 }}>
+            <div style={{ padding: '12px 16px', background: 'rgba(197, 160, 89, 0.06)', borderBottom: '1px solid rgba(197, 160, 89, 0.2)', display: 'flex', gap: '8px', alignItems: 'center', boxSizing: 'border-box' }}>
+              <div style={{ position: 'relative', flex: 1, minWidth: 0 }}>
                 <Search size={16} color="#78716C" style={{ position: 'absolute', left: '12px', top: '12px', pointerEvents: 'none' }} />
                 <input 
                   ref={searchInputRef}
@@ -878,7 +883,7 @@ export default function DeliveryView({
                     border: '1px solid rgba(197, 160, 89, 0.4)', 
                     background: '#FFFFFF', 
                     color: activeTheme.text,
-                    fontSize: '12.5px', 
+                    fontSize: 'var(--font-caption)', 
                     outline: 'none', 
                     boxSizing: 'border-box'
                   }}
@@ -891,7 +896,7 @@ export default function DeliveryView({
                 style={{
                   padding: '10px 14px', background: activeTheme.brand, color: '#FFFFFF', border: 'none',
                   borderRadius: '10px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  boxShadow: '0 2px 8px rgba(255, 89, 88, 0.3)'
+                  boxShadow: '0 2px 8px rgba(255, 89, 88, 0.3)', flexShrink: 0
                 }}
               >
                 <Crosshair size={16} />
@@ -901,7 +906,7 @@ export default function DeliveryView({
             <div ref={mapRef} style={{ flex: 1, width: '100%', background: '#eee' }} />
 
             <div style={{ padding: '16px 20px', background: 'transparent', borderTop: '1px solid rgba(197, 160, 89, 0.25)', display: 'flex', flexDirection: 'column', gap: '10px' }}>
-              <div style={{ fontSize: '12px', color: activeTheme.text, maxHeight: '50px', overflowY: 'auto', textAlign: 'left' }}>
+              <div style={{ fontSize: 'var(--font-caption)', color: activeTheme.text, maxHeight: '50px', overflowY: 'auto', textAlign: 'left' }}>
                 <strong style={{ color: activeTheme.brand }}>Selected Address:</strong> {tempAddress || 'Drop pin or search area'}
               </div>
 
@@ -909,22 +914,22 @@ export default function DeliveryView({
                 background: tempDistanceInfo.invalid ? '#FEF2F2' : '#ECFDF5', 
                 border: `1px solid ${tempDistanceInfo.invalid ? '#DC2626' : '#059669'}`, 
                 borderRadius: '10px', padding: '9px 12px', display: 'flex', alignItems: 'center', 
-                justifyContent: 'space-between', fontSize: '12px'
+                justifyContent: 'space-between', fontSize: 'var(--font-caption)', gap: '8px'
               }}>
-                <span style={{ fontWeight: '700', color: tempDistanceInfo.invalid ? '#DC2626' : '#059669' }}>
+                <span style={{ fontWeight: '700', color: tempDistanceInfo.invalid ? '#DC2626' : '#059669', minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                   {tempDistanceInfo.invalid ? 'Out of Bengaluru Coverage' : `Est. Distance: ${tempDistanceInfo.km}`}
                 </span>
-                <span style={{ fontWeight: '800', color: tempDistanceInfo.invalid ? '#DC2626' : '#059669' }}>
+                <span style={{ fontWeight: '800', color: tempDistanceInfo.invalid ? '#DC2626' : '#059669', flexShrink: 0, whiteSpace: 'nowrap' }}>
                   {tempDistanceInfo.invalid ? 'Unavailable' : `Fee: ₹${tempDistanceInfo.fee}`}
                 </span>
               </div>
 
               {tempDistanceInfo.invalid ? (
-                <div style={{ display: 'flex', gap: '8px' }}>
+                <div style={{ display: 'flex', gap: '8px', width: '100%', boxSizing: 'border-box' }}>
                   <button 
                     type="button"
                     onClick={() => setIsMapModalOpen(false)}
-                    style={{ flex: 1, padding: '11px', background: '#78716C', color: '#FFFFFF', border: 'none', borderRadius: '10px', fontWeight: '700', fontSize: '12.5px', cursor: 'pointer' }}
+                    style={{ flex: 1, minWidth: 0, padding: '11px', background: '#78716C', color: '#FFFFFF', border: 'none', borderRadius: '10px', fontWeight: '700', fontSize: 'var(--font-caption)', cursor: 'pointer' }}
                   >
                     Cancel
                   </button>
@@ -932,12 +937,12 @@ export default function DeliveryView({
                     type="button"
                     onClick={() => handleChatAndSave("Hi, I am trying to order from an out-of-coverage location via map pin and would like to discuss options.")}
                     style={{
-                      flex: 1, padding: '11px', background: '#25D366', color: '#FFFFFF',
-                      border: 'none', borderRadius: '10px', fontWeight: '700', fontSize: '12.5px',
+                      flex: 1, minWidth: 0, padding: '11px', background: '#25D366', color: '#FFFFFF',
+                      border: 'none', borderRadius: '10px', fontWeight: '700', fontSize: 'var(--font-caption)',
                       cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '5px'
                     }}
                   >
-                    <MessageCircle size={14} /> Chat on WhatsApp
+                    <MessageCircle size={14} style={{ flexShrink: 0 }} /> <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>Chat on WhatsApp</span>
                   </button>
                 </div>
               ) : (
@@ -959,7 +964,7 @@ export default function DeliveryView({
                   }}
                   style={{
                     width: '100%', padding: '13px', background: 'linear-gradient(135deg, #FF5958 0%, #E11D48 100%)', color: '#FFFFFF',
-                    border: 'none', borderRadius: '12px', fontWeight: '700', fontSize: '13.5px', cursor: 'pointer',
+                    border: 'none', borderRadius: '12px', fontWeight: '700', fontSize: 'var(--font-body)', cursor: 'pointer',
                     boxShadow: '0 4px 14px rgba(255, 89, 88, 0.3)'
                   }}
                 >

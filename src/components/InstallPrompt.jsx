@@ -76,6 +76,10 @@ export default function InstallPrompt({ theme = {} }) {
 
   if (!showBanner) return null;
 
+  const activeTheme = {
+    radius: 'clamp(20px, 5vw, 24px)' // 💡 FLUID RADIUS
+  };
+
   return (
     <div 
       onClick={handleDismiss}
@@ -101,8 +105,8 @@ export default function InstallPrompt({ theme = {} }) {
         onClick={(e) => e.stopPropagation()}
         style={{
           background: 'linear-gradient(135deg, #FFFDF9 0%, #FAF4EB 100%)', 
-          borderRadius: '24px', 
-          padding: '24px',
+          borderRadius: activeTheme.radius, 
+          padding: 'clamp(18px, 5vw, 24px)', // 💡 FLUID PADDING
           maxWidth: '360px', 
           width: '100%', 
           boxSizing: 'border-box',
@@ -129,7 +133,8 @@ export default function InstallPrompt({ theme = {} }) {
             padding: '4px',
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'center'
+            justifyContent: 'center',
+            flexShrink: 0
           }}
         >
           <X size={18} />
@@ -145,17 +150,18 @@ export default function InstallPrompt({ theme = {} }) {
             height: '56px',
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'center'
+            justifyContent: 'center',
+            flexShrink: 0
           }}>
             {isIos ? <Share2 size={26} color="#FF5958" /> : <Download size={26} color="#FF5958" />}
           </div>
         </div>
 
         {/* Title & Description */}
-        <div>
+        <div style={{ minWidth: 0 }}>
           <h3 style={{ 
             fontFamily: "'Cormorant Garamond', serif", 
-            fontSize: '21px', 
+            fontSize: 'var(--font-h2)', // 💡 FLUID TYPOGRAPHY
             fontWeight: '700', 
             color: '#1A1816', 
             margin: '0 0 8px 0',
@@ -165,7 +171,7 @@ export default function InstallPrompt({ theme = {} }) {
             Install Lyte Bytes
           </h3>
           <p style={{ 
-            fontSize: '12.5px', 
+            fontSize: 'var(--font-caption)', // 💡 FLUID TYPOGRAPHY
             color: '#78716C', 
             margin: 0, 
             lineHeight: '1.45',
@@ -178,16 +184,17 @@ export default function InstallPrompt({ theme = {} }) {
         </div>
 
         {/* Action Buttons */}
-        <div style={{ display: 'flex', gap: '10px', marginTop: '4px' }}>
+        <div style={{ display: 'flex', gap: '10px', marginTop: '4px', width: '100%', boxSizing: 'border-box' }}>
           <button 
             onClick={handleDismiss}
             style={{
               flex: 1,
+              minWidth: 0,
               backgroundColor: 'rgba(197, 160, 89, 0.1)',
               color: '#1A1816',
               border: '1px solid rgba(197, 160, 89, 0.3)',
-              padding: '12px',
-              fontSize: '14px',
+              padding: 'clamp(10px, 3vw, 12px)',
+              fontSize: 'var(--font-body)', // 💡 FLUID TYPOGRAPHY
               fontWeight: '600',
               borderRadius: '14px',
               cursor: 'pointer'
@@ -201,11 +208,12 @@ export default function InstallPrompt({ theme = {} }) {
               onClick={handleInstallClick}
               style={{
                 flex: 1,
+                minWidth: 0,
                 border: '1px solid rgba(255, 255, 255, 0.2)',
                 background: 'linear-gradient(135deg, #FF5958 0%, #E11D48 100%)',
                 color: '#FFFFFF',
-                padding: '12px',
-                fontSize: '14px',
+                padding: 'clamp(10px, 3vw, 12px)',
+                fontSize: 'var(--font-body)', // 💡 FLUID TYPOGRAPHY
                 fontWeight: '600',
                 borderRadius: '14px',
                 cursor: 'pointer',

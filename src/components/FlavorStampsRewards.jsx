@@ -100,7 +100,7 @@ export default function FlavorStampsRewards({
 
   const brandColor = theme.brand || '#FF5958';
   const textColor = theme.text || '#1A1816';
-  const radius = theme.radius || '20px';
+  const radius = theme.radius || 'clamp(16px, 4vw, 20px)'; // 💡 FLUID RADIUS
 
   const hasBronzeMilestoneUnlocked = isBronzeTier && orderCount >= minOrdersForFirstMilestone;
   const hasOtherMilestonesUnlocked = orderCount >= 6;
@@ -111,13 +111,14 @@ export default function FlavorStampsRewards({
     background: '#FFFDF9',
     border: '1px solid rgba(197, 160, 89, 0.4)',
     borderRadius: radius,
-    padding: '12px',
+    padding: 'clamp(10px, 3vw, 12px)', // 💡 FLUID PADDING
     display: 'flex',
     flexDirection: 'column',
     gap: '6px',
     boxSizing: 'border-box',
     boxShadow: '0 4px 16px rgba(44, 34, 30, 0.04)',
-    width: '100%'
+    width: '100%',
+    minWidth: 0
   };
 
   const iconBoxStyle = {
@@ -128,44 +129,46 @@ export default function FlavorStampsRewards({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    boxShadow: '0 2px 5px rgba(0,0,0,0.02)'
+    boxShadow: '0 2px 5px rgba(0,0,0,0.02)',
+    flexShrink: 0
   };
 
   const badgeStyle = {
-    fontSize: '9.5px',
+    fontSize: 'clamp(8.5px, 2.5vw, 9.5px)', // 💡 FLUID BADGE TYPOGRAPHY
     fontWeight: '800',
     backgroundColor: '#FFFFFF',
     padding: '1px 6px',
     borderRadius: '8px',
     border: '1px solid rgba(197, 160, 89, 0.3)',
     whiteSpace: 'nowrap',
-    letterSpacing: '0.3px'
+    letterSpacing: '0.3px',
+    flexShrink: 0
   };
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', width: '100%', boxSizing: 'border-box', fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
       
       {/* Flavor Stamps + Streak Grid */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', width: '100%' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', width: '100%', boxSizing: 'border-box' }}>
         
         {/* Flavor Stamps Card */}
         <div style={cardStyle}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', gap: '4px', minWidth: 0 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', minWidth: 0 }}>
               <div style={iconBoxStyle}>
                 <StampIcon size={18} color={stamp.color} />
               </div>
-              <span style={{ fontSize: '11px', fontWeight: '800', color: textColor, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Stamps</span>
+              <span style={{ fontSize: 'var(--font-caption)', fontWeight: '800', color: textColor, textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Stamps</span>
             </div>
             <span style={{ ...badgeStyle, color: stamp.color }}>
               {stamp.level}
             </span>
           </div>
-          <div>
-            <div style={{ fontSize: '18px', fontWeight: '900', color: stamp.color, letterSpacing: '-0.3px', lineHeight: '1.2' }}>
+          <div style={{ minWidth: 0 }}>
+            <div style={{ fontSize: 'clamp(15px, 4vw, 18px)', fontWeight: '900', color: stamp.color, letterSpacing: '-0.3px', lineHeight: '1.2', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
               {orderCount} Stamps
             </div>
-            <div style={{ fontSize: '10px', color: '#78716C', fontWeight: '700', marginTop: '1px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+            <div style={{ fontSize: 'clamp(9px, 2.5vw, 10px)', color: '#78716C', fontWeight: '700', marginTop: '1px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
               {orderCount >= minOrdersForFirstMilestone ? `🎖️ ${stamp.name}` : `Collect ${minOrdersForFirstMilestone - orderCount} more`}
             </div>
           </div>
@@ -173,20 +176,20 @@ export default function FlavorStampsRewards({
 
         {/* Order Streak Card */}
         <div style={cardStyle}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', gap: '4px', minWidth: 0 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', minWidth: 0 }}>
               <div style={iconBoxStyle}>
                 <Flame size={16} color={streak.color} />
               </div>
-              <span style={{ fontSize: '10px', fontWeight: '800', color: textColor, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Streak</span>
+              <span style={{ fontSize: 'var(--font-caption)', fontWeight: '800', color: textColor, textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Streak</span>
             </div>
             <span style={{ ...badgeStyle, color: streak.color }}>
               {streak.level}
             </span>
           </div>
-          <div>
-            <div style={{ fontSize: '16px', fontWeight: '800', color: streak.color, letterSpacing: '-0.3px', lineHeight: '1.2', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{streak.title}</div>
-            <div style={{ fontSize: '10px', color: '#78716C', fontWeight: '600', marginTop: '1px' }}>{streak.subtitle}</div>
+          <div style={{ minWidth: 0 }}>
+            <div style={{ fontSize: 'clamp(14px, 3.5vw, 16px)', fontWeight: '800', color: streak.color, letterSpacing: '-0.3px', lineHeight: '1.2', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{streak.title}</div>
+            <div style={{ fontSize: 'clamp(9px, 2.5vw, 10px)', color: '#78716C', fontWeight: '600', marginTop: '1px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{streak.subtitle}</div>
           </div>
         </div>
       </div>
@@ -197,21 +200,22 @@ export default function FlavorStampsRewards({
           background: 'linear-gradient(135deg, #FFFFFF 0%, #FAF6ED 100%)', 
           border: '1.5px solid rgba(197, 160, 89, 0.45)', 
           borderRadius: radius, 
-          padding: '16px', 
+          padding: 'clamp(12px, 3.5vw, 16px)', // 💡 FLUID PADDING
           display: 'flex', 
           flexDirection: 'column', 
           gap: '12px', 
           boxSizing: 'border-box',
-          boxShadow: '0 6px 20px rgba(44, 34, 30, 0.04)'
+          boxShadow: '0 6px 20px rgba(44, 34, 30, 0.04)',
+          width: '100%'
         }}>
-          <div style={{ fontSize: '10.5px', fontWeight: '800', color: '#78716C', textTransform: 'uppercase', letterSpacing: '0.8px' }}>
+          <div style={{ fontSize: 'clamp(9.5px, 2.5vw, 10.5px)', fontWeight: '800', color: '#78716C', textTransform: 'uppercase', letterSpacing: '0.8px', textAlign: 'left' }}>
             🎁 Milestone Reward Unlocks
           </div>
 
           {/* First Milestone: Bronze Tier + At least 2 Orders Completed */}
           {hasBronzeMilestoneUnlocked && (
             <div style={{ 
-              padding: '12px 14px', 
+              padding: 'clamp(10px, 3vw, 12px) clamp(12px, 3.5vw, 14px)', 
               background: '#FFFDF9', 
               borderRadius: '14px', 
               border: '1px solid rgba(197, 160, 89, 0.3)', 
@@ -219,15 +223,17 @@ export default function FlavorStampsRewards({
               alignItems: 'center', 
               justifyContent: 'space-between', 
               gap: '12px',
-              boxShadow: '0 2px 8px rgba(0,0,0,0.01)'
+              boxShadow: '0 2px 8px rgba(0,0,0,0.01)',
+              boxSizing: 'border-box',
+              width: '100%'
             }}>
-              <div style={{ textAlign: 'left' }}>
-                <div style={{ fontSize: '13px', fontWeight: '700', color: textColor }}>Sugar Spark</div>
-                <div style={{ fontSize: '11px', color: '#78716C', fontWeight: '500', marginTop: '1px' }}>Bronze Milestone (2 Orders Completed)</div>
+              <div style={{ textAlign: 'left', minWidth: 0, flex: 1 }}>
+                <div style={{ fontSize: 'var(--font-body)', fontWeight: '700', color: textColor, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Sugar Spark</div>
+                <div style={{ fontSize: 'var(--font-caption)', color: '#78716C', fontWeight: '500', marginTop: '1px' }}>Bronze Milestone (2 Orders Completed)</div>
               </div>
               {whiskClaimed ? (
-                <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '11px', fontWeight: '600', color: '#059669', background: '#ECFDF5', padding: '4px 10px', borderRadius: '10px', flexShrink: 0, border: '1px solid rgba(5, 150, 105, 0.2)' }}>
-                  <Check size={13} strokeWidth={3} /> Claimed
+                <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: 'var(--font-caption)', fontWeight: '600', color: '#059669', background: '#ECFDF5', padding: '4px 10px', borderRadius: '10px', flexShrink: 0, border: '1px solid rgba(5, 150, 105, 0.2)' }}>
+                  <Check size={13} strokeWidth={3} style={{ flexShrink: 0 }} /> Claimed
                 </div>
               ) : (
                 <button 
@@ -237,10 +243,10 @@ export default function FlavorStampsRewards({
                     background: brandColor, 
                     color: '#FFF', 
                     border: 'none', 
-                    padding: '6px 14px', 
+                    padding: 'clamp(6px, 2vw, 8px) clamp(12px, 3.5vw, 14px)', 
                     borderRadius: '10px', 
                     fontWeight: '700', 
-                    fontSize: '11.5px', 
+                    fontSize: 'var(--font-caption)', 
                     cursor: 'pointer', 
                     flexShrink: 0,
                     boxShadow: '0 4px 12px rgba(255, 89, 88, 0.25)',
@@ -256,7 +262,7 @@ export default function FlavorStampsRewards({
           {/* 6 Stamps: Mini Surprise */}
           {orderCount >= 6 && (
             <div style={{ 
-              padding: '12px 14px', 
+              padding: 'clamp(10px, 3vw, 12px) clamp(12px, 3.5vw, 14px)', 
               background: '#FFFDF9', 
               borderRadius: '14px', 
               border: '1px solid rgba(197, 160, 89, 0.3)', 
@@ -264,15 +270,17 @@ export default function FlavorStampsRewards({
               alignItems: 'center', 
               justifyContent: 'space-between', 
               gap: '12px',
-              boxShadow: '0 2px 8px rgba(0,0,0,0.01)'
+              boxShadow: '0 2px 8px rgba(0,0,0,0.01)',
+              boxSizing: 'border-box',
+              width: '100%'
             }}>
-              <div style={{ textAlign: 'left' }}>
-                <div style={{ fontSize: '13px', fontWeight: '700', color: textColor }}>Caramel Craft</div>
-                <div style={{ fontSize: '11px', color: '#78716C', fontWeight: '500', marginTop: '1px' }}>Sovereign Perk (6 Stamps)</div>
+              <div style={{ textAlign: 'left', minWidth: 0, flex: 1 }}>
+                <div style={{ fontSize: 'var(--font-body)', fontWeight: '700', color: textColor, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Caramel Craft</div>
+                <div style={{ fontSize: 'var(--font-caption)', color: '#78716C', fontWeight: '500', marginTop: '1px' }}>Sovereign Perk (6 Stamps)</div>
               </div>
               {sovereignClaimed ? (
-                <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '11px', fontWeight: '600', color: '#059669', background: '#ECFDF5', padding: '4px 10px', borderRadius: '10px', flexShrink: 0, border: '1px solid rgba(5, 150, 105, 0.2)' }}>
-                  <Check size={13} strokeWidth={3} /> Claimed
+                <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: 'var(--font-caption)', fontWeight: '600', color: '#059669', background: '#ECFDF5', padding: '4px 10px', borderRadius: '10px', flexShrink: 0, border: '1px solid rgba(5, 150, 105, 0.2)' }}>
+                  <Check size={13} strokeWidth={3} style={{ flexShrink: 0 }} /> Claimed
                 </div>
               ) : (
                 <button 
@@ -282,10 +290,10 @@ export default function FlavorStampsRewards({
                     background: brandColor, 
                     color: '#FFF', 
                     border: 'none', 
-                    padding: '6px 14px', 
+                    padding: 'clamp(6px, 2vw, 8px) clamp(12px, 3.5vw, 14px)', 
                     borderRadius: '10px', 
                     fontWeight: '700', 
-                    fontSize: '11.5px', 
+                    fontSize: 'var(--font-caption)', 
                     cursor: 'pointer', 
                     flexShrink: 0,
                     boxShadow: '0 4px 12px rgba(255, 89, 88, 0.25)',
@@ -301,7 +309,7 @@ export default function FlavorStampsRewards({
           {/* 9 Stamps: Free Delivery & 10% Off */}
           {orderCount >= 9 && (
             <div style={{ 
-              padding: '12px 14px', 
+              padding: 'clamp(10px, 3vw, 12px) clamp(12px, 3.5vw, 14px)', 
               background: '#FFFDF9', 
               borderRadius: '14px', 
               border: '1px solid rgba(197, 160, 89, 0.3)', 
@@ -309,15 +317,17 @@ export default function FlavorStampsRewards({
               alignItems: 'center', 
               justifyContent: 'space-between', 
               gap: '12px',
-              boxShadow: '0 2px 8px rgba(0,0,0,0.01)'
+              boxShadow: '0 2px 8px rgba(0,0,0,0.01)',
+              boxSizing: 'border-box',
+              width: '100%'
             }}>
-              <div style={{ textAlign: 'left', maxWidth: '68%' }}>
-                <div style={{ fontSize: '12px', fontWeight: '700', color: textColor, lineHeight: '1.25' }}>The Alchemist’s Crust</div>
-                <div style={{ fontSize: '10.5px', color: '#78716C', fontWeight: '500', marginTop: '1px' }}>Grandmaster Perk (9 Stamps)</div>
+              <div style={{ textAlign: 'left', minWidth: 0, flex: 1 }}>
+                <div style={{ fontSize: 'var(--font-body)', fontWeight: '700', color: textColor, lineHeight: '1.25', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>The Alchemist’s Crust</div>
+                <div style={{ fontSize: 'clamp(9.5px, 2.5vw, 10.5px)', color: '#78716C', fontWeight: '500', marginTop: '1px' }}>Grandmaster Perk (9 Stamps)</div>
               </div>
               {grandmasterClaimed ? (
-                <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '11px', fontWeight: '600', color: '#059669', background: '#ECFDF5', padding: '4px 10px', borderRadius: '10px', flexShrink: 0, border: '1px solid rgba(5, 150, 105, 0.2)' }}>
-                  <Check size={13} strokeWidth={3} /> Claimed
+                <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: 'var(--font-caption)', fontWeight: '600', color: '#059669', background: '#ECFDF5', padding: '4px 10px', borderRadius: '10px', flexShrink: 0, border: '1px solid rgba(5, 150, 105, 0.2)' }}>
+                  <Check size={13} strokeWidth={3} style={{ flexShrink: 0 }} /> Claimed
                 </div>
               ) : (
                 <button 
@@ -327,10 +337,10 @@ export default function FlavorStampsRewards({
                     background: brandColor, 
                     color: '#FFF', 
                     border: 'none', 
-                    padding: '6px 14px', 
+                    padding: 'clamp(6px, 2vw, 8px) clamp(12px, 3.5vw, 14px)', 
                     borderRadius: '10px', 
                     fontWeight: '700', 
-                    fontSize: '11.5px', 
+                    fontSize: 'var(--font-caption)', 
                     cursor: 'pointer', 
                     flexShrink: 0,
                     boxShadow: '0 4px 12px rgba(255, 89, 88, 0.25)',
@@ -346,7 +356,7 @@ export default function FlavorStampsRewards({
           {/* 12 Stamps: Gift Voucher */}
           {orderCount >= 12 && (
             <div style={{ 
-              padding: '12px 14px', 
+              padding: 'clamp(10px, 3vw, 12px) clamp(12px, 3.5vw, 14px)', 
               background: '#FFFDF9', 
               borderRadius: '14px', 
               border: '1px solid rgba(197, 160, 89, 0.3)', 
@@ -354,15 +364,17 @@ export default function FlavorStampsRewards({
               alignItems: 'center', 
               justifyContent: 'space-between', 
               gap: '12px',
-              boxShadow: '0 2px 8px rgba(0,0,0,0.01)'
+              boxShadow: '0 2px 8px rgba(0,0,0,0.01)',
+              boxSizing: 'border-box',
+              width: '100%'
             }}>
-              <div style={{ textAlign: 'left' }}>
-                <div style={{ fontSize: '13px', fontWeight: '700', color: textColor }}>The Golden Recipe</div>
-                <div style={{ fontSize: '11px', color: '#78716C', fontWeight: '500', marginTop: '1px' }}>Emperor Perk (12 Stamps)</div>
+              <div style={{ textAlign: 'left', minWidth: 0, flex: 1 }}>
+                <div style={{ fontSize: 'var(--font-body)', fontWeight: '700', color: textColor, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>The Golden Recipe</div>
+                <div style={{ fontSize: 'var(--font-caption)', color: '#78716C', fontWeight: '500', marginTop: '1px' }}>Emperor Perk (12 Stamps)</div>
               </div>
               {emperorClaimed ? (
-                <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '11px', fontWeight: '600', color: '#059669', background: '#ECFDF5', padding: '4px 10px', borderRadius: '10px', flexShrink: 0, border: '1px solid rgba(5, 150, 105, 0.2)' }}>
-                  <Check size={13} strokeWidth={3} /> Claimed
+                <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: 'var(--font-caption)', fontWeight: '600', color: '#059669', background: '#ECFDF5', padding: '4px 10px', borderRadius: '10px', flexShrink: 0, border: '1px solid rgba(5, 150, 105, 0.2)' }}>
+                  <Check size={13} strokeWidth={3} style={{ flexShrink: 0 }} /> Claimed
                 </div>
               ) : (
                 <button 
@@ -372,10 +384,10 @@ export default function FlavorStampsRewards({
                     background: brandColor, 
                     color: '#FFF', 
                     border: 'none', 
-                    padding: '6px 14px', 
+                    padding: 'clamp(6px, 2vw, 8px) clamp(12px, 3.5vw, 14px)', 
                     borderRadius: '10px', 
                     fontWeight: '700', 
-                    fontSize: '11.5px', 
+                    fontSize: 'var(--font-caption)', 
                     cursor: 'pointer', 
                     flexShrink: 0,
                     boxShadow: '0 4px 12px rgba(255, 89, 88, 0.25)',

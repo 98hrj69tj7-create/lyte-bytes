@@ -6,67 +6,70 @@ import {
 } from 'lucide-react';
 
 // ============================================================================
-// 🎨 GLOBAL DESIGN SYSTEM & STYLING CONFIGURATION
+// 🎨 GLOBAL DESIGN SYSTEM & STYLING CONFIGURATION (FLUID SCALING)
 // ============================================================================
 
-// Controls the card container: golden ticket dashed border, warm cream gradient, and padding
 const cardStyle = {
-  border: '1px dashed #C5A059',                          // Golden ticket dashed border
-  borderRadius: '14px',                                  // Rounded corners for the card
-  padding: '12px 14px',                                  // Internal spacing (Top/Bottom, Left/Right)
-  background: 'linear-gradient(135deg, #FFFDF9 0%, #FAF4EB 100%)', // Rich warm cream gradient
+  border: '1px dashed #C5A059',
+  borderRadius: '14px',
+  padding: 'clamp(10px, 3vw, 14px) clamp(12px, 3.5vw, 16px)', // 💡 FLUID PADDING
+  background: 'linear-gradient(135deg, #FFFDF9 0%, #FAF4EB 100%)',
   display: 'flex',
   flexDirection: 'column',
-  gap: '4px',                                            // Spacing between the title row and body text
-  boxShadow: '0 4px 16px rgba(44, 34, 30, 0.04)',        // Subtle card shadow
-  boxSizing: 'border-box'
+  gap: '6px',
+  boxShadow: '0 4px 16px rgba(44, 34, 30, 0.04)',
+  boxSizing: 'border-box',
+  minWidth: 0,
+  width: '100%'
 };
 
-// Controls the header alignment inside each micro-card (Icon + Title)
 const headerRowStyle = {
   display: 'flex',
   alignItems: 'center',
-  gap: '8px'                                             // Space between the icon and heading title text
+  gap: '8px',
+  minWidth: 0
 };
 
-// Controls the background and sizing of the icon container
 const iconBoxStyle = {
   padding: '0px',
   borderRadius: '8px',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
+  flexShrink: 0
 };
 
-// Controls the typography of card titles (Serif font, weight, letter spacing)
 const titleStyle = {
   fontFamily: "'Cormorant Garamond', serif",
-  fontSize: '17px',                                      // Adjusted for elegant serif presence
-  fontWeight: '700',                                     // Bold serif weight
+  fontSize: 'clamp(16px, 4.5vw, 18px)', // 💡 FLUID TYPOGRAPHY
+  fontWeight: '700',
   letterSpacing: '0.3px',
-  color: '#1A1816',                                      // Rich charcoal title text color
-  margin: 0
+  color: '#1A1816',
+  margin: 0,
+  whiteSpace: 'nowrap',
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  minWidth: 0
 };
 
-// Controls the typography and line height of the policy description body text
 const textStyle = {
   margin: 0,
-  fontSize: '12px',                                      // Clean readable body text size
+  fontSize: 'clamp(11.5px, 3.2vw, 12.5px)', // 💡 FLUID TYPOGRAPHY
   fontWeight: '500',
-  lineHeight: '1.45',                                    // Line spacing for readability
-  color: '#78716C',                                      // Muted warm grey body text color
+  lineHeight: '1.45',
+  color: '#78716C',
   textAlign: 'left',
-  paddingLeft: '0px'
+  minWidth: 0
 };
 
-// Controls the overall outer wrapper spacing between all cards in a modal
 const containerStyle = {
   display: 'flex',
   flexDirection: 'column',
-  gap: '12px',                                           // Vertical gap/space between individual policy cards
+  gap: '12px',
   width: '100%',
   boxSizing: 'border-box',
-  fontFamily: "'Plus Jakarta Sans', sans-serif"
+  fontFamily: "'Plus Jakarta Sans', sans-serif",
+  minWidth: 0
 };
 
 // ==========================================

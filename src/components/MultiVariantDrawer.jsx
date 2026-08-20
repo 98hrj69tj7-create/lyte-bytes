@@ -15,7 +15,7 @@ export default function MultiVariantDrawer({ selectedItem, setSelectedItem, addT
     text: theme?.text || '#1A1816',
     border: theme?.border || '1px solid #FF5958',
     bg: theme?.bg || '#FFFDF9',
-    radius: theme?.radius || '20px',
+    radius: theme?.radius || 'clamp(16px, 4vw, 20px)', // 💡 FLUID RADIUS
   };
 
   const handleIncrement = (index) => {
@@ -57,20 +57,21 @@ export default function MultiVariantDrawer({ selectedItem, setSelectedItem, addT
         alignItems: 'flex-end', 
         justifyContent: 'center',
         paddingBottom: '85px',
-        boxSizing: 'border-box'
+        boxSizing: 'border-box',
+        padding: '16px'
       }}
     >
       <div 
         onClick={(e) => e.stopPropagation()} 
         style={{ 
-          width: '90%', 
+          width: '100%', 
           maxWidth: '440px', 
           background: 'linear-gradient(135deg, #FFFDF9 0%, #FAF4EB 100%)', 
           borderRadius: activeTheme.radius,
           zIndex: 1101,
           maxHeight: '75vh', 
           overflowY: 'auto',
-          padding: '16px 20px 24px 20px', 
+          padding: 'clamp(14px, 4vw, 16px) clamp(16px, 5vw, 20px) clamp(18px, 5vw, 24px) clamp(16px, 5vw, 20px)', // 💡 FLUID PADDING
           boxShadow: '0 20px 50px rgba(0, 0, 0, 0.35)',
           border: activeTheme.border,
           boxSizing: 'border-box',
@@ -79,27 +80,30 @@ export default function MultiVariantDrawer({ selectedItem, setSelectedItem, addT
         }}
       >
         {/* Drag Handle */}
-        <div style={{ width: '38px', height: '4px', backgroundColor: '#C5A059', opacity: 0.5, borderRadius: '2px', margin: '0 auto 16px auto' }} />
+        <div style={{ width: '38px', height: '4px', backgroundColor: '#C5A059', opacity: 0.5, borderRadius: '2px', margin: '0 auto 16px auto', flexShrink: 0 }} />
 
         {/* Header */}
-        <div style={{ textAlign: 'center', marginBottom: '10px', paddingBottom: '6px' }}>
+        <div style={{ textAlign: 'center', marginBottom: '10px', paddingBottom: '6px', minWidth: 0 }}>
           <h3 style={{ 
             margin: '0 0 3px 0', 
             fontFamily: "'Cormorant Garamond', serif",
-            fontSize: '20px', 
+            fontSize: 'var(--font-h2)', // 💡 FLUID TYPOGRAPHY
             color: activeTheme.text, 
             fontWeight: '700', 
-            letterSpacing: '0.2px' 
+            letterSpacing: '0.2px',
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis'
           }}>
             {selectedItem.name}
           </h3>
-          <p style={{ margin: 0, fontSize: '14px', color: '#78716C', fontStyle: 'italic', fontFamily: "'Cormorant Garamond', serif" }}>
+          <p style={{ margin: 0, fontSize: 'var(--font-caption)', color: '#78716C', fontStyle: 'italic', fontFamily: "'Cormorant Garamond', serif" }}>
             Select your preferred portions or options
           </p>
         </div>
         
         {/* Variant List */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', marginBottom: '20px' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', marginBottom: '20px', width: '100%', boxSizing: 'border-box' }}>
           {selectedItem.variants.map((v, index) => {
             const qty = quantities[index];
             const isSelected = qty > 0;
@@ -109,25 +113,30 @@ export default function MultiVariantDrawer({ selectedItem, setSelectedItem, addT
                 key={index}
                 style={{
                   display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-                  padding: '12px 14px', 
+                  padding: 'clamp(10px, 3vw, 12px) clamp(12px, 3.5vw, 14px)', // 💡 FLUID PADDING
                   border: isSelected ? `1.5px solid ${activeTheme.brand}` : '1px solid rgba(197, 160, 89, 0.25)', 
                   borderRadius: '14px',
                   background: isSelected ? 'rgba(197, 160, 89, 0.12)' : '#FFFFFF',
                   boxShadow: '0 2px 8px rgba(0,0,0,0.03)',
                   transition: 'all 0.25s ease',
-                  boxSizing: 'border-box'
+                  boxSizing: 'border-box',
+                  gap: '12px',
+                  minWidth: 0
                 }}
               >
-                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', minWidth: 0, flex: 1 }}>
                   <span style={{ 
                     fontWeight: '700', 
-                    fontSize: '15px', 
+                    fontSize: 'var(--font-body)', // 💡 FLUID TYPOGRAPHY
                     color: activeTheme.text,
-                    fontFamily: "'Cormorant Garamond', serif"
+                    fontFamily: "'Cormorant Garamond', serif",
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis'
                   }}>
                     {v.label || "N/A"}
                   </span>
-                  <span style={{ color: activeTheme.brand, fontWeight: '700', fontSize: '14.5px', marginTop: '1px' }}>
+                  <span style={{ color: activeTheme.brand, fontWeight: '700', fontSize: 'var(--font-caption)', marginTop: '1px', whiteSpace: 'nowrap' }}>
                     ₹{v.price}
                   </span>
                 </div>
@@ -141,20 +150,21 @@ export default function MultiVariantDrawer({ selectedItem, setSelectedItem, addT
                   color: isSelected ? '#FFFFFF' : activeTheme.text, 
                   padding: '5px 12px', 
                   borderRadius: '20px',
-                  border: '1px solid rgba(197, 160, 89, 0.25)'
+                  border: '1px solid rgba(197, 160, 89, 0.25)',
+                  flexShrink: 0
                 }}>
                   <button 
                     onClick={() => handleDecrement(index)}
-                    style={{ background: 'none', border: 'none', color: isSelected ? '#FFFFFF' : activeTheme.text, fontSize: '15px', fontWeight: '700', cursor: 'pointer', padding: '0 2px' }}
+                    style={{ background: 'none', border: 'none', color: isSelected ? '#FFFFFF' : activeTheme.text, fontSize: '15px', fontWeight: '700', cursor: 'pointer', padding: '0 2px', flexShrink: 0 }}
                   >
                     -
                   </button>
-                  <span style={{ fontWeight: '700', fontSize: '13.5px', minWidth: '14px', textAlign: 'center' }}>
+                  <span style={{ fontWeight: '700', fontSize: 'var(--font-caption)', minWidth: '14px', textAlign: 'center' }}>
                     {qty}
                   </span>
                   <button 
                     onClick={() => handleIncrement(index)}
-                    style={{ background: 'none', border: 'none', color: isSelected ? '#FFFFFF' : activeTheme.brand, fontSize: '15px', fontWeight: '700', cursor: 'pointer', padding: '0 2px' }}
+                    style={{ background: 'none', border: 'none', color: isSelected ? '#FFFFFF' : activeTheme.brand, fontSize: '15px', fontWeight: '700', cursor: 'pointer', padding: '0 2px', flexShrink: 0 }}
                   >
                     +
                   </button>
@@ -175,10 +185,10 @@ export default function MultiVariantDrawer({ selectedItem, setSelectedItem, addT
               : 'linear-gradient(135deg, #FF5958 0%, #E11D48 100%)',
             color: totalSelectedCount === 0 ? '#9C9388' : '#FFFFFF',
             border: totalSelectedCount === 0 ? 'none' : '1px solid rgba(255, 255, 255, 0.2)',
-            padding: '13px',
+            padding: 'clamp(10px, 3vw, 13px)',
             borderRadius: '14px',
             fontWeight: '600',
-            fontSize: '14px',
+            fontSize: 'var(--font-body)', // 💡 FLUID TYPOGRAPHY
             letterSpacing: '0.2px',
             cursor: totalSelectedCount === 0 ? 'not-allowed' : 'pointer',
             boxShadow: totalSelectedCount === 0 ? 'none' : '0 4px 15px rgba(255, 89, 88, 0.35)',

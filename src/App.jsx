@@ -32,10 +32,10 @@ const resolveImagePath = (path, folder = '') => {
   return `${base}${cleanPath}`;
 };
 
-// --- SHARED STYLES WITH FOCUS/TAP RESETS ---
+// --- FLUID SHARED STYLES WITH FOCUS/TAP RESETS ---
 const actionButtonStyle = {
   width: '100%', 
-  padding: '14px', 
+  padding: 'clamp(12px, 3.5vw, 14px) clamp(14px, 4vw, 18px)', 
   marginBottom: '12px', 
   backgroundColor: '#FF5958', 
   backgroundImage: 'linear-gradient(135deg, #FF5958 0%, #E11D48 100%)',
@@ -43,7 +43,7 @@ const actionButtonStyle = {
   border: '1px solid rgba(255, 255, 255, 0.2)', 
   borderRadius: '14px', 
   fontWeight: '600', 
-  fontSize: '15px', 
+  fontSize: 'clamp(13.5px, 4vw, 15px)', 
   cursor: 'pointer', 
   textAlign: 'center', 
   display: 'flex', 
@@ -54,7 +54,9 @@ const actionButtonStyle = {
   WebkitTapHighlightColor: 'transparent', 
   userSelect: 'none',
   boxShadow: '0 4px 14px rgba(255, 89, 88, 0.3)',
-  fontFamily: "'Plus Jakarta Sans', sans-serif"
+  fontFamily: "'Plus Jakarta Sans', sans-serif",
+  boxSizing: 'border-box',
+  minWidth: 0
 };
 
 const secondaryButtonStyle = {
@@ -67,15 +69,62 @@ const secondaryButtonStyle = {
 };
 
 const backButtonStyle = {
-  display: 'inline-flex', alignItems: 'center', gap: '6px', background: 'rgba(255, 255, 255, 0.6)', border: '1px solid rgba(197, 160, 89, 0.3)', outline: 'none', boxShadow: 'none', padding: '6px 12px', borderRadius: '12px', cursor: 'pointer', marginBottom: '20px', fontSize: '13px', fontWeight: '600', color: '#1A1816', WebkitTapHighlightColor: 'transparent', userSelect: 'none', transition: 'all 0.2s ease', fontFamily: "'Plus Jakarta Sans', sans-serif"
+  display: 'inline-flex', 
+  alignItems: 'center', 
+  gap: '6px', 
+  background: 'rgba(255, 255, 255, 0.6)', 
+  border: '1px solid rgba(197, 160, 89, 0.3)', 
+  outline: 'none', 
+  boxShadow: 'none', 
+  padding: 'clamp(5px, 1.5vw, 6px) clamp(10px, 3vw, 12px)', 
+  borderRadius: '12px', 
+  cursor: 'pointer', 
+  marginBottom: '20px', 
+  fontSize: 'clamp(11.5px, 3.2vw, 13px)', 
+  fontWeight: '600', 
+  color: '#1A1816', 
+  WebkitTapHighlightColor: 'transparent', 
+  userSelect: 'none', 
+  transition: 'all 0.2s ease', 
+  fontFamily: "'Plus Jakarta Sans', sans-serif",
+  flexShrink: 0
 };
 
 const inputStyle = {
-  width: '100%', padding: '12px 14px', marginBottom: '12px', borderRadius: '12px', border: '1px solid rgba(197, 160, 89, 0.4)', fontSize: '13px', fontWeight: '500', boxSizing: 'border-box', outline: 'none', background: '#FFFFFF', color: '#1A1816', fontFamily: "'Plus Jakarta Sans', sans-serif"
+  width: '100%', 
+  padding: 'clamp(10px, 3vw, 12px) clamp(12px, 3.5vw, 14px)', 
+  marginBottom: '12px', 
+  borderRadius: '12px', 
+  border: '1px solid rgba(197, 160, 89, 0.4)', 
+  fontSize: 'clamp(11.5px, 3.2vw, 13px)', 
+  fontWeight: '500', 
+  boxSizing: 'border-box', 
+  outline: 'none', 
+  background: '#FFFFFF', 
+  color: '#1A1816', 
+  fontFamily: "'Plus Jakarta Sans', sans-serif",
+  minWidth: 0
 };
 
 const accordionHeaderStyle = {
-  display: 'flex', alignItems: 'center', justifyContent: 'flex-start', gap: '10px', padding: '12px 15px', border: '1px solid rgba(197, 160, 89, 0.4)', borderRadius: '14px', cursor: 'pointer', color: '#FF5958', fontWeight: '700', backgroundColor: '#FFFFFF', marginBottom: '10px', outline: 'none', WebkitTapHighlightColor: 'transparent', userSelect: 'none', fontFamily: "'Plus Jakarta Sans', sans-serif"
+  display: 'flex', 
+  alignItems: 'center', 
+  justifyContent: 'flex-start', 
+  gap: '10px', 
+  padding: 'clamp(10px, 3vw, 12px) clamp(12px, 3.5vw, 15px)', 
+  border: '1px solid rgba(197, 160, 89, 0.4)', 
+  borderRadius: '14px', 
+  cursor: 'pointer', 
+  color: '#FF5958', 
+  fontWeight: '700', 
+  backgroundColor: '#FFFFFF', 
+  marginBottom: '10px', 
+  outline: 'none', 
+  WebkitTapHighlightColor: 'transparent', 
+  userSelect: 'none', 
+  fontFamily: "'Plus Jakarta Sans', sans-serif",
+  boxSizing: 'border-box',
+  minWidth: 0
 };
 
 // --- PAGE TRANSITION WRAPPER FOR SMOOTH FLOW ---
@@ -133,14 +182,13 @@ export default function App() {
   // --- 12-HOUR GAP CACHE REFRESH GUARD FOR ANDROID / iOS PWA ---
   useEffect(() => {
     const LAST_OPEN_KEY = 'lyte_last_open_timestamp';
-    const TWELVE_HOURS_MS = 12 * 60 * 60 * 1000; // 12 hours in milliseconds
+    const TWELVE_HOURS_MS = 12 * 60 * 60 * 1000;
     const now = Date.now();
     const lastOpenTime = localStorage.getItem(LAST_OPEN_KEY);
 
     if (lastOpenTime) {
       const timeDifference = now - parseInt(lastOpenTime, 10);
       
-      // If user opens the PWA after a 12+ hour gap, refresh cache while keeping cart safe
       if (timeDifference > TWELVE_HOURS_MS) {
         localStorage.setItem(LAST_OPEN_KEY, now.toString());
         window.location.reload();

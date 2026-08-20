@@ -14,14 +14,14 @@ export default function WallOfLoveView({
     text: theme?.text || '#1A1816',
     border: theme?.border || '1px solid rgba(197, 160, 89, 0.4)',
     bg: theme?.bg || '#FFFDF9',
-    radius: theme?.radius || '20px'
+    radius: theme?.radius || 'clamp(16px, 4vw, 20px)' // 💡 FLUID RADIUS
   };
 
   const renderSourceLogo = (source) => {
     switch (source?.toLowerCase()) {
       case 'google':
         return (
-          <svg width="14" height="14" viewBox="0 0 24 24">
+          <svg width="14" height="14" viewBox="0 0 24 24" style={{ flexShrink: 0 }}>
             <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z"/>
             <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.11-6.72-4.95H1.19v3.15C3.17 21.32 7.23 24 12 24z"/>
             <path fill="#FBBC05" d="M5.28 14.25c-.25-.72-.38-1.5-.38-2.25s.13-1.53.38-2.25V6.6H1.19A11.93 11.93 0 000 12c0 1.92.45 3.73 1.19 5.35l4.09-3.1z"/>
@@ -30,24 +30,24 @@ export default function WallOfLoveView({
         );
       case 'facebook':
         return (
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="#1877F2">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="#1877F2" style={{ flexShrink: 0 }}>
             <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
           </svg>
         );
       case 'instagram':
         return (
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="#E4405F">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="#E4405F" style={{ flexShrink: 0 }}>
             <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
           </svg>
         );
       case 'whatsapp':
         return (
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="#25D366">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="#25D366" style={{ flexShrink: 0 }}>
             <path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0012.04 2z"/>
           </svg>
         );
       case 'email':
-        return <Mail size={14} color="#C5A059" />;
+        return <Mail size={14} color="#C5A059" style={{ flexShrink: 0 }} />;
       default:
         return null;
     }
@@ -83,7 +83,7 @@ export default function WallOfLoveView({
           </svg>
         );
       default:
-        return <Mail size={24} color="#C5A059" />;
+        return <Mail size={24} color="#C5A059" style={{ flexShrink: 0 }} />;
     }
   };
 
@@ -114,7 +114,7 @@ export default function WallOfLoveView({
       fontFamily: "'Plus Jakarta Sans', sans-serif"
     }}>
       {/* Header Navigation */}
-      <div style={{ display: 'flex', alignItems: 'center', position: 'relative', marginBottom: '16px', padding: '6px 0' }}>
+      <div style={{ display: 'flex', alignItems: 'center', position: 'relative', marginBottom: '16px', padding: '6px 0', gap: '8px', minWidth: 0 }}>
         <button 
           onClick={() => setView('info')} 
           style={{ 
@@ -125,15 +125,16 @@ export default function WallOfLoveView({
             alignItems: 'center', 
             gap: '6px', 
             color: activeTheme.text, 
-            fontSize: '13px', 
+            fontSize: 'clamp(11.5px, 3.2vw, 13px)', // 💡 FLUID TYPOGRAPHY
             fontWeight: '600', 
             padding: '6px 12px', 
             borderRadius: '12px', 
             zIndex: 1,
-            boxShadow: '0 2px 8px rgba(0,0,0,0.03)'
+            boxShadow: '0 2px 8px rgba(0,0,0,0.03)',
+            flexShrink: 0
           }}
         >
-          <ArrowLeft size={15}/> Back
+          <ArrowLeft size={15} style={{ flexShrink: 0 }}/> Back
         </button>
         <h2 style={{ 
           position: 'absolute', 
@@ -141,20 +142,25 @@ export default function WallOfLoveView({
           right: 0, 
           textAlign: 'center', 
           fontFamily: "'Cormorant Garamond', serif",
-          fontSize: '22px', 
+          fontSize: 'clamp(18px, 5vw, 22px)', // 💡 FLUID TYPOGRAPHY
           color: '#FF5958', 
           margin: 0, 
           fontWeight: '700', 
           letterSpacing: '0.8px', 
           textTransform: 'uppercase', 
-          pointerEvents: 'none' 
+          pointerEvents: 'none',
+          whiteSpace: 'nowrap',
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          paddingLeft: '70px',
+          paddingRight: '70px'
         }}>
           Wall of Love
         </h2>
       </div>
 
       {/* Filter Tabs */}
-      <div style={{ display: 'flex', gap: '6px', overflowX: 'auto', paddingBottom: '12px', marginBottom: '4px' }}>
+      <div style={{ display: 'flex', gap: '6px', overflowX: 'auto', paddingBottom: '12px', marginBottom: '4px', minWidth: 0, boxSizing: 'border-box' }}>
         {tabs.map((tab) => (
           <button
             key={tab.id}
@@ -165,7 +171,7 @@ export default function WallOfLoveView({
               border: '1px solid rgba(197, 160, 89, 0.4)',
               borderRadius: '10px',
               padding: '6px 12px',
-              fontSize: '11.5px',
+              fontSize: 'clamp(10.5px, 2.8vw, 11.5px)', // 💡 FLUID TYPOGRAPHY
               fontWeight: '700',
               cursor: 'pointer',
               whiteSpace: 'nowrap',
@@ -179,9 +185,9 @@ export default function WallOfLoveView({
       </div>
 
       {/* Reviews List */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', minWidth: 0, boxSizing: 'border-box' }}>
         {filteredReviews.length === 0 ? (
-          <div style={{ textAlign: 'center', padding: '40px 20px', color: '#78716C', fontSize: '13px' }}>
+          <div style={{ textAlign: 'center', padding: '40px 20px', color: '#78716C', fontSize: 'clamp(12px, 3.5vw, 13px)' }}>
             No reviews found for this category yet.
           </div>
         ) : (
@@ -193,7 +199,7 @@ export default function WallOfLoveView({
                 background: 'linear-gradient(135deg, #FFFFFF 0%, #FAF4EB 100%)',
                 border: '1px solid rgba(197, 160, 89, 0.4)',
                 borderRadius: '16px',
-                padding: '16px',
+                padding: 'clamp(12px, 3.5vw, 16px)', // 💡 FLUID PADDING
                 display: 'flex',
                 flexDirection: 'column',
                 gap: '10px',
@@ -201,7 +207,9 @@ export default function WallOfLoveView({
                 boxShadow: '0 6px 18px rgba(44, 34, 30, 0.04)',
                 textAlign: 'left',
                 position: 'relative',
-                overflow: 'hidden'
+                overflow: 'hidden',
+                minWidth: 0,
+                boxSizing: 'border-box'
               }}
             >
               {/* Background Source Watermark */}
@@ -221,12 +229,12 @@ export default function WallOfLoveView({
               {/* Review Stars & Rating */}
               <div style={{ display: 'flex', gap: '3px', position: 'relative', zIndex: 1 }}>
                 {[...Array(5)].map((_, i) => (
-                  <Star key={i} size={13} fill="#C5A059" color="#C5A059" />
+                  <Star key={i} size={13} fill="#C5A059" color="#C5A059" style={{ flexShrink: 0 }} />
                 ))}
               </div>
 
               {/* Review Text */}
-              <p style={{ margin: 0, fontSize: '13px', color: activeTheme.text, lineHeight: '1.5', fontWeight: '500', position: 'relative', zIndex: 1 }}>
+              <p style={{ margin: 0, fontSize: 'clamp(12px, 3.5vw, 13px)', color: activeTheme.text, lineHeight: '1.5', fontWeight: '500', position: 'relative', zIndex: 1, minWidth: 0 }}>
                 "{item.text}"
               </p>
 
@@ -234,18 +242,18 @@ export default function WallOfLoveView({
               {item.imageUrl && (
                 <div style={{ position: 'relative', zIndex: 1 }}>
                   <span style={{ fontSize: '10px', color: '#8A6D2B', background: 'rgba(197, 160, 89, 0.15)', padding: '2px 6px', borderRadius: '6px', fontWeight: '700', display: 'inline-flex', alignItems: 'center', gap: '3px' }}>
-                    <Camera size={10} /> Photo Attached
+                    <Camera size={10} style={{ flexShrink: 0 }} /> Photo Attached
                   </span>
                 </div>
               )}
 
               {/* Author & Source Details */}
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '11px', paddingTop: '8px', borderTop: '1px dashed rgba(197, 160, 89, 0.3)', position: 'relative', zIndex: 1 }}>
-                <span style={{ fontWeight: '700', color: '#FF5958', fontSize: '12.5px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: 'clamp(10.5px, 3vw, 11px)', paddingTop: '8px', borderTop: '1px dashed rgba(197, 160, 89, 0.3)', position: 'relative', zIndex: 1, gap: '8px', minWidth: 0 }}>
+                <span style={{ fontWeight: '700', color: '#FF5958', fontSize: 'clamp(11.5px, 3.5vw, 12.5px)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                   {item.author}
                 </span>
-                <span style={{ textTransform: 'capitalize', color: '#78716C', fontWeight: '700', display: 'flex', alignItems: 'center', gap: '5px' }}>
-                  {renderSourceLogo(item.source)} {item.source}
+                <span style={{ textTransform: 'capitalize', color: '#78716C', fontWeight: '700', display: 'flex', alignItems: 'center', gap: '5px', whiteSpace: 'nowrap', flexShrink: 0, minWidth: 0 }}>
+                  {renderSourceLogo(item.source)} <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{item.source}</span>
                 </span>
               </div>
             </div>

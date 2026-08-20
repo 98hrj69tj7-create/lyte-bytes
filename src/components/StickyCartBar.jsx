@@ -3,17 +3,14 @@ import { ArrowRight } from 'lucide-react';
 
 const PALETTES = {
   obsidianGold: {
-    bg: 'linear-gradient(135deg, rgba(26, 23, 20, 0.98) 0%, rgba(18, 15, 13, 0.99) 100%)', // #1A1714 Dark Charcoal Base
+    bg: 'linear-gradient(135deg, rgba(26, 23, 20, 0.98) 0%, rgba(18, 15, 13, 0.99) 100%)',
     border: '1px solid rgba(197, 160, 89, 0.4)',
     shadow: '0 16px 36px rgba(0, 0, 0, 0.65), inset 0 1px 1px rgba(197, 160, 89, 0.2)',
-    
     badgeBg: 'linear-gradient(135deg, #FF5958 0%, #E11D48 100%)',
     badgeText: '#FFFFFF',
-    labelColor: '#C5A059',   // Champagne Gold
+    labelColor: '#C5A059',
     priceColor: '#FFFBF2',
-    
-    goldGlow: '197, 160, 89', 
-    
+    goldGlow: '197, 160, 89',
     btnBg: 'linear-gradient(135deg, #FF5958 0%, #E11D48 100%)',
     btnText: '#FFFFFF',
     btnShadow: '0 4px 16px rgba(255, 89, 88, 0.4)'
@@ -22,19 +19,19 @@ const PALETTES = {
 
 const SPACING = {
   dockBottom: '82px',          
-  dockMaxWidth: '325px',        
-  dockPadding: '10px 16px',     
+  dockMaxWidth: '340px',        
+  dockPadding: 'clamp(8px, 2.5vw, 10px) clamp(12px, 4vw, 16px)',     // 💡 FLUID PADDING
   dockBorderRadius: '50px',     
-  badgeToTextGap: '12px',      
-  labelToPriceGap: '3px',       
-  badgeSize: '35px',            
-  badgeFontSize: '14px',        
-  labelFontSize: '10px',        
-  priceFontSize: '16px',        
-  btnPadding: '6px 12px',       
+  badgeToTextGap: 'clamp(8px, 3vw, 12px)',      
+  labelToPriceGap: '2px',       
+  badgeSize: 'clamp(32px, 9vw, 35px)',            // 💡 FLUID BADGE SIZE
+  badgeFontSize: 'clamp(12px, 3.5vw, 14px)',      // 💡 FLUID TYPOGRAPHY
+  labelFontSize: 'clamp(9px, 2.5vw, 10px)',       // 💡 FLUID TYPOGRAPHY
+  priceFontSize: 'clamp(14px, 4.5vw, 16px)',      // 💡 FLUID TYPOGRAPHY
+  btnPadding: 'clamp(5px, 1.5vw, 6px) clamp(10px, 3vw, 12px)',       
   btnBorderRadius: '20px',      
   btnTextToIconGap: '5px',      
-  btnFontSize: '12px',          
+  btnFontSize: 'clamp(11px, 3vw, 12px)',          // 💡 FLUID TYPOGRAPHY
   btnIconSize: 16,              
 };
 
@@ -158,9 +155,11 @@ export default function StickyCartBar({ cart = [], onViewCart }) {
           display: 'flex', 
           alignItems: 'center', 
           gap: SPACING.badgeToTextGap,
-          zIndex: 1 
+          zIndex: 1,
+          minWidth: 0,
+          flex: 1
         }}>
-          <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
             <div style={{
               position: 'absolute',
               width: '100%',
@@ -208,7 +207,9 @@ export default function StickyCartBar({ cart = [], onViewCart }) {
             flexDirection: 'column', 
             alignItems: 'flex-start',
             justifyContent: 'center',
-            gap: SPACING.labelToPriceGap 
+            gap: SPACING.labelToPriceGap,
+            minWidth: 0,
+            overflow: 'hidden'
           }}>
             <span style={{ 
               fontSize: SPACING.labelFontSize,
@@ -218,7 +219,11 @@ export default function StickyCartBar({ cart = [], onViewCart }) {
               textTransform: 'uppercase',
               lineHeight: 1,
               margin: 0,
-              padding: 0
+              padding: 0,
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              width: '100%'
             }}>
               {totalItems === 1 ? '1 Item Selected' : 'Items Selected'}
             </span>
@@ -228,9 +233,13 @@ export default function StickyCartBar({ cart = [], onViewCart }) {
               color: theme.priceColor, 
               letterSpacing: '0.3px',
               textShadow: '0 2px 8px rgba(0,0,0,0.4)',
-              lineHeight: 1.1,
+              lineHeight: '1.1',
               margin: 0,
-              padding: 0
+              padding: 0,
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              width: '100%'
             }}>
               ₹{totalPrice.toLocaleString('en-IN')}
             </span>
@@ -252,9 +261,11 @@ export default function StickyCartBar({ cart = [], onViewCart }) {
           boxShadow: theme.btnShadow,
           zIndex: 1,
           transition: 'all 0.2s ease',
+          flexShrink: 0,
+          whiteSpace: 'nowrap'
         }}>
           <span>VIEW BAG</span>
-          <ArrowRight size={SPACING.btnIconSize} strokeWidth={2.8} />
+          <ArrowRight size={SPACING.btnIconSize} strokeWidth={2.8} style={{ flexShrink: 0 }} />
         </div>
       </div>
 

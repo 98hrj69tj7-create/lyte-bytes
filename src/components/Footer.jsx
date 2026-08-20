@@ -85,7 +85,7 @@ export default function Footer({ view, setView, theme }) {
             key={item.id}
             onClick={() => setView(item.id)}
             style={{
-              background: 'transparent', // Removed active background box block
+              background: 'transparent',
               border: 'none',
               cursor: 'pointer',
               display: 'flex',
@@ -93,13 +93,14 @@ export default function Footer({ view, setView, theme }) {
               alignItems: 'center',
               justifyContent: 'center',
               position: 'relative',
-              padding: '6px 8px',      
+              padding: '6px 4px',      
               outline: 'none',
               WebkitTapHighlightColor: 'transparent',
               userSelect: 'none',
               transition: 'all 0.2s ease', 
               boxShadow: 'none',
               flex: 1,
+              minWidth: 0
             }}
           >
             <div style={{ 
@@ -108,7 +109,8 @@ export default function Footer({ view, setView, theme }) {
               height: '22px', 
               display: 'flex', 
               alignItems: 'center', 
-              justifyContent: 'center' 
+              justifyContent: 'center',
+              flexShrink: 0
             }}>
               <IconComponent 
                 size={20} 
@@ -120,7 +122,6 @@ export default function Footer({ view, setView, theme }) {
                   filter: isActive ? 'drop-shadow(0 2px 8px rgba(197, 160, 89, 0.4))' : 'none',
                 }}
               />
-              {/* Dynamic Timeline Status Dot for Concierge (Green when live, Red when offline) */}
               {item.badge && (
                 <span style={{
                   position: 'absolute',
@@ -132,19 +133,23 @@ export default function Footer({ view, setView, theme }) {
                   borderRadius: '50%',
                   boxShadow: isLive ? '0 0 6px #22c55e' : '0 0 6px #ef4444',
                   animation: isLive ? 'pulseLive 2s infinite' : 'pulseOffline 2s infinite',
-                  border: '1px solid #1A1714'
+                  border: '1px solid #1A1714',
+                  flexShrink: 0
                 }} />
               )}
             </div>
 
             <span style={{
-              fontSize: '10.5px',      
+              fontSize: 'clamp(9.5px, 2.5vw, 10.5px)', // 💡 FLUID TYPOGRAPHY
               marginTop: '4px',       
               fontWeight: isActive ? '700' : '500',
               color: isActive ? '#C5A059' : '#A19A92',
               letterSpacing: '0.3px',
               transition: 'all 0.2s ease',
-              whiteSpace: 'nowrap'
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              maxWidth: '100%'
             }}>
               {item.label}
             </span>

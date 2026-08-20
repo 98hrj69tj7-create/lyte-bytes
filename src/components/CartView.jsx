@@ -9,8 +9,6 @@ import { CartViewPolicyModalContent } from './PolicyContents';
 // ============================================================================
 // 🎫 DEFAULT COUPONS DATA STRUCTURE
 // ============================================================================
-// Customize or add more promotional codes here. Each coupon requires a unique 
-// code, title, discount percentage, tag badge label, and description text.
 const DEFAULT_COUPONS = [
   {
     code: 'ANNI25',
@@ -46,15 +44,12 @@ export default function CartView({
   // ============================================================================
   // 🎛️ LOCAL UI STATE MANAGEMENT
   // ============================================================================
-  const [isPolicyOpen, setIsPolicyOpen] = useState(false);         // Controls Policy/Order Conditions modal visibility
-  const [isCouponDrawerOpen, setIsCouponDrawerOpen] = useState(false); // Controls Coupon Selection bottom sheet visibility
-  
-  // Internal coupon state fallback if the parent component doesn't manage applied coupons externally
+  const [isPolicyOpen, setIsPolicyOpen] = useState(false);         
+  const [isCouponDrawerOpen, setIsCouponDrawerOpen] = useState(false); 
   const [internalAppliedCoupon, setInternalAppliedCoupon] = useState(null);
 
   const activeAppliedCoupon = externalAppliedCoupon !== undefined ? externalAppliedCoupon : internalAppliedCoupon;
 
-  // Handler triggered when a coupon is selected/applied
   const handleApply = (coupon) => {
     if (externalOnApplyCoupon) {
       externalOnApplyCoupon(coupon);
@@ -64,7 +59,6 @@ export default function CartView({
     setIsCouponDrawerOpen(false);
   };
 
-  // Handler triggered when an applied coupon is removed
   const handleRemove = () => {
     if (externalOnRemoveCoupon) {
       externalOnRemoveCoupon();
@@ -76,13 +70,12 @@ export default function CartView({
   // ============================================================================
   // 🎨 THEME & STYLING CONFIGURATION
   // ============================================================================
-  // Customize primary brand colors, container background gradients, and border radii here.
   const activeTheme = {
-    brand: theme?.brand || '#FF5958',                        // Primary accent color (Coral Red)
-    text: theme?.text || '#1A1816',                          // Main text heading color
-    border: theme?.border || '1px solid rgba(197, 160, 89, 0.4)', // Soft warm gold border
-    bg: theme?.bg || '#FFFDF9',                              // Base background tint
-    radius: theme?.radius || '20px',                         // Container corner rounding
+    brand: theme?.brand || '#FF5958',                        
+    text: theme?.text || '#1A1816',                          
+    border: theme?.border || '1px solid rgba(197, 160, 89, 0.4)', 
+    bg: theme?.bg || '#FFFDF9',                              
+    radius: 'clamp(16px, 4vw, 20px)', // 💡 FLUID RADIUS                         
     buttonBg: theme?.buttonBg || '#FF5958'
   };
 
@@ -103,7 +96,7 @@ export default function CartView({
       flexDirection: 'column', 
       overflowY: 'auto', 
       flex: 1, 
-      paddingBottom: '140px', // Ensures content clears the floating bottom navigation dock/cart bars
+      paddingBottom: '140px', 
       paddingTop: '6px',
       boxSizing: 'border-box',
       fontFamily: "'Plus Jakarta Sans', sans-serif" 
@@ -123,7 +116,7 @@ export default function CartView({
             alignItems: 'center', 
             gap: '6px', 
             color: activeTheme.text, 
-            fontSize: '13px', 
+            fontSize: 'var(--font-caption)', // 💡 FLUID TYPOGRAPHY
             fontWeight: '600', 
             padding: '6px 12px', 
             borderRadius: '12px', 
@@ -139,7 +132,7 @@ export default function CartView({
           right: 0, 
           textAlign: 'center', 
           fontFamily: "'Cormorant Garamond', serif",
-          fontSize: '21px', 
+          fontSize: 'var(--font-h2)', // 💡 FLUID TYPOGRAPHY
           color: '#FF5958', 
           margin: 0, 
           fontWeight: '700', 
@@ -158,14 +151,14 @@ export default function CartView({
         // ------------------ EMPTY CART VIEW ------------------
         <div style={{ 
           textAlign: 'center', 
-          marginTop: '100px', 
-          padding: '25px 25px', 
+          marginTop: 'clamp(60px, 15vh, 100px)', // 💡 FLUID MARGIN
+          padding: 'clamp(20px, 5vw, 25px)', // 💡 FLUID PADDING
           border: '1px solid rgba(197, 160, 89, 0.4)', 
           borderRadius: activeTheme.radius, 
           background: 'linear-gradient(135deg, #FFFDF9 0%, #FAF4EB 100%)' 
         }}>
           <ShoppingBag size={45} color={activeTheme.buttonBg} style={{ marginBottom: '10px', opacity: 0.6 }} />
-          <p style={{ fontSize: '20px', color: activeTheme.text, fontWeight: '500', marginBottom: '15px', fontFamily: "'Cormorant Garamond', serif", fontStyle: 'italic' }}>
+          <p style={{ fontSize: 'var(--font-h2)', color: activeTheme.text, fontWeight: '500', marginBottom: '15px', fontFamily: "'Cormorant Garamond', serif", fontStyle: 'italic' }}>
             Your bag is currently empty
           </p>
           <button 
@@ -174,9 +167,10 @@ export default function CartView({
               ...actionButtonStyle, 
               background: 'linear-gradient(135deg, #FF5958 0%, #E11D48 100%)', 
               borderRadius: '14px', 
-              padding: '12px 24px', 
+              padding: 'clamp(10px, 3vw, 12px) clamp(20px, 5vw, 24px)', // 💡 FLUID PADDING
               border: 'none', 
               color: '#FFF', 
+              fontSize: 'var(--font-body)',
               fontWeight: '600', 
               cursor: 'pointer', 
               boxShadow: '0 4px 14px rgba(255, 89, 88, 0.3)' 
@@ -191,7 +185,7 @@ export default function CartView({
           border: '1px solid rgba(197, 160, 89, 0.4)', 
           borderRadius: activeTheme.radius, 
           background: 'linear-gradient(135deg, #FFFDF9 0%, #FAF4EB 100%)', 
-          padding: '14px',
+          padding: 'clamp(12px, 3.5vw, 16px)', // 💡 FLUID PADDING
           boxShadow: '0 8px 24px rgba(44, 34, 30, 0.06)'
         }}>
           
@@ -201,32 +195,39 @@ export default function CartView({
               display: 'flex', 
               alignItems: 'center',
               justifyContent: 'space-between',
-              padding: '1px 0',
+              padding: '8px 0',
               borderBottom: index < safeCart.length - 1 ? `1px solid rgba(197, 160, 89, 0.2)` : 'none', 
-              gap: '6px'
+              gap: '8px'
             }}>
-              {/* Left Side: Item Name & Selected Portion/Unit Info */}
+              {/* 💡 BULLETPROOF FLEX: minWidth: 0 prevents long names from breaking layout */}
               <div style={{ display: 'flex', flexDirection: 'column', flex: 1, minWidth: 0, textAlign: 'left' }}>
-                <span style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: '700', fontSize: '18px', color: activeTheme.text, lineHeight: '1' }}>
+                <span style={{ 
+                  fontFamily: "'Cormorant Garamond', serif", 
+                  fontWeight: '700', 
+                  fontSize: 'clamp(15px, 4vw, 18px)', // 💡 FLUID ITEM NAME
+                  color: activeTheme.text, 
+                  lineHeight: '1.2',
+                  wordBreak: 'break-word'
+                }}>
                   {item.name}
                 </span>
-                <span style={{ fontSize: '15px', color: '#FF5958', fontWeight: '600', marginTop: '1px', fontFamily: "'Cormorant Garamond', serif" }}>
+                <span style={{ fontSize: 'var(--font-caption)', color: '#FF5958', fontWeight: '600', marginTop: '2px' }}>
                   {item.unit ? String(item.unit).replace(/(\d+)([a-zA-Z]+)/g, '$1 $2') : ''}
                 </span>
               </div>
 
-              {/* Right Side Group: Quantity Counter Pill, Price, & Remove Icon */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: '2px', flexShrink: 0 }}>
+              {/* 💡 BULLETPROOF FLEX: flexShrink: 0 ensures counters and prices never squish */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '4px', flexShrink: 0 }}>
                 
-                {/* Quantity Controller Pill (Decrement [-], Count, Increment [+]) */}
+                {/* Quantity Controller Pill */}
                 <div style={{ 
                   display: 'flex', 
                   alignItems: 'center', 
                   backgroundColor: 'rgba(197, 160, 89, 0.12)', 
                   borderRadius: '20px', 
-                  padding: '3px 10px',
+                  padding: '3px 8px',
                   border: '1px solid rgba(197, 160, 89, 0.3)',
-                  gap: '6px'
+                  gap: '4px'
                 }}>
                   <button 
                     onClick={() => removeFromCart(item.name, item.unit)} 
@@ -246,14 +247,14 @@ export default function CartView({
                 </div>
 
                 {/* Item Line Total Price */}
-                <span style={{ fontWeight: '700', fontSize: '15px', color: activeTheme.brand, minWidth: '55px', textAlign: 'right' }}>
+                <span style={{ fontWeight: '700', fontSize: 'var(--font-body)', color: activeTheme.brand, minWidth: '45px', textAlign: 'right' }}>
                   ₹{(Number(item.price) || 0) * (Number(item.qty) || 1)}
                 </span>
 
-                {/* Remove Item Button ([X]) */}
+                {/* Remove Item Button */}
                 <button 
                   onClick={() => removeFromCart(item.name, item.unit)} 
-                  style={{ background: 'none', border: 'none', color: '#A8A29E', cursor: 'pointer', padding: '2px', display: 'flex', alignItems: 'center', transition: 'color 0.2s ease' }}
+                  style={{ background: 'none', border: 'none', color: '#A8A29E', cursor: 'pointer', padding: '2px', display: 'flex', alignItems: 'center', transition: 'color 0.2s ease', flexShrink: 0 }}
                 >
                   <X size={15} />
                 </button>
@@ -266,7 +267,6 @@ export default function CartView({
           {/* ============================================================== */}
           <div style={{ marginTop: '16px', marginBottom: '14px' }}>
             {!activeAppliedCoupon ? (
-              // Trigger Button to open coupon selection drawer
               <button 
                 onClick={() => setIsCouponDrawerOpen(true)}
                 style={{
@@ -274,7 +274,7 @@ export default function CartView({
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'space-between',
-                  padding: '12px 16px',
+                  padding: 'clamp(10px, 3vw, 12px) clamp(12px, 3.5vw, 16px)', // 💡 FLUID PADDING
                   borderRadius: '12px',
                   border: '1.5px dashed rgba(255, 89, 88, 0.6)',
                   backgroundColor: 'rgba(255, 89, 88, 0.04)',
@@ -283,54 +283,49 @@ export default function CartView({
                   transition: 'all 0.2s ease'
                 }}
               >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <Tag size={16} color={activeTheme.brand} />
-                  <span style={{ fontSize: '13.5px', fontWeight: '700', color: activeTheme.text }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', minWidth: 0 }}>
+                  <Tag size={16} color={activeTheme.brand} style={{ flexShrink: 0 }} />
+                  <span style={{ fontSize: 'var(--font-body)', fontWeight: '700', color: activeTheme.text, whiteSpace: 'nowrap' }}>
                     Apply Coupon
                   </span>
                   <span style={{
-                    fontSize: '10px',
+                    fontSize: 'clamp(9px, 2.5vw, 10px)', // 💡 FLUID BADGE
                     fontWeight: '800',
                     color: '#8A6D2B',
                     backgroundColor: 'rgba(197, 160, 89, 0.15)',
                     padding: '2px 8px',
                     borderRadius: '10px',
-                    border: '1px solid rgba(197, 160, 89, 0.3)'
+                    border: '1px solid rgba(197, 160, 89, 0.3)',
+                    flexShrink: 0
                   }}>
                     {coupons.length} Available
                   </span>
                 </div>
-                <ChevronRight size={18} color={activeTheme.brand} />
+                <ChevronRight size={18} color={activeTheme.brand} style={{ flexShrink: 0 }} />
               </button>
             ) : (
-              // Active Coupon Success Card
               <div style={{
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
-                padding: '10px 14px',
+                padding: 'clamp(8px, 2.5vw, 10px) clamp(10px, 3vw, 14px)',
                 borderRadius: '12px',
                 border: '1px solid #059669',
-                backgroundColor: '#ECFDF5'
+                backgroundColor: '#ECFDF5',
+                gap: '8px'
               }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', textAlign: 'left' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', textAlign: 'left', minWidth: 0 }}>
                   <div style={{
-                    backgroundColor: '#059669',
-                    borderRadius: '50%',
-                    width: '22px',
-                    height: '22px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    flexShrink: '0'
+                    backgroundColor: '#059669', borderRadius: '50%', width: '22px', height: '22px',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: '0'
                   }}>
                     <Check size={13} color="#FFFFFF" />
                   </div>
-                  <div>
-                    <div style={{ fontSize: '13px', fontWeight: '800', color: '#065F46' }}>
+                  <div style={{ minWidth: 0 }}>
+                    <div style={{ fontSize: 'var(--font-body)', fontWeight: '800', color: '#065F46', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                       '{activeAppliedCoupon.code}' Applied!
                     </div>
-                    <div style={{ fontSize: '11px', color: '#047857', fontWeight: '500' }}>
+                    <div style={{ fontSize: 'var(--font-caption)', color: '#047857', fontWeight: '500' }}>
                       You saved ₹{discountAmount} on this order
                     </div>
                   </div>
@@ -339,13 +334,8 @@ export default function CartView({
                 <button 
                   onClick={handleRemove}
                   style={{
-                    background: 'none',
-                    border: 'none',
-                    color: '#DC2626',
-                    fontSize: '12px',
-                    fontWeight: '700',
-                    cursor: 'pointer',
-                    padding: '4px'
+                    background: 'none', border: 'none', color: '#DC2626', fontSize: 'var(--font-caption)',
+                    fontWeight: '700', cursor: 'pointer', padding: '4px', flexShrink: 0
                   }}
                 >
                   Remove
@@ -359,44 +349,34 @@ export default function CartView({
           {/* ============================================================== */}
           <div style={{ borderTop: '1px dashed #FF5958', paddingTop: '10px' }}>
             
-            {/* Item Total Sub-row */}
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13.5px', color: '#78716C', fontWeight: '500', marginBottom: '8px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 'var(--font-body)', color: '#78716C', fontWeight: '500', marginBottom: '8px' }}>
               <span>Item Total</span>
               <span style={{ color: activeTheme.text, fontWeight: '600' }}>₹{total}</span>
             </div>
 
-            {/* Conditional Coupon Discount Sub-row */}
             {activeAppliedCoupon && (
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13.5px', color: '#059669', fontWeight: '600', marginBottom: '8px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 'var(--font-body)', color: '#059669', fontWeight: '600', marginBottom: '8px' }}>
                 <span>Coupon Discount ({activeAppliedCoupon.discountPercent}%)</span>
                 <span>-₹{discountAmount}</span>
               </div>
             )}
 
-            {/* Delivery Fee Sub-row */}
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13.5px', color: '#78716C', fontWeight: '500', marginBottom: '8px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 'var(--font-body)', color: '#78716C', fontWeight: '500', marginBottom: '8px' }}>
               <span>Delivery Fee</span>
-              <span style={{ fontSize: '11.5px', color: activeTheme.brand, fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.3px' }}>Calculated next</span>
+              <span style={{ fontSize: 'var(--font-caption)', color: activeTheme.brand, fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.3px' }}>Calculated next</span>
             </div>
 
-            {/* Grand Total Amount Sub-row */}
-            <div style={{ display: 'flex', justifyContent: 'space-between', paddingTop: '10px', borderTop: '1px dashed #FF5958', fontSize: '16px', fontWeight: '700', color: activeTheme.text, marginBottom: '16px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', paddingTop: '10px', borderTop: '1px dashed #FF5958', fontSize: 'clamp(15px, 4vw, 17px)', fontWeight: '700', color: activeTheme.text, marginBottom: '16px' }}>
               <span>Total Amount</span>
               <span style={{ color: activeTheme.brand }}>₹{grandTotal}</span>
             </div>
 
-            {/* Order Conditions Policy Trigger Link */}
             <div style={{ textAlign: 'center', marginBottom: '14px' }}>
-              <span style={{ fontSize: '11.5px', color: '#78716C' }}>
+              <span style={{ fontSize: 'var(--font-caption)', color: '#78716C' }}>
                 By proceeding, you agree to our{' '}
                 <span 
                   onClick={() => setIsPolicyOpen(true)}
-                  style={{ 
-                    color: activeTheme.brand, 
-                    cursor: 'pointer', 
-                    fontWeight: '600',
-                    textDecoration: 'underline' 
-                  }}
+                  style={{ color: activeTheme.brand, cursor: 'pointer', fontWeight: '600', textDecoration: 'underline' }}
                 >
                   Order Conditions
                 </span>
@@ -415,8 +395,8 @@ export default function CartView({
                 background: 'linear-gradient(135deg, #FF5958 0%, #E11D48 100%)', 
                 border: '1px solid rgba(255, 255, 255, 0.2)', 
                 marginBottom: 0, 
-                padding: '14px', 
-                fontSize: '15px', 
+                padding: 'clamp(12px, 3.5vw, 15px)', // 💡 FLUID PADDING
+                fontSize: 'var(--font-body)', // 💡 FLUID TYPOGRAPHY
                 fontWeight: '600', 
                 borderRadius: '14px', 
                 boxShadow: '0 4px 14px rgba(255, 89, 88, 0.3)' 
@@ -432,8 +412,8 @@ export default function CartView({
                 border: '1px solid rgba(197, 160, 89, 0.3)', 
                 color: activeTheme.text, 
                 marginBottom: 0, 
-                padding: '12px', 
-                fontSize: '14px', 
+                padding: 'clamp(10px, 3vw, 12px)', 
+                fontSize: 'var(--font-body)', 
                 fontWeight: '600', 
                 borderRadius: '14px' 
               }}
@@ -465,7 +445,7 @@ export default function CartView({
             borderTopLeftRadius: '24px',
             borderTopRightRadius: '24px',
             borderTop: '1px solid rgba(197, 160, 89, 0.4)',
-            padding: '20px',
+            padding: 'clamp(16px, 5vw, 24px)', // 💡 FLUID PADDING
             boxSizing: 'border-box',
             overflowY: 'auto'
           }}>
@@ -473,13 +453,13 @@ export default function CartView({
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                 <Sparkles size={18} color={activeTheme.brand} />
-                <h3 style={{ margin: 0, fontFamily: "'Cormorant Garamond', serif", fontSize: '20px', fontWeight: '700', color: activeTheme.text }}>
+                <h3 style={{ margin: 0, fontFamily: "'Cormorant Garamond', serif", fontSize: 'var(--font-h2)', fontWeight: '700', color: activeTheme.text }}>
                   Available Coupons
                 </h3>
               </div>
               <button 
                 onClick={() => setIsCouponDrawerOpen(false)}
-                style={{ background: 'rgba(255, 255, 255, 0.6)', border: '1px solid rgba(197, 160, 89, 0.3)', borderRadius: '50%', width: '28px', height: '28px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', padding: 0 }}
+                style={{ background: 'rgba(255, 255, 255, 0.6)', border: '1px solid rgba(197, 160, 89, 0.3)', borderRadius: '50%', width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', padding: 0, flexShrink: 0 }}
               >
                 <X size={16} color={activeTheme.text} />
               </button>
@@ -495,27 +475,28 @@ export default function CartView({
                   <div 
                     key={coupon.code} 
                     style={{
-                      padding: '14px',
+                      padding: 'clamp(12px, 3.5vw, 16px)', // 💡 FLUID PADDING
                       borderRadius: '14px',
                       border: isSelected ? '1.5px solid #059669' : '1px solid rgba(197, 160, 89, 0.3)',
                       backgroundColor: isSelected ? '#ECFDF5' : '#FFFFFF',
                       display: 'flex',
                       justifyContent: 'space-between',
                       alignItems: 'center',
-                      boxShadow: '0 2px 8px rgba(0,0,0,0.02)'
+                      boxShadow: '0 2px 8px rgba(0,0,0,0.02)',
+                      gap: '12px'
                     }}
                   >
-                    <div style={{ textAlign: 'left', flex: 1, paddingRight: '10px' }}>
-                      <span style={{ fontSize: '10px', fontWeight: '800', color: activeTheme.brand, letterSpacing: '0.5px' }}>
+                    <div style={{ textAlign: 'left', flex: 1, minWidth: 0 }}>
+                      <span style={{ fontSize: 'var(--font-caption)', fontWeight: '800', color: activeTheme.brand, letterSpacing: '0.5px' }}>
                         {coupon.tag}
                       </span>
-                      <h4 style={{ margin: '2px 0 2px 0', fontFamily: "'Cormorant Garamond', serif", fontSize: '17px', fontWeight: '700', color: activeTheme.text }}>
+                      <h4 style={{ margin: '2px 0 2px 0', fontFamily: "'Cormorant Garamond', serif", fontSize: 'clamp(15px, 4vw, 18px)', fontWeight: '700', color: activeTheme.text, wordBreak: 'break-word' }}>
                         {coupon.title} ({coupon.discountPercent}% OFF)
                       </h4>
-                      <p style={{ margin: '0 0 4px 0', fontSize: '12px', color: '#78716C' }}>
+                      <p style={{ margin: '0 0 4px 0', fontSize: 'var(--font-caption)', color: '#78716C' }}>
                         {coupon.description}
                       </p>
-                      <span style={{ fontSize: '11px', fontWeight: '700', color: '#059669' }}>
+                      <span style={{ fontSize: 'var(--font-caption)', fontWeight: '700', color: '#059669' }}>
                         Saves ₹{couponSaveAmount} on current total
                       </span>
                     </div>
@@ -526,10 +507,10 @@ export default function CartView({
                         backgroundColor: isSelected ? '#059669' : activeTheme.brand,
                         color: '#FFFFFF',
                         border: 'none',
-                        padding: '8px 16px',
+                        padding: 'clamp(8px, 2.5vw, 10px) clamp(12px, 3.5vw, 16px)', // 💡 FLUID BUTTON
                         borderRadius: '10px',
                         fontWeight: '700',
-                        fontSize: '12.5px',
+                        fontSize: 'var(--font-caption)',
                         cursor: 'pointer',
                         flexShrink: 0,
                         boxShadow: '0 2px 8px rgba(0,0,0,0.1)'

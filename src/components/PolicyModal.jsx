@@ -4,7 +4,7 @@ import { X } from 'lucide-react';
 
 /**
  * PolicyModal Component
- * Elite luxury modal rendered via Portal for edge-to-edge screen immersion.
+ * Elite luxury modal rendered via Portal with fluid typography scaling.
  */
 export default function PolicyModal({ 
   isOpen = false, 
@@ -58,8 +58,8 @@ export default function PolicyModal({
         onClick={(e) => e.stopPropagation()}
         style={{
           background: 'linear-gradient(135deg, #FFFDF9 0%, #FAF4EB 100%)', 
-          borderRadius: '28px', 
-          padding: '20px',
+          borderRadius: 'clamp(20px, 5vw, 28px)', // 💡 FLUID RADIUS
+          padding: 'clamp(16px, 4vw, 22px)',     // 💡 FLUID PADDING
           maxWidth: '520px', 
           width: '100%', 
           maxHeight: '82vh',
@@ -79,16 +79,22 @@ export default function PolicyModal({
           justifyContent: 'space-between',
           paddingBottom: '16px',
           marginBottom: '2px',
-          flexShrink: 0
+          flexShrink: 0,
+          gap: '8px',
+          minWidth: 0
         }}>
           <h3 style={{ 
             fontFamily: "'Cormorant Garamond', serif", 
-            fontSize: '20px', 
+            fontSize: 'clamp(18px, 4.5vw, 22px)', // 💡 FLUID TYPOGRAPHY
             fontWeight: '700', 
             color: activeTheme.brand, 
             margin: 5,
             textTransform: 'uppercase',
-            letterSpacing: '1px'
+            letterSpacing: '1px',
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            minWidth: 0
           }}>
             {title}
           </h3>
@@ -98,21 +104,22 @@ export default function PolicyModal({
               background: 'rgba(197, 160, 89, 0.15)',
               border: '1px solid rgba(197, 160, 89, 0.3)',
               borderRadius: '50%',
-              width: '25px',
-              height: '25px',
+              width: '28px',
+              height: '28px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               cursor: 'pointer',
               color: '#1A1816',
-              transition: 'all 0.2s ease'
+              transition: 'all 0.2s ease',
+              flexShrink: 0
             }}
           >
             <X size={16} />
           </button>
         </div>
 
-        {/* Clean Editorial Content Body */}
+        {/* Clean Editorial Content Body with Fluid Typography */}
         <div style={{ 
           overflowY: 'auto', 
           display: 'flex', 
@@ -120,10 +127,11 @@ export default function PolicyModal({
           gap: '10px',
           boxSizing: 'border-box',
           textAlign: 'left',
-          fontSize: '13px',
+          fontSize: 'clamp(12px, 3.5vw, 14px)', // 💡 FLUID TYPOGRAPHY
           color: '#57534E',
-          lineHeight: '1',
-          paddingRight: '6px'
+          lineHeight: '1.5',
+          paddingRight: '6px',
+          minWidth: 0
         }}>
           {children}
         </div>
@@ -131,6 +139,5 @@ export default function PolicyModal({
     </div>
   );
 
-  // Portal renders modal directly into document.body, escaping app container clipping
   return ReactDOM.createPortal(modalContent, document.body);
 }

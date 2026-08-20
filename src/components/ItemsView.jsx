@@ -22,7 +22,7 @@ export default function ItemsView({
   return (
     <div style={{ paddingBottom: '140px', fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
       {/* Uniform Header with Absolute Centered Title & Floating Back Button */}
-      <div style={{ display: 'flex', alignItems: 'center', position: 'relative', marginBottom: '20px', padding: '6px 0' }}>
+      <div style={{ display: 'flex', alignItems: 'center', position: 'relative', marginBottom: '20px', padding: '6px 0', gap: '8px' }}>
         <button 
           onClick={() => setView('subcat')} 
           style={{ 
@@ -33,16 +33,17 @@ export default function ItemsView({
             alignItems: 'center', 
             gap: '6px', 
             color: theme.text, 
-            fontSize: '13px', 
+            fontSize: 'var(--font-caption)', // 💡 FLUID TYPOGRAPHY
             fontWeight: '600', 
             padding: '6px 12px', 
             borderRadius: '12px', 
             backgroundColor: 'rgba(255, 255, 255, 0.05)', 
             zIndex: 1,
-            transition: 'all 0.2s ease'
+            transition: 'all 0.2s ease',
+            flexShrink: 0
           }}
         >
-          <ArrowLeft size={15}/> Back
+          <ArrowLeft size={15} style={{ flexShrink: 0 }}/> Back
         </button>
         <h2 style={{ 
           position: 'absolute', 
@@ -50,13 +51,18 @@ export default function ItemsView({
           right: 0, 
           textAlign: 'center', 
           fontFamily: "'Cormorant Garamond', serif",
-          fontSize: '21px', 
+          fontSize: 'var(--font-h2)', // 💡 FLUID TYPOGRAPHY
           color: '#FF5958', 
           margin: 0, 
           fontWeight: '700', 
           letterSpacing: '0.5px', 
           textTransform: 'uppercase', 
-          pointerEvents: 'none' 
+          pointerEvents: 'none',
+          whiteSpace: 'nowrap',
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          paddingLeft: '70px',
+          paddingRight: '70px'
         }}>
           {activeSub || 'Items'}
         </h2>
@@ -71,12 +77,12 @@ export default function ItemsView({
           onChange={(e) => setSearchQuery(e.target.value)}
           style={{
             width: '100%',
-            padding: '12px 18px',
+            padding: 'clamp(10px, 3vw, 12px) clamp(14px, 4vw, 18px)', // 💡 FLUID PADDING
             border: '1.5px solid #FF5958',
             borderRadius: '16px',
             backgroundColor: '#FFFFFF',
             color: theme.text,
-            fontSize: '14px',
+            fontSize: 'var(--font-body)', // 💡 FLUID TYPOGRAPHY
             fontWeight: '500',
             outline: 'none',
             boxSizing: 'border-box',
@@ -94,13 +100,16 @@ export default function ItemsView({
         marginBottom: '16px', 
         padding: '4px 2px',
         backgroundColor: 'transparent',
-        border: 'none'
+        border: 'none',
+        gap: '8px',
+        minWidth: 0,
+        boxSizing: 'border-box'
       }}>
         {/* Left Side: Slide Toggle Switch for Veg / Non-Veg */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', minWidth: 0, flexShrink: 0 }}>
           <span 
             onClick={() => setIsNonVeg(false)}
-            style={{ fontSize: '11.5px', fontWeight: '800', color: '#2D8A56', cursor: 'pointer', letterSpacing: '0.5px' }}
+            style={{ fontSize: 'var(--font-caption)', fontWeight: '800', color: '#2D8A56', cursor: 'pointer', letterSpacing: '0.5px', whiteSpace: 'nowrap' }}
           >
             VEG
           </span>
@@ -111,7 +120,8 @@ export default function ItemsView({
               width: '42px', height: '22px', 
               background: isNonVeg === null ? '#d4d4d8' : (isNonVeg ? '#D32F2F' : '#2D8A56'), 
               borderRadius: '24px', position: 'relative', cursor: 'pointer', transition: 'all 0.3s ease',
-              boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.2)'
+              boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.2)',
+              flexShrink: 0
             }}
           >
             <div style={{ 
@@ -123,14 +133,14 @@ export default function ItemsView({
           
           <span 
             onClick={() => setIsNonVeg(true)}
-            style={{ fontSize: '11.5px', fontWeight: '700', color: '#D32F2F', cursor: 'pointer', letterSpacing: '0.5px' }}
+            style={{ fontSize: 'var(--font-caption)', fontWeight: '700', color: '#D32F2F', cursor: 'pointer', letterSpacing: '0.5px', whiteSpace: 'nowrap' }}
           >
             NON-VEG
           </span>
         </div>
 
         {/* Right Side: Grid & List Layout Toggle Buttons */}
-        <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
+        <div style={{ display: 'flex', gap: '6px', alignItems: 'center', flexShrink: 0 }}>
           <button 
             onClick={() => setLayout('list')} 
             style={{ 
@@ -142,11 +152,12 @@ export default function ItemsView({
               display: 'flex', 
               alignItems: 'center',
               boxShadow: layout === 'list' ? '0 2px 8px rgba(255, 89, 88, 0.3)' : 'none',
-              transition: 'all 0.2s ease'
+              transition: 'all 0.2s ease',
+              flexShrink: 0
             }}
             title="List View"
           >
-            <ListIcon size={15} color={layout === 'list' ? '#FFFFFF' : theme.text}/>
+            <ListIcon size={15} color={layout === 'list' ? '#FFFFFF' : theme.text} style={{ flexShrink: 0 }}/>
           </button>
           
           <button 
@@ -160,11 +171,12 @@ export default function ItemsView({
               display: 'flex', 
               alignItems: 'center',
               boxShadow: layout === 'grid' ? '0 2px 8px rgba(255, 89, 88, 0.3)' : 'none',
-              transition: 'all 0.2s ease'
+              transition: 'all 0.2s ease',
+              flexShrink: 0
             }}
             title="Grid View"
           >
-            <Grid size={15} color={layout === 'grid' ? '#FFFFFF' : theme.text}/>
+            <Grid size={15} color={layout === 'grid' ? '#FFFFFF' : theme.text} style={{ flexShrink: 0 }}/>
           </button>
         </div>
       </div>
@@ -174,7 +186,9 @@ export default function ItemsView({
         display: layout === 'grid' ? 'grid' : 'flex', 
         gridTemplateColumns: layout === 'grid' ? 'repeat(2, 1fr)' : 'none', 
         flexDirection: 'column', 
-        gap: '12px' 
+        gap: '12px',
+        width: '100%',
+        boxSizing: 'border-box'
       }}>
         {(searchQuery 
           ? Object.values(menuData).flatMap(cat => Object.values(cat.subcategories).flat())

@@ -71,7 +71,7 @@ export default function TrackView({
     text: theme?.text || '#1A1816',
     border: theme?.border || '1px solid rgba(197, 160, 89, 0.4)',
     bg: theme?.bg || '#FFFDF9',
-    radius: theme?.radius || '20px'
+    radius: theme?.radius || 'clamp(16px, 4vw, 20px)' // 💡 FLUID RADIUS
   };
 
   const [searchCode, setSearchCode] = useState('');
@@ -103,7 +103,6 @@ export default function TrackView({
       if (found) {
         const paymentStatus = getField(found, ['Payment_Status', 'Status', 'Payment']) || 'Paid';
         
-        // Read the stage directly from the Google Sheet column (default to 1 if empty)
         const sheetStage = parseInt(getField(found, ['Stage', 'Order_Stage', 'Fulfillment_Stage']), 10);
         const resolvedStage = !isNaN(sheetStage) && sheetStage >= 1 && sheetStage <= 5 ? sheetStage : 1;
 
@@ -131,7 +130,7 @@ export default function TrackView({
     const isCompleted = activeStage === 5;
 
     return (
-      <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '16px', boxSizing: 'border-box' }}>
+      <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '16px', boxSizing: 'border-box', minWidth: 0 }}>
         <style>{`
           @keyframes premiumGlow {
             0% { box-shadow: 0 0 0 0 rgba(255, 89, 88, 0.4), 0 0 12px rgba(255, 89, 88, 0.2); }
@@ -141,13 +140,13 @@ export default function TrackView({
         `}</style>
 
         {orderDetails && (
-          <div style={{ background: '#FFFFFF', border: '1px solid rgba(197, 160, 89, 0.4)', borderRadius: '14px', padding: '12px 14px', textAlign: 'left', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <div>
-              <div style={{ fontSize: '13px', fontWeight: '800', color: activeTheme.text }}>{orderDetails.id}</div>
-              <div style={{ fontSize: '12px', color: activeTheme.brand, fontWeight: '700', marginTop: '2px' }}>{orderDetails.item}</div>
-              <div style={{ fontSize: '11px', color: '#78716C', fontWeight: '500', marginTop: '2px' }}>Placed on: {orderDetails.date || 'Recent'} • ₹{orderDetails.total}</div>
+          <div style={{ background: '#FFFFFF', border: '1px solid rgba(197, 160, 89, 0.4)', borderRadius: '14px', padding: '12px 14px', textAlign: 'left', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '8px', minWidth: '0', boxSizing: 'border-box' }}>
+            <div style={{ minWidth: 0, flex: 1 }}>
+              <div style={{ fontSize: 'clamp(12px, 3.5vw, 13px)', fontWeight: '800', color: activeTheme.text, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{orderDetails.id}</div>
+              <div style={{ fontSize: 'clamp(11.5px, 3.2vw, 12px)', color: activeTheme.brand, fontWeight: '700', marginTop: '2px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{orderDetails.item}</div>
+              <div style={{ fontSize: 'clamp(10.5px, 2.8vw, 11px)', color: '#78716C', fontWeight: '500', marginTop: '2px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Placed on: {orderDetails.date || 'Recent'} • ₹{orderDetails.total}</div>
             </div>
-            <span style={{ fontSize: '11px', fontWeight: '800', color: '#059669', background: '#ECFDF5', padding: '4px 10px', borderRadius: '8px', textTransform: 'uppercase' }}>
+            <span style={{ fontSize: '10.5px', fontWeight: '800', color: '#059669', background: '#ECFDF5', padding: '4px 10px', borderRadius: '8px', textTransform: 'uppercase', whiteSpace: 'nowrap', flexShrink: 0 }}>
               {orderDetails.status}
             </span>
           </div>
@@ -157,20 +156,20 @@ export default function TrackView({
           {!isCompleted && (
             <div style={{ position: 'absolute', width: '72px', height: '72px', borderRadius: '50%', background: activeTheme.brand, opacity: 0.18, animation: 'pulse 2.2s infinite ease-in-out' }} />
           )}
-          <div style={{ width: '56px', height: '56px', borderRadius: '50%', background: '#FFFFFF', border: '1px solid rgba(197, 160, 89, 0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: activeTheme.brand, zIndex: '1', fontSize: '28px', boxShadow: '0 4px 12px rgba(255, 89, 88, 0.2)' }}>
+          <div style={{ width: '56px', height: '56px', borderRadius: '50%', background: '#FFFFFF', border: '1px solid rgba(197, 160, 89, 0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: activeTheme.brand, zIndex: '1', fontSize: '28px', boxShadow: '0 4px 12px rgba(255, 89, 88, 0.2)', flexShrink: 0 }}>
             {activeStage === 1 ? '📝' : activeStage === 2 ? '👨‍🍳' : activeStage === 3 ? '📦' : activeStage === 4 ? '🛵' : '🎉'}
           </div>
         </div>
 
-        <div>
-          <h3 style={{ fontFamily: "'Cormorant Garamond', serif", color: isCompleted ? '#059669' : activeTheme.brand, margin: '0 0 6px 0', fontSize: '21px', fontWeight: '700', textTransform: 'uppercase' }}>
+        <div style={{ minWidth: 0 }}>
+          <h3 style={{ fontFamily: "'Cormorant Garamond', serif", color: isCompleted ? '#059669' : activeTheme.brand, margin: '0 0 6px 0', fontSize: 'clamp(18px, 5vw, 21px)', fontWeight: '700', textTransform: 'uppercase', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
             {isCompleted ? 'Order Completed' : 'Order Active'}
           </h3>
         </div>
 
         {/* 5-Stage Emoticon Progression */}
-        <div style={{ width: '100%', borderTop: '1px solid rgba(197, 160, 89, 0.35)', paddingTop: '16px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
-          <span style={{ fontSize: '11.5px', fontWeight: '800', color: '#78716C', textTransform: 'uppercase', alignSelf: 'flex-start', letterSpacing: '0.8px' }}>
+        <div style={{ width: '100%', borderTop: '1px solid rgba(197, 160, 89, 0.35)', paddingTop: '16px', display: 'flex', flexDirection: 'column', gap: '12px', minWidth: 0, boxSizing: 'border-box' }}>
+          <span style={{ fontSize: '11px', fontWeight: '800', color: '#78716C', textTransform: 'uppercase', alignSelf: 'flex-start', letterSpacing: '0.8px', whiteSpace: 'nowrap' }}>
             Live Status Progression
           </span>
 
@@ -185,14 +184,15 @@ export default function TrackView({
             const isCurrent = item.step === activeStage;
 
             return (
-              <div key={item.step} style={{ display: 'flex', alignItems: 'flex-start', gap: '14px', textAlign: 'left' }}>
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+              <div key={item.step} style={{ display: 'flex', alignItems: 'flex-start', gap: '14px', textAlign: 'left', minWidth: 0 }}>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flexShrink: 0 }}>
                   <div style={{
                     width: '46px', height: '46px', borderRadius: '50%',
                     background: stepCompleted || isCurrent ? '#FFFFFF' : '#FFFDF9', 
                     border: '1px solid rgba(197, 160, 89, 0.4)', fontSize: '24px', 
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    animation: (!isCompleted && isCurrent) ? 'premiumGlow 2s infinite ease-in-out' : 'none'
+                    animation: (!isCompleted && isCurrent) ? 'premiumGlow 2s infinite ease-in-out' : 'none',
+                    flexShrink: 0
                   }}>
                     {item.icon}
                   </div>
@@ -204,16 +204,16 @@ export default function TrackView({
                     }} />
                   )}
                 </div>
-                <div style={{ flex: 1, paddingTop: '3px' }}>
-                  <div style={{ fontSize: '13.5px', fontWeight: '700', color: (!isCompleted && isCurrent) ? activeTheme.brand : (stepCompleted || isCurrent) ? activeTheme.text : '#78716C', display: 'flex', alignItems: 'center', gap: '8px', fontFamily: "'Cormorant Garamond', serif" }}>
-                    {item.title} 
+                <div style={{ flex: 1, paddingTop: '3px', minWidth: 0 }}>
+                  <div style={{ fontSize: 'clamp(12.5px, 3.5vw, 13.5px)', fontWeight: '700', color: (!isCompleted && isCurrent) ? activeTheme.brand : (stepCompleted || isCurrent) ? activeTheme.text : '#78716C', display: 'flex', alignItems: 'center', gap: '8px', fontFamily: "'Cormorant Garamond', serif", minWidth: 0, flexWrap: 'wrap' }}>
+                    <span style={{ whiteSpace: 'nowrap' }}>{item.title}</span>
                     {!isCompleted && isCurrent && (
-                      <span style={{ fontSize: '10px', background: '#FFF1EE', color: activeTheme.brand, padding: '1px 6px', borderRadius: '4px', fontWeight: '800' }}>
+                      <span style={{ fontSize: '10px', background: '#FFF1EE', color: activeTheme.brand, padding: '1px 6px', borderRadius: '4px', fontWeight: '800', whiteSpace: 'nowrap', flexShrink: 0 }}>
                         ACTIVE
                       </span>
                     )}
                   </div>
-                  <div style={{ fontSize: '11.5px', color: '#78716C', marginTop: '2px', fontWeight: '500' }}>{item.desc}</div>
+                  <div style={{ fontSize: 'clamp(11px, 3vw, 11.5px)', color: '#78716C', marginTop: '2px', fontWeight: '500', minWidth: 0 }}>{item.desc}</div>
                 </div>
               </div>
             );
@@ -226,23 +226,23 @@ export default function TrackView({
   if (hasActiveOrder) {
     return (
       <div style={{ display: 'flex', flexDirection: 'column', overflowY: 'auto', flex: 1, paddingBottom: '140px', paddingTop: '6px', boxSizing: 'border-box', width: '100%', position: 'relative', fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
-        <div style={{ display: 'flex', alignItems: 'center', position: 'relative', marginBottom: '20px', padding: '6px 0' }}>
-          <button onClick={() => setView('home')} style={{ background: 'rgba(255, 255, 255, 0.6)', border: '1px solid rgba(197, 160, 89, 0.3)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px', color: activeTheme.text, fontSize: '13px', fontWeight: '600', padding: '6px 12px', borderRadius: '12px', zIndex: 1 }}>
-            <ArrowLeft size={15}/> Home
+        <div style={{ display: 'flex', alignItems: 'center', position: 'relative', marginBottom: '20px', padding: '6px 0', gap: '8px' }}>
+          <button onClick={() => setView('home')} style={{ background: 'rgba(255, 255, 255, 0.6)', border: '1px solid rgba(197, 160, 89, 0.3)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px', color: activeTheme.text, fontSize: 'clamp(11.5px, 3.2vw, 13px)', fontWeight: '600', padding: '6px 12px', borderRadius: '12px', zIndex: 1, flexShrink: 0 }}>
+            <ArrowLeft size={15} style={{ flexShrink: 0 }}/> Home
           </button>
-          <h2 style={{ position: 'absolute', left: 0, right: 0, textAlign: 'center', fontFamily: "'Cormorant Garamond', serif", fontSize: '21px', color: '#FF5958', margin: 0, fontWeight: '700', letterSpacing: '0.5px', textTransform: 'uppercase', pointerEvents: 'none' }}>
+          <h2 style={{ position: 'absolute', left: 0, right: 0, textAlign: 'center', fontFamily: "'Cormorant Garamond', serif", fontSize: 'clamp(18px, 5vw, 21px)', color: '#FF5958', margin: 0, fontWeight: '700', letterSpacing: '0.5px', textTransform: 'uppercase', pointerEvents: 'none', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', paddingLeft: '75px', paddingRight: '75px' }}>
             Live Order Track
           </h2>
         </div>
 
-        <div style={{ border: '1px solid rgba(197, 160, 89, 0.4)', borderRadius: activeTheme.radius, background: 'linear-gradient(135deg, #FFFDF9 0%, #FAF4EB 100%)', padding: '18px', boxShadow: '0 8px 24px rgba(44, 34, 30, 0.06)', display: 'flex', flexDirection: 'column', gap: '18px', boxSizing: 'border-box', width: '100%', alignItems: 'center', textAlign: 'center' }}>
+        <div style={{ border: '1px solid rgba(197, 160, 89, 0.4)', borderRadius: activeTheme.radius, background: 'linear-gradient(135deg, #FFFDF9 0%, #FAF4EB 100%)', padding: 'clamp(14px, 4vw, 18px)', boxShadow: '0 8px 24px rgba(44, 34, 30, 0.06)', display: 'flex', flexDirection: 'column', gap: '18px', boxSizing: 'border-box', width: '100%', alignItems: 'center', textAlign: 'center', minWidth: 0 }}>
           {renderStageTracker(currentStage || 1, null)}
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', width: '100%', marginTop: '4px' }}>
-            <button type="button" onClick={() => window.open('https://wa.me/9108286886?text=Hi,%20I%20want%20an%20update%20on%20my%20recent%20order!', '_blank')} style={{ border: '1px solid rgba(255, 255, 255, 0.2)', background: 'linear-gradient(135deg, #FF5958 0%, #E11D48 100%)', color: '#FFFFFF', padding: '14px', fontSize: '15px', fontWeight: '600', borderRadius: '14px', width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', cursor: 'pointer', boxShadow: '0 4px 14px rgba(255, 89, 88, 0.3)' }}>
-              <MessageSquare size={18} /> Get WhatsApp Live Update
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', width: '100%', marginTop: '4px', boxSizing: 'border-box' }}>
+            <button type="button" onClick={() => window.open('https://wa.me/9108286886?text=Hi,%20I%20want%20an%20update%20on%20my%20recent%20order!', '_blank')} style={{ border: '1px solid rgba(255, 255, 255, 0.2)', background: 'linear-gradient(135deg, #FF5958 0%, #E11D48 100%)', color: '#FFFFFF', padding: '14px', fontSize: 'clamp(13.5px, 4vw, 15px)', fontWeight: '600', borderRadius: '14px', width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', cursor: 'pointer', boxShadow: '0 4px 14px rgba(255, 89, 88, 0.3)', boxSizing: 'border-box' }}>
+              <MessageSquare size={18} style={{ flexShrink: 0 }} /> <span style={{ whiteSpace: 'nowrap' }}>Get WhatsApp Live Update</span>
             </button>
-            <button type="button" onClick={() => { setCart([]); setView('home'); }} style={{ backgroundColor: 'rgba(197, 160, 89, 0.1)', color: activeTheme.text, border: '1px solid rgba(197, 160, 89, 0.3)', padding: '12px', fontSize: '14px', fontWeight: '600', borderRadius: '14px', width: '100%', cursor: 'pointer' }}>
+            <button type="button" onClick={() => { setCart([]); setView('home'); }} style={{ backgroundColor: 'rgba(197, 160, 89, 0.1)', color: activeTheme.text, border: '1px solid rgba(197, 160, 89, 0.3)', padding: '12px', fontSize: 'clamp(13px, 3.8vw, 14px)', fontWeight: '600', borderRadius: '14px', width: '100%', cursor: 'pointer', boxSizing: 'border-box' }}>
               Continue Shopping
             </button>
           </div>
@@ -253,48 +253,48 @@ export default function TrackView({
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', overflowY: 'auto', flex: 1, paddingBottom: '140px', paddingTop: '6px', boxSizing: 'border-box', width: '100%', fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
-      <div style={{ display: 'flex', alignItems: 'center', position: 'relative', marginBottom: '20px', padding: '6px 0' }}>
-        <button onClick={() => setView('home')} style={{ background: 'rgba(255, 255, 255, 0.6)', border: '1px solid rgba(197, 160, 89, 0.3)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px', color: activeTheme.text, fontSize: '13px', fontWeight: '600', padding: '6px 12px', borderRadius: '12px', zIndex: 1 }}>
-          <ArrowLeft size={15}/> Home
+      <div style={{ display: 'flex', alignItems: 'center', position: 'relative', marginBottom: '20px', padding: '6px 0', gap: '8px' }}>
+        <button onClick={() => setView('home')} style={{ background: 'rgba(255, 255, 255, 0.6)', border: '1px solid rgba(197, 160, 89, 0.3)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px', color: activeTheme.text, fontSize: 'clamp(11.5px, 3.2vw, 13px)', fontWeight: '600', padding: '6px 12px', borderRadius: '12px', zIndex: 1, flexShrink: 0 }}>
+          <ArrowLeft size={15} style={{ flexShrink: 0 }}/> Home
         </button>
-        <h2 style={{ position: 'absolute', left: 0, right: 0, textAlign: 'center', fontFamily: "'Cormorant Garamond', serif", fontSize: '21px', color: '#FF5958', margin: 0, fontWeight: '700', letterSpacing: '0.5px', textTransform: 'uppercase', pointerEvents: 'none' }}>
+        <h2 style={{ position: 'absolute', left: 0, right: 0, textAlign: 'center', fontFamily: "'Cormorant Garamond', serif", fontSize: 'clamp(18px, 5vw, 21px)', color: '#FF5958', margin: 0, fontWeight: '700', letterSpacing: '0.5px', textTransform: 'uppercase', pointerEvents: 'none', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', paddingLeft: '75px', paddingRight: '75px' }}>
           Live Tracking
         </h2>
       </div>
 
-      <div style={{ border: '1px solid rgba(197, 160, 89, 0.4)', borderRadius: activeTheme.radius, background: 'linear-gradient(135deg, #FFFDF9 0%, #FAF4EB 100%)', padding: '20px 18px', boxShadow: '0 8px 24px rgba(44, 34, 30, 0.06)', display: 'flex', flexDirection: 'column', gap: '16px', boxSizing: 'border-box', width: '100%', alignItems: 'center', textAlign: 'center' }}>
+      <div style={{ border: '1px solid rgba(197, 160, 89, 0.4)', borderRadius: activeTheme.radius, background: 'linear-gradient(135deg, #FFFDF9 0%, #FAF4EB 100%)', padding: 'clamp(16px, 4.5vw, 20px) clamp(14px, 4vw, 18px)', boxShadow: '0 8px 24px rgba(44, 34, 30, 0.06)', display: 'flex', flexDirection: 'column', gap: '16px', boxSizing: 'border-box', width: '100%', alignItems: 'center', textAlign: 'center', minWidth: 0 }}>
         
         {!searchedOrder ? (
           <>
-            <div style={{ width: '56px', height: '56px', borderRadius: '50%', background: '#FFFFFF', border: '1px solid rgba(197, 160, 89, 0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: activeTheme.brand, boxShadow: '0 4px 12px rgba(255, 89, 88, 0.1)' }}>
-              <Package size={30} color={activeTheme.brand} />
+            <div style={{ width: '56px', height: '56px', borderRadius: '50%', background: '#FFFFFF', border: '1px solid rgba(197, 160, 89, 0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: activeTheme.brand, boxShadow: '0 4px 12px rgba(255, 89, 88, 0.1)', flexShrink: 0 }}>
+              <Package size={30} color={activeTheme.brand} style={{ flexShrink: 0 }} />
             </div>
 
-            <div>
-              <h3 style={{ fontFamily: "'Cormorant Garamond', serif", color: activeTheme.brand, margin: '0 0 6px 0', fontSize: '20px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.3px' }}>
+            <div style={{ minWidth: 0, width: '100%' }}>
+              <h3 style={{ fontFamily: "'Cormorant Garamond', serif", color: activeTheme.brand, margin: '0 0 6px 0', fontSize: 'clamp(17px, 4.8vw, 20px)', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.3px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                 Track Past / Active Order
               </h3>
-              <p style={{ color: '#78716C', fontSize: '13px', margin: 0, lineHeight: '1.5', fontWeight: '500' }}>
+              <p style={{ color: '#78716C', fontSize: 'clamp(11.5px, 3.2vw, 13px)', margin: 0, lineHeight: '1.5', fontWeight: '500' }}>
                 Have an order code? Enter it below to check its live status from our kitchen engine.
               </p>
             </div>
 
-            <form onSubmit={handleManualSearch} style={{ display: 'flex', gap: '8px', width: '100%', marginTop: '4px' }}>
+            <form onSubmit={handleManualSearch} style={{ display: 'flex', gap: '8px', width: '100%', marginTop: '4px', boxSizing: 'border-box', minWidth: 0 }}>
               <input 
                 type="text"
-                placeholder="Enter Order ID (e.g. LB017-SH95-BAK-FC-0001)"
+                placeholder="Enter Order ID (e.g. LB017-SH95)"
                 value={searchCode}
                 onChange={(e) => setSearchCode(e.target.value)}
-                style={{ flex: 1, padding: '12px 14px', borderRadius: '14px', border: '1px solid rgba(197, 160, 89, 0.5)', background: '#FFFFFF', fontSize: '13px', color: activeTheme.text, fontWeight: '600', outline: 'none' }}
+                style={{ flex: 1, padding: '12px 14px', borderRadius: '14px', border: '1px solid rgba(197, 160, 89, 0.5)', background: '#FFFFFF', fontSize: 'clamp(11.5px, 3.2vw, 13px)', color: activeTheme.text, fontWeight: '600', outline: 'none', minWidth: 0, boxSizing: 'border-box' }}
               />
-              <button type="submit" disabled={isSearching} style={{ background: activeTheme.brand, color: '#FFFFFF', border: 'none', padding: '0 16px', borderRadius: '14px', fontWeight: '700', fontSize: '13px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px', boxShadow: '0 4px 12px rgba(255, 89, 88, 0.25)' }}>
-                {isSearching ? <Loader2 size={16} className="animate-spin" /> : <Search size={16} />}
-                Track
+              <button type="submit" disabled={isSearching} style={{ background: activeTheme.brand, color: '#FFFFFF', border: 'none', padding: '0 16px', borderRadius: '14px', fontWeight: '700', fontSize: 'clamp(11.5px, 3.2vw, 13px)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px', boxShadow: '0 4px 12px rgba(255, 89, 88, 0.25)', flexShrink: 0, whiteSpace: 'nowrap' }}>
+                {isSearching ? <Loader2 size={16} className="animate-spin" style={{ flexShrink: 0 }} /> : <Search size={16} style={{ flexShrink: 0 }} />}
+                <span>Track</span>
               </button>
             </form>
 
             {searchError && (
-              <div style={{ fontSize: '12px', color: '#DC2626', fontWeight: '600' }}>
+              <div style={{ fontSize: 'clamp(11px, 3vw, 12px)', color: '#DC2626', fontWeight: '600', minWidth: 0 }}>
                 No order found matching "{searchCode}". Please check your code.
               </div>
             )}
@@ -302,14 +302,14 @@ export default function TrackView({
         ) : (
           <>
             {renderStageTracker(searchedOrder.stage, searchedOrder)}
-            <button type="button" onClick={() => setSearchedOrder(null)} style={{ backgroundColor: 'rgba(197, 160, 89, 0.1)', color: activeTheme.text, border: '1px solid rgba(197, 160, 89, 0.3)', padding: '12px', fontSize: '14px', fontWeight: '600', borderRadius: '14px', width: '100%', cursor: 'pointer', marginTop: '10px' }}>
+            <button type="button" onClick={() => setSearchedOrder(null)} style={{ backgroundColor: 'rgba(197, 160, 89, 0.1)', color: activeTheme.text, border: '1px solid rgba(197, 160, 89, 0.3)', padding: '12px', fontSize: 'clamp(13px, 3.8vw, 14px)', fontWeight: '600', borderRadius: '14px', width: '100%', cursor: 'pointer', marginTop: '10px', boxSizing: 'border-box' }}>
               Track Another Order
             </button>
           </>
         )}
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', width: '100%', marginTop: '4px' }}>
-          <button type="button" onClick={() => setView('home')} style={{ backgroundColor: 'rgba(197, 160, 89, 0.1)', color: activeTheme.text, border: '1px solid rgba(197, 160, 89, 0.3)', padding: '12px', fontSize: '14px', fontWeight: '600', borderRadius: '14px', width: '100%', cursor: 'pointer' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', width: '100%', marginTop: '4px', boxSizing: 'border-box' }}>
+          <button type="button" onClick={() => setView('home')} style={{ backgroundColor: 'rgba(197, 160, 89, 0.1)', color: activeTheme.text, border: '1px solid rgba(197, 160, 89, 0.3)', padding: '12px', fontSize: 'clamp(13px, 3.8vw, 14px)', fontWeight: '600', borderRadius: '14px', width: '100%', cursor: 'pointer', boxSizing: 'border-box' }}>
             Continue Shopping
           </button>
         </div>

@@ -21,7 +21,7 @@ export default function FestiveHampersModal({ isOpen, onClose }) {
   const activeTheme = {
     brand: '#FF5958',
     text: '#1A1816',
-    radius: '24px'
+    radius: 'clamp(20px, 5vw, 24px)' // 💡 FLUID RADIUS
   };
 
   useEffect(() => {
@@ -111,8 +111,8 @@ export default function FestiveHampersModal({ isOpen, onClose }) {
         onClick={(e) => e.stopPropagation()}
         style={{
           background: 'linear-gradient(135deg, #FFFDF9 0%, #FAF4EB 100%)', 
-          borderRadius: '24px', 
-          padding: '20px 20px 18px 20px',
+          borderRadius: activeTheme.radius, 
+          padding: 'clamp(16px, 4vw, 20px)', // 💡 FLUID PADDING
           maxWidth: '380px', 
           width: '100%', 
           boxSizing: 'border-box',
@@ -145,7 +145,8 @@ export default function FestiveHampersModal({ isOpen, onClose }) {
             justifyContent: 'center', 
             cursor: 'pointer', 
             color: '#8A6D2B', 
-            zIndex: 10
+            zIndex: 10,
+            flexShrink: 0
           }}
         >
           <X size={16} />
@@ -166,7 +167,7 @@ export default function FestiveHampersModal({ isOpen, onClose }) {
             <Gift size={16} color="#C5A059" style={{ flexShrink: 0 }} />
             <span style={{ 
               fontFamily: "'Cormorant Garamond', serif", 
-              fontSize: '18px', 
+              fontSize: 'var(--font-h2)', // 💡 FLUID TYPOGRAPHY
               fontWeight: '700', 
               color: activeTheme.text, 
               textTransform: 'uppercase', 
@@ -196,15 +197,15 @@ export default function FestiveHampersModal({ isOpen, onClose }) {
           }}
         >
           <div style={{ marginBottom: '8px', textAlign: 'left' }}>
-            <h3 style={{ margin: '0 0 2px 0', fontFamily: "'Cormorant Garamond', serif", fontSize: '17px', color: '#1A1816', fontWeight: '600' }}>
+            <h3 style={{ margin: '0 0 2px 0', fontFamily: "'Cormorant Garamond', serif", fontSize: 'clamp(15px, 4vw, 17px)', color: '#1A1816', fontWeight: '600' }}>
               ✦ Curated Collections ✦
             </h3>
-            <p style={{ margin: 0, fontSize: '10.5px', color: '#78716C', fontWeight: '500', lineHeight: '1.35' }}>
+            <p style={{ margin: 0, fontSize: 'var(--font-caption)', color: '#78716C', fontWeight: '500', lineHeight: '1.35' }}>
               Fill out details below or submit to initiate a WhatsApp discussion with us:
             </p>
           </div>
 
-          <form onSubmit={submitHamperWhatsApp} style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+          <form onSubmit={submitHamperWhatsApp} style={{ display: 'flex', flexDirection: 'column', gap: '8px', width: '100%', boxSizing: 'border-box' }}>
             {/* Name Field */}
             <input 
               type="text"
@@ -215,7 +216,7 @@ export default function FestiveHampersModal({ isOpen, onClose }) {
               style={{
                 width: '100%', padding: '9px 12px', borderRadius: '10px',
                 border: '1px solid rgba(197, 160, 89, 0.5)', backgroundColor: '#FFF',
-                fontSize: '11.5px', boxSizing: 'border-box', outline: 'none', color: '#1A1816'
+                fontSize: 'var(--font-caption)', boxSizing: 'border-box', outline: 'none', color: '#1A1816'
               }}
             />
 
@@ -227,7 +228,7 @@ export default function FestiveHampersModal({ isOpen, onClose }) {
                 style={{
                   width: '100%', padding: '9px 32px 9px 12px', borderRadius: '10px',
                   border: '1px solid rgba(197, 160, 89, 0.5)', backgroundColor: '#FFF',
-                  fontSize: '11.5px', boxSizing: 'border-box', outline: 'none', color: '#1A1816', 
+                  fontSize: 'var(--font-caption)', boxSizing: 'border-box', outline: 'none', color: '#1A1816', 
                   cursor: 'pointer', appearance: 'none', WebkitAppearance: 'none'
                 }}
               >
@@ -242,7 +243,7 @@ export default function FestiveHampersModal({ isOpen, onClose }) {
                 color="#8A6D2B" 
                 style={{ 
                   position: 'absolute', right: '12px', top: '50%', 
-                  transform: 'translateY(-50%)', pointerEvents: 'none' 
+                  transform: 'translateY(-50%)', pointerEvents: 'none', flexShrink: 0
                 }} 
               />
             </div>
@@ -257,7 +258,7 @@ export default function FestiveHampersModal({ isOpen, onClose }) {
                 style={{
                   width: '100%', padding: '8px 12px', borderRadius: '10px',
                   border: '1px solid rgba(197, 160, 89, 0.5)', backgroundColor: '#FFF',
-                  fontSize: '11.5px', boxSizing: 'border-box', outline: 'none', color: '#1A1816'
+                  fontSize: 'var(--font-caption)', boxSizing: 'border-box', outline: 'none', color: '#1A1816'
                 }}
               />
             )}
@@ -273,7 +274,7 @@ export default function FestiveHampersModal({ isOpen, onClose }) {
                 style={{
                   flex: 1, minWidth: 0, padding: '9px 12px', borderRadius: '10px',
                   border: '1px solid rgba(197, 160, 89, 0.5)', backgroundColor: '#FFF',
-                  fontSize: '11.5px', boxSizing: 'border-box', outline: 'none', color: '#1A1816'
+                  fontSize: 'var(--font-caption)', boxSizing: 'border-box', outline: 'none', color: '#1A1816'
                 }}
               />
               <input 
@@ -284,7 +285,7 @@ export default function FestiveHampersModal({ isOpen, onClose }) {
                 style={{
                   flex: 1, minWidth: 0, padding: '9px 12px', borderRadius: '10px',
                   border: '1px solid rgba(197, 160, 89, 0.5)', backgroundColor: '#FFF',
-                  fontSize: '11.5px', boxSizing: 'border-box', outline: 'none', color: '#1A1816', cursor: 'pointer'
+                  fontSize: 'var(--font-caption)', boxSizing: 'border-box', outline: 'none', color: '#1A1816', cursor: 'pointer'
                 }}
               />
             </div>
@@ -312,7 +313,8 @@ export default function FestiveHampersModal({ isOpen, onClose }) {
                         fontWeight: '600',
                         cursor: 'pointer',
                         transition: 'all 0.2s ease',
-                        boxShadow: isSelected ? '0 2px 4px rgba(197, 160, 89, 0.3)' : 'none'
+                        boxShadow: isSelected ? '0 2px 4px rgba(197, 160, 89, 0.3)' : 'none',
+                        flexShrink: 0
                       }}
                     >
                       {isSelected ? '✓ ' : '+ '}{item}
@@ -331,7 +333,7 @@ export default function FestiveHampersModal({ isOpen, onClose }) {
               style={{
                 width: '100%', padding: '9px 12px', borderRadius: '10px',
                 border: '1px solid rgba(197, 160, 89, 0.5)', backgroundColor: '#FFF',
-                fontSize: '11.5px', boxSizing: 'border-box', outline: 'none', color: '#1A1816', resize: 'none', marginTop: '1px'
+                fontSize: 'var(--font-caption)', boxSizing: 'border-box', outline: 'none', color: '#1A1816', resize: 'none', marginTop: '1px'
               }}
             />
 
@@ -341,12 +343,12 @@ export default function FestiveHampersModal({ isOpen, onClose }) {
               style={{
                 background: '#25D366',
                 color: '#FFF', border: 'none', borderRadius: '11px', padding: '10px',
-                fontSize: '12px', fontWeight: '700', cursor: 'pointer', display: 'flex',
+                fontSize: 'var(--font-caption)', fontWeight: '700', cursor: 'pointer', display: 'flex',
                 alignItems: 'center', justifyContent: 'center', gap: '6px',
-                boxShadow: '0 4px 12px rgba(37, 211, 102, 0.3)', marginTop: '2px'
+                boxShadow: '0 4px 12px rgba(37, 211, 102, 0.3)', marginTop: '2px', width: '100%', boxSizing: 'border-box'
               }}
             >
-              <MessageSquare size={14} /> Send Inquiry via WhatsApp
+              <MessageSquare size={14} style={{ flexShrink: 0 }} /> Send Inquiry via WhatsApp
             </button>
           </form>
         </div>

@@ -14,11 +14,11 @@ export default function EmptyState({
       flexDirection: 'column',
       alignItems: 'center',
       justifyContent: 'center',
-      padding: '40px 20px',
+      padding: 'clamp(30px, 8vw, 40px) clamp(16px, 5vw, 20px)', // 💡 FLUID PADDING
       textAlign: 'center',
       background: 'linear-gradient(135deg, #FFFDF9 0%, #FAF4EB 100%)',
       border: '1px solid rgba(197, 160, 89, 0.4)',
-      borderRadius: '20px',
+      borderRadius: 'clamp(16px, 4vw, 20px)', // 💡 FLUID RADIUS
       boxShadow: '0 8px 24px rgba(44, 34, 30, 0.04)',
       margin: '20px 0',
       boxSizing: 'border-box',
@@ -34,14 +34,15 @@ export default function EmptyState({
         alignItems: 'center',
         justifyContent: 'center',
         marginBottom: '16px',
-        border: '1px solid rgba(197, 160, 89, 0.3)'
+        border: '1px solid rgba(197, 160, 89, 0.3)',
+        flexShrink: 0
       }}>
         <Icon size={30} color="#C5A059" strokeWidth={1.8} />
       </div>
 
       <h3 style={{
         fontFamily: "'Cormorant Garamond', serif",
-        fontSize: '22px',
+        fontSize: 'var(--font-h2)', // 💡 FLUID TYPOGRAPHY
         fontWeight: '700',
         color: '#1A1816',
         margin: '0 0 8px 0',
@@ -51,7 +52,7 @@ export default function EmptyState({
       </h3>
 
       <p style={{
-        fontSize: '13px',
+        fontSize: 'var(--font-body)', // 💡 FLUID TYPOGRAPHY
         color: '#78716C',
         lineHeight: '1.5',
         maxWidth: '280px',
@@ -68,8 +69,8 @@ export default function EmptyState({
           color: '#FFFFFF',
           border: 'none',
           borderRadius: '14px',
-          padding: '12px 24px',
-          fontSize: '13px',
+          padding: 'clamp(10px, 3vw, 12px) clamp(20px, 5vw, 24px)', // 💡 FLUID PADDING
+          fontSize: 'var(--font-body)', // 💡 FLUID TYPOGRAPHY
           fontWeight: '700',
           cursor: 'pointer',
           display: 'flex',
@@ -80,7 +81,7 @@ export default function EmptyState({
           outline: 'none'
         }}
       >
-        {actionText} <ArrowRight size={16} strokeWidth={2.5} />
+        {actionText} <ArrowRight size={16} strokeWidth={2.5} style={{ flexShrink: 0 }} />
       </button>
     </div>
   );

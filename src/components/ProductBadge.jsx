@@ -56,22 +56,24 @@ export default function ProductBadge({ tagKey }) {
         display: 'inline-flex',
         alignItems: 'center',
         gap: '4px',
-        padding: '4px 10px',
+        padding: 'clamp(3px, 1vw, 4px) clamp(8px, 2.5vw, 10px)', // 💡 FLUID PADDING
         borderRadius: '20px',
         background: config.bg,
         color: config.color,
-        fontSize: '11px',
+        fontSize: 'clamp(10px, 2.8vw, 11px)', // 💡 FLUID TYPOGRAPHY
         fontWeight: '800',
         letterSpacing: '0.4px',
         textTransform: 'uppercase',
         boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
         whiteSpace: 'nowrap',
         backdropFilter: 'blur(4px)',
-        fontFamily: "'Plus Jakarta Sans', sans-serif"
+        fontFamily: "'Plus Jakarta Sans', sans-serif",
+        flexShrink: 0,
+        minWidth: 0
       }}
     >
-      {IconComponent && <IconComponent size={12} strokeWidth={2.5} />}
-      {config.label}
+      {IconComponent && <IconComponent size={12} strokeWidth={2.5} style={{ flexShrink: 0 }} />}
+      <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{config.label}</span>
     </span>
   );
 }

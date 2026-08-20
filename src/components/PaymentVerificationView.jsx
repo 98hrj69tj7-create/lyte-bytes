@@ -5,7 +5,7 @@ export default function PaymentVerificationView({
   theme = {}, 
   onVerificationComplete = () => {},
   setView = () => {},
-  orderId = "LB-9482" // Can be passed dynamically from props
+  orderId = "LB-9482"
 }) {
   const [isVerified, setIsVerified] = useState(false);
 
@@ -14,11 +14,10 @@ export default function PaymentVerificationView({
     text: theme?.text || '#1A1816',
     border: theme?.border || '1px solid rgba(197, 160, 89, 0.4)',
     bg: theme?.bg || '#FFFDF9',
-    radius: theme?.radius || '20px',
+    radius: 'clamp(18px, 5vw, 20px)', // 💡 FLUID RADIUS
   };
 
   useEffect(() => {
-    // Simulate secure bank communication latency (3 seconds), then transition to Success View
     const timer = setTimeout(() => {
       setIsVerified(true);
       onVerificationComplete();
@@ -56,7 +55,7 @@ export default function PaymentVerificationView({
         background: 'linear-gradient(135deg, #FFFDF9 0%, #FAF4EB 100%)',
         border: '1.5px solid rgba(197, 160, 89, 0.5)',
         borderRadius: activeTheme.radius,
-        padding: '36px 24px',
+        padding: 'clamp(24px, 5vw, 36px) clamp(18px, 4vw, 24px)', // 💡 FLUID PADDING
         width: '100%',
         maxWidth: '380px',
         boxShadow: '0 12px 32px rgba(44, 34, 30, 0.08)',
@@ -81,20 +80,23 @@ export default function PaymentVerificationView({
               </div>
             </div>
 
-            <div>
+            <div style={{ minWidth: 0, width: '100%' }}>
               <h3 style={{ 
                 fontFamily: "'Cormorant Garamond', serif",
-                fontSize: '22px', 
+                fontSize: 'var(--font-h2)', // 💡 FLUID TYPOGRAPHY
                 fontWeight: '700', 
                 color: activeTheme.text, 
                 margin: '0 0 6px 0',
                 textTransform: 'uppercase',
-                letterSpacing: '0.8px'
+                letterSpacing: '0.8px',
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis'
               }}>
                 Verifying Payment
               </h3>
               <p style={{ 
-                fontSize: '12.5px', 
+                fontSize: 'var(--font-caption)', // 💡 FLUID TYPOGRAPHY
                 color: '#78716C', 
                 margin: 0, 
                 lineHeight: '1.4',
@@ -112,13 +114,13 @@ export default function PaymentVerificationView({
               border: '1px solid #059669',
               padding: '6px 12px',
               borderRadius: '20px',
-              fontSize: '11.5px',
+              fontSize: 'var(--font-caption)',
               fontWeight: '600',
               color: '#065F46',
               marginTop: '6px'
             }}>
-              <ShieldCheck size={15} />
-              <span>256-Bit Bank Grade Encryption</span>
+              <ShieldCheck size={15} style={{ flexShrink: 0 }} />
+              <span style={{ whiteSpace: 'nowrap' }}>256-Bit Bank Grade Encryption</span>
             </div>
           </>
         ) : (
@@ -134,27 +136,31 @@ export default function PaymentVerificationView({
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              position: 'relative'
+              position: 'relative',
+              flexShrink: 0
             }}>
               <Sparkles size={20} color="#C5A059" style={{ position: 'absolute', top: '-4px', right: '-4px' }} />
               <CheckCircle2 size={36} color="#059669" />
             </div>
 
-            <div>
+            <div style={{ minWidth: 0, width: '100%' }}>
               <span style={{ fontSize: '10px', fontWeight: '800', color: '#8A6D2B', letterSpacing: '1.5px', textTransform: 'uppercase' }}>
                 ✦ Order Confirmed ✦
               </span>
               <h3 style={{ 
                 fontFamily: "'Cormorant Garamond', serif",
-                fontSize: '24px', 
+                fontSize: 'clamp(20px, 5vw, 24px)', // 💡 FLUID TYPOGRAPHY
                 fontWeight: '700', 
                 color: activeTheme.text, 
-                margin: '2px 0 6px 0'
+                margin: '2px 0 6px 0',
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis'
               }}>
                 Thank You For Your Order
               </h3>
               <p style={{ 
-                fontSize: '12.5px', 
+                fontSize: 'var(--font-caption)', // 💡 FLUID TYPOGRAPHY
                 color: '#78716C', 
                 margin: 0, 
                 lineHeight: '1.4',
@@ -174,13 +180,15 @@ export default function PaymentVerificationView({
               display: 'flex',
               justifyContent: 'space-between',
               alignItems: 'center',
-              boxSizing: 'border-box'
+              boxSizing: 'border-box',
+              gap: '8px',
+              minWidth: 0
             }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <Package size={18} color="#C5A059" />
-                <span style={{ fontSize: '12px', fontWeight: '600', color: '#78716C' }}>Order Reference</span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', minWidth: 0 }}>
+                <Package size={18} color="#C5A059" style={{ flexShrink: 0 }} />
+                <span style={{ fontSize: 'var(--font-caption)', fontWeight: '600', color: '#78716C', whiteSpace: 'nowrap' }}>Order Reference</span>
               </div>
-              <span style={{ fontSize: '13px', fontWeight: '800', color: activeTheme.text, letterSpacing: '0.5px' }}>
+              <span style={{ fontSize: 'var(--font-body)', fontWeight: '800', color: activeTheme.text, letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>
                 {orderId}
               </span>
             </div>
@@ -195,7 +203,7 @@ export default function PaymentVerificationView({
                 border: 'none',
                 borderRadius: '14px',
                 padding: '13px',
-                fontSize: '14px',
+                fontSize: 'var(--font-body)', // 💡 FLUID TYPOGRAPHY
                 fontWeight: '700',
                 cursor: 'pointer',
                 display: 'flex',
@@ -205,10 +213,11 @@ export default function PaymentVerificationView({
                 boxShadow: '0 4px 16px rgba(225, 29, 72, 0.25)',
                 transition: 'all 0.25s ease',
                 outline: 'none',
-                marginTop: '4px'
+                marginTop: '4px',
+                boxSizing: 'border-box'
               }}
             >
-              Track Live Order <ArrowRight size={16} strokeWidth={2.5} />
+              Track Live Order <ArrowRight size={16} strokeWidth={2.5} style={{ flexShrink: 0 }} />
             </button>
           </>
         )}

@@ -1,7 +1,6 @@
 import React, { useLayoutEffect, useEffect, useRef } from 'react';
 import { ArrowLeft, ShieldCheck, ExternalLink } from 'lucide-react';
 
-// --- CENTRALIZED APP CONFIGURATION (LOCAL PUBLIC PATHS) ---
 const APP_CONFIG = {
   'Google Pay': {
     logo: '/logos/gpay.png',
@@ -50,11 +49,10 @@ export default function PaymentView({
     text: theme?.text || '#1A1816',
     border: theme?.border || '1px solid rgba(197, 160, 89, 0.4)',
     bg: theme?.bg || '#FFFDF9',
-    radius: theme?.radius || '20px',
+    radius: 'clamp(16px, 4vw, 20px)', // 💡 FLUID RADIUS
     buttonBg: theme?.buttonBg || '#FF5958'
   };
 
-  // Default selection to Google Pay on mount if none selected
   useEffect(() => {
     if (!upiApp) {
       setUpiApp('Google Pay');
@@ -64,7 +62,6 @@ export default function PaymentView({
     }
   }, [upiApp, setUpiApp, setUpiId]);
 
-  // Absolute scroll wipe to force view to start at the top
   useLayoutEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
     if (containerRef.current) {
@@ -82,7 +79,6 @@ export default function PaymentView({
     return () => clearTimeout(t);
   }, []);
 
-  // Calculation logic for cart items and delivery
   const calculatedItemsTotal = cartTotal || total || (Array.isArray(cart) ? cart.reduce((acc, item) => acc + (Number(item.price) || 0) * (Number(item.qty) || 1), 0) : 0);
   
   const calculatedDeliveryFee = (() => {
@@ -102,7 +98,6 @@ export default function PaymentView({
     ? orderTotal 
     : (Number(calculatedItemsTotal) + Number(calculatedDeliveryFee));
 
-  // Function to handle launching native UPI apps directly
   const handleAppLaunch = (app) => {
     const targetApp = app || 'Google Pay';
     setUpiApp(targetApp);
@@ -133,22 +128,15 @@ export default function PaymentView({
     window.addEventListener('pagehide', () => clearTimeout(fallbackTimer), { once: true });
   };
 
-  // Triggers deep link + places order + opens track view
   const handlePaymentSubmit = () => {
     const selectedApp = upiApp || 'Google Pay';
-    
-    // 1. Set UPI Payment state
     setPayment('UPI');
 
-    // 2. Execute Order Placement callback if available
     if (typeof onPlaceOrder === 'function') {
       onPlaceOrder();
     }
 
-    // 3. Launch selected UPI App (Google Pay by default)
     handleAppLaunch(selectedApp);
-
-    // 4. Navigate to live tracking
     setView('track');
   };
 
@@ -172,7 +160,7 @@ export default function PaymentView({
       <div ref={topAnchorRef} style={{ height: 0, width: 0, overflow: 'hidden' }} />
 
       {/* ================= UNIFORM HEADER SECTION ================= */}
-      <div style={{ display: 'flex', alignItems: 'center', position: 'relative', marginBottom: '20px', padding: '6px 0' }}>
+      <div style={{ display: 'flex', alignItems: 'center', position: 'relative', marginBottom: '20px', padding: '6px 0', gap: '8px' }}>
         <button 
           onClick={() => setView('delivery')} 
           style={{ 
@@ -183,15 +171,16 @@ export default function PaymentView({
             alignItems: 'center', 
             gap: '6px', 
             color: activeTheme.text, 
-            fontSize: '13px', 
+            fontSize: 'var(--font-caption)', // 💡 FLUID TYPOGRAPHY
             fontWeight: '600', 
             padding: '6px 12px', 
             borderRadius: '12px', 
             zIndex: 1,
-            transition: 'all 0.2s ease'
+            transition: 'all 0.2s ease',
+            flexShrink: 0
           }}
         >
-          <ArrowLeft size={15}/> Delivery
+          <ArrowLeft size={15} style={{ flexShrink: 0 }}/> Delivery
         </button>
         <h2 style={{ 
           position: 'absolute', 
@@ -199,13 +188,18 @@ export default function PaymentView({
           right: 0, 
           textAlign: 'center', 
           fontFamily: "'Cormorant Garamond', serif",
-          fontSize: '21px', 
+          fontSize: 'var(--font-h2)', // 💡 FLUID TYPOGRAPHY
           color: '#FF5958', 
           margin: 0, 
           fontWeight: '700', 
           letterSpacing: '0.5px', 
           textTransform: 'uppercase', 
-          pointerEvents: 'none' 
+          pointerEvents: 'none',
+          whiteSpace: 'nowrap',
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          paddingLeft: '80px',
+          paddingRight: '80px'
         }}>
           Payment
         </h2>
@@ -216,36 +210,37 @@ export default function PaymentView({
         border: '1px solid rgba(197, 160, 89, 0.4)', 
         borderRadius: activeTheme.radius, 
         background: 'linear-gradient(135deg, #FFFDF9 0%, #FAF4EB 100%)', 
-        padding: '18px',
+        padding: 'clamp(14px, 4vw, 18px)', // 💡 FLUID PADDING
         boxShadow: '0 8px 24px rgba(44, 34, 30, 0.06)',
         display: 'flex',
         flexDirection: 'column',
         gap: '16px',
         boxSizing: 'border-box',
-        width: '100%'
+        width: '100%',
+        minWidth: 0
       }}>
 
         {/* Bill Summary Sub-Section */}
-        <div style={{ borderBottom: '1px solid rgba(197, 160, 89, 0.35)', paddingBottom: '12px' }}>
+        <div style={{ borderBottom: '1px solid rgba(197, 160, 89, 0.35)', paddingBottom: '12px', minWidth: 0 }}>
           <div style={{ fontSize: '11.5px', fontWeight: '800', color: '#78716C', textTransform: 'uppercase', letterSpacing: '0.8px', marginBottom: '8px', textAlign: 'left' }}>
             Bill Summary
           </div>
           
-          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13.5px', color: '#78716C', fontWeight: '500', marginBottom: '8px' }}>
-            <span>Items Total</span>
-            <span style={{ color: activeTheme.text, fontWeight: '600' }}>₹{Number(calculatedItemsTotal).toFixed(2)}</span>
+          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 'var(--font-caption)', color: '#78716C', fontWeight: '500', marginBottom: '8px', minWidth: 0, gap: '8px' }}>
+            <span style={{ whiteSpace: 'nowrap' }}>Items Total</span>
+            <span style={{ color: activeTheme.text, fontWeight: '600', whiteSpace: 'nowrap' }}>₹{Number(calculatedItemsTotal).toFixed(2)}</span>
           </div>
 
-          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13.5px', color: '#78716C', fontWeight: '500', marginBottom: '8px' }}>
-            <span>Delivery Charges</span>
-            <span style={{ fontSize: '11.5px', color: calculatedDeliveryFee === 0 ? '#059669' : activeTheme.brand, fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.3px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 'var(--font-caption)', color: '#78716C', fontWeight: '500', marginBottom: '8px', minWidth: 0, gap: '8px' }}>
+            <span style={{ whiteSpace: 'nowrap' }}>Delivery Charges</span>
+            <span style={{ fontSize: '11.5px', color: calculatedDeliveryFee === 0 ? '#059669' : activeTheme.brand, fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.3px', whiteSpace: 'nowrap' }}>
               {calculatedDeliveryFee === 0 ? 'FREE (₹0)' : `₹${calculatedDeliveryFee}`}
             </span>
           </div>
 
-          <div style={{ display: 'flex', justifyContent: 'space-between', paddingTop: '10px', borderTop: '1px dashed rgba(197, 160, 89, 0.4)', fontSize: '16px', fontWeight: '700', color: activeTheme.text }}>
-            <span>Grand Total</span>
-            <span style={{ color: activeTheme.brand }}>₹{Number(calculatedGrandTotal).toFixed(2)}</span>
+          <div style={{ display: 'flex', justifyContent: 'space-between', paddingTop: '10px', borderTop: '1px dashed rgba(197, 160, 89, 0.4)', fontSize: 'clamp(15px, 4vw, 16px)', fontWeight: '700', color: activeTheme.text, minWidth: 0, gap: '8px' }}>
+            <span style={{ whiteSpace: 'nowrap' }}>Grand Total</span>
+            <span style={{ color: activeTheme.brand, whiteSpace: 'nowrap' }}>₹{Number(calculatedGrandTotal).toFixed(2)}</span>
           </div>
         </div>
 
@@ -260,18 +255,19 @@ export default function PaymentView({
           gap: '12px',
           boxSizing: 'border-box',
           boxShadow: '0 2px 8px rgba(0,0,0,0.02)',
-          textAlign: 'left'
+          textAlign: 'left',
+          minWidth: 0
         }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <span style={{ fontSize: '11px', fontWeight: '800', color: '#78716C', textTransform: 'uppercase', letterSpacing: '0.6px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '8px', minWidth: 0 }}>
+            <span style={{ fontSize: '11px', fontWeight: '800', color: '#78716C', textTransform: 'uppercase', letterSpacing: '0.6px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
               Tap to Select UPI App
             </span>
-            <span style={{ color: '#059669', fontSize: '10.5px', background: '#ECFDF5', padding: '2px 8px', borderRadius: '8px', fontWeight: '800' }}>
+            <span style={{ color: '#059669', fontSize: '10.5px', background: '#ECFDF5', padding: '2px 8px', borderRadius: '8px', fontWeight: '800', whiteSpace: 'nowrap', flexShrink: 0 }}>
               Auto-fills ₹{Number(calculatedGrandTotal).toFixed(2)}
             </span>
           </div>
           
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px', boxSizing: 'border-box' }}>
             {Object.keys(APP_CONFIG).map((app) => {
               const isSelected = currentSelectedApp === app;
               return (
@@ -295,18 +291,20 @@ export default function PaymentView({
                     justifyContent: 'center',
                     padding: '6px 4px',
                     gap: '4px',
-                    transition: 'all 0.18s ease'
+                    transition: 'all 0.18s ease',
+                    boxSizing: 'border-box',
+                    minWidth: 0
                   }}
                 >
-                  <div style={{ height: '32px', width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <div style={{ height: '32px', width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', minWidth: 0 }}>
                     <img 
                       src={APP_CONFIG[app].logo} 
                       alt={app} 
                       style={{ maxHeight: '36px', maxWidth: '80%', objectFit: 'contain' }} 
                     />
                   </div>
-                  <span style={{ fontSize: '11px', fontWeight: '700', color: isSelected ? activeTheme.brand : activeTheme.text, whiteSpace: 'nowrap', display: 'flex', alignItems: 'center', gap: '2px' }}>
-                    {app} <ExternalLink size={9} color={isSelected ? activeTheme.brand : '#78716C'} />
+                  <span style={{ fontSize: '11px', fontWeight: '700', color: isSelected ? activeTheme.brand : activeTheme.text, whiteSpace: 'nowrap', display: 'flex', alignItems: 'center', gap: '2px', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '100%' }}>
+                    {app} <ExternalLink size={9} color={isSelected ? activeTheme.brand : '#78716C'} style={{ flexShrink: 0 }} />
                   </span>
                 </button>
               );
@@ -315,13 +313,13 @@ export default function PaymentView({
         </div>
 
         {/* Security Badge */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', fontSize: '11.5px', color: '#78716C', fontStyle: 'italic', fontWeight: '500' }}>
-          <ShieldCheck size={14} color="#059669" />
-          <span>Direct bank settlement</span>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', fontSize: 'var(--font-caption)', color: '#78716C', fontStyle: 'italic', fontWeight: '500' }}>
+          <ShieldCheck size={14} color="#059669" style={{ flexShrink: 0 }} />
+          <span style={{ whiteSpace: 'nowrap' }}>Direct bank settlement</span>
         </div>
 
         {/* Action Buttons */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', width: '100%', marginTop: '4px' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', width: '100%', marginTop: '4px', boxSizing: 'border-box' }}>
           <button 
             type="button"
             onClick={handlePaymentSubmit} 
@@ -337,7 +335,7 @@ export default function PaymentView({
               color: '#FFFFFF',
               marginBottom: 0, 
               padding: '14px', 
-              fontSize: '15px', 
+              fontSize: 'var(--font-body)', // 💡 FLUID TYPOGRAPHY
               fontWeight: '600',
               borderRadius: '14px', 
               width: '100%', 
@@ -364,7 +362,7 @@ export default function PaymentView({
               border: '1px solid rgba(197, 160, 89, 0.3)',
               marginBottom: 0, 
               padding: '12px', 
-              fontSize: '14px', 
+              fontSize: 'var(--font-body)', // 💡 FLUID TYPOGRAPHY
               fontWeight: '600',
               borderRadius: '14px', 
               width: '100%', 

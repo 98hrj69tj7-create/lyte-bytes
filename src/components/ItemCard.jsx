@@ -311,7 +311,7 @@ export default function ItemCard({ item, openModal, addToCart, resolveImagePath,
         onMouseLeave={() => setIsHovered(false)}
         style={{ 
           padding: isGridView ? '10px' : '10px 12px', 
-          borderRadius: '16px',               
+          borderRadius: 'clamp(14px, 4vw, 16px)',               
           display: 'flex', 
           flexDirection: isGridView ? 'column' : 'row', 
           gap: isGridView ? '10px' : '12px',    
@@ -325,7 +325,7 @@ export default function ItemCard({ item, openModal, addToCart, resolveImagePath,
           WebkitBackdropFilter: 'blur(16px)',
           border: isHovered 
             ? '1px solid rgba(255, 89, 88, 0.4)' 
-            : '1px solid rgba(197, 160, 89, 0.25)', // Subtle warm gold-tinted border matching home view
+            : '1px solid rgba(197, 160, 89, 0.25)',
           
           boxShadow: isHovered 
             ? '0 8px 24px -4px rgba(0, 0, 0, 0.5), 0 0 16px rgba(255, 89, 88, 0.12)' 
@@ -421,8 +421,8 @@ export default function ItemCard({ item, openModal, addToCart, resolveImagePath,
               top: '3px',
               right: '5px',
               backgroundColor: 'rgba(18, 15, 13, 0.85)',
-              border: '1px solid rgba(197, 160, 89, 0.6)', // Luxury Gold border
-              color: '#FFD700',                          // Gold icon color
+              border: '1px solid rgba(197, 160, 89, 0.6)',
+              color: '#FFD700',
               borderRadius: '50%',
               width: '15px',
               height: '15px',
@@ -435,7 +435,8 @@ export default function ItemCard({ item, openModal, addToCart, resolveImagePath,
               boxShadow: '0 2px 6px rgba(0, 0, 0, 0.6)',
               padding: 0,
               zIndex: 2,
-              transition: 'transform 0.2s ease, border-color 0.2s ease'
+              transition: 'transform 0.2s ease, border-color 0.2s ease',
+              flexShrink: 0
             }}
           >
             i
@@ -478,6 +479,7 @@ export default function ItemCard({ item, openModal, addToCart, resolveImagePath,
         </div>
 
         {/* 2. CONTENT COLUMN */}
+        {/* 💡 BULLETPROOF FLEX: minWidth: 0 prevents truncation overflow */}
         <div style={{ 
           flex: 1, 
           display: 'flex', 
@@ -496,18 +498,22 @@ export default function ItemCard({ item, openModal, addToCart, resolveImagePath,
             alignItems: 'flex-start', 
             textAlign: 'left', 
             gap: '1px',
-            width: '100%' 
+            width: '100%',
+            minWidth: 0
           }}>
             <div style={{ 
-              /* Elevated Serif Product Title matching Home & Category aesthetics */
               fontFamily: "'Cormorant Garamond', serif",
               fontWeight: '600', 
-              fontSize: '20px',                
+              fontSize: 'clamp(17px, 4.5vw, 20px)', // 💡 FLUID TYPOGRAPHY
               color: '#FFFFFF',                
               lineHeight: '1.1',
               letterSpacing: '0.4px',
               textAlign: 'left',
-              width: '100%'
+              width: '100%',
+              minWidth: 0,
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: isGridView ? 'normal' : 'nowrap'
             }}>
               {item.name}
             </div>
@@ -518,19 +524,23 @@ export default function ItemCard({ item, openModal, addToCart, resolveImagePath,
                 display: 'flex',
                 alignItems: 'center',
                 gap: '8px',
-                fontSize: '12px', 
+                fontSize: 'var(--font-caption)', // 💡 FLUID TYPOGRAPHY
                 lineHeight: '1.3',
                 letterSpacing: '0.1px',
                 textAlign: 'left',
                 width: '100%',
-                flexWrap: 'wrap'
+                flexWrap: 'wrap',
+                minWidth: 0
               }}>
                 {displayUnit && (
                   <span style={{ 
-                    color: '#C5A059', // Refined gold text tone for units 
+                    color: '#C5A059', 
                     fontStyle: 'italic', 
                     fontWeight: '400',
-                    fontFamily: "sans-serif"
+                    fontFamily: "sans-serif",
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis'
                   }}>
                     {displayUnit}
                   </span>
@@ -540,7 +550,8 @@ export default function ItemCard({ item, openModal, addToCart, resolveImagePath,
                     fontSize: '10px', 
                     color: '#A1A1AA', 
                     fontWeight: '500',
-                    fontStyle: 'normal'
+                    fontStyle: 'normal',
+                    whiteSpace: 'nowrap'
                   }}>
                     {displayUnit ? '• Customisable' : 'Customisable'}
                   </span>
@@ -550,7 +561,7 @@ export default function ItemCard({ item, openModal, addToCart, resolveImagePath,
 
             {/* Primary Tag Badge */}
             {primaryTag && (
-              <div style={{ marginTop: '5px', display: 'flex', justifyContent: 'flex-start', width: '100%' }}>
+              <div style={{ marginTop: '5px', display: 'flex', justifyContent: 'flex-start', width: '100%', minWidth: 0 }}>
                 <InlineTagBadge tagKey={primaryTag} />
               </div>
             )}
@@ -562,11 +573,13 @@ export default function ItemCard({ item, openModal, addToCart, resolveImagePath,
             justifyContent: 'space-between', 
             alignItems: 'center', 
             width: '100%',
-            marginTop: isGridView ? '8px' : '4px'
+            marginTop: isGridView ? '8px' : '4px',
+            minWidth: '0',
+            gap: '8px'
           }}>
-            <div>
+            <div style={{ minWidth: 0 }}>
               {hasVariants && !isGridView && (
-                <span style={{ fontSize: '9.5px', color: '#A1A1AA', fontWeight: '500' }}>
+                <span style={{ fontSize: '9.5px', color: '#A1A1AA', fontWeight: '500', whiteSpace: 'nowrap' }}>
                   Customisable
                 </span>
               )}
@@ -576,16 +589,18 @@ export default function ItemCard({ item, openModal, addToCart, resolveImagePath,
               display: 'flex', 
               alignItems: 'center', 
               gap: '10px',
-              marginLeft: 'auto' 
+              marginLeft: 'auto',
+              flexShrink: 0 
             }}>
               {/* Price Label */}
               <div style={{ 
-                color: '#FF5958',              // Coral Price text color
+                color: '#FF5958',
                 fontWeight: '600', 
-                fontSize: '15px',              
+                fontSize: 'var(--font-body)', // 💡 FLUID TYPOGRAPHY
                 letterSpacing: '-0.2px',
                 lineHeight: '1',
-                textShadow: '0 0 10px rgba(255, 89, 88, 0.25)'
+                textShadow: '0 0 10px rgba(255, 89, 88, 0.25)',
+                whiteSpace: 'nowrap'
               }}>
                 ₹{displayPrice}
               </div>
@@ -600,14 +615,14 @@ export default function ItemCard({ item, openModal, addToCart, resolveImagePath,
                 style={{
                   background: isAddedRecently 
                     ? 'linear-gradient(135deg, #10B981 0%, #059669 100%)' 
-                    : 'linear-gradient(135deg, #FF5958 0%, #E11D48 100%)', // Coral Gradient matching search & buttons
+                    : 'linear-gradient(135deg, #FF5958 0%, #E11D48 100%)',
                   
                   color: '#FFFFFF',
                   border: '1px solid rgba(255, 255, 255, 0.2)',
                   padding: '4px 16px', 
                   borderRadius: '16px',
                   fontWeight: '600',
-                  fontSize: '12.5px',
+                  fontSize: 'var(--font-caption)', // 💡 FLUID TYPOGRAPHY
                   letterSpacing: '0.2px',
                   cursor: 'pointer',
                   boxShadow: isAddedRecently 
@@ -615,7 +630,9 @@ export default function ItemCard({ item, openModal, addToCart, resolveImagePath,
                     : '0 3px 12px rgba(255, 89, 88, 0.3)',
                   transform: isPressed ? 'scale(0.94)' : (isAddedRecently ? 'scale(1.03)' : 'scale(1)'),
                   transition: 'transform 0.15s ease, background 0.3s ease, box-shadow 0.3s ease',
-                  lineHeight: '1.2'
+                  lineHeight: '1.2',
+                  flexShrink: 0,
+                  whiteSpace: 'nowrap'
                 }}
               >
                 {isAddedRecently ? '✓ Added' : 'Add'}
@@ -642,16 +659,17 @@ export default function ItemCard({ item, openModal, addToCart, resolveImagePath,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            padding: '12px'
+            padding: '12px',
+            boxSizing: 'border-box'
           }}
         >
           <div 
             onClick={(e) => e.stopPropagation()}
             style={{
               background: 'linear-gradient(135deg, rgba(32, 27, 24, 0.98) 0%, rgba(18, 15, 13, 0.98) 100%)',
-              border: '1px solid rgba(197, 160, 89, 0.4)', // Warm gold border matching modal tone
+              border: '1px solid rgba(197, 160, 89, 0.4)',
               borderRadius: '20px',
-              padding: '22px 20px',
+              padding: 'clamp(16px, 4vw, 22px)', // 💡 FLUID PADDING
               maxWidth: '380px',
               width: '100%',
               boxShadow: '0 20px 40px rgba(0, 0, 0, 0.8), 0 0 20px rgba(255, 215, 0, 0.12)',
@@ -660,7 +678,8 @@ export default function ItemCard({ item, openModal, addToCart, resolveImagePath,
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'flex-start',
-              fontFamily: "'Plus Jakarta Sans', sans-serif"
+              fontFamily: "'Plus Jakarta Sans', sans-serif",
+              boxSizing: 'border-box'
             }}
           >
             {/* Modal Header Row */}
@@ -669,17 +688,22 @@ export default function ItemCard({ item, openModal, addToCart, resolveImagePath,
               justifyContent: 'space-between', 
               alignItems: 'flex-start', 
               width: '100%', 
-              marginBottom: '10px' 
+              marginBottom: '10px',
+              gap: '8px',
+              minWidth: 0
             }}>
               <h4 style={{ 
                 margin: 0, 
-                fontSize: '17px', 
+                fontSize: 'clamp(16px, 4.5vw, 17px)', // 💡 FLUID TYPOGRAPHY
                 fontWeight: '700', 
                 color: '#FFD700',               
                 lineHeight: '1.3',
                 textAlign: 'left',
-                paddingRight: '10px',
-                fontFamily: "'Cormorant Garamond', serif"
+                paddingRight: '4px',
+                fontFamily: "'Cormorant Garamond', serif",
+                minWidth: 0,
+                overflow: 'hidden',
+                textOverflow: 'ellipsis'
               }}>
                 {guideline.title}
               </h4>
@@ -711,7 +735,7 @@ export default function ItemCard({ item, openModal, addToCart, resolveImagePath,
               display: 'inline-flex',
               alignItems: 'center',
               gap: '4px',
-              fontSize: '11px',
+              fontSize: 'var(--font-caption)', // 💡 FLUID TYPOGRAPHY
               color: '#FF7372',
               marginBottom: '16px',
               backgroundColor: 'rgba(255, 89, 88, 0.12)',
@@ -719,10 +743,12 @@ export default function ItemCard({ item, openModal, addToCart, resolveImagePath,
               borderRadius: '8px',
               border: '1px solid rgba(255, 89, 88, 0.25)',
               textAlign: 'left',
-              alignSelf: 'flex-start'
+              alignSelf: 'flex-start',
+              maxWidth: '100%',
+              boxSizing: 'border-box'
             }}>
-              <span style={{ fontSize: '12px' }}>⏳</span> 
-              <span><strong>Shelf Life:</strong> {guideline.shelfLife}</span>
+              <span style={{ fontSize: '12px', flexShrink: 0 }}>⏳</span> 
+              <span style={{ minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis' }}><strong>Shelf Life:</strong> {guideline.shelfLife}</span>
             </div>
 
             {/* Instruction Steps */}
@@ -732,7 +758,7 @@ export default function ItemCard({ item, openModal, addToCart, resolveImagePath,
               display: 'flex', 
               flexDirection: 'column', 
               gap: '10px',
-              fontSize: '12.5px',
+              fontSize: 'var(--font-caption)', // 💡 FLUID TYPOGRAPHY
               lineHeight: '1.5',
               color: '#E4E4E7',
               textAlign: 'left',
@@ -757,10 +783,11 @@ export default function ItemCard({ item, openModal, addToCart, resolveImagePath,
                 border: '1px solid rgba(255, 255, 255, 0.2)',
                 borderRadius: '12px',
                 fontWeight: '600',
-                fontSize: '13px',
+                fontSize: 'var(--font-body)', // 💡 FLUID TYPOGRAPHY
                 cursor: 'pointer',
                 boxShadow: '0 4px 14px rgba(255, 89, 88, 0.3)',
-                textAlign: 'center'
+                textAlign: 'center',
+                boxSizing: 'border-box'
               }}
             >
               Got it
