@@ -1047,6 +1047,7 @@ export default function HomeAndSubCategoryView({
                 justifyContent: 'center',
                 flexShrink: '0',
                 position: 'relative',
+                backgroundColor: 'rgba(197, 160, 89, 0.12)',
                 zIndex: 2
               }}>
                 <ChevronRight size={18} color="#8A6D2B" strokeWidth={2.5} />

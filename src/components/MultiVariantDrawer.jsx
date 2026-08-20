@@ -126,10 +126,10 @@ export default function MultiVariantDrawer({ selectedItem, setSelectedItem, addT
               >
                 <div style={{ display: 'flex', flexDirection: 'column', minWidth: 0, flex: 1 }}>
                   <span style={{ 
-                    fontWeight: '700', 
+                    fontWeight: '600', 
                     fontSize: 'var(--font-body)', // 💡 FLUID TYPOGRAPHY
                     color: activeTheme.text,
-                    fontFamily: "'Cormorant Garamond', serif",
+                    fontFamily: "sans-serif",
                     whiteSpace: 'nowrap',
                     overflow: 'hidden',
                     textOverflow: 'ellipsis'

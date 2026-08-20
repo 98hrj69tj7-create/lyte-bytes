@@ -244,6 +244,7 @@ export default function SupportInfoView({
             justifyContent: 'center',
             flexShrink: '0',
             position: 'relative',
+            backgroundColor: 'rgba(197, 160, 89, 0.12)',
             zIndex: 2
           }}>
             <ChevronRight size={18} color="#C5A059" strokeWidth={2.5} style={{ flexShrink: 0 }} />
@@ -431,7 +432,7 @@ export default function SupportInfoView({
               </div>
               <div style={{ textAlign: 'left', flex: 1, minWidth: 0 }}>
                 <h3 style={{ margin: '0 0 2px 0', color: activeTheme.text, fontSize: 'clamp(16px, 4.5vw, 18px)', fontWeight: '700', fontFamily: "'Cormorant Garamond', serif", whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Email</h3>
-                <p style={{ margin: 0, color: '#78716C', fontSize: 'clamp(10px, 2.8vw, 11px)', fontWeight: '500', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Detailed queries & bulk orders</p>
+                <p style={{ margin: 0, color: '#78716C', fontSize: 'clamp(10px, 2.8vw, 11px)', fontWeight: '500', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Detailed queries</p>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(197, 160, 89, 0.12)', borderRadius: '50%', width: '28px', height: '28px', flexShrink: 0 }}>
                 <ChevronRight size={16} color="#C5A059" strokeWidth={2.5} style={{ flexShrink: 0 }} />
