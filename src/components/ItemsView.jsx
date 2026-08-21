@@ -33,7 +33,7 @@ export default function ItemsView({
             alignItems: 'center', 
             gap: '6px', 
             color: theme.text, 
-            fontSize: 'var(--font-caption)', // 💡 FLUID TYPOGRAPHY
+            fontSize: 'var(--font-caption)', 
             fontWeight: '600', 
             padding: '6px 10px', 
             borderRadius: '12px', 
@@ -51,7 +51,7 @@ export default function ItemsView({
           right: 0, 
           textAlign: 'center', 
           fontFamily: "'Cormorant Garamond', serif",
-          fontSize: 'var(--font-h2)', // 💡 FLUID TYPOGRAPHY
+          fontSize: 'var(--font-h2)', 
           color: '#FF5958', 
           margin: 0, 
           fontWeight: '700', 
@@ -69,7 +69,7 @@ export default function ItemsView({
       </div>
 
       {/* Uniform Glowing Coral-Red Search Bar */}
-      <div style={{ marginBottom: '20px' }}>
+      <div style={{ marginBottom: '16px' }}>
         <input 
           type="text"
           placeholder="Search all items..."
@@ -77,12 +77,12 @@ export default function ItemsView({
           onChange={(e) => setSearchQuery(e.target.value)}
           style={{
             width: '100%',
-            padding: 'clamp(10px, 3vw, 12px) clamp(14px, 4vw, 18px)', // 💡 FLUID PADDING
+            padding: 'clamp(10px, 3vw, 12px) clamp(14px, 4vw, 18px)', 
             border: '1.5px solid #FF5958',
             borderRadius: '16px',
             backgroundColor: '#FFFFFF',
             color: theme.text,
-            fontSize: 'var(--font-body)', // 💡 FLUID TYPOGRAPHY
+            fontSize: 'var(--font-body)', 
             fontWeight: '500',
             outline: 'none',
             boxSizing: 'border-box',
@@ -180,6 +180,65 @@ export default function ItemsView({
           </button>
         </div>
       </div>
+
+{/* ✨ Executive Pass VIP Luminous Card */}
+      {activeSub?.toLowerCase() === 'meals' && (
+        <div 
+          onClick={() => setView('subscription-pass')}
+          style={{
+            background: 'linear-gradient(135deg, #282421 0%, #141211 100%)',
+            borderRadius: '20px',
+            padding: '12px 20px',
+            color: '#FFFBF2',
+            cursor: 'pointer',
+            border: '2px solid #C5A059',
+            marginBottom: '12px',
+            display: 'flex',
+            alignItems: 'center',
+            boxShadow: '0 8px 30px rgba(197, 160, 89, 0.4), inset 0 1px 3px rgba(255, 255, 255, 0.35)',
+            position: 'relative',
+            overflow: 'hidden',
+            boxSizing: 'border-box'
+          }}
+        >
+          {/* Top Metallic Shimmer Highlight */}
+          <div style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            height: '2px',
+            background: 'linear-gradient(90deg, transparent, #FFD700, transparent)'
+          }} />
+
+          <div style={{ flex: 1, paddingRight: '10px'}}>
+            <div style={{ fontSize: '11px', fontWeight: '800', color: '#FFD700', letterSpacing: '1.5px', textTransform: 'uppercase' }}>
+              LYTE BYTES EXECUTIVE MEAL PASS
+            </div>
+            <div style={{ fontSize: '10.5px', fontWeight: '800', color: '#FF5958', letterSpacing: '1.5px', textTransform: 'uppercase', marginBottom: '4px' }}>
+              • Save up to 15% •
+            </div>
+            <div style={{ fontSize: '11.5px', color: '#FFFFFF', lineHeight: '1.6', fontWeight: '400' }}>
+              Flexible skips, no-loss credits
+            </div>
+          </div>
+
+          <div style={{
+            background: 'linear-gradient(135deg, #FF5958 0%, #E11D48 100%)',
+            color: '#FFF',
+            padding: '4px 10px',
+            borderRadius: '14px',
+            fontSize: '12px',
+            fontWeight: '700',
+            whiteSpace: 'nowrap',
+            boxShadow: '0 4px 16px rgba(255, 89, 88, 0.5)',
+            border: '1px solid rgba(255, 255, 255, 0.3)',
+            flexShrink: 0
+          }}>
+            CHECK
+          </div>
+        </div>
+      )}
 
       {/* Filtered Item List */}
       <div style={{ 

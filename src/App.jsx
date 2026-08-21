@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import HomeAndSubCategoryView from './components/HomeAndSubCategoryView';
+import SubscriptionPassView from './components/SubscriptionPassView';
+import SubscriptionDashboardView from './components/SubscriptionDashboardView';
 import ItemModal from './components/ItemModal';
 import MultiVariantDrawer from './components/MultiVariantDrawer';
 import StickyCartBar from './components/StickyCartBar';
@@ -555,6 +557,23 @@ export default function App() {
           </PageTransition>
         )}
 
+        {view === 'subscription-pass' && (
+          <SubscriptionPassView 
+            theme={theme} 
+            customer={customer} 
+            setView={setView} 
+            setCart={setCart} 
+          />
+        )}
+
+        {view === 'subscription-dashboard' && (
+          <SubscriptionDashboardView 
+            theme={theme} 
+            customer={customer} 
+            setView={setView} 
+          />
+        )}
+
         {view === 'items' && (
           <PageTransition viewKey="items">
             <ItemsView
@@ -715,6 +734,7 @@ export default function App() {
             <CustomerView
               onBack={() => setView('home')}
               customer={customer}
+              setView={setView}
             />
           </PageTransition>
         )}

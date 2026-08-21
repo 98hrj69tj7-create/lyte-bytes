@@ -492,7 +492,53 @@ export default function CustomerView({
             </div>
           </div>
 
-          {/* Flavor Stamps & Rewards Component Integration (Tier passed for strict milestone control) */}
+          {/* ✨ Active Executive Pass Card in Account Tab */}
+          <div 
+            onClick={() => {
+              if (setView) setView('subscription-dashboard');
+            }}
+            style={{
+              background: 'linear-gradient(135deg, #1A1816 0%, #2D2721 100%)',
+              borderRadius: '16px',
+              padding: '16px 18px',
+              color: '#FFFBF2',
+              textAlign: 'left',
+              cursor: 'pointer',
+              border: '1.5px solid rgba(197, 160, 89, 0.6)',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              boxShadow: '0 8px 24px rgba(0,0,0,0.2), inset 0 1px 1px rgba(255, 255, 255, 0.2)',
+              boxSizing: 'border-box',
+              width: '100%'
+            }}
+          >
+            <div>
+              <div style={{ textAlign: 'left', fontSize: '10px', fontWeight: '800', color: '#C5A059', letterSpacing: '1.2px', textTransform: 'uppercase', marginBottom: '3px' }}>
+                Active Membership
+              </div>
+              <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '18px', fontWeight: '700', color: '#FFFBF2', marginBottom: '2px' }}>
+                My Executive Meal Pass
+              </div>
+              <div style={{ fontSize: '11.5px', color: '#D4D4D8' }}>
+                View credits, balance & manage calendar
+              </div>
+            </div>
+            <span style={{ 
+              fontSize: '12px', 
+              background: 'linear-gradient(135deg, #FF5958 0%, #E11D48 100%)', 
+              color: '#FFF', 
+              padding: '8px 14px', 
+              borderRadius: '12px', 
+              fontWeight: '700', 
+              whiteSpace: 'nowrap',
+              boxShadow: '0 4px 12px rgba(255, 89, 88, 0.35)'
+            }}>
+              Manage
+            </span>
+          </div>
+
+          {/* Flavor Stamps & Rewards Component Integration */}
           <FlavorStampsRewards 
             orders={liveCustomerData.orders} 
             theme={activeTheme} 
