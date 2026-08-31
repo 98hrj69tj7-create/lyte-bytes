@@ -176,7 +176,7 @@ export default function FestiveHampersModal({ isOpen, onClose }) {
               overflow: 'hidden',
               textOverflow: 'ellipsis'
             }}>
-              Festive Bundles & Hampers
+              Bundles & Hampers
             </span>
           </div>
         </div>
@@ -201,7 +201,7 @@ export default function FestiveHampersModal({ isOpen, onClose }) {
               ✦ Curated Collections ✦
             </h3>
             <p style={{ margin: 0, fontSize: 'var(--font-caption)', color: '#78716C', fontWeight: '500', lineHeight: '1.35' }}>
-              Fill out details below or submit to initiate a WhatsApp discussion with us:
+              Share your details to connect and discuss instantly.
             </p>
           </div>
 
@@ -267,7 +267,7 @@ export default function FestiveHampersModal({ isOpen, onClose }) {
             <div style={{ display: 'flex', gap: '8px', width: '100%', boxSizing: 'border-box' }}>
               <input 
                 type="text"
-                placeholder="Number of Boxes"
+                placeholder="No of Boxes"
                 required
                 value={hamperData.quantity}
                 onChange={(e) => setHamperData({...hamperData, quantity: e.target.value})}

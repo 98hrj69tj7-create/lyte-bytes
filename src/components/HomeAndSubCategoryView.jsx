@@ -391,7 +391,6 @@ export default function HomeAndSubCategoryView({
   }, [isStoryModalOpen, onStoryToggle]);
 
   const currentCategoryData = findCategoryData(menuData, activeCat);
-  const isCateringCategory = activeCat && activeCat.toLowerCase().includes('catering');
 
   /* ------------------------------------------------------------------------
      ALPHABETICAL SORTING (A to Z) LOGIC FOR CATEGORIES AND SUBCATEGORIES
@@ -978,82 +977,6 @@ export default function HomeAndSubCategoryView({
               {activeCat}
             </h2>
           </div>
-
-          {/* Bespoke Catering Callout Card */}
-          {isCateringCategory && (
-            <div 
-              className="support-card" 
-              onClick={() => setIsBulkModalOpen(true)}
-              style={{ 
-                display: 'flex', 
-                alignItems: 'center', 
-                justifyContent: 'space-between',
-                padding: 'clamp(12px, 3.5vw, 14px) clamp(14px, 4vw, 16px)', 
-                background: 'linear-gradient(135deg, #FFFDF9 0%, #FAF4EB 100%)', 
-                border: '1px solid rgba(197, 160, 89, 0.5)', 
-                borderRadius: 'clamp(14px, 4vw, 16px)', 
-                boxShadow: '0 4px 16px rgba(44, 34, 30, 0.04)',
-                boxSizing: 'border-box',
-                width: '100%',
-                position: 'relative',
-                overflow: 'hidden',
-                marginBottom: '16px',
-                gap: '12px'
-              }}
-            >
-              <div style={{
-                position: 'absolute',
-                top: 0,
-                left: '-150%',
-                width: '150%',
-                height: '100%',
-                background: 'linear-gradient(90deg, transparent, rgba(197, 160, 89, 0.28), transparent)',
-                transform: 'skewX(-20deg)',
-                animation: 'prismSweep 4s infinite ease-in-out',
-                pointerEvents: 'none',
-                zIndex: 1
-              }} />
-
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flex: 1, minWidth: 0, position: 'relative', zIndex: 2 }}>
-                <div style={{ 
-                  backgroundColor: 'rgba(197, 160, 89, 0.15)',
-                  borderRadius: '50%',
-                  width: '40px',
-                  height: '40px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  flexShrink: 0 
-                }}>
-                  <Users size={20} color="#8A6D2B" style={{ flexShrink: 0 }} />
-                </div>
-                <div style={{ textAlign: 'left', minWidth: 0, flex: 1 }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '1px' }}>
-                    <span style={{ fontSize: '9px', fontWeight: '800', color: '#8A6D2B', letterSpacing: '1px', textTransform: 'uppercase', whiteSpace: 'nowrap' }}>
-                      ✦ Bespoke Catering ✦
-                    </span>
-                  </div>
-                  <h3 style={{ margin: '0 0 1px 0', fontFamily: "'Cormorant Garamond', serif", color: '#1A1816', fontSize: 'clamp(16px, 4vw, 17px)', fontWeight: '700', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                    Bulk Orders & Pricing
-                  </h3>
-                  <p style={{ margin: 0, color: '#78716C', fontSize: 'var(--font-caption)', fontWeight: '400', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                    Competitive pricing for bespoke bulk orders
-                  </p>
-                </div>
-              </div>
-              <div style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                flexShrink: '0',
-                position: 'relative',
-                backgroundColor: 'rgba(197, 160, 89, 0.12)',
-                zIndex: 2
-              }}>
-                <ChevronRight size={18} color="#8A6D2B" strokeWidth={2.5} />
-              </div>
-            </div>
-          )}
 
           {/* --- RENDER ALPHABETICALLY SORTED SUBCATEGORIES (A-Z) --- */}
           <div style={{ 

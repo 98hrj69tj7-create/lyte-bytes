@@ -322,9 +322,9 @@ export default function CustomerView({
             alignItems: 'center', 
             gap: '6px', 
             color: activeTheme.text, 
-            fontSize: '13px', 
+            fontSize: 'var(--font-caption)', // 💡 FLUID TYPOGRAPHY
             fontWeight: '600', 
-            padding: '6px 12px', 
+            padding: '6px 6px', 
             borderRadius: '12px', 
             zIndex: 1,
             boxShadow: '0 2px 8px rgba(0,0,0,0.03)',
@@ -332,7 +332,7 @@ export default function CustomerView({
             ...backButtonStyle
           }}
         >
-          <ArrowLeft size={15}/> Menu
+          <ArrowLeft size={15}/> Back
         </button>
         <h2 style={{ 
           position: 'absolute', 
@@ -340,7 +340,7 @@ export default function CustomerView({
           right: 0, 
           textAlign: 'center', 
           fontFamily: "'Cormorant Garamond', serif",
-          fontSize: '22px', 
+          fontSize: 'var(--font-h2)', // 💡 FLUID TYPOGRAPHY
           color: '#FF5958', 
           margin: 0, 
           fontWeight: '700', 

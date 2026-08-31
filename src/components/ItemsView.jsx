@@ -33,7 +33,7 @@ export default function ItemsView({
             alignItems: 'center', 
             gap: '6px', 
             color: theme.text, 
-            fontSize: 'var(--font-caption)', // 💡 FLUID TYPOGRAPHY
+            fontSize: 'var(--font-caption)', 
             fontWeight: '600', 
             padding: '6px 10px', 
             borderRadius: '12px', 
@@ -51,7 +51,7 @@ export default function ItemsView({
           right: 0, 
           textAlign: 'center', 
           fontFamily: "'Cormorant Garamond', serif",
-          fontSize: 'var(--font-h2)', // 💡 FLUID TYPOGRAPHY
+          fontSize: 'var(--font-h2)', 
           color: '#FF5958', 
           margin: 0, 
           fontWeight: '700', 
@@ -77,12 +77,12 @@ export default function ItemsView({
           onChange={(e) => setSearchQuery(e.target.value)}
           style={{
             width: '100%',
-            padding: 'clamp(10px, 3vw, 12px) clamp(14px, 4vw, 18px)', // 💡 FLUID PADDING
+            padding: 'clamp(10px, 3vw, 12px) clamp(14px, 4vw, 18px)', 
             border: '1.5px solid #FF5958',
             borderRadius: '16px',
             backgroundColor: '#FFFFFF',
             color: theme.text,
-            fontSize: 'var(--font-body)', // 💡 FLUID TYPOGRAPHY
+            fontSize: 'var(--font-body)', 
             fontWeight: '500',
             outline: 'none',
             boxSizing: 'border-box',
@@ -105,7 +105,6 @@ export default function ItemsView({
         minWidth: 0,
         boxSizing: 'border-box'
       }}>
-        {/* Left Side: Slide Toggle Switch for Veg / Non-Veg */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', minWidth: 0, flexShrink: 0 }}>
           <span 
             onClick={() => setIsNonVeg(false)}
@@ -139,7 +138,6 @@ export default function ItemsView({
           </span>
         </div>
 
-        {/* Right Side: Grid & List Layout Toggle Buttons */}
         <div style={{ display: 'flex', gap: '6px', alignItems: 'center', flexShrink: 0 }}>
           <button 
             onClick={() => setLayout('list')} 
@@ -155,7 +153,6 @@ export default function ItemsView({
               transition: 'all 0.2s ease',
               flexShrink: 0
             }}
-            title="List View"
           >
             <ListIcon size={15} color={layout === 'list' ? '#FFFFFF' : theme.text} style={{ flexShrink: 0 }}/>
           </button>
@@ -174,14 +171,13 @@ export default function ItemsView({
               transition: 'all 0.2s ease',
               flexShrink: 0
             }}
-            title="Grid View"
           >
             <Grid size={15} color={layout === 'grid' ? '#FFFFFF' : theme.text} style={{ flexShrink: 0 }}/>
           </button>
         </div>
       </div>
 
-      {/* Filtered Item List */}
+      {/* Filtered Item List - NO WHITE CARD OVERRIDES HERE */}
       <div style={{ 
         display: layout === 'grid' ? 'grid' : 'flex', 
         gridTemplateColumns: layout === 'grid' ? 'repeat(2, 1fr)' : 'none', 
