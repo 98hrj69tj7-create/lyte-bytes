@@ -329,7 +329,7 @@ export default function SupportInfoView({
           </div>
 
           <p style={{ marginTop: '-10px', fontSize: 'clamp(11px, 3vw, 12px)', color: '#78716C', lineHeight: '1.4', textAlign: 'left', minWidth: 0 }}>
-            Have a question about our menu, ingredients, or custom catering? <br />Tap a topic below or type your own to start chatting with Chef Lyte!
+            Have a question about our menu, ingredients, or custom catering? Tap a topic below or type your own to start chatting with Chef Lyte!
           </p>
 
           {/* Elite 2x2 Grid Layout for All 4 Questions */}
@@ -474,9 +474,8 @@ export default function SupportInfoView({
 
         {/* SOCIAL MEDIA LINKS FOOTER (@lytebytes) */}
         <div style={{ 
-          marginTop: '8px', 
-          paddingTop: '16px', 
-          borderTop: '1px dashed rgba(197, 160, 89, 0.4)',
+          marginTop: '4px', 
+          paddingTop: '10px', 
           display: 'flex', 
           flexDirection: 'column', 
           alignItems: 'center', 
