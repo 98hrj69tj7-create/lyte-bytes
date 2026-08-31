@@ -301,7 +301,7 @@ export default function LimitedOfferModal({ theme = {}, setView }) {
               boxSizing: 'border-box'
             }}>
               <ShoppingBag size={16} color={activeTheme.brand} style={{ flexShrink: 0 }} />
-              <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Applied in Bag at Checkout</span>
+              <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Available in Bag at Checkout</span>
             </div>
           </div>
 
