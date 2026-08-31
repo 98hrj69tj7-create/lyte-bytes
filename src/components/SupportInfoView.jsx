@@ -104,7 +104,7 @@ export default function SupportInfoView({
             alignItems: 'center', 
             gap: '6px', 
             color: activeTheme.text, 
-            fontSize: 'clamp(11.5px, 3.2vw, 13px)', // 💡 FLUID TYPOGRAPHY
+            fontSize: 'var(--font-caption)', // 💡 FLUID TYPOGRAPHY
             fontWeight: '600', 
             padding: '6px 10px', 
             borderRadius: '12px', 
@@ -122,7 +122,7 @@ export default function SupportInfoView({
           right: 0, 
           textAlign: 'center', 
           fontFamily: "'Cormorant Garamond', serif",
-          fontSize: 'clamp(18px, 5vw, 22px)', // 💡 FLUID TYPOGRAPHY
+          fontSize: 'var(--font-h2)', // 💡 FLUID TYPOGRAPHY
           color: '#FF5958', 
           margin: 0, 
           fontWeight: '700', 
@@ -185,7 +185,7 @@ export default function SupportInfoView({
             display: 'flex', 
             alignItems: 'center', 
             justifyContent: 'space-between',
-            padding: 'clamp(10px, 3vw, 12px) clamp(12px, 3.5vw, 14px)', 
+            padding: 'clamp(8px, 3vw, 10px) clamp(10px, 3.5vw, 12px)', 
             background: 'linear-gradient(135deg, #FFFDF9 0%, #FAF4EB 100%)', 
             border: '1px solid rgba(197, 160, 89, 0.5)', 
             borderRadius: '16px', 
