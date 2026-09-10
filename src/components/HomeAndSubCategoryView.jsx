@@ -356,7 +356,8 @@ export default function HomeAndSubCategoryView({
   openModal, 
   addToCart, 
   resolveImagePath,
-  onStoryToggle
+  onStoryToggle,
+  currentUserHasOrderedBeef
 }) {
   const [isStoryModalOpen, setIsStoryModalOpen] = useState(false);
   const [isBulkModalOpen, setIsBulkModalOpen] = useState(false);
@@ -877,7 +878,16 @@ export default function HomeAndSubCategoryView({
                     parentCatImage: catImg
                   }));
                 })
-                .filter(item => item && item.name && item.name.toLowerCase().includes(searchQuery.toLowerCase()))
+                .filter(item => {
+                  if (!item || !item.name) return false;
+                  const matchesSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase());
+                  
+                  // Hide beef if unauthorized; leave pork alone
+                  const isBeef = item.name.toLowerCase().includes('beef');
+                  if (isBeef && !currentUserHasOrderedBeef) return false;
+
+                  return matchesSearch;
+                })
                 .sort((a, b) => (a.name || '').localeCompare(b.name || '', undefined, { sensitivity: 'base' }))
                 .map((item, i) => {
                   const rawItemImg = getImgUrl(item);

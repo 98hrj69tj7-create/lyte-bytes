@@ -81,7 +81,7 @@ export default function ItemsView({
             border: '1.5px solid #FF5958',
             borderRadius: '16px',
             backgroundColor: '#FFFFFF',
-            color: theme.text,
+            color: '#1A1A1A',
             fontSize: 'var(--font-body)', 
             fontWeight: '500',
             outline: 'none',
