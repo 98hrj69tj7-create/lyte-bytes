@@ -10,14 +10,11 @@ import {
   Trophy,
   Medal,
   Star,
-  Gift
+  Gift,
+  LogOut
 } from 'lucide-react';
 import FlavorStampsRewards from './FlavorStampsRewards';
 import MemberAuthModal from './MemberAuthModal';
-
-/* ==========================================================================
-   CONFIG & DATA FETCHING HELPERS (Orders_Engine Sync)
-   ========================================================================== */
 
 const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQscxfQpCFZxTywvO12f0PAEG9RJ2SmGsTvuZKCYMdd2RNyhu9cPfzJXJpS7NXegFW9y8ajDK32CRs_/pub?gid=0&single=true&output=csv";
 const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwjR5KBDf8iB9e5Dh4ye5TxmIsbcirJsevDjMWma6B_Ine3HCYwC1ImeXgmr0XdVI9FZg/exec";
@@ -143,14 +140,13 @@ const MONTHS = [
   "July", "August", "September", "October", "November", "December"
 ];
 
-/* ==========================================================================
-   MAIN CUSTOMER VIEW COMPONENT
-   ========================================================================== */
 export default function CustomerView({
   theme = {},
   onBack,
   setView,
   customer = {},
+  setCustomer,
+  setCurrentUserHasOrderedBeef,
   backButtonStyle = {}
 }) {
   const [isLoading, setIsLoading] = useState(true);
@@ -182,6 +178,19 @@ export default function CustomerView({
 
   const handleBack = onBack || (() => setView && setView('home'));
 
+  // 🔥 Sign Out handler: clear local storage session, reset states, and re-run lookup
+  const handleSignOut = () => {
+    localStorage.removeItem('lytebytes_user');
+    localStorage.removeItem('lytebytes_has_ordered_beef');
+    if (setCustomer) {
+      setCustomer({ name: '', phone: '', email: '', address: '' });
+    }
+    if (setCurrentUserHasOrderedBeef) {
+      setCurrentUserHasOrderedBeef(false);
+    }
+    performLookup('');
+  };
+
   const performLookup = async (phoneToLookup) => {
     setIsLoading(true);
     const rawRows = await fetchHistoricalOrders();
@@ -202,6 +211,7 @@ export default function CustomerView({
     };
 
     let foundMatch = false;
+    let hasOrderedBeef = false;
 
     if (Array.isArray(rawRows) && targetPhone) {
       rawRows.forEach((row) => {
@@ -246,6 +256,10 @@ export default function CustomerView({
           const itemDesc = getField(row, ['Variety / Item', 'Item', 'Product', 'Variety']) || 'Item';
           const packInfo = getField(row, ['Qty_vol', 'Pack_Type', 'Size', 'Volume']) || 'Standard';
 
+          if (itemDesc.toLowerCase().includes('beef')) {
+            hasOrderedBeef = true;
+          }
+
           matchedCustomer.orders.push({
             id: getField(row, ['Final_Order_Code', 'Order_No', 'Order No', 'Invoice']) || `ORD-${Math.floor(Math.random() * 9000) + 1000}`,
             date: orderDate,
@@ -263,6 +277,11 @@ export default function CustomerView({
     if (!foundMatch) {
       matchedCustomer.name = targetPhone ? 'New Member / Guest' : 'Guest Account';
       matchedCustomer.isRecognizedGuest = false;
+    }
+
+    if (setCurrentUserHasOrderedBeef) {
+      setCurrentUserHasOrderedBeef(hasOrderedBeef);
+      localStorage.setItem('lytebytes_has_ordered_beef', JSON.stringify(hasOrderedBeef));
     }
 
     setLiveCustomerData(matchedCustomer);
@@ -293,7 +312,6 @@ export default function CustomerView({
 
   const tierStyle = getTierStyles(liveCustomerData.tier);
   const milestone = getMilestoneInfo(liveCustomerData.loyaltyScore);
-  const nextTierStyle = getTierStyles(milestone.nextTierName);
 
   return (
     <div style={{ 
@@ -308,9 +326,8 @@ export default function CustomerView({
       width: '100%',
       fontFamily: "'Plus Jakarta Sans', sans-serif" 
     }}>
-
-      {/* Header - Uniform across Client Care, Bag, and Account Views */}
-      <div style={{ display: 'flex', alignItems: 'center', position: 'relative', marginBottom: '20px', padding: '6px 0' }}>
+      {/* Header row with Back Button (Left), MY ACCOUNT (Center), and Sign Out Button (Right) */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', position: 'relative', marginBottom: '20px', padding: '6px 0' }}>
         <button 
           type="button"
           onClick={handleBack} 
@@ -322,7 +339,7 @@ export default function CustomerView({
             alignItems: 'center', 
             gap: '6px', 
             color: activeTheme.text, 
-            fontSize: 'var(--font-caption)', // 💡 FLUID TYPOGRAPHY
+            fontSize: 'var(--font-caption)', 
             fontWeight: '600', 
             padding: '6px 6px', 
             borderRadius: '12px', 
@@ -334,22 +351,41 @@ export default function CustomerView({
         >
           <ArrowLeft size={15}/> Back
         </button>
+
         <h2 style={{ 
-          position: 'absolute', 
-          left: 0, 
-          right: 0, 
-          textAlign: 'center', 
-          fontFamily: "'Cormorant Garamond', serif",
-          fontSize: 'var(--font-h2)', // 💡 FLUID TYPOGRAPHY
-          color: '#FF5958', 
-          margin: 0, 
-          fontWeight: '700', 
-          letterSpacing: '0.8px', 
-          textTransform: 'uppercase', 
-          pointerEvents: 'none' 
+          position: 'absolute', left: 0, right: 0, textAlign: 'center', fontFamily: "'Cormorant Garamond', serif",
+          fontSize: 'var(--font-h2)', color: '#FF5958', margin: 0, fontWeight: '700', letterSpacing: '0.8px', textTransform: 'uppercase', pointerEvents: 'none' 
         }}>
           My Account
         </h2>
+
+        {/* 🔥 Conditional Sign Out button on the extreme right (visible only when a phone/user is logged in) */}
+        {liveCustomerData.phone ? (
+          <button 
+            type="button"
+            onClick={handleSignOut}
+            style={{ 
+              background: 'rgba(239, 68, 68, 0.1)', 
+              border: '1px solid rgba(239, 68, 68, 0.35)', 
+              cursor: 'pointer', 
+              display: 'flex', 
+              alignItems: 'center', 
+              gap: '5px', 
+              color: '#DC2626', 
+              fontSize: 'var(--font-caption)', 
+              fontWeight: '700', 
+              padding: '4px 8px', 
+              borderRadius: '12px', 
+              zIndex: 1,
+              boxShadow: '0 2px 8px rgba(220, 38, 38, 0.08)',
+              transition: 'all 0.2s ease'
+            }}
+          >
+            <LogOut size={14} /> Logout
+          </button>
+        ) : (
+          <div style={{ width: '70px' }} /> /* Spacer to keep MY ACCOUNT perfectly centered when sign out is hidden */
+        )}
       </div>
 
       {isLoading ? (
@@ -371,24 +407,14 @@ export default function CustomerView({
           width: '100%'
         }}>
           
-          {/* USER ACCOUNT CARD */}
           <div style={{ 
-            background: '#FFFFFF',
-            border: '1px solid rgba(197, 160, 89, 0.4)',
-            borderRadius: '16px',
-            padding: '14px',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '12px',
-            boxShadow: '0 4px 16px rgba(44, 34, 30, 0.04)',
-            boxSizing: 'border-box'
+            background: '#FFFFFF', border: '1px solid rgba(197, 160, 89, 0.4)', borderRadius: '16px',
+            padding: '14px', display: 'flex', flexDirection: 'column', gap: '12px',
+            boxShadow: '0 4px 16px rgba(44, 34, 30, 0.04)', boxSizing: 'border-box'
           }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <div style={{ 
-                  backgroundColor: tierStyle.bg, border: `1px solid ${tierStyle.border}`, width: '44px', height: '44px', 
-                  borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 
-                }}>
+                <div style={{ backgroundColor: tierStyle.bg, border: `1px solid ${tierStyle.border}`, width: '44px', height: '44px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                   <User size={30} color={tierStyle.accentColor} />
                 </div>
                 <div style={{ textAlign: 'left' }}>
@@ -406,12 +432,8 @@ export default function CustomerView({
               </div>
             </div>
 
-            {/* Smart Sign Up Banner */}
-            {(!liveCustomerData.phone || liveCustomerData.orders.length === 0) ? (
-              <div style={{ 
-                background: 'rgba(197, 160, 89, 0.1)', border: '1px dashed rgba(197, 160, 89, 0.5)', 
-                borderRadius: '12px', padding: '10px 12px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px' 
-              }}>
+            {!liveCustomerData.phone && (
+              <div style={{ background: 'rgba(197, 160, 89, 0.1)', border: '1px dashed rgba(197, 160, 89, 0.5)', borderRadius: '12px', padding: '10px 12px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px' }}>
                 <div style={{ textAlign: 'left', flex: 1 }}>
                   <div style={{ fontSize: '12px', fontWeight: '700', color: '#8A6D2B' }}>Have past orders or want rewards?</div>
                   <div style={{ fontSize: '11px', color: '#78716C' }}>Link your mobile number to view history.</div>
@@ -419,31 +441,7 @@ export default function CustomerView({
                 <button 
                   type="button"
                   onClick={() => setIsAuthModalOpen(true)}
-                  style={{
-                    background: '#C5A059', color: '#FFF', border: 'none', padding: '6px 12px',
-                    borderRadius: '10px', fontSize: '11.5px', fontWeight: '700', cursor: 'pointer', whiteSpace: 'nowrap', 
-                  }}
-                >
-                  Sign In
-                </button>
-              </div>
-            ) : liveCustomerData.isRecognizedGuest && (
-              <div style={{ 
-                background: 'linear-gradient(135deg, #ECFDF5 0%, #D1FAE5 100%)', border: '1px solid #059669', 
-                borderRadius: '12px', padding: '10px 12px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' 
-              }}>
-                <div style={{ textAlign: 'left', flex: 1 }}>
-                  <div style={{ fontSize: '12.5px', fontWeight: '700', color: '#065F46' }}>History Found! Claim Account</div>
-                  <div style={{ fontSize: '11px', color: '#047857', fontWeight: '500' }}>Sign in to secure your profile.</div>
-                </div>
-                <button 
-                  type="button"
-                  onClick={() => setIsAuthModalOpen(true)}
-                  style={{
-                    backgroundColor: '#059669', color: '#FFF', border: 'none', padding: '6px 12px',
-                    borderRadius: '10px', fontSize: '11px', fontWeight: '700', cursor: 'pointer', whiteSpace: 'nowrap', marginTop: '20px',
-                    boxShadow: '0 2px 8px rgba(5, 150, 105, 0.3)'
-                  }}
+                  style={{ background: '#C5A059', color: '#FFF', border: 'none', padding: '6px 12px', borderRadius: '10px', fontSize: '11.5px', fontWeight: '700', cursor: 'pointer', whiteSpace: 'nowrap' }}
                 >
                   Sign In
                 </button>
@@ -451,37 +449,19 @@ export default function CustomerView({
             )}
           </div>
 
-          {/* Loyalty Status Card */}
-          <div style={{ 
-            background: '#FFFFFF',
-            border: '1px solid rgba(197, 160, 89, 0.4)',
-            borderRadius: '16px',
-            padding: '12px',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '10px',
-            boxShadow: '0 4px 16px rgba(44, 34, 30, 0.04)',
-            boxSizing: 'border-box',
-            textAlign: 'left'
-          }}>
+          <div style={{ background: '#FFFFFF', border: '1px solid rgba(197, 160, 89, 0.4)', borderRadius: '16px', padding: '12px', display: 'flex', flexDirection: 'column', gap: '10px', boxShadow: '0 4px 16px rgba(44, 34, 30, 0.04)', boxSizing: 'border-box', textAlign: 'left' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <div>
-                <span style={{ fontSize: '11px', fontWeight: '800', color: '#8A6D2B', letterSpacing: '0.8px', textTransform: 'uppercase' }}>
-                  Loyalty Quest
-                </span>
-                <div style={{ fontSize: '12px', fontWeight: '700', color: activeTheme.text, fontFamily: "sans-serif", marginTop: '1px' }}>
-                {liveCustomerData.tier} Tier
-                </div>
+                <span style={{ fontSize: '11px', fontWeight: '800', color: '#8A6D2B', letterSpacing: '0.8px', textTransform: 'uppercase' }}>Loyalty Quest</span>
+                <div style={{ fontSize: '12px', fontWeight: '700', color: activeTheme.text, fontFamily: "sans-serif", marginTop: '1px' }}>{liveCustomerData.tier} Tier</div>
               </div>
               <span style={{ fontSize: '14px', fontWeight: '800', color: '#2563EB', fontFamily: "sans-serif" }}>
                 {liveCustomerData.loyaltyScore} <span style={{ fontSize: '11px', fontWeight: '700' }}>PTS</span>
               </span>
             </div>
-
             <div style={{ width: '100%', height: '6px', backgroundColor: '#F3F4F6', borderRadius: '4px', overflow: 'hidden', border: '1px solid rgba(197, 160, 89, 0.2)' }}>
               <div style={{ height: '100%', width: `${milestone.progressPercent}%`, background: tierStyle.progressFill, borderRadius: '4px', transition: 'width 0.8s ease' }} />
             </div>
-
             <div style={{ fontSize: '11px', color: '#1E40AF', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '5px' }}>
               <Zap size={13} color="#2563EB" fill="#2563EB" />
               {milestone.isMax ? (
@@ -492,7 +472,6 @@ export default function CustomerView({
             </div>
           </div>
 
-          {/* Flavor Stamps & Rewards Component Integration (Tier passed for strict milestone control) */}
           <FlavorStampsRewards 
             orders={liveCustomerData.orders} 
             theme={activeTheme} 
@@ -501,11 +480,7 @@ export default function CustomerView({
             tier={liveCustomerData.tier}
           />
 
-          {/* Birthday Vault */}
-          <div style={{ 
-            background: 'linear-gradient(135deg, #FAF4EB 0%, #FFFDF9 100%)', border: '1.5px dashed rgba(197, 160, 89, 0.6)',
-            borderRadius: '16px', padding: '12px 14px', display: 'flex', flexDirection: 'column', gap: '8px', boxSizing: 'border-box'
-          }}>
+          <div style={{ background: 'linear-gradient(135deg, #FAF4EB 0%, #FFFDF9 100%)', border: '1.5px dashed rgba(197, 160, 89, 0.6)', borderRadius: '16px', padding: '12px 14px', display: 'flex', flexDirection: 'column', gap: '8px', boxSizing: 'border-box' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                 <Gift size={30} color={activeTheme.brand} />
@@ -523,45 +498,29 @@ export default function CustomerView({
                 <select 
                   value={selectedDob} 
                   onChange={(e) => setSelectedDob(e.target.value)}
-                  style={{ 
-                    flex: 1, padding: '8px 30px 8px 10px', borderRadius: '10px', 
-                    border: '1px solid rgba(197, 160, 89, 0.5)', backgroundColor: '#FFFFFF', 
-                    fontSize: '11.5px', outline: 'none', color: activeTheme.text, fontWeight: '600', cursor: 'pointer',
-                    appearance: 'none', 
-                    backgroundImage: `url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%2378716C' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><path d='m6 9 6 6 6-6'/></svg>")`,
-                    backgroundRepeat: 'no-repeat', backgroundPosition: 'right 10px center' 
-                  }}
+                  style={{ flex: 1, padding: '8px 30px 8px 10px', borderRadius: '10px', border: '1px solid rgba(197, 160, 89, 0.5)', backgroundColor: '#FFFFFF', fontSize: '11.5px', outline: 'none', color: activeTheme.text, fontWeight: '600', cursor: 'pointer', appearance: 'none', backgroundImage: `url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%2378716C' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><path d='m6 9 6 6 6-6'/></svg>")`, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 10px center' }}
                 >
                   <option value="">Select your birth month</option>
-                  {MONTHS.map((month) => (
-                    <option key={month} value={month}>{month}</option>
-                  ))}
+                  {MONTHS.map((month) => <option key={month} value={month}>{month}</option>)}
                 </select>
                 <button 
                   type="button"
                   onClick={handleSaveDob} 
                   disabled={isSavingDob || !selectedDob}
-                  style={{ 
-                    background: activeTheme.brand, color: '#FFFFFF', border: 'none', padding: '8px 14px', 
-                    borderRadius: '10px', fontWeight: '700', fontSize: '11.5px', cursor: 'pointer' 
-                  }}
+                  style={{ background: activeTheme.brand, color: '#FFFFFF', border: 'none', padding: '8px 14px', borderRadius: '10px', fontWeight: '700', fontSize: '11.5px', cursor: 'pointer' }}
                 >
                   {isSavingDob ? 'Saving...' : 'Save'}
                 </button>
               </div>
             ) : (
-              <div style={{ fontSize: '11px', color: '#059669', fontWeight: '700', textAlign: 'left' }}>
-                ✅ Birthday month registered successfully!
-              </div>
+              <div style={{ fontSize: '11px', color: '#059669', fontWeight: '700', textAlign: 'left' }}>✅ Birthday month registered successfully!</div>
             )}
           </div>
 
-          {/* Order History */}
           <div style={{ marginTop: '2px' }}>
             <h3 style={{ margin: '0 0 8px 2px', color: activeTheme.text, fontSize: '13px', fontWeight: '800', textAlign: 'left', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
               Order History ({liveCustomerData.orders.length})
             </h3>
-
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
               {liveCustomerData.orders.length === 0 ? (
                 <div style={{ textAlign: 'center', padding: '30px 16px', color: '#78716C', fontSize: '12px', fontWeight: '600', background: '#FFFFFF', borderRadius: '16px', border: '1px solid rgba(197, 160, 89, 0.4)' }}>
@@ -569,11 +528,7 @@ export default function CustomerView({
                 </div>
               ) : (
                 liveCustomerData.orders.map((order, idx) => (
-                  <div key={idx} style={{ 
-                    display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 14px', 
-                    background: '#FFFFFF', border: '1px solid rgba(197, 160, 89, 0.4)', 
-                    borderRadius: '16px', boxShadow: '0 4px 16px rgba(44, 34, 30, 0.04)', boxSizing: 'border-box', width: '100%'
-                  }}>
+                  <div key={idx} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 14px', background: '#FFFFFF', border: '1px solid rgba(197, 160, 89, 0.4)', borderRadius: '16px', boxShadow: '0 4px 16px rgba(44, 34, 30, 0.04)', boxSizing: 'border-box', width: '100%' }}>
                     <div style={{ textAlign: 'left', flex: 1, paddingRight: '8px', minWidth: 0 }}>
                       <div style={{ fontWeight: '700', fontSize: '13.5px', color: activeTheme.text, wordBreak: 'break-all' }}>{order.id}</div>
                       <div style={{ fontSize: '12px', color: activeTheme.brand, fontWeight: '700', marginTop: '2px' }}>{order.item}</div>
@@ -583,10 +538,7 @@ export default function CustomerView({
                     </div>
                     <div style={{ textAlign: 'right', flexShrink: 0 }}>
                       <div style={{ fontSize: '14px', fontWeight: '800', color: activeTheme.text, marginBottom: '4px' }}>₹{order.total}</div>
-                      <span style={{ 
-                        display: 'inline-block', fontSize: '10px', fontWeight: '800', color: order.color,
-                        backgroundColor: order.bg, padding: '3px 8px', borderRadius: '6px', textTransform: 'uppercase'
-                      }}>
+                      <span style={{ display: 'inline-block', fontSize: '10px', fontWeight: '800', color: order.color, backgroundColor: order.bg, padding: '3px 8px', borderRadius: '6px', textTransform: 'uppercase' }}>
                         {order.status}
                       </span>
                     </div>
@@ -595,11 +547,9 @@ export default function CustomerView({
               )}
             </div>
           </div>
-
         </div>
       )}
 
-      {/* Auth Modal Popup */}
       <MemberAuthModal 
         isOpen={isAuthModalOpen} 
         onClose={() => setIsAuthModalOpen(false)} 
@@ -607,6 +557,9 @@ export default function CustomerView({
         csvRows={csvRows} 
         webAppUrl={WEB_APP_URL}
         onLoginSuccess={(userData) => {
+          if (setCustomer) {
+            setCustomer(prev => ({ ...prev, phone: userData.phone }));
+          }
           performLookup(userData.phone);
         }}
       />

@@ -17,11 +17,11 @@ export default function ItemsView({
   activeSub,
   openModal,
   addToCart,
-  resolveImagePath
+  resolveImagePath,
+  currentUserHasOrderedBeef
 }) {
   return (
     <div style={{ paddingBottom: '140px', fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
-      {/* Uniform Header with Absolute Centered Title & Floating Back Button */}
       <div style={{ display: 'flex', alignItems: 'center', position: 'relative', marginBottom: '20px', padding: '6px 0', gap: '8px' }}>
         <button 
           onClick={() => setView('subcat')} 
@@ -68,7 +68,6 @@ export default function ItemsView({
         </h2>
       </div>
 
-      {/* Uniform Glowing Coral-Red Search Bar */}
       <div style={{ marginBottom: '20px' }}>
         <input 
           type="text"
@@ -92,7 +91,6 @@ export default function ItemsView({
         />
       </div>
 
-      {/* Transparent Controls Bar: Veg/Non-Veg (Left) & Grid/List (Right) */}
       <div style={{ 
         display: 'flex', 
         alignItems: 'center', 
@@ -177,7 +175,6 @@ export default function ItemsView({
         </div>
       </div>
 
-      {/* Filtered Item List - NO WHITE CARD OVERRIDES HERE */}
       <div style={{ 
         display: layout === 'grid' ? 'grid' : 'flex', 
         gridTemplateColumns: layout === 'grid' ? 'repeat(2, 1fr)' : 'none', 
@@ -192,6 +189,11 @@ export default function ItemsView({
         )
         .filter(item => {
           const matchesSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase());
+          
+          // 🔥 Dynamic check: hide beef if unauthorized
+          const isBeef = item.name.toLowerCase().includes('beef');
+          if (isBeef && !currentUserHasOrderedBeef) return false;
+
           if (isNonVeg === null) return matchesSearch;
           const v = item.variation ? item.variation.trim().toLowerCase() : '';
           if (!isNonVeg) return matchesSearch && (v === 'veg' || v === 'egg');

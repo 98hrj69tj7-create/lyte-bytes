@@ -14,7 +14,7 @@ export default function WallOfLoveView({
     text: theme?.text || '#1A1816',
     border: theme?.border || '1px solid rgba(197, 160, 89, 0.4)',
     bg: theme?.bg || '#FFFDF9',
-    radius: theme?.radius || 'clamp(16px, 4vw, 20px)' // 💡 FLUID RADIUS
+    radius: theme?.radius || 'clamp(16px, 4vw, 20px)'
   };
 
   const renderSourceLogo = (source) => {
@@ -100,12 +100,24 @@ export default function WallOfLoveView({
     { id: 'email', label: 'Email' }
   ];
 
-  // 💡 Helper to format category name nicely in empty state
   const getCategoryDisplayName = (tab) => {
     if (tab === 'all') return 'this category';
     if (tab === 'whatsapp') return 'WhatsApp';
     if (tab === 'email') return 'Email';
     return tab.charAt(0).toUpperCase() + tab.slice(1);
+  };
+
+  // Helper to convert rating text like "FOUR" or "FIVE" or numeric values into star counts
+  const parseRating = (ratingInput) => {
+    if (!ratingInput) return 5;
+    const str = String(ratingInput).trim().toUpperCase();
+    if (str === 'ONE' || str === '1') return 1;
+    if (str === 'TWO' || str === '2') return 2;
+    if (str === 'THREE' || str === '3') return 3;
+    if (str === 'FOUR' || str === '4') return 4;
+    if (str === 'FIVE' || str === '5') return 5;
+    const num = Number(ratingInput);
+    return isNaN(num) ? 5 : num;
   };
 
   return (
@@ -211,73 +223,84 @@ export default function WallOfLoveView({
             No reviews found on {getCategoryDisplayName(activeTab)} yet.
           </div>
         ) : (
-          filteredReviews.map((item, idx) => (
-            <div 
-              key={idx}
-              onClick={() => onSelectReview(item)}
-              style={{
-                background: 'linear-gradient(135deg, #FFFFFF 0%, #FAF4EB 100%)',
-                border: '1px solid rgba(197, 160, 89, 0.4)',
-                borderRadius: '16px',
-                padding: 'clamp(12px, 3.5vw, 16px)', 
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '10px',
-                cursor: 'pointer',
-                boxShadow: '0 6px 18px rgba(44, 34, 30, 0.04)',
-                textAlign: 'left',
-                position: 'relative',
-                overflow: 'hidden',
-                minWidth: 0,
-                boxSizing: 'border-box'
-              }}
-            >
-              {/* Background Source Watermark */}
-              <div style={{
-                position: 'absolute',
-                right: '-10px',
-                bottom: '-10px',
-                width: '75px',
-                height: '75px',
-                opacity: 0.07,
-                pointerEvents: 'none',
-                zIndex: 0
-              }}>
-                {renderWatermarkSvg(item.source)}
-              </div>
+          filteredReviews.map((item, idx) => {
+            const ratingValue = parseRating(item.rating);
+            const fullStarsCount = Math.min(5, Math.max(0, ratingValue));
 
-              {/* Review Stars & Rating */}
-              <div style={{ display: 'flex', gap: '3px', position: 'relative', zIndex: 1 }}>
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} size={13} fill="#C5A059" color="#C5A059" style={{ flexShrink: 0 }} />
-                ))}
-              </div>
+            return (
+              <div 
+                key={idx}
+                onClick={() => onSelectReview(item)}
+                style={{
+                  background: 'linear-gradient(135deg, #FFFFFF 0%, #FAF4EB 100%)',
+                  border: '1px solid rgba(197, 160, 89, 0.4)',
+                  borderRadius: '16px',
+                  padding: 'clamp(12px, 3.5vw, 16px)', 
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '10px',
+                  cursor: 'pointer',
+                  boxShadow: '0 6px 18px rgba(44, 34, 30, 0.04)',
+                  textAlign: 'left',
+                  position: 'relative',
+                  overflow: 'hidden',
+                  minWidth: 0,
+                  boxSizing: 'border-box'
+                }}
+              >
+                {/* Background Source Watermark */}
+                <div style={{
+                  position: 'absolute',
+                  right: '-10px',
+                  bottom: '-10px',
+                  width: '75px',
+                  height: '75px',
+                  opacity: 0.07,
+                  pointerEvents: 'none',
+                  zIndex: 0
+                }}>
+                  {renderWatermarkSvg(item.source)}
+                </div>
 
-              {/* Review Text */}
-              <p style={{ margin: 0, fontSize: 'clamp(12px, 3.5vw, 13px)', color: activeTheme.text, lineHeight: '1.5', fontWeight: '500', position: 'relative', zIndex: 1, minWidth: 0 }}>
-                "{item.text}"
-              </p>
+                {/* Star Rating Matching Sheet Data (e.g., FOUR stars filled out of 5) */}
+                <div style={{ display: 'flex', gap: '3px', position: 'relative', zIndex: 1 }}>
+                  {[...Array(5)].map((_, i) => (
+                    <Star 
+                      key={i} 
+                      size={13} 
+                      fill={i < fullStarsCount ? "#C5A059" : "none"} 
+                      color="#C5A059" 
+                      style={{ flexShrink: 0 }} 
+                    />
+                  ))}
+                </div>
 
-              {/* Optional Photo Tag */}
-              {item.imageUrl && (
-                <div style={{ position: 'relative', zIndex: 1 }}>
-                  <span style={{ fontSize: '10px', color: '#8A6D2B', background: 'rgba(197, 160, 89, 0.15)', padding: '2px 6px', borderRadius: '6px', fontWeight: '700', display: 'inline-flex', alignItems: 'center', gap: '3px' }}>
-                    <Camera size={10} style={{ flexShrink: 0 }} /> Photo Attached
+                {/* Review Text */}
+                <p style={{ margin: 0, fontSize: 'clamp(12px, 3.5vw, 13px)', color: activeTheme.text, lineHeight: '1.5', fontWeight: '500', position: 'relative', zIndex: 1, minWidth: 0 }}>
+                  "{item.text}"
+                </p>
+
+                {/* Optional Photo Tag */}
+                {item.imageUrl && (
+                  <div style={{ position: 'relative', zIndex: 1 }}>
+                    <span style={{ fontSize: '10px', color: '#8A6D2B', background: 'rgba(197, 160, 89, 0.15)', padding: '2px 6px', borderRadius: '6px', fontWeight: '700', display: 'inline-flex', alignItems: 'center', gap: '3px' }}>
+                      <Camera size={10} style={{ flexShrink: 0 }} /> Photo Attached
+                    </span>
+                  </div>
+                )}
+
+                {/* Author & Source Details */}
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: 'clamp(10.5px, 3vw, 11px)', paddingTop: '8px', borderTop: '1px dashed rgba(197, 160, 89, 0.3)', position: 'relative', zIndex: 1, gap: '8px', minWidth: 0 }}>
+                  <span style={{ fontWeight: '700', color: '#FF5958', fontSize: 'clamp(11.5px, 3.5vw, 12.5px)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                    {item.author}
+                  </span>
+                  <span style={{ textTransform: 'capitalize', color: '#78716C', fontWeight: '700', display: 'flex', alignItems: 'center', gap: '5px', whiteSpace: 'nowrap', flexShrink: 0, minWidth: 0 }}>
+                    {renderSourceLogo(item.source)} <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{item.source}</span>
                   </span>
                 </div>
-              )}
-
-              {/* Author & Source Details */}
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: 'clamp(10.5px, 3vw, 11px)', paddingTop: '8px', borderTop: '1px dashed rgba(197, 160, 89, 0.3)', position: 'relative', zIndex: 1, gap: '8px', minWidth: 0 }}>
-                <span style={{ fontWeight: '700', color: '#FF5958', fontSize: 'clamp(11.5px, 3.5vw, 12.5px)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                  {item.author}
-                </span>
-                <span style={{ textTransform: 'capitalize', color: '#78716C', fontWeight: '700', display: 'flex', alignItems: 'center', gap: '5px', whiteSpace: 'nowrap', flexShrink: 0, minWidth: 0 }}>
-                  {renderSourceLogo(item.source)} <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{item.source}</span>
-                </span>
               </div>
-            </div>
-          ))
+            );
+          })
         )}
       </div>
     </div>

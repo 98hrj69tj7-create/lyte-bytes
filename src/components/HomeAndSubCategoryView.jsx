@@ -15,21 +15,11 @@ import {
 import ItemCard from './ItemCard';
 import BulkOrdersModal from './BulkOrdersModal';
 
-/* ==========================================================================
-   CONFIG & UTILITY HELPERS
-   ========================================================================== */
-
-/**
- * Safely extracts an image path from an object regardless of property naming convention
- */
 function getImgUrl(obj) {
   if (!obj || typeof obj !== 'object') return null;
   return obj.imageUrl || obj.image || obj.img || obj.banner || obj.categoryImage || obj.photo || null;
 }
 
-/**
- * Case-insensitive category lookup helper
- */
 function findCategoryData(menuData, catKey) {
   if (!menuData || !catKey) return null;
   if (menuData[catKey]) return menuData[catKey];
@@ -42,9 +32,6 @@ function findCategoryData(menuData, catKey) {
   return foundKey ? menuData[foundKey] : null;
 }
 
-/**
- * Generates a clean, Base64-encoded SVG fallback data URL.
- */
 function getFallbackSvgImage(title = "Lyte Bytes") {
   const svgString = `
     <svg xmlns="http://www.w3.org/2000/svg" width="600" height="400" viewBox="0 0 600 400">
@@ -75,9 +62,6 @@ function getFallbackSvgImage(title = "Lyte Bytes") {
   return `data:image/svg+xml;base64,${base64}`;
 }
 
-/**
- * Resolves the image path for a subcategory using hierarchical fallback
- */
 function resolveSubcategoryImage(subName, activeCat, menuData, resolveImagePath) {
   const catObj = findCategoryData(menuData, activeCat);
   if (!catObj) return getFallbackSvgImage(subName);
@@ -118,9 +102,6 @@ function resolveSubcategoryImage(subName, activeCat, menuData, resolveImagePath)
   return resolvedSubItemImg || resolvedCatImg || getFallbackSvgImage(subName);
 }
 
-/* ==========================================================================
-   CATEGORY CARD COMPONENT
-   ========================================================================== */
 function CategoryCard({ cat, resolveImagePath, theme, onClick }) {
   const [isHovered, setIsHovered] = useState(false);
   const rawPath = getImgUrl(cat);
@@ -223,9 +204,6 @@ function CategoryCard({ cat, resolveImagePath, theme, onClick }) {
   );
 }
 
-/* ==========================================================================
-   SUBCATEGORY CARD COMPONENT
-   ========================================================================== */
 function SubCategoryCard({ sub, resolveImagePath, activeCat, menuData, onClick }) {
   const [isHovered, setIsHovered] = useState(false);
   
@@ -338,9 +316,6 @@ function SubCategoryCard({ sub, resolveImagePath, activeCat, menuData, onClick }
   );
 }
 
-/* ==========================================================================
-   MAIN VIEW COMPONENT
-   ========================================================================== */
 export default function HomeAndSubCategoryView({ 
   view, 
   theme, 
@@ -362,13 +337,11 @@ export default function HomeAndSubCategoryView({
   const [isStoryModalOpen, setIsStoryModalOpen] = useState(false);
   const [isBulkModalOpen, setIsBulkModalOpen] = useState(false);
 
-  // Theme configuration matching uniform modal guidelines
   const activeTheme = {
     brand: theme?.brand || '#FF5958',
     text: theme?.text || '#1A1816',
   };
 
-  // Close modal on Escape key press and lock body scroll
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.key === 'Escape') setIsStoryModalOpen(false);
@@ -392,10 +365,6 @@ export default function HomeAndSubCategoryView({
   }, [isStoryModalOpen, onStoryToggle]);
 
   const currentCategoryData = findCategoryData(menuData, activeCat);
-
-  /* ------------------------------------------------------------------------
-     ALPHABETICAL SORTING (A to Z) LOGIC FOR CATEGORIES AND SUBCATEGORIES
-     ------------------------------------------------------------------------ */
   
   const sortedCategoryKeys = Object.keys(menuData || {}).sort((a, b) => 
     a.localeCompare(b, undefined, { sensitivity: 'base' })
@@ -414,7 +383,6 @@ export default function HomeAndSubCategoryView({
     String(a).localeCompare(String(b), undefined, { sensitivity: 'base' })
   );
 
-  // Story Modal Portal Content matching PolicyModal structure
   const storyModalContent = isStoryModalOpen && (
     <div 
       onClick={() => setIsStoryModalOpen(false)}
@@ -453,7 +421,6 @@ export default function HomeAndSubCategoryView({
           overflow: 'hidden'
         }}
       >
-        {/* Header with Title & Polished Close Button */}
         <div style={{
           display: 'flex', 
           alignItems: 'center', 
@@ -500,7 +467,6 @@ export default function HomeAndSubCategoryView({
           </button>
         </div>
 
-        {/* Modal Scrollable Content Body with Dashed Cards */}
         <div style={{ 
           overflowY: 'auto', 
           display: 'flex', 
@@ -514,7 +480,6 @@ export default function HomeAndSubCategoryView({
           paddingRight: '6px',
           minWidth: 0
         }}>
-          {/* Card 1: Our Origins */}
           <div style={{
             background: 'linear-gradient(135deg, #FFFDF9 0%, #FAF4EB 100%)',
             borderRadius: '16px',
@@ -530,7 +495,6 @@ export default function HomeAndSubCategoryView({
             </p>
           </div>
 
-          {/* Card 2: Journey */}
           <div style={{
             background: 'linear-gradient(135deg, #FFFDF9 0%, #FAF4EB 100%)',
             borderRadius: '16px',
@@ -546,7 +510,6 @@ export default function HomeAndSubCategoryView({
             </p>
           </div>
 
-          {/* Card 3: Quote Highlight */}
           <div style={{
             backgroundColor: 'rgba(197, 160, 89, 0.08)',
             borderRadius: '16px',
@@ -566,7 +529,6 @@ export default function HomeAndSubCategoryView({
             </p>
           </div>
 
-          {/* Card 4: Evolution & Culmination */}
           <div style={{
             background: 'linear-gradient(135deg, #FFFDF9 0%, #FAF4EB 100%)',
             borderRadius: '16px',
@@ -582,7 +544,6 @@ export default function HomeAndSubCategoryView({
             </p>
           </div>
 
-          {/* Grid Features */}
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
             {[
               { icon: Clock, label: 'Made strictly to order' },
@@ -608,7 +569,6 @@ export default function HomeAndSubCategoryView({
             ))}
           </div>
 
-          {/* Card 5: Our Promise */}
           <div style={{
             background: 'linear-gradient(135deg, #FFFDF9 0%, #FAF4EB 100%)',
             borderRadius: '16px',
@@ -659,20 +619,14 @@ export default function HomeAndSubCategoryView({
         }
       `}</style>
       
-      {/* ====================================================================
-         HOME VIEW
-         ==================================================================== */}
       {view === 'home' && (
         <div style={{ 
           paddingBottom: '100px',
           fontFamily: "'Plus Jakarta Sans', sans-serif",
           position: 'relative'
         }}>
-          
-          {/* --- RENDER STORY MODAL VIA PORTAL --- */}
           {ReactDOM.createPortal(storyModalContent || <></>, document.body)}
 
-          {/* --- TOP SCROLLING BRAND SLOGAN BAR --- */}
           <div style={{ 
             margin: '2px 0 8px 0', 
             overflow: 'hidden', 
@@ -704,7 +658,6 @@ export default function HomeAndSubCategoryView({
             </div>
           </div>
 
-          {/* --- CORAL RED GLOW SEARCH BAR --- */}
           <div style={{ marginBottom: '12px' }}>
             <div style={{
               position: 'relative',
@@ -740,7 +693,6 @@ export default function HomeAndSubCategoryView({
             </div>
           </div>
 
-          {/* --- HERITAGE & CRAFT TRIGGER CARD --- */}
           {!searchQuery.trim() && (
             <div 
               className="support-card"
@@ -842,7 +794,6 @@ export default function HomeAndSubCategoryView({
             </div>
           )}
 
-          {/* --- SEARCH RESULTS OR CATEGORY LIST --- */}
           {searchQuery.trim() ? (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2px' }}>
@@ -882,7 +833,7 @@ export default function HomeAndSubCategoryView({
                   if (!item || !item.name) return false;
                   const matchesSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase());
                   
-                  // Hide beef if unauthorized; leave pork alone
+                  // 🔥 Dynamic check: hide beef if unauthorized
                   const isBeef = item.name.toLowerCase().includes('beef');
                   if (isBeef && !currentUserHasOrderedBeef) return false;
 
@@ -914,7 +865,6 @@ export default function HomeAndSubCategoryView({
               </div>
             </div>
           ) : (
-            /* --- RENDER ALPHABETICALLY SORTED CATEGORIES (A-Z) --- */
             <div style={{ 
               display: 'flex', 
               flexDirection: 'column', 
@@ -934,15 +884,11 @@ export default function HomeAndSubCategoryView({
         </div>
       )}
 
-      {/* ====================================================================
-         SUBCATEGORY VIEW
-         ==================================================================== */}
       {view === 'subcat' && (
         <div style={{ 
           paddingBottom: '100px', 
           fontFamily: "'Plus Jakarta Sans', sans-serif" 
         }}>
-          {/* --- TOP BAR (BACK BUTTON & CATEGORY TITLE) --- */}
           <div style={{ display: 'flex', alignItems: 'center', position: 'relative', marginBottom: '12px', padding: '4px 0' }}>
             <button 
               onClick={() => setView('home')} 
@@ -988,7 +934,6 @@ export default function HomeAndSubCategoryView({
             </h2>
           </div>
 
-          {/* --- RENDER ALPHABETICALLY SORTED SUBCATEGORIES (A-Z) --- */}
           <div style={{ 
             display: 'flex', 
             flexDirection: 'column', 
@@ -1009,7 +954,6 @@ export default function HomeAndSubCategoryView({
         </div>
       )}
 
-      {/* Bulk Orders Popup Modal */}
       <BulkOrdersModal 
         isOpen={isBulkModalOpen} 
         onClose={() => setIsBulkModalOpen(false)} 

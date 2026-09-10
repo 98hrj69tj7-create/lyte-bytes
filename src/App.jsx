@@ -180,23 +180,15 @@ function useLocalStorage(key, initialValue) {
 }
 
 export default function App() {
-  // --- 1. VIEW STATE DECLARED FIRST (Prevents ReferenceError) ---
   const [view, setView] = useState('home');
-
-  // --- UNIVERSAL CROSS-OS SCROLL-TO-TOP ENGINE ---
   const mainContainerRef = useRef(null);
 
   useEffect(() => {
-    // 1. Instant window scroll reset
     window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
-
-    // 2. Instant container scroll reset
     if (mainContainerRef.current) {
       mainContainerRef.current.scrollTop = 0;
       mainContainerRef.current.scrollTo({ top: 0, left: 0, behavior: 'instant' });
     }
-
-    // 3. Micro-timeout fallback for mobile WebKit / iOS Safari layout paints
     const timer = setTimeout(() => {
       window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
       if (mainContainerRef.current) {
@@ -204,11 +196,9 @@ export default function App() {
         mainContainerRef.current.scrollTo({ top: 0, left: 0, behavior: 'instant' });
       }
     }, 15);
-
     return () => clearTimeout(timer);
   }, [view]);
 
-  // --- 12-HOUR GAP CACHE REFRESH GUARD FOR ANDROID / iOS PWA ---
   useEffect(() => {
     const LAST_OPEN_KEY = 'lyte_last_open_timestamp';
     const TWELVE_HOURS_MS = 12 * 60 * 60 * 1000;
@@ -217,7 +207,6 @@ export default function App() {
 
     if (lastOpenTime) {
       const timeDifference = now - parseInt(lastOpenTime, 10);
-      
       if (timeDifference > TWELVE_HOURS_MS) {
         localStorage.setItem(LAST_OPEN_KEY, now.toString());
         window.location.reload();
@@ -238,6 +227,29 @@ export default function App() {
   const [layout, setLayout] = useState('list');
   const [cart, setCart] = useLocalStorage('app_cart', []);
   const [customer, setCustomer] = useLocalStorage('app_customer', { name: '', phone: '', email: '', address: '' });
+  
+  // 🔥 Dynamic Beef Order History State
+  const [currentUserHasOrderedBeef, setCurrentUserHasOrderedBeef] = useLocalStorage('lytebytes_has_ordered_beef', false);
+
+  useEffect(() => {
+    const savedUser = localStorage.getItem('lytebytes_user');
+    if (savedUser) {
+      try {
+        const parsed = JSON.parse(savedUser);
+        if (parsed.phone) {
+          setCustomer(prev => {
+            if (prev.phone !== parsed.phone) {
+              return { ...prev, phone: parsed.phone };
+            }
+            return prev;
+          });
+        }
+      } catch (e) {
+        console.error("Error parsing user session:", e);
+      }
+    }
+  }, []);
+
   const [payment, setPayment] = useState(null);
   const [showConditions, setShowConditions] = useState(false);
   const [deliveryDate, setDeliveryDate] = useState('');
@@ -245,7 +257,6 @@ export default function App() {
   const [upiApp, setUpiApp] = useState('');
   const [upiId, setUpiId] = useState('');
   
-  // Wall of Love Review State with Randomization
   const [selectedReview, setSelectedReview] = useState(null);
   const INITIAL_FALLBACK_REVIEWS = [
     { id: 1, source: 'google', text: 'The best pickles and homemade treats! Authentic taste and amazing packaging.', author: 'Priya S.', rating: 5 },
@@ -270,7 +281,6 @@ export default function App() {
     return [...INITIAL_FALLBACK_REVIEWS].sort(() => Math.random() - 0.5);
   });
 
-  // Fetch reviews background sync & randomise
   useEffect(() => {
     const fetchFreshReviews = async () => {
       try {
@@ -282,14 +292,28 @@ export default function App() {
         
         if (data && data.length > 0) {
           const normalizedReviews = data
-            .map(item => ({
-              id: item.id || item.ID || Math.random(),
-              text: item.text || item.Text || '',
-              author: item.author || item.Author || 'Customer',
-              source: (item.source || item.Source || 'google').toLowerCase(),
-              rating: parseInt(item.rating || item.Rating || 5),
-              imageUrl: item.image || item.Image || item.Photo || item.photo || item.imageUrl || item['Image URL'] || null
-            }))
+            .map(item => {
+              const parseRatingVal = (val) => {
+                if (!val) return 5;
+                const str = String(val).trim().toUpperCase();
+                if (str === 'ONE' || str === '1') return 1;
+                if (str === 'TWO' || str === '2') return 2;
+                if (str === 'THREE' || str === '3') return 3;
+                if (str === 'FOUR' || str === '4') return 4;
+                if (str === 'FIVE' || str === '5') return 5;
+                const num = Number(val);
+                return isNaN(num) ? 5 : num;
+              };
+
+              return {
+                id: item.id || item.ID || Math.random(),
+                text: item.text || item.Text || '',
+                author: item.author || item.Author || 'Customer',
+                source: (item.source || item.Source || 'google').toLowerCase(),
+                rating: parseRatingVal(item.rating || item.Rating),
+                imageUrl: item.image || item.Image || item.Photo || item.photo || item.imageUrl || item['Image URL'] || null
+              };
+            })
             .filter(item => item.text && item.text.trim().length > 0);
           
           if (normalizedReviews.length > 0) {
@@ -305,29 +329,23 @@ export default function App() {
     fetchFreshReviews();
   }, []);
 
-  // Custom Back Warning Modal State
   const [isBackModalOpen, setIsBackModalOpen] = useState(false);
   const [isStoryExpanded, setIsStoryExpanded] = useState(false);
 
   useEffect(() => {
-    if (view !== 'home') {
-      setIsStoryExpanded(false);
-    }
+    if (view !== 'home') setIsStoryExpanded(false);
   }, [view]);
 
-  // --- PWA BROWSER BACK BUTTON CUSTOM MODAL INTERCEPTOR ---
   useEffect(() => {
     if (view !== 'home') {
       window.history.pushState({ view }, '', window.location.href);
     }
-
     const handlePopState = (event) => {
       if (view !== 'home') {
         window.history.pushState({ view }, '', window.location.href);
         setIsBackModalOpen(true);
       }
     };
-
     window.addEventListener('popstate', handlePopState);
     return () => window.removeEventListener('popstate', handlePopState);
   }, [view]);
@@ -526,7 +544,6 @@ export default function App() {
       <LimitedOfferModal theme={theme} setView={setView} />
       <Header theme={theme} setView={setView} />
       
-      {/* Scrollable Main Viewport with Ref attached */}
       <main ref={mainContainerRef} style={{ flex: 1, paddingTop: '5px', paddingLeft: '20px', paddingRight: '20px', paddingBottom: '80px', overflowY: 'auto', display: 'flex', flexDirection: 'column' }}>
         {view === 'offers' && (
           <PageTransition viewKey="offers">
@@ -552,6 +569,7 @@ export default function App() {
               addToCart={addToCart}
               resolveImagePath={resolveImagePath}
               onStoryToggle={setIsStoryExpanded}
+              currentUserHasOrderedBeef={currentUserHasOrderedBeef}
             />
           </PageTransition>
         )}
@@ -574,6 +592,7 @@ export default function App() {
               openModal={openModal}
               addToCart={addToCart}
               resolveImagePath={resolveImagePath}
+              currentUserHasOrderedBeef={currentUserHasOrderedBeef}
             />
           </PageTransition>
         )}
@@ -716,6 +735,8 @@ export default function App() {
             <CustomerView
               onBack={() => setView('home')}
               customer={customer}
+              setCustomer={setCustomer}
+              setCurrentUserHasOrderedBeef={setCurrentUserHasOrderedBeef}
             />
           </PageTransition>
         )}
@@ -731,7 +752,6 @@ export default function App() {
         )}
       </main>
 
-    {/* 💡 StickyCartBar only shows on allowed shopping and tracking tabs */}
 {['home', 'subcat', 'items', 'offers', 'track'].includes(view) && !isStoryExpanded && (
   <StickyCartBar
     cart={cart}
@@ -740,7 +760,6 @@ export default function App() {
   />
 )}
 
-      {/* PWA Install Prompt Banner */}
       <InstallPrompt theme={theme} />
 
       {!isStoryExpanded && (
@@ -765,7 +784,6 @@ export default function App() {
         />
       )}
 
-      {/* ================= SINGLE REVIEW DETAILS POPUP MODAL ================= */}
       {selectedReview && (
         <div 
           onClick={() => setSelectedReview(null)}
@@ -818,72 +836,86 @@ export default function App() {
         </div>
       )}
 
-      {/* ================= CUSTOM BRANDED BACK WARNING MODAL ================= */}
       {isBackModalOpen && (
         <div 
           onClick={() => setIsBackModalOpen(false)}
           style={{
             position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
             backgroundColor: 'rgba(20, 15, 12, 0.82)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            zIndex: 9999, padding: '16px', boxSizing: 'border-box'
+            display: 'flex', alignItems: 'flex-end', justifyContent: 'center',
+            zIndex: 9999, padding: '0', boxSizing: 'border-box'
           }}
         >
+          <style>{`
+            @keyframes slideUpFromBottom {
+              0% { transform: translateY(100%); opacity: 0; }
+              100% { transform: translateY(0); opacity: 1; }
+            }
+          `}</style>
           <div 
             onClick={(e) => e.stopPropagation()}
             style={{
               background: 'linear-gradient(135deg, #FFFDF9 0%, #FAF4EB 100%)', 
-              borderRadius: '24px', 
-              padding: '24px',
-              maxWidth: '360px', 
+              borderTopLeftRadius: '28px',
+              borderTopRightRadius: '28px',
+              borderBottomLeftRadius: '0px',
+              borderBottomRightRadius: '0px',
+              padding: '28px 24px 34px 24px',
               width: '100%', 
+              maxWidth: '480px',
               boxSizing: 'border-box',
               position: 'relative', 
-              boxShadow: '0 20px 40px rgba(0,0,0,0.3)',
-              border: '1px solid rgba(197, 160, 89, 0.4)',
+              boxShadow: '0 -10px 40px rgba(44, 34, 30, 0.2)',
+              borderTop: '1px solid rgba(197, 160, 89, 0.4)',
               textAlign: 'center', 
               display: 'flex', 
               flexDirection: 'column', 
               gap: '16px',
-              fontFamily: "'Plus Jakarta Sans', sans-serif"
+              fontFamily: "'Plus Jakarta Sans', sans-serif",
+              animation: 'slideUpFromBottom 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards'
             }}
           >
+            <div style={{ width: '40px', height: '4px', backgroundColor: 'rgba(197, 160, 89, 0.3)', borderRadius: '2px', alignSelf: 'center', marginBottom: '4px' }} />
+            
             <h3 style={{ 
               fontFamily: "'Cormorant Garamond', serif", 
-              fontSize: '21px', 
+              fontSize: '23px', 
               fontWeight: '700', 
               color: '#1A1816', 
               margin: 0,
               textTransform: 'uppercase',
-              letterSpacing: '0.5px'
+              letterSpacing: '0.6px'
             }}>
-              Leave Current Page?
+              Heading back so soon? 
             </h3>
+            
             <p style={{ 
-              fontSize: '12.5px', 
+              fontSize: '13.5px', 
               color: '#78716C', 
               margin: 0, 
-              lineHeight: '1.45',
-              fontWeight: '500' 
+              lineHeight: '1.5',
+              fontWeight: '500',
+              padding: '0 8px'
             }}>
-              Are you sure you want to go back? Your current order progress or form entries may be lost.
+              We’d hate for you to lose your handcrafted picks or order progress. Would you like to stay a while longer?
             </p>
-            <div style={{ display: 'flex', gap: '10px', marginTop: '6px' }}>
+
+            <div style={{ display: 'flex', gap: '12px', marginTop: '8px' }}>
               <button 
                 onClick={() => setIsBackModalOpen(false)}
                 style={{
                   flex: 1,
-                  backgroundColor: 'rgba(197, 160, 89, 0.1)',
+                  backgroundColor: 'rgba(197, 160, 89, 0.12)',
                   color: '#1A1816',
-                  border: '1px solid rgba(197, 160, 89, 0.3)',
-                  padding: '12px',
+                  border: '1px solid rgba(197, 160, 89, 0.35)',
+                  padding: '13px',
                   fontSize: '14px',
-                  fontWeight: '600',
+                  fontWeight: '700',
                   borderRadius: '14px',
                   cursor: 'pointer'
                 }}
               >
-                Stay Here
+                Stay & Continue
               </button>
               <button 
                 onClick={() => {
@@ -895,9 +927,9 @@ export default function App() {
                   border: '1px solid rgba(255, 255, 255, 0.2)',
                   background: 'linear-gradient(135deg, #FF5958 0%, #E11D48 100%)',
                   color: '#FFFFFF',
-                  padding: '12px',
+                  padding: '13px',
                   fontSize: '14px',
-                  fontWeight: '600',
+                  fontWeight: '700',
                   borderRadius: '14px',
                   cursor: 'pointer',
                   boxShadow: '0 4px 14px rgba(255, 89, 88, 0.3)'

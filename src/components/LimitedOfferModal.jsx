@@ -5,35 +5,29 @@ import { getAllOffers } from '../utils/offersEngine';
 export default function LimitedOfferModal({ theme = {}, setView }) {
   const [isOpen, setIsOpen] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
-
-  // Live Countdown Timer state for urgent flash deals
   const [timeLeft, setTimeLeft] = useState({ hours: 0, minutes: 0, seconds: 0 });
 
-  // Fallback Theme values with fluid radius
   const activeTheme = {
     brand: theme?.brand || '#FF5958',
     text: theme?.text || '#1A1816',
     border: theme?.border || '1px solid rgba(197, 160, 89, 0.4)',
     bg: theme?.bg || '#FFFDF9',
-    radius: theme?.radius || 'clamp(20px, 5vw, 24px)', // 💡 FLUID RADIUS
+    radius: theme?.radius || 'clamp(20px, 5vw, 24px)', 
   };
 
-  // Get current order count to filter dynamic offers using offers engine
   const currentCount = parseInt(localStorage.getItem('store_order_count') || '1', 10);
   const allOffers = getAllOffers(currentCount);
 
-  // 1. Trigger Logic: 10-Hour Cooldown via localStorage & Delayed Load (3.5 seconds)
+  // 🔥 1. Trigger Logic: 10-Hour Cooldown via localStorage & Delayed Load
   useEffect(() => {
-    const lastShownTime = localStorage.getItem('lyte_offer_last_shown_time');
-    const now = new Date().getTime();
-    const tenHoursInMs = 10 * 60 * 60 * 1000;
+    const dismissedUntil = localStorage.getItem('offer_dismissed_until');
+    const now = Date.now();
 
-    const hasExpired = !lastShownTime || (now - parseInt(lastShownTime, 10)) > tenHoursInMs;
+    const hasExpired = !dismissedUntil || now > parseInt(dismissedUntil, 10);
 
     if (hasExpired && allOffers.length > 0) {
       const timer = setTimeout(() => {
         setIsOpen(true);
-        localStorage.setItem('lyte_offer_last_shown_time', now.toString());
         localStorage.removeItem('lyte_offer_closed');
       }, 3500);
 
@@ -46,9 +40,10 @@ export default function LimitedOfferModal({ theme = {}, setView }) {
   const handleClose = () => {
     setIsOpen(false);
     localStorage.setItem('lyte_offer_closed', 'true');
+    // 🔥 Set expiration marker for 10 hours in the future
+    localStorage.setItem('offer_dismissed_until', (Date.now() + 10 * 60 * 60 * 1000).toString());
   };
 
-  // 2. Close on Escape key press
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.key === 'Escape') handleClose();
@@ -59,7 +54,6 @@ export default function LimitedOfferModal({ theme = {}, setView }) {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isOpen]);
 
-  // Active ticking countdown interval logic
   useEffect(() => {
     const targetTime = new Date();
     targetTime.setHours(23, 59, 59, 999);
@@ -83,7 +77,6 @@ export default function LimitedOfferModal({ theme = {}, setView }) {
     return () => clearInterval(timerInterval);
   }, []);
 
-  // Auto-slide carousel effect every 4.5 seconds
   useEffect(() => {
     if (!isOpen || allOffers.length <= 1) return;
     const interval = setInterval(() => {
@@ -92,13 +85,8 @@ export default function LimitedOfferModal({ theme = {}, setView }) {
     return () => clearInterval(interval);
   }, [isOpen, allOffers.length]);
 
-  const handlePrev = () => {
-    setCurrentIndex((prevIndex) => (prevIndex === 0 ? allOffers.length - 1 : prevIndex - 1));
-  };
-
-  const handleNext = () => {
-    setCurrentIndex((prevIndex) => (prevIndex + 1) % allOffers.length);
-  };
+  const handlePrev = () => setCurrentIndex((prevIndex) => (prevIndex === 0 ? allOffers.length - 1 : prevIndex - 1));
+  const handleNext = () => setCurrentIndex((prevIndex) => (prevIndex + 1) % allOffers.length);
 
   if (!isOpen) return null;
 
@@ -108,21 +96,8 @@ export default function LimitedOfferModal({ theme = {}, setView }) {
     <div 
       onClick={handleClose}
       style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        backgroundColor: 'rgba(20, 15, 12, 0.82)',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        zIndex: 99999,
-        padding: '16px',
-        backdropFilter: 'blur(8px)',
-        WebkitBackdropFilter: 'blur(8px)',
-        cursor: 'pointer',
-        boxSizing: 'border-box'
+        position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(20, 15, 12, 0.82)', display: 'flex', justifyContent: 'center', alignItems: 'center',
+        zIndex: 99999, padding: '16px', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)', cursor: 'pointer', boxSizing: 'border-box'
       }}
     >
       <style>{`
@@ -135,138 +110,55 @@ export default function LimitedOfferModal({ theme = {}, setView }) {
       <div 
         onClick={(e) => e.stopPropagation()}
         style={{
-          background: 'linear-gradient(135deg, #FFFDF9 0%, #FAF4EB 100%)',
-          borderRadius: activeTheme.radius,
-          border: '1px solid rgba(197, 160, 89, 0.4)',
-          width: '100%',
-          maxWidth: '380px',
-          display: 'flex',
-          flexDirection: 'column',
-          boxShadow: '0 24px 60px rgba(44, 34, 30, 0.35)',
-          overflow: 'hidden',
-          position: 'relative',
-          animation: 'modalScaleIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards',
-          cursor: 'default',
-          boxSizing: 'border-box',
-          fontFamily: "'Plus Jakarta Sans', sans-serif"
+          background: 'linear-gradient(135deg, #FFFDF9 0%, #FAF4EB 100%)', borderRadius: activeTheme.radius, border: '1px solid rgba(197, 160, 89, 0.4)',
+          width: '100%', maxWidth: '380px', display: 'flex', flexDirection: 'column', boxShadow: '0 24px 60px rgba(44, 34, 30, 0.35)', overflow: 'hidden', position: 'relative',
+          animation: 'modalScaleIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards', cursor: 'default', boxSizing: 'border-box', fontFamily: "'Plus Jakarta Sans', sans-serif"
         }}
       >
-        {/* Modal Header */}
-        <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          padding: '22px 20px 4px 20px',
-          boxSizing: 'border-box',
-          position: 'relative'
-        }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '22px 20px 4px 20px', boxSizing: 'border-box', position: 'relative' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', minWidth: 0 }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
               <Sparkles size={18} color={activeTheme.brand} />
             </div>
-            <span style={{ 
-              fontFamily: "'Cormorant Garamond', serif", 
-              fontSize: 'var(--font-h2)', // 💡 FLUID TYPOGRAPHY
-              fontWeight: '700', 
-              color: activeTheme.text, 
-              textTransform: 'uppercase', 
-              letterSpacing: '1px',
-              whiteSpace: 'nowrap',
-              overflow: 'hidden',
-              textOverflow: 'ellipsis'
-            }}>
+            <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 'var(--font-h2)', fontWeight: '700', color: activeTheme.text, textTransform: 'uppercase', letterSpacing: '1px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
               Exclusive Offers
             </span>
           </div>
         </div>
 
-        {/* Carousel Container Wrapper */}
         <div style={{ padding: 'clamp(12px, 3.5vw, 14px) clamp(16px, 5vw, 20px) clamp(14px, 4vw, 16px) clamp(16px, 5vw, 20px)', position: 'relative', boxSizing: 'border-box' }}>
           
-          {/* Active Carousel Card with Golden Ticket Border */}
-          <div 
-            style={{
-              background: 'linear-gradient(135deg, #FFFDF9 0%, #FAF4EB 100%)',
-              borderRadius: '16px',
-              padding: 'clamp(14px, 4vw, 18px) clamp(16px, 4.5vw, 20px)', // 💡 FLUID PADDING
-              color: activeTheme.text,
-              boxShadow: '0 8px 24px rgba(44, 34, 30, 0.06)',
-              position: 'relative',
-              overflow: 'hidden',
-              minHeight: '190px',
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'space-between',
-              boxSizing: 'border-box',
-              border: '1px dashed #C5A059'
-            }}
-          >
+          <div style={{
+            background: 'linear-gradient(135deg, #FFFDF9 0%, #FAF4EB 100%)', borderRadius: '16px', padding: 'clamp(14px, 4vw, 18px) clamp(16px, 4.5vw, 20px)', color: activeTheme.text,
+            boxShadow: '0 8px 24px rgba(44, 34, 30, 0.06)', position: 'relative', overflow: 'hidden', minHeight: '190px', display: 'flex', flexDirection: 'column',
+            justifyContent: 'space-between', boxSizing: 'border-box', border: '1px dashed #C5A059'
+          }}>
             <div style={{ position: 'absolute', right: '-15px', bottom: '-15px', opacity: 0.05, pointerEvents: 'none' }}>
               <Sparkles size={110} color="#C5A059" />
             </div>
 
             <div>
-              {/* Header row inside card */}
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px', position: 'relative', zIndex: 1, gap: '8px', minWidth: 0 }}>
-                <span style={{ 
-                  background: 'rgba(197, 160, 89, 0.12)', 
-                  border: '1px solid rgba(197, 160, 89, 0.3)',
-                  padding: '3px 10px', 
-                  borderRadius: '12px', 
-                  fontSize: '9.5px', 
-                  fontWeight: '700', 
-                  letterSpacing: '1px',
-                  textTransform: 'uppercase',
-                  color: '#8A6D2B',
-                  whiteSpace: 'nowrap',
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis'
-                }}>
+                <span style={{ background: 'rgba(197, 160, 89, 0.12)', border: '1px solid rgba(197, 160, 89, 0.3)', padding: '3px 10px', borderRadius: '12px', fontSize: '9.5px', fontWeight: '700', letterSpacing: '1px', textTransform: 'uppercase', color: '#8A6D2B', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                   {currentOffer.tag}
                 </span>
 
                 <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexShrink: 0 }}>
                   {currentOffer.id === 'early_aug' && (
-                    <div style={{
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      gap: '4px',
-                      background: 'rgba(239, 68, 68, 0.1)',
-                      border: '1px solid rgba(239, 68, 68, 0.3)',
-                      padding: '3px 8px',
-                      borderRadius: '10px',
-                      fontSize: '9.5px',
-                      fontWeight: '600',
-                      color: '#DC2626',
-                      letterSpacing: '0.4px',
-                      flexShrink: 0
-                    }}>
+                    <div style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', background: 'rgba(239, 68, 68, 0.1)', border: '1px solid rgba(239, 68, 68, 0.3)', padding: '3px 8px', borderRadius: '10px', fontSize: '9.5px', fontWeight: '600', color: '#DC2626', letterSpacing: '0.4px', flexShrink: 0 }}>
                       <Clock size={10} style={{ flexShrink: 0 }} />
                       <span style={{ whiteSpace: 'nowrap' }}>
-                        {String(timeLeft.hours).padStart(2, '0')}:
-                        {String(timeLeft.minutes).padStart(2, '0')}:
-                        {String(timeLeft.seconds).padStart(2, '0')}
+                        {String(timeLeft.hours).padStart(2, '0')}:{String(timeLeft.minutes).padStart(2, '0')}:{String(timeLeft.seconds).padStart(2, '0')}
                       </span>
                     </div>
                   )}
 
-                  <span style={{ 
-                    fontSize: 'var(--font-caption)', 
-                    fontWeight: '800', 
-                    background: activeTheme.brand, 
-                    color: '#FFFFFF',
-                    padding: '3px 10px', 
-                    borderRadius: '6px',
-                    boxShadow: '0 2px 8px rgba(255, 89, 88, 0.3)',
-                    whiteSpace: 'nowrap',
-                    flexShrink: 0
-                  }}>
+                  <span style={{ fontSize: 'var(--font-caption)', fontWeight: '800', background: activeTheme.brand, color: '#FFFFFF', padding: '3px 10px', borderRadius: '6px', boxShadow: '0 2px 8px rgba(255, 89, 88, 0.3)', whiteSpace: 'nowrap', flexShrink: 0 }}>
                     {currentOffer.discount}
                   </span>
                 </div>
               </div>
 
-              {/* Title & Description */}
               <h3 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 'clamp(16px, 4.5vw, 18px)', fontWeight: '700', margin: '4px 0 6px 0', position: 'relative', zIndex: 1, letterSpacing: '0.3px', color: activeTheme.text }}>
                 {currentOffer.title}
               </h3>
@@ -274,95 +166,39 @@ export default function LimitedOfferModal({ theme = {}, setView }) {
                 {currentOffer.description}
               </p>
 
-              {/* Condition Badge */}
               <div style={{ fontSize: 'var(--font-caption)', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '5px', position: 'relative', zIndex: 1, marginBottom: '10px', color: '#8A6D2B' }}>
                 <Tag size={11} color={activeTheme.brand} style={{ flexShrink: 0 }} /> <span style={{ minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis' }}>{currentOffer.condition}</span>
               </div>
             </div>
 
-            {/* In-Cart Availability Badge */}
             <div style={{ 
-              display: 'flex', 
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '6px',
-              background: 'rgba(197, 160, 89, 0.08)', 
-              backdropFilter: 'blur(6px)',
-              WebkitBackdropFilter: 'blur(6px)',
-              padding: '9px 12px', 
-              borderRadius: '10px',
-              border: '1px solid rgba(197, 160, 89, 0.25)',
-              marginTop: '4px',
-              fontSize: 'var(--font-caption)',
-              fontWeight: '700',
-              position: 'relative',
-              zIndex: 1,
-              color: activeTheme.text,
-              boxSizing: 'border-box'
+              display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', background: 'rgba(197, 160, 89, 0.08)', backdropFilter: 'blur(6px)',
+              WebkitBackdropFilter: 'blur(6px)', padding: '9px 12px', borderRadius: '10px', border: '1px solid rgba(197, 160, 89, 0.25)', marginTop: '4px',
+              fontSize: 'var(--font-caption)', fontWeight: '700', position: 'relative', zIndex: 1, color: activeTheme.text, boxSizing: 'border-box'
             }}>
               <ShoppingBag size={16} color={activeTheme.brand} style={{ flexShrink: 0 }} />
               <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Available in Bag at Checkout</span>
             </div>
           </div>
 
-          {/* Carousel Controls & Indicators */}
           {allOffers.length > 1 && (
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '14px', width: '100%', boxSizing: 'border-box' }}>
               <button 
                 onClick={handlePrev}
-                style={{
-                  border: '1px solid rgba(197, 160, 89, 0.4)',
-                  borderRadius: '50%',
-                  width: '32px',
-                  height: '32px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  cursor: 'pointer',
-                  color: activeTheme.text,
-                  background: 'rgba(255, 255, 255, 0.8)',
-                  boxShadow: '0 2px 8px rgba(44, 34, 30, 0.06)',
-                  flexShrink: 0
-                }}
+                style={{ border: '1px solid rgba(197, 160, 89, 0.4)', borderRadius: '50%', width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: activeTheme.text, background: 'rgba(255, 255, 255, 0.8)', boxShadow: '0 2px 8px rgba(44, 34, 30, 0.06)', flexShrink: 0 }}
               >
                 <ChevronLeft size={16} />
               </button>
 
-              {/* Dots Indicator */}
               <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
                 {allOffers.map((_, idx) => (
-                  <div 
-                    key={idx}
-                    onClick={() => setCurrentIndex(idx)}
-                    style={{
-                      width: currentIndex === idx ? '18px' : '6px',
-                      height: '6px',
-                      borderRadius: '3px',
-                      backgroundColor: currentIndex === idx ? activeTheme.brand : '#C5A059',
-                      opacity: currentIndex === idx ? 1 : 0.4,
-                      cursor: 'pointer',
-                      transition: 'all 0.3s ease'
-                    }}
-                  />
+                  <div key={idx} onClick={() => setCurrentIndex(idx)} style={{ width: currentIndex === idx ? '18px' : '6px', height: '6px', borderRadius: '3px', backgroundColor: currentIndex === idx ? activeTheme.brand : '#C5A059', opacity: currentIndex === idx ? 1 : 0.4, cursor: 'pointer', transition: 'all 0.3s ease' }} />
                 ))}
               </div>
 
               <button 
                 onClick={handleNext}
-                style={{
-                  border: '1px solid rgba(197, 160, 89, 0.4)',
-                  borderRadius: '50%',
-                  width: '32px',
-                  height: '32px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  cursor: 'pointer',
-                  color: activeTheme.text,
-                  background: 'rgba(255, 255, 255, 0.8)',
-                  boxShadow: '0 2px 8px rgba(44, 34, 30, 0.06)',
-                  flexShrink: 0
-                }}
+                style={{ border: '1px solid rgba(197, 160, 89, 0.4)', borderRadius: '50%', width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: activeTheme.text, background: 'rgba(255, 255, 255, 0.8)', boxShadow: '0 2px 8px rgba(44, 34, 30, 0.06)', flexShrink: 0 }}
               >
                 <ChevronRight size={16} />
               </button>

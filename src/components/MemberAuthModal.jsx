@@ -414,7 +414,7 @@ export default function MemberAuthModal({ isOpen, onClose, initialPhone = '', cs
                       {emailSentStatus ? (
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', alignItems: 'center', width: '100%', boxSizing: 'border-box' }}>
                           <div style={{ fontSize: 'var(--font-caption)', color: '#059669', fontWeight: '700' }}>
-                            ✉️ PIN successfully sent to your inbox!
+                            ✉️ PIN requested successfully!
                           </div>
                           <button 
                             type="button"
