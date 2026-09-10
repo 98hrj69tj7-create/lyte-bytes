@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { Analytics } from '@vercel/analytics/react';
 import HomeAndSubCategoryView from './components/HomeAndSubCategoryView';
 import ItemModal from './components/ItemModal';
 import MultiVariantDrawer from './components/MultiVariantDrawer';
@@ -908,6 +909,7 @@ export default function App() {
           </div>
         </div>
       )}
+      <Analytics />
     </div>
   );
 }
