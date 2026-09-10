@@ -392,22 +392,30 @@ export default function App() {
     const timestamp = new Date().getTime();
     const CSV_URL = `https://docs.google.com/spreadsheets/d/e/2PACX-1vR35Ed3Gcjjj3SLQvZWaLEahaM9QYPmdVvnGoFOefqmA544Jtcr3xR2QVj8Yy1tk-mjh4DVQarYB7Yh/pub?output=csv&t=${timestamp}`;
 
-    Papa.parse(CSV_URL, {
-      download: true,
-      header: true,
-      complete: (results) => {
-        const transformed = {};
+  Papa.parse(CSV_URL, {
+  download: true,
+  header: true,
+  complete: (results) => {
+    const transformed = {};
 
-        results.data.forEach((row) => {
-          if (row.Availability?.toString().trim().toUpperCase() !== 'TRUE') return;
-          if (!row.Category) return;
+    results.data.forEach((row) => {
+      // ✅ Fixed: Only process rows where Availability is TRUE
+      if (row.Availability?.toString().trim().toUpperCase() !== 'TRUE') return;
+      if (!row.Category) return;
 
-          if (!transformed[row.Category]) {
-            transformed[row.Category] = {
-              imageUrl: categoryImages[row.Category] || "/catering.jpg",
-              subcategories: {}
-            };
-          }
+      // 🛑 SKIP SUBSCRIPTION ITEMS FROM SHOWING IN STANDARD MENUS
+      const catLower = row.Category.trim().toLowerCase();
+      const subLower = row.Sub_Category ? row.Sub_Category.trim().toLowerCase() : '';
+      if (catLower === 'subscription' || subLower === 'executive meal pass' || (row.SKU && row.SKU.startsWith('LB-SUB-'))) {
+        return;
+      }
+
+      if (!transformed[row.Category]) {
+        transformed[row.Category] = {
+          imageUrl: categoryImages[row.Category] || "/catering.jpg",
+          subcategories: {}
+        };
+      }
           if (!transformed[row.Category].subcategories[row.Sub_Category]) {
             transformed[row.Category].subcategories[row.Sub_Category] = [];
           }
@@ -517,8 +525,71 @@ export default function App() {
     const upiLink = "upi://pay?pa=rosemarycloney-3@okicici&pn=LyteBytes&cu=INR";
     window.location.href = upiLink;
   };
+//SPLASH SCREEN
+if (!menuData) return (
+  <div style={{
+    position: 'fixed', inset: 0,
+    background: '#FFFDF9',
+    display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+    gap: 'clamp(16px, 4vw, 24px)', fontFamily: "'Plus Jakarta Sans', sans-serif", zIndex: 99999,
+    padding: '20px', boxSizing: 'border-box',
+    animation: 'fadeOutSplash 0.5s ease 1.2s forwards'
+  }}>
+    {/* Expanded Fluid Responsive Logo Wrapper */}
+    <div style={{
+      width: 'clamp(150px, 45vw, 210px)', 
+      height: 'clamp(150px, 45vw, 210px)', 
+      borderRadius: '50%',
+      background: '#FFFFFF',
+      boxShadow: '0 14px 40px rgba(255, 89, 88, 0.2), 0 6px 18px rgba(0,0,0,0.06)',
+      border: '1.5px solid rgba(255, 89, 88, 0.25)',
+      animation: 'zoomInLogo 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+      display: 'flex', alignItems: 'center', justifyContent: 'center', boxSizing: 'border-box',
+      padding: '6px'
+    }}>
+      <img 
+        src="/splash.png" 
+        alt="Lyte Bytes Logo" 
+        style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'contain' }} 
+      />
+    </div>
 
-  if (!menuData) return <div style={{ padding: '40px', textAlign: 'center', fontFamily: "'Plus Jakarta Sans', sans-serif" }}>Loading menu...</div>;
+    {/* Fluid Responsive Typography */}
+    <div style={{ 
+      textAlign: 'center', display: 'flex', flexDirection: 'column', gap: '6px',
+      animation: 'fadeInText 0.8s ease 0.3s forwards', opacity: 0
+    }}>
+      <div style={{ 
+        fontFamily: "'Cormorant Garamond', serif", 
+        fontSize: 'clamp(26px, 6.5vw, 36px)', 
+        color: '#FF5958', fontWeight: '700', letterSpacing: '2.5px', textTransform: 'uppercase' 
+      }}>
+        Lyte Bytes
+      </div>
+      <div style={{ 
+        fontSize: 'clamp(10px, 2.8vw, 12.5px)', 
+        color: '#78716C', fontWeight: '700', 
+        letterSpacing: '3px', textTransform: 'uppercase' 
+      }}>
+        Freshly Crafted For You
+      </div>
+    </div>
+
+    <style>{`
+      @keyframes zoomInLogo {
+        0% { transform: scale(0.6); opacity: 0; filter: blur(6px); }
+        100% { transform: scale(1); opacity: 1; filter: blur(0); }
+      }
+      @keyframes fadeInText {
+        0% { transform: translateY(10px); opacity: 0; }
+        100% { transform: translateY(0); opacity: 1; }
+      }
+      @keyframes fadeOutSplash {
+        to { opacity: 0; visibility: hidden; }
+      }
+    `}</style>
+  </div>
+);
 
   const total = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
 
@@ -559,12 +630,13 @@ export default function App() {
 
         {view === 'subscription-pass' && (
           <SubscriptionPassView 
-            theme={theme} 
-            customer={customer} 
-            setView={setView} 
-            setCart={setCart} 
+          theme={theme} 
+          customer={customer} 
+          setCustomer={setCustomer} 
+          setView={setView} 
+          setCart={setCart} 
           />
-        )}
+    )}
 
         {view === 'subscription-dashboard' && (
           <SubscriptionDashboardView 

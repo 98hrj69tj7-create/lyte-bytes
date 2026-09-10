@@ -21,7 +21,6 @@ export default function BulkOrdersModal({ isOpen, onClose }) {
   const activeTheme = {
     brand: '#FF5958',
     text: '#1A1816',
-    radius: 'clamp(20px, 5vw, 24px)' // 💡 FLUID RADIUS
   };
 
   useEffect(() => {
@@ -83,102 +82,117 @@ export default function BulkOrdersModal({ isOpen, onClose }) {
       onTouchMove={(e) => e.preventDefault()}
       style={{
         position: 'fixed',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        backgroundColor: 'rgba(20, 15, 12, 0.78)', 
-        backdropFilter: 'blur(6px)', 
-        WebkitBackdropFilter: 'blur(6px)',
+        inset: 0,
+        width: '100vw',
+        height: '100dvh',
+        backgroundColor: 'rgba(20, 15, 12, 0.8)', 
+        backdropFilter: 'blur(8px)', 
+        WebkitBackdropFilter: 'blur(8px)',
         display: 'flex',
+        alignItems: 'flex-end',
         justifyContent: 'center',
-        alignItems: 'center',
-        zIndex: 999999, 
-        padding: 'clamp(12px, 3vw, 24px)', // 💡 FLUID PADDING
+        zIndex: 99999, 
+        padding: '20px',
+        boxSizing: 'border-box',
         cursor: 'pointer',
-        boxSizing: 'border-box'
+        fontFamily: "'Plus Jakarta Sans', sans-serif"
       }}
     >
-      <style>{`
-        @keyframes modalScaleIn {
-          0% { opacity: 0; transform: scale(0.92) translateY(12px); }
-          100% { opacity: 1; transform: scale(1) translateY(0); }
-        }
-      `}</style>
-
       <div 
         onClick={(e) => e.stopPropagation()}
         style={{
           background: 'linear-gradient(135deg, #FFFDF9 0%, #FAF4EB 100%)',
-          borderRadius: activeTheme.radius,
-          border: '1px solid rgba(197, 160, 89, 0.4)',
+          borderTopLeftRadius: 'clamp(20px, 5vw, 28px)',
+          borderTopRightRadius: 'clamp(20px, 5vw, 28px)',
+          borderBottomLeftRadius: '0px',
+          borderBottomRightRadius: '0px',
+          padding: 'clamp(16px, 4vw, 22px)',
+          maxWidth: '520px',
           width: '100%',
-          maxWidth: '420px', // Slightly expanded for better scaling
-          maxHeight: '90vh',
+          maxHeight: '82vh',
+          boxSizing: 'border-box',
+          position: 'relative',
+          boxShadow: '0 25px 50px rgba(0,0,0,0.35)',
+          border: '1px solid rgba(197, 160, 89, 0.5)',
           display: 'flex',
           flexDirection: 'column',
-          boxShadow: '0 20px 40px rgba(0,0,0,0.35)', 
-          overflowY: 'auto',
-          position: 'relative',
-          animation: 'modalScaleIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards',
-          cursor: 'default',
-          boxSizing: 'border-box',
-          fontFamily: "'Plus Jakarta Sans', sans-serif"
+          overflow: 'hidden',
+          animation: 'slideUpSheet 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+          cursor: 'default'
         }}
       >
-        {/* Close Button */}
-        <button 
-          type="button"
-          onClick={onClose}
-          style={{
-            position: 'absolute', top: '12px', right: '12px', background: 'rgba(197, 160, 89, 0.12)',
-            border: 'none', borderRadius: '50%', width: '32px', height: '32px',
-            display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: '#8A6D2B', zIndex: 10,
-            flexShrink: 0
-          }}
-        >
-          <X size={16} />
-        </button>
-
-        {/* Header Title Area */}
         <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          padding: 'clamp(16px, 4vw, 20px) 46px 2px clamp(16px, 4vw, 20px)', // 💡 FLUID PADDING
-          boxSizing: 'border-box',
-          width: '100%',
-          overflow: 'hidden'
+          display: 'flex', 
+          alignItems: 'center', 
+          justifyContent: 'space-between',
+          paddingBottom: '16px',
+          marginBottom: '2px',
+          flexShrink: 0,
+          gap: '8px',
+          minWidth: 0
         }}>
-          {/* 💡 BULLETPROOF FLEX: minWidth: 0 prevents long text from breaking flex boundaries */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', maxWidth: '100%', minWidth: 0 }}>
-            <Users size={16} color="#C5A059" style={{ flexShrink: 0 }} />
-            <span style={{ 
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', minWidth: 0 }}>
+            <Users size={18} color="#C5A059" style={{ flexShrink: 0 }} />
+            <h3 style={{ 
               fontFamily: "'Cormorant Garamond', serif", 
-              fontSize: 'var(--font-h2)', // 💡 FLUID TYPOGRAPHY
+              fontSize: 'clamp(18px, 4.5vw, 22px)', 
               fontWeight: '700', 
-              color: activeTheme.text, 
-              textTransform: 'uppercase', 
-              letterSpacing: '0.5px', 
+              color: activeTheme.brand, 
+              margin: 0,
+              textTransform: 'uppercase',
+              letterSpacing: '1px',
               whiteSpace: 'nowrap',
               overflow: 'hidden',
-              textOverflow: 'ellipsis'
+              textOverflow: 'ellipsis',
+              minWidth: 0
             }}>
               Bulk Orders & Pricing
-            </span>
+            </h3>
           </div>
+          <button 
+            type="button"
+            onClick={onClose}
+            style={{
+              background: 'rgba(197, 160, 89, 0.15)',
+              border: '1px solid rgba(197, 160, 89, 0.3)',
+              borderRadius: '50%',
+              width: '28px',
+              height: '28px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              cursor: 'pointer',
+              color: '#1A1816',
+              transition: 'all 0.2s ease',
+              flexShrink: 0
+            }}
+          >
+            <X size={16} />
+          </button>
         </div>
 
-        {/* Form Body Container */}
-        <div style={{ padding: 'clamp(12px, 3vw, 16px)', position: 'relative', boxSizing: 'border-box' }}>
+        <div style={{ 
+          overflowY: 'auto', 
+          display: 'flex', 
+          flexDirection: 'column', 
+          gap: '12px',
+          boxSizing: 'border-box',
+          textAlign: 'left',
+          fontSize: 'clamp(12px, 3.5vw, 14px)',
+          color: '#57534E',
+          lineHeight: '1.5',
+          paddingRight: '6px',
+          minWidth: 0
+        }}>
           <div 
             style={{
               background: 'linear-gradient(135deg, #FFFDF9 0%, #FAF4EB 100%)',
-              borderRadius: 'clamp(14px, 4vw, 16px)',
-              padding: 'clamp(14px, 4vw, 20px) clamp(12px, 3vw, 16px)', // 💡 FLUID INNER PADDING
+              borderRadius: '16px',
+              padding: 'clamp(14px, 4vw, 18px) clamp(16px, 4.5vw, 20px)',
               color: activeTheme.text,
-              boxShadow: '0 6px 20px rgba(44, 34, 30, 0.05)',
+              boxShadow: '0 8px 24px rgba(44, 34, 30, 0.06)',
               position: 'relative',
+              overflow: 'hidden',
               display: 'flex',
               flexDirection: 'column',
               boxSizing: 'border-box',
@@ -189,13 +203,12 @@ export default function BulkOrdersModal({ isOpen, onClose }) {
               <h3 style={{ margin: '0 0 4px 0', fontFamily: "'Cormorant Garamond', serif", fontSize: 'clamp(16px, 4vw, 18px)', color: '#1A1816', fontWeight: '700' }}>
                 ✦ Bespoke Catering ✦
               </h3>
-              <p style={{ margin: 0, fontSize: 'var(--font-caption)', color: '#78716C', fontWeight: '500', lineHeight: '1.4' }}>
+              <p style={{ margin: 0, fontSize: 'clamp(11.5px, 3.2vw, 13px)', color: '#78716C', fontWeight: '500', lineHeight: '1.4' }}>
                 Share your event specs to submit or discuss instantly via WhatsApp.
               </p>
             </div>
 
             <form onSubmit={submitBulkWhatsApp} style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-              {/* Name Field */}
               <input 
                 type="text"
                 placeholder="Your Name"
@@ -203,21 +216,20 @@ export default function BulkOrdersModal({ isOpen, onClose }) {
                 value={bulkData.name}
                 onChange={(e) => setBulkData({...bulkData, name: e.target.value})}
                 style={{
-                  width: '100%', padding: 'clamp(10px, 3vw, 12px) clamp(12px, 3vw, 14px)', borderRadius: '10px',
+                  width: '100%', padding: '12px 14px', borderRadius: '12px',
                   border: '1px solid rgba(197, 160, 89, 0.5)', backgroundColor: '#FFF',
-                  fontSize: 'var(--font-body)', boxSizing: 'border-box', outline: 'none', color: '#1A1816'
+                  fontSize: 'clamp(12px, 3.5vw, 14px)', boxSizing: 'border-box', outline: 'none', color: '#1A1816'
                 }}
               />
 
-              {/* Event Type Dropdown with Custom Arrow */}
               <div style={{ position: 'relative', width: '100%', boxSizing: 'border-box' }}>
                 <select 
                   value={bulkData.eventType}
                   onChange={(e) => setBulkData({...bulkData, eventType: e.target.value})}
                   style={{
-                    width: '100%', padding: 'clamp(10px, 3vw, 12px) 32px clamp(10px, 3vw, 12px) clamp(12px, 3vw, 14px)', borderRadius: '10px',
+                    width: '100%', padding: '12px 32px 12px 14px', borderRadius: '12px',
                     border: '1px solid rgba(197, 160, 89, 0.5)', backgroundColor: '#FFF',
-                    fontSize: 'var(--font-body)', boxSizing: 'border-box', outline: 'none', color: '#1A1816', 
+                    fontSize: 'clamp(12px, 3.5vw, 14px)', boxSizing: 'border-box', outline: 'none', color: '#1A1816', 
                     cursor: 'pointer', appearance: 'none', WebkitAppearance: 'none'
                   }}
                 >
@@ -246,14 +258,13 @@ export default function BulkOrdersModal({ isOpen, onClose }) {
                   value={bulkData.customEventType}
                   onChange={(e) => setBulkData({...bulkData, customEventType: e.target.value})}
                   style={{
-                    width: '100%', padding: 'clamp(10px, 3vw, 12px) clamp(12px, 3vw, 14px)', borderRadius: '10px',
+                    width: '100%', padding: '12px 14px', borderRadius: '12px',
                     border: '1px solid rgba(197, 160, 89, 0.5)', backgroundColor: '#FFF',
-                    fontSize: 'var(--font-body)', boxSizing: 'border-box', outline: 'none', color: '#1A1816'
+                    fontSize: 'clamp(12px, 3.5vw, 14px)', boxSizing: 'border-box', outline: 'none', color: '#1A1816'
                   }}
                 />
               )}
 
-              {/* 💡 BULLETPROOF FLEX: Guests and Date Row with minWidth: 0 to prevent overflow */}
               <div style={{ display: 'flex', gap: '8px', width: '100%', boxSizing: 'border-box' }}>
                 <input 
                   type="text"
@@ -262,9 +273,9 @@ export default function BulkOrdersModal({ isOpen, onClose }) {
                   value={bulkData.guests}
                   onChange={(e) => setBulkData({...bulkData, guests: e.target.value})}
                   style={{
-                    flex: 1, minWidth: 0, padding: 'clamp(10px, 3vw, 12px) clamp(12px, 3vw, 14px)', borderRadius: '10px',
+                    flex: 1, minWidth: 0, padding: '12px 14px', borderRadius: '12px',
                     border: '1px solid rgba(197, 160, 89, 0.5)', backgroundColor: '#FFF',
-                    fontSize: 'var(--font-body)', boxSizing: 'border-box', outline: 'none', color: '#1A1816'
+                    fontSize: 'clamp(12px, 3.5vw, 14px)', boxSizing: 'border-box', outline: 'none', color: '#1A1816'
                   }}
                 />
                 <input 
@@ -273,16 +284,15 @@ export default function BulkOrdersModal({ isOpen, onClose }) {
                   value={bulkData.date}
                   onChange={(e) => setBulkData({...bulkData, date: e.target.value})}
                   style={{
-                    flex: 1, minWidth: 0, padding: 'clamp(10px, 3vw, 12px) clamp(12px, 3vw, 14px)', borderRadius: '10px',
+                    flex: 1, minWidth: 0, padding: '12px 14px', borderRadius: '12px',
                     border: '1px solid rgba(197, 160, 89, 0.5)', backgroundColor: '#FFF',
-                    fontSize: 'var(--font-body)', boxSizing: 'border-box', outline: 'none', color: '#1A1816', cursor: 'pointer'
+                    fontSize: 'clamp(12px, 3.5vw, 14px)', boxSizing: 'border-box', outline: 'none', color: '#1A1816', cursor: 'pointer'
                   }}
                 />
               </div>
 
-              {/* Menu Categories Selection Pills */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', textAlign: 'left', marginTop: '6px' }}>
-                <label style={{ fontSize: 'clamp(9px, 2.5vw, 11px)', fontWeight: '700', color: '#8A6D2B', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                <label style={{ fontSize: 'clamp(10px, 2.5vw, 11px)', fontWeight: '700', color: '#8A6D2B', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
                   Interested Menu Items / Categories:
                 </label>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
@@ -298,8 +308,8 @@ export default function BulkOrdersModal({ isOpen, onClose }) {
                           color: isSelected ? '#FFFFFF' : '#524B47',
                           border: '1px solid rgba(197, 160, 89, 0.5)',
                           borderRadius: '8px',
-                          padding: '6px clamp(10px, 3vw, 14px)', // 💡 FLUID BUTTON PADDING
-                          fontSize: 'clamp(10.5px, 2.5vw, 12px)', // 💡 FLUID PILL TEXT
+                          padding: '6px 12px',
+                          fontSize: 'clamp(11px, 3vw, 12px)',
                           fontWeight: '600',
                           cursor: 'pointer',
                           transition: 'all 0.2s ease',
@@ -313,26 +323,24 @@ export default function BulkOrdersModal({ isOpen, onClose }) {
                 </div>
               </div>
 
-              {/* Notes / Special Requests */}
               <textarea 
                 placeholder="Any special menu items, dietary preferences or notes..."
                 rows="2"
                 value={bulkData.notes}
                 onChange={(e) => setBulkData({...bulkData, notes: e.target.value})}
                 style={{
-                  width: '100%', padding: 'clamp(10px, 3vw, 12px) clamp(12px, 3vw, 14px)', borderRadius: '10px',
+                  width: '100%', padding: '12px 14px', borderRadius: '12px',
                   border: '1px solid rgba(197, 160, 89, 0.5)', backgroundColor: '#FFF',
-                  fontSize: 'var(--font-body)', boxSizing: 'border-box', outline: 'none', color: '#1A1816', resize: 'none', marginTop: '6px'
+                  fontSize: 'clamp(12px, 3.5vw, 14px)', boxSizing: 'border-box', outline: 'none', color: '#1A1816', resize: 'none', marginTop: '6px'
                 }}
               />
 
-              {/* WhatsApp Submit Action */}
               <button 
                 type="submit"
                 style={{
                   background: '#25D366',
-                  color: '#FFF', border: 'none', borderRadius: '12px', padding: 'clamp(12px, 3.5vw, 14px)', // 💡 FLUID PADDING
-                  fontSize: 'var(--font-body)', fontWeight: '700', cursor: 'pointer', display: 'flex',
+                  color: '#FFF', border: 'none', borderRadius: '12px', padding: '12px 16px',
+                  fontSize: 'clamp(13px, 3.8vw, 14.5px)', fontWeight: '700', cursor: 'pointer', display: 'flex',
                   alignItems: 'center', justifyContent: 'center', gap: '8px',
                   boxShadow: '0 6px 14px rgba(37, 211, 102, 0.35)', marginTop: '8px'
                 }}

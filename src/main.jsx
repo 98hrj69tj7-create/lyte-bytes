@@ -52,3 +52,12 @@ createRoot(document.getElementById('root')).render(
     <App />
   </StrictMode>,
 )
+// Add this once in your main.jsx or App.jsx root
+if (typeof window !== 'undefined') {
+  window.addEventListener('click', (e) => {
+    const targetButton = e.target.closest('button, [role="button"]');
+    if (targetButton && window.navigator && window.navigator.vibrate) {
+      window.navigator.vibrate(12);
+    }
+  });
+}

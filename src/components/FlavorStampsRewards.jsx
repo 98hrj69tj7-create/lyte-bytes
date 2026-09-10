@@ -124,7 +124,7 @@ export default function FlavorStampsRewards({
     background: '#FFFDF9',
     border: '1px solid rgba(197, 160, 89, 0.4)',
     borderRadius: radius,
-    padding: '6px 12px',
+    padding: '12px 14px',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-between',
@@ -208,7 +208,7 @@ export default function FlavorStampsRewards({
           background: 'linear-gradient(135deg, #FFFDF9 0%, #FAF5EC 100%)', 
           border: '1.5px solid rgba(197, 160, 89, 0.45)', 
           borderRadius: radius, 
-          padding: '6px 14px', 
+          padding: '12px 14px', 
           display: 'flex', 
           flexDirection: 'column', 
           gap: '12px', 
@@ -220,13 +220,13 @@ export default function FlavorStampsRewards({
           {/* Header Row (Single Clean Line) */}
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingBottom: '2px', padding: '0px 0px', gap: '2px', minWidth: 0 }}>
             <div style={{ fontSize: '11px', fontWeight: '800', color: '#8A6D2B', textTransform: 'uppercase', letterSpacing: '0.9px', display: 'flex', alignItems: 'center', gap: '5px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', minWidth: 0 }}>
-              milestone Reward Unlock
+              Milestone Reward Unlock
             </div>
           </div>
 
           {activeReward ? (
             <div style={{ 
-              padding: '6px 10px', 
+              padding: '10px 12px', 
               background: '#FFFFFF', 
               borderRadius: '14px', 
               border: '1px solid rgba(197, 160, 89, 0.4)', 
@@ -255,12 +255,11 @@ export default function FlavorStampsRewards({
                     background: '#E5E7EB', 
                     color: '#9CA3AF', 
                     border: 'none', 
-                    padding: '6px 12px', 
+                    padding: '8px 14px', 
                     borderRadius: '10px', 
                     fontWeight: '700', 
-                    fontSize: '11px', 
+                    fontSize: '11.5px', 
                     cursor: 'not-allowed',
-                    marginTop: '14px',
                     flexShrink: '0',
                     boxShadow: 'none'
                   }}
@@ -275,12 +274,11 @@ export default function FlavorStampsRewards({
                     background: brandColor, 
                     color: '#FFF', 
                     border: 'none', 
-                    padding: '6px 12px', 
+                    padding: '8px 14px', 
                     borderRadius: '10px', 
                     fontWeight: '700', 
-                    fontSize: '11px', 
+                    fontSize: '11.5px', 
                     cursor: 'pointer',
-                    marginTop: '14px',
                     flexShrink: '0',
                     boxShadow: '0 4px 12px rgba(255, 89, 88, 0.25)',
                     transition: 'transform 0.1s ease'
@@ -292,13 +290,13 @@ export default function FlavorStampsRewards({
             </div>
           ) : (
             <div style={{ 
-              padding: '6px 10px', 
+              padding: '10px 12px', 
               background: '#ECFDF5', 
               borderRadius: '14px', 
               border: '1px solid rgba(5, 150, 105, 0.25)', 
               display: 'flex', 
               alignItems: 'center', 
-              gap: '2px',
+              gap: '8px',
               color: '#065F46',
               fontSize: '11.5px',
               fontWeight: '700'

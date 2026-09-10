@@ -188,7 +188,7 @@ export default function ItemsView({
           style={{
             background: 'linear-gradient(135deg, #282421 0%, #141211 100%)',
             borderRadius: '20px',
-            padding: '12px 20px',
+            padding: '12px 18px',
             color: '#FFFBF2',
             cursor: 'pointer',
             border: '2px solid #C5A059',
@@ -226,7 +226,7 @@ export default function ItemsView({
           <div style={{
             background: 'linear-gradient(135deg, #FF5958 0%, #E11D48 100%)',
             color: '#FFF',
-            padding: '4px 10px',
+            padding: '2px 8px',
             borderRadius: '14px',
             fontSize: '12px',
             fontWeight: '700',

@@ -41,20 +41,20 @@ export default function Footer({ view, setView, theme }) {
   return (
     <div style={{
       position: 'fixed',
-      bottom: '10px',         
+      bottom: '12px',         
       left: '50%',
       transform: `translateX(-50%) translateY(${isVisible ? '0' : '100px'})`, 
-      width: 'calc(100% - 24px)', 
-      maxWidth: '380px',      
+      width: 'calc(100% - 28px)', 
+      maxWidth: '420px',      
       backgroundColor: '#1A1714', 
       backdropFilter: 'blur(24px)',              
       WebkitBackdropFilter: 'blur(24px)',        
       border: '1px solid rgba(197, 160, 89, 0.4)', 
-      borderRadius: '24px',                      
+      borderRadius: '28px',                      
       display: 'flex',
       justifyContent: 'space-around',
       alignItems: 'center',
-      padding: '6px 8px',        
+      padding: '8px 10px',        
       zIndex: 1000,
       boxShadow: '0 16px 40px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.08)',
       boxSizing: 'border-box',
@@ -83,6 +83,7 @@ export default function Footer({ view, setView, theme }) {
         return (
           <button
             key={item.id}
+            type="button"
             onClick={() => setView(item.id)}
             style={{
               background: 'transparent',
@@ -140,7 +141,7 @@ export default function Footer({ view, setView, theme }) {
             </div>
 
             <span style={{
-              fontSize: 'clamp(9.5px, 2.5vw, 10.5px)', // 💡 FLUID TYPOGRAPHY
+              fontSize: 'clamp(9.5px, 2.5vw, 10.5px)', 
               marginTop: '4px',       
               fontWeight: isActive ? '700' : '500',
               color: isActive ? '#C5A059' : '#A19A92',

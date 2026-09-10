@@ -261,7 +261,7 @@ export default function CustomerView({
     }
 
     if (!foundMatch) {
-      matchedCustomer.name = targetPhone ? 'New Member / Guest' : 'Guest Account';
+      matchedCustomer.name = targetPhone ? 'New Member' : 'Guest Account';
       matchedCustomer.isRecognizedGuest = false;
     }
 
@@ -500,11 +500,11 @@ export default function CustomerView({
             style={{
               background: 'linear-gradient(135deg, #1A1816 0%, #2D2721 100%)',
               borderRadius: '16px',
-              padding: '16px 18px',
+              padding: '12px 14px',
               color: '#FFFBF2',
               textAlign: 'left',
               cursor: 'pointer',
-              border: '1.5px solid rgba(197, 160, 89, 0.6)',
+              border: '2.5px solid rgba(197, 160, 89, 0.6)',
               display: 'flex',
               justifyContent: 'space-between',
               alignItems: 'center',
@@ -518,17 +518,17 @@ export default function CustomerView({
                 Active Membership
               </div>
               <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '18px', fontWeight: '700', color: '#FFFBF2', marginBottom: '2px' }}>
-                My Executive Meal Pass
+                Meal Pass Subscription
               </div>
               <div style={{ fontSize: '11.5px', color: '#D4D4D8' }}>
-                View credits, balance & manage calendar
+                View balance & manage the calendar
               </div>
             </div>
             <span style={{ 
               fontSize: '12px', 
               background: 'linear-gradient(135deg, #FF5958 0%, #E11D48 100%)', 
               color: '#FFF', 
-              padding: '8px 14px', 
+              padding: '4px 8px', 
               borderRadius: '12px', 
               fontWeight: '700', 
               whiteSpace: 'nowrap',

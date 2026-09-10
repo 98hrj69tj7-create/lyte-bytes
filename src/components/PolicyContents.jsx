@@ -2,7 +2,7 @@ import React from 'react';
 import { 
   Clock, MapPin, Package, UserCheck, CheckCircle, 
   AlertCircle, Database, Eye, Lock, 
-  ShieldCheck, Tag, Percent, Sparkles, FileText, CheckCircle2, DollarSign, ShieldAlert
+  ShieldCheck, Tag, Percent, Sparkles, FileText, CheckCircle2, DollarSign, ShieldAlert, Calendar, RefreshCw, Shuffle, Utensils
 } from 'lucide-react';
 
 // ============================================================================
@@ -375,6 +375,75 @@ export function PrivacyPolicyModalContent({ brandColor = '#FF5958' }) {
         </div>
         <p style={textStyle}>
           Your information is never sold. Data is shared exclusively with trusted local logistics partners. We do not use tracking cookies.
+        </p>
+      </div>
+    </div>
+  );
+}
+
+// ==========================================
+// 📅 6. SUBSCRIPTION PASS POLICY CONTENT
+// ==========================================
+export function SubscriptionPolicyModalContent({ brandColor = '#FF5958' }) {
+  return (
+    <div style={containerStyle}>
+      <div style={cardStyle}>
+        <div style={headerRowStyle}>
+          <div style={iconBoxStyle}>
+            <Clock size={16} color={brandColor} />
+          </div>
+          <h4 style={titleStyle}>Flexible Skips & Cut-Offs</h4>
+        </div>
+        <p style={textStyle}>
+          Pause or skip deliveries via your dashboard at least <strong>10 hours before</strong> the scheduled meal time to retain your credit. Meals missed within this window are forfeited to cover preparation and food loss.
+        </p>
+      </div>
+
+      <div style={cardStyle}>
+        <div style={headerRowStyle}>
+          <div style={iconBoxStyle}>
+            <Calendar size={16} color={brandColor} />
+          </div>
+          <h4 style={titleStyle}>Extended Validity</h4>
+        </div>
+        <p style={textStyle}>
+          Passes include extended validity windows to accommodate pauses: Weekly Passes remain active for up to <strong>14 days</strong>, and Monthly Passes for up to <strong>45 days</strong>.
+        </p>
+      </div>
+
+      <div style={cardStyle}>
+        <div style={headerRowStyle}>
+          <div style={iconBoxStyle}>
+            <RefreshCw size={16} color={brandColor} />
+          </div>
+          <h4 style={titleStyle}>Cancellations & Transfers</h4>
+        </div>
+        <p style={textStyle}>
+          Active subscription passes are non-refundable once the first meal has been dispatched. Transferring remaining meal credits to family or friends requires advance notice, delivery feasibility, and operational approval.
+        </p>
+      </div>
+
+      <div style={cardStyle}>
+        <div style={headerRowStyle}>
+          <div style={iconBoxStyle}>
+            <MapPin size={16} color={brandColor} />
+          </div>
+          <h4 style={titleStyle}>Delivery Location Flexibility</h4>
+        </div>
+        <p style={textStyle}>
+          Passes are tied to your primary delivery address. Permanent mid-subscription address changes may incur distance-based delivery fee adjustments or pass cancellation if outside coverage.
+        </p>
+      </div>
+
+      <div style={cardStyle}>
+        <div style={headerRowStyle}>
+          <div style={iconBoxStyle}>
+            <Utensils size={16} color={brandColor} />
+          </div>
+          <h4 style={titleStyle}>Menu Variations</h4>
+        </div>
+        <p style={textStyle}>
+          Executive meals feature a rotating home-style menu based on raw produce availability. While Veg/Non-Veg preferences are supported within the deadline, specific daily items are set by the kitchen.
         </p>
       </div>
     </div>

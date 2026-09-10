@@ -1,4 +1,5 @@
 import React from 'react';
+import { createPortal } from 'react-dom';
 import { Flame } from 'lucide-react';
 
 // Color & Style mapping for menu tags
@@ -56,7 +57,7 @@ function ModalTagBadge({ tagKey }) {
       backgroundColor: 'rgba(197, 160, 89, 0.12)',
       border: '1px solid rgba(197, 160, 89, 0.3)',
       color: '#8A6D2B',
-      fontSize: 'var(--font-caption)', // 💡 FLUID TYPOGRAPHY
+      fontSize: 'var(--font-caption)',
       fontWeight: '600',
       lineHeight: '1.2',
       flexShrink: 0
@@ -103,57 +104,68 @@ export default function ItemModal({ selectedItem, setSelectedItem, resolveImageP
     return `/menu-items/${selectedItem.imageUrl}`;
   };
 
-  const activeTheme = {
-    radius: 'clamp(20px, 5vw, 24px)' // 💡 FLUID RADIUS
-  };
-
-  return (
+  const modalContent = (
     <div 
       onClick={handleClose}
+      onTouchMove={(e) => e.preventDefault()}
       style={{
         position: 'fixed',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        zIndex: 1000,
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        padding: '16px', 
-        boxSizing: 'border-box',
-        backgroundColor: 'rgba(20, 15, 12, 0.82)',
-        backdropFilter: 'blur(8px)',
+        inset: 0,
+        width: '100vw',
+        height: '100dvh',
+        backgroundColor: 'rgba(20, 15, 12, 0.8)', 
+        backdropFilter: 'blur(8px)', 
         WebkitBackdropFilter: 'blur(8px)',
-        cursor: 'pointer' 
+        display: 'flex',
+        alignItems: 'flex-end',
+        justifyContent: 'center',
+        zIndex: 99999, 
+        padding: '20px', 
+        boxSizing: 'border-box',
+        cursor: 'pointer',
+        fontFamily: "'Plus Jakarta Sans', sans-serif"
       }}
     >
+      <style>{`
+        @keyframes slideUpSheet {
+          0% { opacity: 0; transform: translateY(20px); }
+          100% { opacity: 1; transform: translateY(0); }
+        }
+      `}</style>
+
       <div 
-        onClick={() => e.stopPropagation()}
+        onClick={(e) => e.stopPropagation()}
         style={{
-          maxWidth: '460px', 
-          width: '100%',
-          maxHeight: '90vh', 
-          borderRadius: activeTheme.radius, // 💡 FLUID RADIUS
           background: 'linear-gradient(135deg, #FFFDF9 0%, #FAF4EB 100%)',
-          overflow: 'hidden',
+          borderTopLeftRadius: 'clamp(20px, 5vw, 28px)',
+          borderTopRightRadius: 'clamp(20px, 5vw, 28px)',
+          borderBottomLeftRadius: '0px',
+          borderBottomRightRadius: '0px',
+          padding: 'clamp(16px, 4vw, 22px)',
+          maxWidth: '520px',
+          width: '100%',
+          maxHeight: '82vh',
+          boxSizing: 'border-box',
+          position: 'relative',
+          boxShadow: '0 25px 50px rgba(0,0,0,0.35)',
+          border: '1px solid rgba(197, 160, 89, 0.5)',
           display: 'flex',
           flexDirection: 'column',
-          boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.45)',
-          border: '1px solid rgba(197, 160, 89, 0.45)',
-          position: 'relative',
-          boxSizing: 'border-box',
-          cursor: 'default',
-          fontFamily: "'Plus Jakarta Sans', sans-serif"
+          overflow: 'hidden',
+          animation: 'slideUpSheet 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+          cursor: 'default'
         }}
       >
         {/* MAIN ITEM IMAGE HEADER */}
         <div style={{ 
           width: '100%', 
-          height: 'clamp(200px, 50vw, 240px)', // 💡 FLUID HEIGHT
+          height: 'clamp(180px, 40vw, 220px)', 
           backgroundColor: '#1a1a1a', 
           position: 'relative',
-          flexShrink: 0
+          borderRadius: '16px',
+          overflow: 'hidden',
+          flexShrink: 0,
+          marginBottom: '12px'
         }}>
           <img 
             src={getImageSrc()} 
@@ -171,14 +183,14 @@ export default function ItemModal({ selectedItem, setSelectedItem, resolveImageP
             <div style={{
               position: 'absolute',
               bottom: '12px', 
-              left: '16px', 
-              padding: '5px 12px', 
+              left: '12px', 
+              padding: '4px 10px', 
               borderRadius: '20px', 
               backgroundColor: 'rgba(30, 24, 20, 0.85)',
               backdropFilter: 'blur(6px)',
               border: '1px solid rgba(197, 160, 89, 0.3)',
               color: '#FFD700',
-              fontSize: 'var(--font-caption)', // 💡 FLUID TYPOGRAPHY
+              fontSize: 'var(--font-caption)',
               fontWeight: '600',
               letterSpacing: '0.3px',
               fontFamily: "sans-serif",
@@ -187,18 +199,46 @@ export default function ItemModal({ selectedItem, setSelectedItem, resolveImageP
               {selectedItem.unit}
             </div>
           )}
+
+          {/* CLOSE BUTTON OVERLAY ON TOP RIGHT OF IMAGE */}
+          <button 
+            type="button"
+            onClick={handleClose}
+            style={{
+              position: 'absolute',
+              top: '12px',
+              right: '12px',
+              background: 'rgba(30, 24, 20, 0.75)',
+              backdropFilter: 'blur(6px)',
+              border: '1px solid rgba(197, 160, 89, 0.4)',
+              borderRadius: '50%',
+              width: '32px',
+              height: '32px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              cursor: 'pointer',
+              color: '#FFF',
+              zIndex: 10,
+              flexShrink: 0
+            }}
+          >
+            ✕
+          </button>
         </div>
 
         {/* SCROLLABLE CONTENT BODY */}
         <div style={{ 
-          padding: 'clamp(16px, 4vw, 22px)', // 💡 FLUID PADDING
-          gap: '12px', 
-          textAlign: 'left', 
           overflowY: 'auto', 
           display: 'flex', 
-          flexDirection: 'column',
-          flex: 1,
+          flexDirection: 'column', 
+          gap: '12px',
           boxSizing: 'border-box',
+          textAlign: 'left',
+          fontSize: 'var(--font-body)',
+          color: '#57534E',
+          lineHeight: '1.5',
+          paddingRight: '4px',
           minWidth: 0
         }}>
           
@@ -213,11 +253,11 @@ export default function ItemModal({ selectedItem, setSelectedItem, resolveImageP
             <h2 style={{ 
               margin: 0, 
               fontFamily: "'Cormorant Garamond', serif",
-              fontSize: 'var(--font-h2)', // 💡 FLUID TYPOGRAPHY
+              fontSize: 'clamp(18px, 4.5vw, 22px)',
               color: '#1A1816', 
               fontWeight: '700', 
               letterSpacing: '0.2px', 
-              lineHeight: '1',
+              lineHeight: '1.2',
               minWidth: 0,
               overflow: 'hidden',
               textOverflow: 'ellipsis',
@@ -250,7 +290,7 @@ export default function ItemModal({ selectedItem, setSelectedItem, resolveImageP
             <p style={{ 
               color: '#57534E', 
               margin: 0, 
-              fontSize: 'var(--font-body)', // 💡 FLUID TYPOGRAPHY
+              fontSize: 'var(--font-body)',
               lineHeight: '1.6', 
               fontWeight: '400' 
             }}>
@@ -265,7 +305,7 @@ export default function ItemModal({ selectedItem, setSelectedItem, resolveImageP
               borderLeft: '3.5px solid #FF5958', 
               borderRadius: '0 10px 10px 0',
               backgroundColor: 'rgba(255, 89, 88, 0.06)', 
-              fontSize: 'var(--font-caption)', // 💡 FLUID TYPOGRAPHY
+              fontSize: 'var(--font-caption)',
               color: '#C53030', 
               fontStyle: 'italic', 
               fontWeight: '500',
@@ -296,7 +336,7 @@ export default function ItemModal({ selectedItem, setSelectedItem, resolveImageP
               letterSpacing: '0.8px',
               minWidth: 0
             }}>
-              <Flame size={18} color="#FF5958" style={{ flexShrink: 0 }} /> <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>Nutritional Info. (Per Portion)</span>
+              <Flame size={16} color="#FF5958" style={{ flexShrink: 0 }} /> <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>Nutritional Info. (Per Portion)</span>
             </div>
             
             {/* NUTRITIONAL GRID */}
@@ -342,7 +382,7 @@ export default function ItemModal({ selectedItem, setSelectedItem, resolveImageP
           </div>
 
           {/* VISUAL DISCLAIMER */}
-          <div style={{ paddingTop: '0px' }}>
+          <div style={{ paddingTop: '2px', paddingBottom: '8px' }}>
             <span style={{ fontSize: 'clamp(9px, 2.5vw, 10px)', color: '#78716C', fontStyle: 'italic' }}>
               * Visuals are for illustration. The final product may vary.
             </span>
@@ -353,4 +393,6 @@ export default function ItemModal({ selectedItem, setSelectedItem, resolveImageP
       </div>
     </div>
   );
+
+  return createPortal(modalContent, document.body);
 }

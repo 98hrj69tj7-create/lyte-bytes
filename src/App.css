@@ -103,6 +103,10 @@ a:active {
     opacity: 0;
   }
 }
+@keyframes slideUpSheet {
+  from { transform: translateY(100%); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
 
 .burst-particle {
   position: absolute;
@@ -444,4 +448,54 @@ a * {
   font-size: 14px;
   outline: none;
   cursor: pointer;
+}
+/* --- Micro-Interaction Button Press Effect --- */
+.haptic-press {
+  transition: transform 0.12s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease !important;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.haptic-press:active {
+  transform: scale(0.96) !important;
+}
+/* --- Global Micro-Interaction & Haptic Press Shortcut --- */
+button, 
+[role="button"], 
+.clickable {
+  transition: transform 0.12s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+button:active, 
+[role="button"]:active, 
+.clickable:active {
+  transform: scale(0.96) !important;
+}
+/* --- Branded Splash Pulse Animation --- */
+@keyframes brandPulse {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(197, 160, 89, 0.4);
+  }
+  70% {
+    transform: scale(1.05);
+    box-shadow: 0 0 0 16px rgba(197, 160, 89, 0);
+  }
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(197, 160, 89, 0);
+  }
+}
+
+.splash-pulse-logo {
+  animation: brandPulse 2s infinite cubic-bezier(0.4, 0, 0.6, 1);
+}
+
+@keyframes slideUpSheet {
+  from { transform: translateY(100%); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
 }
