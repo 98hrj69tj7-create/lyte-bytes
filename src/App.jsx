@@ -826,12 +826,10 @@ if (!menuData) return (
             <CustomerView
               onBack={() => setView('home')}
               customer={customer}
-<<<<<<< HEAD
               setCustomer={setCustomer}
               setCurrentUserHasOrderedBeef={setCurrentUserHasOrderedBeef}
-=======
+
               setView={setView}
->>>>>>> development
             />
           </PageTransition>
         )}

@@ -432,11 +432,11 @@ export default function MemberAuthModal({ isOpen, onClose, initialPhone = '', cs
                     <div style={{ textAlign: 'center', borderTop: '1px dashed rgba(197, 160, 89, 0.35)', paddingTop: '10px', marginTop: '2px', width: '100%', boxSizing: 'border-box' }}>
                       {emailSentStatus ? (
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', alignItems: 'center', width: '100%', boxSizing: 'border-box' }}>
-<<<<<<< HEAD
+
                           <div style={{ fontSize: 'var(--font-caption)', color: '#059669', fontWeight: '700' }}>
-=======
+
                           <div style={{ fontSize: 'clamp(11.5px, 3.2vw, 13px)', color: '#059669', fontWeight: '700' }}>
->>>>>>> development
+
                             ✉️ PIN requested successfully!
                           </div>
                           <button 

@@ -472,8 +472,6 @@ export default function CustomerView({
             </div>
           </div>
 
-<<<<<<< HEAD
-=======
           {/* ✨ Active Executive Pass Card in Account Tab */}
           <div 
             onClick={() => {
@@ -521,7 +519,6 @@ export default function CustomerView({
           </div>
 
           {/* Flavor Stamps & Rewards Component Integration */}
->>>>>>> development
           <FlavorStampsRewards 
             orders={liveCustomerData.orders} 
             theme={activeTheme} 
