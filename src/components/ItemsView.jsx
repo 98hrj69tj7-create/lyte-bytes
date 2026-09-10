@@ -68,6 +68,7 @@ export default function ItemsView({
         </h2>
       </div>
 
+      {/* Uniform Glowing Coral-Red Search Bar */}
       <div style={{ marginBottom: '20px' }}>
         <input 
           type="text"
@@ -80,8 +81,8 @@ export default function ItemsView({
             border: '1.5px solid #FF5958',
             borderRadius: '16px',
             backgroundColor: '#FFFFFF',
-            color: '#1A1A1A',
-            fontSize: 'var(--font-body)', 
+            color: theme.text,
+            fontSize: 'var(--font-body)', // 💡 FLUID TYPOGRAPHY
             fontWeight: '500',
             outline: 'none',
             boxSizing: 'border-box',
@@ -175,6 +176,7 @@ export default function ItemsView({
         </div>
       </div>
 
+      {/* Filtered Item List */}
       <div style={{ 
         display: layout === 'grid' ? 'grid' : 'flex', 
         gridTemplateColumns: layout === 'grid' ? 'repeat(2, 1fr)' : 'none', 

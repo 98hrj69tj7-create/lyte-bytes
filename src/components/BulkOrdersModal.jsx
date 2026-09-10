@@ -46,7 +46,10 @@ export default function BulkOrdersModal({ isOpen, onClose }) {
   const activeTheme = {
     brand: '#FF5958',
     text: '#1A1816',
+<<<<<<< HEAD
     radius: 'clamp(20px, 5vw, 24px)'
+=======
+>>>>>>> development
   };
 
   useEffect(() => {
@@ -167,6 +170,7 @@ export default function BulkOrdersModal({ isOpen, onClose }) {
       onClick={onClose}
       onTouchMove={(e) => e.preventDefault()}
       style={{
+<<<<<<< HEAD
         position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
         backgroundColor: 'rgba(20, 15, 12, 0.78)', backdropFilter: 'blur(6px)', WebkitBackdropFilter: 'blur(6px)',
         display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 999999, 
@@ -185,10 +189,30 @@ export default function BulkOrdersModal({ isOpen, onClose }) {
         }
       `}</style>
 
+=======
+        position: 'fixed',
+        inset: 0,
+        width: '100vw',
+        height: '100dvh',
+        backgroundColor: 'rgba(20, 15, 12, 0.8)', 
+        backdropFilter: 'blur(8px)', 
+        WebkitBackdropFilter: 'blur(8px)',
+        display: 'flex',
+        alignItems: 'flex-end',
+        justifyContent: 'center',
+        zIndex: 99999, 
+        padding: '20px',
+        boxSizing: 'border-box',
+        cursor: 'pointer',
+        fontFamily: "'Plus Jakarta Sans', sans-serif"
+      }}
+    >
+>>>>>>> development
       <div 
         onClick={(e) => e.stopPropagation()}
         style={{
           background: 'linear-gradient(135deg, #FFFDF9 0%, #FAF4EB 100%)',
+<<<<<<< HEAD
           borderRadius: activeTheme.radius, border: '1px solid rgba(197, 160, 89, 0.4)',
           width: '100%', maxWidth: '420px', maxHeight: '90vh',
           display: 'flex', flexDirection: 'column', boxShadow: '0 20px 40px rgba(0,0,0,0.35)', 
@@ -212,11 +236,78 @@ export default function BulkOrdersModal({ isOpen, onClose }) {
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', width: '100%', justifyContent: 'center' }}>
             <Users size={16} color="#C5A059" style={{ flexShrink: 0 }} />
             <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 'clamp(18px, 5vw, 22px)', fontWeight: '700', color: activeTheme.text, textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>
+=======
+          borderTopLeftRadius: 'clamp(20px, 5vw, 28px)',
+          borderTopRightRadius: 'clamp(20px, 5vw, 28px)',
+          borderBottomLeftRadius: '0px',
+          borderBottomRightRadius: '0px',
+          padding: 'clamp(16px, 4vw, 22px)',
+          maxWidth: '520px',
+          width: '100%',
+          maxHeight: '82vh',
+          boxSizing: 'border-box',
+          position: 'relative',
+          boxShadow: '0 25px 50px rgba(0,0,0,0.35)',
+          border: '1px solid rgba(197, 160, 89, 0.5)',
+          display: 'flex',
+          flexDirection: 'column',
+          overflow: 'hidden',
+          animation: 'slideUpSheet 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+          cursor: 'default'
+        }}
+      >
+        <div style={{
+          display: 'flex', 
+          alignItems: 'center', 
+          justifyContent: 'space-between',
+          paddingBottom: '16px',
+          marginBottom: '2px',
+          flexShrink: 0,
+          gap: '8px',
+          minWidth: 0
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', minWidth: 0 }}>
+            <Users size={18} color="#C5A059" style={{ flexShrink: 0 }} />
+            <h3 style={{ 
+              fontFamily: "'Cormorant Garamond', serif", 
+              fontSize: 'clamp(18px, 4.5vw, 22px)', 
+              fontWeight: '700', 
+              color: activeTheme.brand, 
+              margin: 0,
+              textTransform: 'uppercase',
+              letterSpacing: '1px',
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              minWidth: 0
+            }}>
+>>>>>>> development
               Bulk Orders & Pricing
-            </span>
+            </h3>
           </div>
+          <button 
+            type="button"
+            onClick={onClose}
+            style={{
+              background: 'rgba(197, 160, 89, 0.15)',
+              border: '1px solid rgba(197, 160, 89, 0.3)',
+              borderRadius: '50%',
+              width: '28px',
+              height: '28px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              cursor: 'pointer',
+              color: '#1A1816',
+              transition: 'all 0.2s ease',
+              flexShrink: 0
+            }}
+          >
+            <X size={16} />
+          </button>
         </div>
 
+<<<<<<< HEAD
         <div style={{ padding: 'clamp(12px, 3vw, 16px)', position: 'relative', boxSizing: 'border-box' }}>
           <div 
             style={{
@@ -224,18 +315,52 @@ export default function BulkOrdersModal({ isOpen, onClose }) {
               borderRadius: 'clamp(14px, 4vw, 16px)', padding: 'clamp(14px, 4vw, 20px) clamp(12px, 3vw, 16px)',
               color: activeTheme.text, boxShadow: '0 6px 20px rgba(44, 34, 30, 0.05)', position: 'relative',
               display: 'flex', flexDirection: 'column', boxSizing: 'border-box', border: '1px dashed #C5A059'
+=======
+        <div style={{ 
+          overflowY: 'auto', 
+          display: 'flex', 
+          flexDirection: 'column', 
+          gap: '12px',
+          boxSizing: 'border-box',
+          textAlign: 'left',
+          fontSize: 'clamp(12px, 3.5vw, 14px)',
+          color: '#57534E',
+          lineHeight: '1.5',
+          paddingRight: '6px',
+          minWidth: 0
+        }}>
+          <div 
+            style={{
+              background: 'linear-gradient(135deg, #FFFDF9 0%, #FAF4EB 100%)',
+              borderRadius: '16px',
+              padding: 'clamp(14px, 4vw, 18px) clamp(16px, 4.5vw, 20px)',
+              color: activeTheme.text,
+              boxShadow: '0 8px 24px rgba(44, 34, 30, 0.06)',
+              position: 'relative',
+              overflow: 'hidden',
+              display: 'flex',
+              flexDirection: 'column',
+              boxSizing: 'border-box',
+              border: '1px dashed #C5A059'
+>>>>>>> development
             }}
           >
             <div style={{ marginBottom: '14px', textAlign: 'left' }}>
               <h3 style={{ margin: '0 0 4px 0', fontFamily: "'Cormorant Garamond', serif", fontSize: 'clamp(16px, 4vw, 18px)', color: '#1A1816', fontWeight: '700' }}>
                 ✦ Bespoke Catering ✦
               </h3>
+<<<<<<< HEAD
               <p style={{ margin: 0, fontSize: 'var(--font-caption)', color: '#78716C', fontWeight: '500', lineHeight: '1.4' }}>
                 Share your details to connect and discuss instantly.
+=======
+              <p style={{ margin: 0, fontSize: 'clamp(11.5px, 3.2vw, 13px)', color: '#78716C', fontWeight: '500', lineHeight: '1.4' }}>
+                Share your event specs to submit or discuss instantly via WhatsApp.
+>>>>>>> development
               </p>
             </div>
 
             <form onSubmit={submitBulkWhatsApp} style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+<<<<<<< HEAD
               
               {/* Phone Field */}
               <input 
@@ -258,6 +383,31 @@ export default function BulkOrdersModal({ isOpen, onClose }) {
                     paddingRight: '32px',
                     color: bulkData.eventType ? '#1A1816' : '#9CA3AF' 
                   })}
+=======
+              <input 
+                type="text"
+                placeholder="Your Name"
+                required
+                value={bulkData.name}
+                onChange={(e) => setBulkData({...bulkData, name: e.target.value})}
+                style={{
+                  width: '100%', padding: '12px 14px', borderRadius: '12px',
+                  border: '1px solid rgba(197, 160, 89, 0.5)', backgroundColor: '#FFF',
+                  fontSize: 'clamp(12px, 3.5vw, 14px)', boxSizing: 'border-box', outline: 'none', color: '#1A1816'
+                }}
+              />
+
+              <div style={{ position: 'relative', width: '100%', boxSizing: 'border-box' }}>
+                <select 
+                  value={bulkData.eventType}
+                  onChange={(e) => setBulkData({...bulkData, eventType: e.target.value})}
+                  style={{
+                    width: '100%', padding: '12px 32px 12px 14px', borderRadius: '12px',
+                    border: '1px solid rgba(197, 160, 89, 0.5)', backgroundColor: '#FFF',
+                    fontSize: 'clamp(12px, 3.5vw, 14px)', boxSizing: 'border-box', outline: 'none', color: '#1A1816', 
+                    cursor: 'pointer', appearance: 'none', WebkitAppearance: 'none'
+                  }}
+>>>>>>> development
                 >
                   <option value="" disabled style={{ color: '#9CA3AF' }}>Select Event Type *</option>
                   {eventTypeOptions.map((opt, idx) => (
@@ -272,6 +422,7 @@ export default function BulkOrdersModal({ isOpen, onClose }) {
                   type="text"
                   placeholder="Specify event type... *"
                   value={bulkData.customEventType}
+<<<<<<< HEAD
                   onChange={(e) => handleChange('customEventType', e.target.value)}
                   style={getInputStyle('customEventType')}
                 />
@@ -309,13 +460,44 @@ export default function BulkOrdersModal({ isOpen, onClose }) {
               </div>
 
               {/* Guests and Date Row with Perfectly Aligned Uniform Dimensions */}
+=======
+                  onChange={(e) => setBulkData({...bulkData, customEventType: e.target.value})}
+                  style={{
+                    width: '100%', padding: '12px 14px', borderRadius: '12px',
+                    border: '1px solid rgba(197, 160, 89, 0.5)', backgroundColor: '#FFF',
+                    fontSize: 'clamp(12px, 3.5vw, 14px)', boxSizing: 'border-box', outline: 'none', color: '#1A1816'
+                  }}
+                />
+              )}
+
+>>>>>>> development
               <div style={{ display: 'flex', gap: '8px', width: '100%', boxSizing: 'border-box' }}>
                 <input 
                   type="number"
                   placeholder="Approx. Guests *"
                   value={bulkData.guests}
+<<<<<<< HEAD
                   onChange={(e) => handleChange('guests', e.target.value)}
                   style={getInputStyle('guests', { flex: 1, minWidth: 0 })}
+=======
+                  onChange={(e) => setBulkData({...bulkData, guests: e.target.value})}
+                  style={{
+                    flex: 1, minWidth: 0, padding: '12px 14px', borderRadius: '12px',
+                    border: '1px solid rgba(197, 160, 89, 0.5)', backgroundColor: '#FFF',
+                    fontSize: 'clamp(12px, 3.5vw, 14px)', boxSizing: 'border-box', outline: 'none', color: '#1A1816'
+                  }}
+                />
+                <input 
+                  type="date"
+                  required
+                  value={bulkData.date}
+                  onChange={(e) => setBulkData({...bulkData, date: e.target.value})}
+                  style={{
+                    flex: 1, minWidth: 0, padding: '12px 14px', borderRadius: '12px',
+                    border: '1px solid rgba(197, 160, 89, 0.5)', backgroundColor: '#FFF',
+                    fontSize: 'clamp(12px, 3.5vw, 14px)', boxSizing: 'border-box', outline: 'none', color: '#1A1816', cursor: 'pointer'
+                  }}
+>>>>>>> development
                 />
                 
                 <div style={{ flex: 1, minWidth: 0, position: 'relative' }}>
@@ -357,9 +539,14 @@ export default function BulkOrdersModal({ isOpen, onClose }) {
                 </div>
               </div>
 
+<<<<<<< HEAD
               {/* Menu Categories Selection Pills */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', textAlign: 'left', marginTop: '4px' }}>
                 <label style={{ fontSize: '10px', fontWeight: '700', color: '#8A6D2B', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+=======
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', textAlign: 'left', marginTop: '6px' }}>
+                <label style={{ fontSize: 'clamp(10px, 2.5vw, 11px)', fontWeight: '700', color: '#8A6D2B', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+>>>>>>> development
                   Interested Menu Items / Categories:
                 </label>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
@@ -371,9 +558,19 @@ export default function BulkOrdersModal({ isOpen, onClose }) {
                         style={{
                           background: isSelected ? 'linear-gradient(135deg, #C5A059 0%, #A3803F 100%)' : '#FFFFFF',
                           color: isSelected ? '#FFFFFF' : '#524B47',
+<<<<<<< HEAD
                           border: '1px solid rgba(197, 160, 89, 0.5)', borderRadius: '8px',
                           padding: '6px clamp(10px, 3vw, 14px)', fontSize: 'clamp(10.5px, 2.5vw, 12px)',
                           fontWeight: '600', cursor: 'pointer', transition: 'all 0.2s ease',
+=======
+                          border: '1px solid rgba(197, 160, 89, 0.5)',
+                          borderRadius: '8px',
+                          padding: '6px 12px',
+                          fontSize: 'clamp(11px, 3vw, 12px)',
+                          fontWeight: '600',
+                          cursor: 'pointer',
+                          transition: 'all 0.2s ease',
+>>>>>>> development
                           boxShadow: isSelected ? '0 2px 6px rgba(197, 160, 89, 0.3)' : 'none'
                         }}
                       >
@@ -384,13 +581,13 @@ export default function BulkOrdersModal({ isOpen, onClose }) {
                 </div>
               </div>
 
-              {/* Notes / Special Requests */}
               <textarea 
                 placeholder="Any special menu items, dietary preferences or notes..."
                 rows="2"
                 value={bulkData.notes}
                 onChange={(e) => handleChange('notes', e.target.value)}
                 style={{
+<<<<<<< HEAD
                   width: '100%', 
                   padding: '12px 14px', 
                   borderRadius: '10px',
@@ -403,15 +600,25 @@ export default function BulkOrdersModal({ isOpen, onClose }) {
                   resize: 'none', 
                   marginTop: '4px',
                   transition: 'all 0.2s ease'
+=======
+                  width: '100%', padding: '12px 14px', borderRadius: '12px',
+                  border: '1px solid rgba(197, 160, 89, 0.5)', backgroundColor: '#FFF',
+                  fontSize: 'clamp(12px, 3.5vw, 14px)', boxSizing: 'border-box', outline: 'none', color: '#1A1816', resize: 'none', marginTop: '6px'
+>>>>>>> development
                 }}
               />
 
-              {/* WhatsApp Submit Action */}
               <button 
                 type="submit"
                 style={{
+<<<<<<< HEAD
                   background: '#25D366', color: '#FFF', border: '1px solid rgba(255, 255, 255, 0.2)', borderRadius: '12px', padding: 'clamp(12px, 3.5vw, 14px)',
                   fontSize: 'var(--font-body)', fontWeight: '700', cursor: 'pointer', display: 'flex',
+=======
+                  background: '#25D366',
+                  color: '#FFF', border: 'none', borderRadius: '12px', padding: '12px 16px',
+                  fontSize: 'clamp(13px, 3.8vw, 14.5px)', fontWeight: '700', cursor: 'pointer', display: 'flex',
+>>>>>>> development
                   alignItems: 'center', justifyContent: 'center', gap: '8px',
                   boxShadow: '0 6px 14px rgba(37, 211, 102, 0.35)', marginTop: '4px'
                 }}

@@ -17,13 +17,32 @@ export default function PolicyModal({
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
+      document.body.style.position = 'fixed';
+      document.body.style.width = '100%';
+      document.body.style.height = '100%';
     } else {
-      document.body.style.overflow = 'unset';
+      document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.width = '';
+      document.body.style.height = '';
     }
-    return () => {
-      document.body.style.overflow = 'unset';
+
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') onClose();
     };
-  }, [isOpen]);
+    
+    if (isOpen) {
+      window.addEventListener('keydown', handleKeyDown);
+    }
+    
+    return () => {
+      document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.width = '';
+      document.body.style.height = '';
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isOpen, onClose]);
 
   if (!isOpen) return null;
 
@@ -36,6 +55,7 @@ export default function PolicyModal({
     /* 1. Full-Viewport Edge-to-Edge Backdrop */
     <div 
       onClick={onClose}
+      onTouchMove={(e) => e.preventDefault()}
       style={{
         position: 'fixed', 
         inset: 0,
@@ -45,20 +65,31 @@ export default function PolicyModal({
         backdropFilter: 'blur(8px)', 
         WebkitBackdropFilter: 'blur(8px)',
         display: 'flex', 
-        alignItems: 'center', 
+        alignItems: 'flex-end', // 💡 Always anchors to bottom
         justifyContent: 'center',
         zIndex: 99999, 
         padding: '20px', 
         boxSizing: 'border-box',
+        cursor: 'pointer',
         fontFamily: "'Plus Jakarta Sans', sans-serif"
       }}
     >
+      <style>{`
+        @keyframes slideUpSheet {
+          0% { opacity: 0; transform: translateY(20px); }
+          100% { opacity: 1; transform: translateY(0); }
+        }
+      `}</style>
+
       {/* 2. Luxury Modal Card Container */}
       <div 
         onClick={(e) => e.stopPropagation()}
         style={{
           background: 'linear-gradient(135deg, #FFFDF9 0%, #FAF4EB 100%)', 
-          borderRadius: 'clamp(20px, 5vw, 28px)', // 💡 FLUID RADIUS
+          borderTopLeftRadius: 'clamp(20px, 5vw, 28px)', // 💡 FLUID RADIUS
+          borderTopRightRadius: 'clamp(20px, 5vw, 28px)',
+          borderBottomLeftRadius: '0px',
+          borderBottomRightRadius: '0px',
           padding: 'clamp(16px, 4vw, 22px)',     // 💡 FLUID PADDING
           maxWidth: '520px', 
           width: '100%', 
@@ -69,7 +100,9 @@ export default function PolicyModal({
           border: '1px solid rgba(197, 160, 89, 0.5)',
           display: 'flex', 
           flexDirection: 'column', 
-          overflow: 'hidden'
+          overflow: 'hidden',
+          animation: 'slideUpSheet 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+          cursor: 'default'
         }}
       >
         {/* Header with Title & Polished Close Button */}
@@ -88,7 +121,7 @@ export default function PolicyModal({
             fontSize: 'clamp(18px, 4.5vw, 22px)', // 💡 FLUID TYPOGRAPHY
             fontWeight: '700', 
             color: activeTheme.brand, 
-            margin: 5,
+            margin: 0,
             textTransform: 'uppercase',
             letterSpacing: '1px',
             whiteSpace: 'nowrap',
@@ -99,6 +132,7 @@ export default function PolicyModal({
             {title}
           </h3>
           <button
+            type="button"
             onClick={onClose}
             style={{
               background: 'rgba(197, 160, 89, 0.15)',
