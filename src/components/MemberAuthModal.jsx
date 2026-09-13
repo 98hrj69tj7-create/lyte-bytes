@@ -1,19 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { 
-  Sparkles,
   FileText,
   ChevronRight,
   ShieldCheck,
   Mail,
   KeyRound,
   Lock,
-  X
+  X,
+  Eye,
+  EyeOff,
+  CheckCircle2,
+  AlertCircle,
+  ArrowLeft,
+  Send
 } from 'lucide-react';
 
 export default function MemberAuthModal({ isOpen, onClose, initialPhone = '', csvRows = [], onLoginSuccess, webAppUrl }) {
   const [step, setStep] = useState('phone'); 
   const [mobile, setMobile] = useState(initialPhone);
+  const [userEmail, setUserEmail] = useState('');
   const [enteredCode, setEnteredCode] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -22,6 +28,9 @@ export default function MemberAuthModal({ isOpen, onClose, initialPhone = '', cs
   const [dynamicExpectedCode, setDynamicExpectedCode] = useState('');
   const [showTermsPopup, setShowTermsPopup] = useState(false);
   const [emailSentStatus, setEmailSentStatus] = useState(false);
+
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const activeTheme = {
     brand: '#FF5958',
@@ -107,18 +116,33 @@ export default function MemberAuthModal({ isOpen, onClose, initialPhone = '', cs
     }, 400);
   };
 
-  const handleAutomatedEmailRequest = async () => {
+  const handleAutomatedEmailRequest = async (e) => {
+    if (e) e.preventDefault();
+    if (!userEmail || !userEmail.includes('@')) {
+      alert('Please enter a valid email address.');
+      return;
+    }
+
     setLoading(true);
     try {
+      const payload = new URLSearchParams();
+      payload.append('action', 'send_pin');
+      payload.append('phone', mobile);
+      payload.append('email', userEmail);
+      payload.append('pin', dynamicExpectedCode);
+
       await fetch(webAppUrl, {
         method: 'POST',
         mode: 'no-cors',
-        body: JSON.stringify({ action: 'send_pin', phone: mobile, pin: dynamicExpectedCode })
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: payload.toString()
       });
       setEmailSentStatus(true);
+      setStep('temp_code');
     } catch (err) {
       console.error("Failed to send automated email:", err);
       setEmailSentStatus(true);
+      setStep('temp_code');
     } finally {
       setLoading(false);
     }
@@ -152,8 +176,8 @@ export default function MemberAuthModal({ isOpen, onClose, initialPhone = '', cs
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
-      const userData = { phone: mobile, isVerified: true };
-      localStorage.setItem(`lytebytes_user_${mobile}`, JSON.stringify({ password }));
+      const userData = { phone: mobile, email: userEmail, isVerified: true };
+      localStorage.setItem(`lytebytes_user_${mobile}`, JSON.stringify({ password, email: userEmail }));
       localStorage.setItem('lytebytes_user', JSON.stringify(userData));
       
       onLoginSuccess(userData);
@@ -166,7 +190,7 @@ export default function MemberAuthModal({ isOpen, onClose, initialPhone = '', cs
     const storedData = JSON.parse(localStorage.getItem(`lytebytes_user_${mobile}`) || '{}');
     
     if (storedData.password && storedData.password === password) {
-      const userData = { phone: mobile, isVerified: true };
+      const userData = { phone: mobile, email: storedData.email || '', isVerified: true };
       localStorage.setItem('lytebytes_user', JSON.stringify(userData));
       onLoginSuccess(userData);
       onClose();
@@ -174,6 +198,17 @@ export default function MemberAuthModal({ isOpen, onClose, initialPhone = '', cs
       alert('Incorrect password. Click "Forgot Password" to receive your PIN.');
     }
   };
+
+  const getPasswordStrength = (pwd) => {
+    if (!pwd) return { label: '', color: '#D1D5DB', width: '0%' };
+    if (pwd.length < 4) return { label: 'Too short', color: '#DC2626', width: '25%' };
+    if (pwd.length < 6) return { label: 'Weak', color: '#F59E0B', width: '50%' };
+    if (pwd.length < 8 || !/[A-Z]/.test(pwd) || !/[0-9]/.test(pwd)) return { label: 'Medium', color: '#3B82F6', width: '75%' };
+    return { label: 'Strong', color: '#059669', width: '100%' };
+  };
+
+  const strengthInfo = getPasswordStrength(password);
+  const passwordsMatch = password.length > 0 && confirmPassword.length > 0 && password === confirmPassword;
 
   const modalContent = (
     <div 
@@ -221,6 +256,25 @@ export default function MemberAuthModal({ isOpen, onClose, initialPhone = '', cs
         }}
       >
         <div style={{
+          position: 'absolute',
+          top: '25%',
+          left: '75%',
+          transform: 'translate(-50%, -50%) rotate(-15deg)',
+          width: '100px',
+          opacity: 0.075,
+          filter: 'grayscale(110%) contrast(5000%)',
+          mixBlendMode: 'multiply',
+          pointerEvents: 'none',
+          zIndex: 0
+        }}>
+          <img 
+            src="/logo.png" 
+            alt="Luxury Watermark" 
+            style={{ width: '120%', height: 'auto', display: 'block' }} 
+          />
+        </div>
+
+        <div style={{
           display: 'flex', 
           alignItems: 'center', 
           justifyContent: 'space-between',
@@ -228,7 +282,8 @@ export default function MemberAuthModal({ isOpen, onClose, initialPhone = '', cs
           marginBottom: '2px',
           flexShrink: 0,
           gap: '8px',
-          minWidth: 0
+          minWidth: 0,
+          zIndex: 1
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', minWidth: 0 }}>
             <Lock size={18} color="#C5A059" style={{ flexShrink: 0 }} />
@@ -263,7 +318,8 @@ export default function MemberAuthModal({ isOpen, onClose, initialPhone = '', cs
               cursor: 'pointer',
               color: '#1A1816',
               transition: 'all 0.2s ease',
-              flexShrink: 0
+              flexShrink: 0,
+              zIndex: 1
             }}
           >
             <X size={16} />
@@ -281,15 +337,15 @@ export default function MemberAuthModal({ isOpen, onClose, initialPhone = '', cs
           color: '#57534E',
           lineHeight: '1.5',
           paddingRight: '6px',
-          minWidth: 0
+          minWidth: 0,
+          zIndex: 1
         }}>
           <div 
             style={{
-              background: 'linear-gradient(135deg, #FFFDF9 0%, #FAF4EB 100%)',
+              background: 'transparent',
               borderRadius: '16px',
               padding: 'clamp(14px, 4vw, 18px) clamp(16px, 4.5vw, 20px)',
               color: activeTheme.text,
-              boxShadow: '0 8px 24px rgba(44, 34, 30, 0.06)',
               position: 'relative',
               overflow: 'hidden',
               display: 'flex',
@@ -328,15 +384,17 @@ export default function MemberAuthModal({ isOpen, onClose, initialPhone = '', cs
               <>
                 <div style={{ marginBottom: '14px', textAlign: 'left', minWidth: 0 }}>
                   <h3 style={{ margin: '0 0 4px 0', fontFamily: "'Cormorant Garamond', serif", fontSize: 'clamp(18px, 5vw, 22px)', color: '#1A1816', fontWeight: '700', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                    {step === 'phone' && 'Signup / Signin'}
+                    {step === 'phone' && 'Login / Register'}
                     {step === 'temp_code' && 'Enter Unique PIN'}
+                    {step === 'request_email' && 'Email Verification'}
                     {step === 'set_password' && 'Create Password'}
                     {step === 'enter_password' && 'Welcome Back'}
                   </h3>
                   <p style={{ margin: 0, fontSize: 'clamp(11.5px, 3.2vw, 13px)', color: '#78716C', fontWeight: '500', lineHeight: '1.4' }}>
                     {step === 'phone' && 'Enter your mobile number'}
-                    {step === 'temp_code' && 'Unaware of your Unique PIN, Email us.'}
-                    {step === 'set_password' && 'Set a secure password for future quick sign-in.'}
+                    {step === 'temp_code' && 'Forgot your Unique PIN? Email us.'}
+                    {step === 'request_email' && `Enter your email to receive your PIN for ${mobile}`}
+                    {step === 'set_password' && 'Set a secure password for future sign-in.'}
                     {step === 'enter_password' && `Enter your password for +91 ${mobile}`}
                   </p>
                 </div>
@@ -437,7 +495,7 @@ export default function MemberAuthModal({ isOpen, onClose, initialPhone = '', cs
                           </div>
                           <button 
                             type="button"
-                            onClick={() => setEmailSentStatus(false)}
+                            onClick={() => setStep('request_email')}
                             style={{
                               background: 'none', border: 'none', color: '#C5A059', fontSize: 'clamp(11.5px, 3.2vw, 13px)',
                               fontWeight: '700', cursor: 'pointer', textDecoration: 'underline'
@@ -449,7 +507,7 @@ export default function MemberAuthModal({ isOpen, onClose, initialPhone = '', cs
                       ) : (
                         <button 
                           type="button"
-                          onClick={handleAutomatedEmailRequest}
+                          onClick={() => setStep('request_email')}
                           style={{
                             background: 'none', border: 'none', color: '#C5A059', fontSize: 'clamp(11.5px, 3.2vw, 13px)',
                             fontWeight: '700', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '5px'
@@ -462,30 +520,27 @@ export default function MemberAuthModal({ isOpen, onClose, initialPhone = '', cs
                   </form>
                 )}
 
-                {step === 'set_password' && (
-                  <form onSubmit={handleSavePassword} style={{ display: 'flex', flexDirection: 'column', gap: '12px', width: '100%', boxSizing: 'border-box' }}>
-                    <input 
-                      type="password"
-                      placeholder="Create Password (min 4 chars)"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      style={{
-                        width: '100%', padding: '12px 14px', borderRadius: '12px',
-                        border: '1px solid rgba(197, 160, 89, 0.5)', backgroundColor: '#FFF',
-                        fontSize: 'clamp(12px, 3.5vw, 14px)', boxSizing: 'border-box', outline: 'none', color: '#1A1816'
-                      }}
-                    />
-                    <input 
-                      type="password"
-                      placeholder="Confirm Password"
-                      value={confirmPassword}
-                      onChange={(e) => setConfirmPassword(e.target.value)}
-                      style={{
-                        width: '100%', padding: '12px 14px', borderRadius: '12px',
-                        border: '1px solid rgba(197, 160, 89, 0.5)', backgroundColor: '#FFF',
-                        fontSize: 'clamp(12px, 3.5vw, 14px)', boxSizing: 'border-box', outline: 'none', color: '#1A1816'
-                      }}
-                    />
+                {/* Sub-step for Email Input */}
+                {step === 'request_email' && (
+                  <form onSubmit={handleAutomatedEmailRequest} style={{ display: 'flex', flexDirection: 'column', gap: '12px', width: '100%', boxSizing: 'border-box' }}>
+                    <div style={{ position: 'relative', width: '100%', boxSizing: 'border-box' }}>
+                      <span style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)', color: '#8A6D2B', display: 'flex', alignItems: 'center' }}>
+                        <Mail size={16} />
+                      </span>
+                      <input 
+                        type="email"
+                        placeholder="Enter your email address"
+                        value={userEmail}
+                        onChange={(e) => setUserEmail(e.target.value)}
+                        required
+                        style={{
+                          width: '100%', padding: '12px 14px 12px 42px', borderRadius: '12px',
+                          border: '1px solid rgba(197, 160, 89, 0.5)', backgroundColor: '#FFF',
+                          fontSize: 'clamp(12px, 3.5vw, 14px)', boxSizing: 'border-box', outline: 'none', color: '#1A1816',
+                          boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.02)'
+                        }}
+                      />
+                    </div>
 
                     <button 
                       type="submit"
@@ -498,6 +553,102 @@ export default function MemberAuthModal({ isOpen, onClose, initialPhone = '', cs
                         boxShadow: '0 6px 16px rgba(197, 160, 89, 0.35)', width: '100%', boxSizing: 'border-box'
                       }}
                     >
+                      {loading ? 'Sending Key...' : 'Send Access Key'} <Send size={15} style={{ flexShrink: 0 }} />
+                    </button>
+
+                    <div style={{ textAlign: 'center', paddingTop: '4px', width: '100%', boxSizing: 'border-box' }}>
+                      <button 
+                        type="button" 
+                        onClick={() => setStep('temp_code')}
+                        style={{ background: 'none', border: 'none', color: '#8A6D2B', fontSize: 'clamp(11.5px, 3.2vw, 13px)', fontWeight: '600', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '4px' }}
+                      >
+                        <ArrowLeft size={13} /> Back to PIN verification
+                      </button>
+                    </div>
+                  </form>
+                )}
+
+                {step === 'set_password' && (
+                  <form onSubmit={handleSavePassword} style={{ display: 'flex', flexDirection: 'column', gap: '10px', width: '100%', boxSizing: 'border-box' }}>
+                    <div style={{ position: 'relative', width: '100%', boxSizing: 'border-box' }}>
+                      <input 
+                        type={showPassword ? "text" : "password"}
+                        placeholder="Create Password (min 4 chars)"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        style={{
+                          width: '100%', padding: '12px 42px 12px 14px', borderRadius: '12px',
+                          border: '1px solid rgba(197, 160, 89, 0.5)', backgroundColor: '#FFF',
+                          fontSize: 'clamp(12px, 3.5vw, 14px)', boxSizing: 'border-box', outline: 'none', color: '#1A1816'
+                        }}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        style={{
+                          position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)',
+                          background: 'none', border: 'none', cursor: 'pointer', color: '#78716C', padding: 0, display: 'flex', alignItems: 'center'
+                        }}
+                      >
+                        {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                      </button>
+                    </div>
+
+                    {password.length > 0 && (
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', width: '100%' }}>
+                        <div style={{ width: '100%', height: '5px', backgroundColor: '#E5E7EB', borderRadius: '3px', overflow: 'hidden' }}>
+                          <div style={{ width: strengthInfo.width, height: '100%', backgroundColor: strengthInfo.color, transition: 'width 0.3s ease, background-color 0.3s ease' }} />
+                        </div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '10.5px', fontWeight: '700', color: strengthInfo.color }}>
+                          <span>Strength: {strengthInfo.label}</span>
+                        </div>
+                      </div>
+                    )}
+
+                    <div style={{ position: 'relative', width: '100%', boxSizing: 'border-box', marginTop: '2px' }}>
+                      <input 
+                        type={showConfirmPassword ? "text" : "password"}
+                        placeholder="Confirm Password"
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                        style={{
+                          width: '100%', padding: '12px 42px 12px 14px', borderRadius: '12px',
+                          border: confirmPassword.length > 0 ? (passwordsMatch ? '1px solid #059669' : '1px solid #DC2626') : '1px solid rgba(197, 160, 89, 0.5)', 
+                          backgroundColor: '#FFF',
+                          fontSize: 'clamp(12px, 3.5vw, 14px)', boxSizing: 'border-box', outline: 'none', color: '#1A1816'
+                        }}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                        style={{
+                          position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)',
+                          background: 'none', border: 'none', cursor: 'pointer', color: '#78716C', padding: 0, display: 'flex', alignItems: 'center'
+                        }}
+                      >
+                        {showConfirmPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                      </button>
+                    </div>
+
+                    {confirmPassword.length > 0 && (
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '11px', fontWeight: '700', color: passwordsMatch ? '#059669' : '#DC2626' }}>
+                        {passwordsMatch ? <CheckCircle2 size={13} /> : <AlertCircle size={13} />}
+                        <span>{passwordsMatch ? 'Passwords match!' : 'Passwords do not match'}</span>
+                      </div>
+                    )}
+
+                    <button 
+                      type="submit"
+                      disabled={loading || !passwordsMatch}
+                      style={{
+                        background: 'linear-gradient(135deg, #C5A059 0%, #A3803F 100%)',
+                        color: '#FFF', border: 'none', borderRadius: '12px', padding: '12px',
+                        fontSize: 'clamp(13px, 3.8vw, 14.5px)', fontWeight: '700', cursor: passwordsMatch ? 'pointer' : 'not-allowed', 
+                        opacity: passwordsMatch ? 1 : 0.6,
+                        display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px',
+                        boxShadow: '0 6px 16px rgba(197, 160, 89, 0.35)', width: '100%', boxSizing: 'border-box', marginTop: '4px'
+                      }}
+                    >
                       {loading ? 'Saving...' : 'Save & Login'} <KeyRound size={16} style={{ flexShrink: 0 }} />
                     </button>
                   </form>
@@ -505,17 +656,29 @@ export default function MemberAuthModal({ isOpen, onClose, initialPhone = '', cs
 
                 {step === 'enter_password' && (
                   <form onSubmit={handleLoginWithPassword} style={{ display: 'flex', flexDirection: 'column', gap: '12px', width: '100%', boxSizing: 'border-box' }}>
-                    <input 
-                      type="password"
-                      placeholder="Enter your password"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      style={{
-                        width: '100%', padding: '12px 14px', borderRadius: '12px',
-                        border: '1px solid rgba(197, 160, 89, 0.5)', backgroundColor: '#FFF',
-                        fontSize: 'clamp(12px, 3.5vw, 14px)', boxSizing: 'border-box', outline: 'none', color: '#1A1816'
-                      }}
-                    />
+                    <div style={{ position: 'relative', width: '100%', boxSizing: 'border-box' }}>
+                      <input 
+                        type={showPassword ? "text" : "password"}
+                        placeholder="Enter your password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        style={{
+                          width: '100%', padding: '12px 42px 12px 14px', borderRadius: '12px',
+                          border: '1px solid rgba(197, 160, 89, 0.5)', backgroundColor: '#FFF',
+                          fontSize: 'clamp(12px, 3.5vw, 14px)', boxSizing: 'border-box', outline: 'none', color: '#1A1816'
+                        }}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        style={{
+                          position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)',
+                          background: 'none', border: 'none', cursor: 'pointer', color: '#78716C', padding: 0, display: 'flex', alignItems: 'center'
+                        }}
+                      >
+                        {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                      </button>
+                    </div>
 
                     <button 
                       type="submit"

@@ -211,3 +211,14 @@ code {
 .marquee-track:hover {
   animation-play-state: paused;
 }
+html, body {
+  background-color: #121110 !important;
+  overscroll-behavior-y: none;
+}
+html, body, #root {
+  background-color: #121110 !important;
+  overscroll-behavior-y: none;
+  position: relative;
+  height: 100%;
+  width: 100%;
+}

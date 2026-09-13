@@ -30,17 +30,22 @@ export default function Footer({ view, setView, theme }) {
     return () => window.removeEventListener('scroll', handleScroll, true);
   }, []);
 
+  // 💡 Moved after all hooks to comply with React hook rules
+  if (['admin-customers', 'concierge', 'chatbot', 'chat', 'info'].includes(view)) {
+    return null;
+  }
+
   const navItems = [
     { id: 'home', label: 'Home', icon: Home },
-    { id: 'offers', label: 'Offers', icon: Sparkles },       
+    { id: 'offers', label: 'Plans', icon: Sparkles },       
     { id: 'track', label: 'Track', icon: Navigation },     
-    { id: 'info', label: 'Concierge', icon: Headphones, badge: true }, 
+    { id: 'info', label: 'Support', icon: Headphones, badge: true }, 
     { id: 'account', label: 'Account', icon: User },
   ];
 
   return (
     <div style={{
-      position: 'fixed',
+      position: 'fixed', 
       bottom: '12px',         
       left: '50%',
       transform: `translateX(-50%) translateY(${isVisible ? '0' : '100px'})`, 
@@ -54,7 +59,7 @@ export default function Footer({ view, setView, theme }) {
       display: 'flex',
       justifyContent: 'space-around',
       alignItems: 'center',
-      padding: '8px 10px',        
+      padding: '8px 12px',        
       zIndex: 1000,
       boxShadow: '0 16px 40px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.08)',
       boxSizing: 'border-box',
@@ -94,7 +99,7 @@ export default function Footer({ view, setView, theme }) {
               alignItems: 'center',
               justifyContent: 'center',
               position: 'relative',
-              padding: '6px 4px',      
+              padding: '6px 6px',      
               outline: 'none',
               WebkitTapHighlightColor: 'transparent',
               userSelect: 'none',

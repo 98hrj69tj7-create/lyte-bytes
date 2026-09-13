@@ -3,7 +3,6 @@ import {
   ArrowLeft, MessageCircle, CheckCircle, Mail, ChevronRight, 
   FileText, Gift, Bot, Send, Heart, MessageSquare 
 } from 'lucide-react';
-import { GeneralTermsModalContent } from './PolicyContents';
 import FestiveHampersModal from './FestiveHampersModal';
 
 const FAQ_DATA = [
@@ -17,7 +16,6 @@ export default function SupportInfoView({
   theme = {},
   setView = () => {}
 }) {
-  const [termsOpen, setTermsOpen] = useState(false);
   const [inputText, setInputText] = useState('');
   
   // Festive Hamper Modal State
@@ -42,7 +40,7 @@ export default function SupportInfoView({
     text: theme?.text || '#1A1816',
     border: theme?.border || '1px solid rgba(197, 160, 89, 0.4)',
     bg: theme?.bg || '#FFFDF9',
-    radius: theme?.radius || 'clamp(16px, 4vw, 20px)' // 💡 FLUID RADIUS
+    radius: theme?.radius || 'clamp(16px, 4vw, 20px)' 
   };
 
   const handleWhatsAppClick = (e) => {
@@ -104,7 +102,7 @@ export default function SupportInfoView({
             alignItems: 'center', 
             gap: '6px', 
             color: activeTheme.text, 
-            fontSize: 'var(--font-caption)', // 💡 FLUID TYPOGRAPHY
+            fontSize: 'var(--font-caption)', 
             fontWeight: '600', 
             padding: '6px 10px', 
             borderRadius: '12px', 
@@ -122,7 +120,7 @@ export default function SupportInfoView({
           right: 0, 
           textAlign: 'center', 
           fontFamily: "'Cormorant Garamond', serif",
-          fontSize: 'var(--font-h2)', // 💡 FLUID TYPOGRAPHY
+          fontSize: 'var(--font-h2)', 
           color: '#FF5958', 
           margin: 0, 
           fontWeight: '700', 
@@ -144,7 +142,7 @@ export default function SupportInfoView({
         border: '1.5px solid rgba(197, 160, 89, 0.45)', 
         borderRadius: activeTheme.radius,
         background: 'linear-gradient(135deg, #FFFDF9 0%, #FAF5EC 100%)', 
-        padding: 'clamp(8px, 2.5vw, 10px)', // 💡 FLUID PADDING
+        padding: 'clamp(8px, 2.5vw, 10px)', 
         boxShadow: '0 12px 32px rgba(44, 34, 30, 0.07)',
         display: 'flex', flexDirection: 'column', gap: '10px', boxSizing: 'border-box', width: '100%', minWidth: 0
       }}>
@@ -439,36 +437,6 @@ export default function SupportInfoView({
               </div>
             </div>
           </a>
-
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', minWidth: 0 }}>
-            <div 
-              className="support-card" 
-              onClick={() => setTermsOpen(!termsOpen)}
-              style={{ display: 'flex', alignItems: 'center', padding: 'clamp(10px, 3vw, 12px) clamp(12px, 3.5vw, 14px)', border: '1px solid rgba(197, 160, 89, 0.4)', borderRadius: '16px', boxShadow: '0 6px 18px rgba(44, 34, 30, 0.04)', cursor: 'pointer', background: 'linear-gradient(135deg, #FFFFFF 0%, #FAF4EB 100%)', minWidth: 0, gap: '8px', boxSizing: 'border-box' }}
-            >
-              <div style={{ width: '48px', height: '48px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: '0' }}>
-                <FileText size={30} color="#C5A059" />
-              </div>
-              <div style={{ textAlign: 'left', flex: 1, minWidth: 0 }}>
-                <h3 style={{ margin: '0 0 2px 0', color: activeTheme.text, fontSize: 'clamp(16px, 4.5vw, 18px)', fontWeight: '700', fontFamily: "'Cormorant Garamond', serif", whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>General Guidelines</h3>
-                <p style={{ margin: 0, color: '#78716C', fontSize: 'clamp(10px, 2.8vw, 11px)', fontWeight: '500', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Terms, shipping & privacy</p>
-              </div>
-              <div style={{ 
-                display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(197, 160, 89, 0.12)', borderRadius: '50%', width: '28px', height: '28px',
-                transform: termsOpen ? 'rotate(90deg)' : 'rotate(0deg)', 
-                transition: 'transform 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
-                flexShrink: 0
-              }}>
-                <ChevronRight size={16} color="#C5A059" strokeWidth={2.5} style={{ flexShrink: 0 }} />
-              </div>
-            </div>
-
-            {termsOpen && (
-              <div style={{ paddingTop: '6px', paddingBottom: '6px', minWidth: 0 }}>
-                <GeneralTermsModalContent brandColor="#C5A059" />
-              </div>
-            )}
-          </div>
 
         </div>
 

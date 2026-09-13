@@ -93,9 +93,10 @@ export default function StickyCartBar({ cart = [], view, onViewCart }) {
     return () => window.removeEventListener('scroll', handleScroll, true);
   }, []);
 
-  // 💡 Hide bar if cart is empty OR if user is on concierge, chatbot, chat, or info views
-  if (totalItems === 0 || ['concierge', 'chatbot', 'chat', 'info'].includes(view)) return null;
-
+  // 💡 Ensure 'admin-customers' is explicitly caught here to prevent the bar from showing
+  if (totalItems === 0 || ['concierge', 'admin-customers', 'chatbot', 'chat', 'info'].includes(view)) {
+    return null;
+  }
   return (
     <>
       <div 

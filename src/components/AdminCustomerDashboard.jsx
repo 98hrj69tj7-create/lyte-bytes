@@ -15,7 +15,11 @@ import {
   Star,
   ShieldCheck,
   Crown,
-  Medal
+  Medal,
+  Fingerprint,
+  Download,
+  Filter,
+  ShieldAlert
 } from 'lucide-react';
 
 /* ==========================================================================
@@ -27,7 +31,6 @@ const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQscxfQpCFZxTyw
 function getMilestoneInfo(score = 0, currentTier = 'Blue') {
   const t = (currentTier || 'Blue').toLowerCase();
   
-  let nextTier = 'Bronze';
   let targetPts = 50;
   let currentTierBase = 0;
 
@@ -40,19 +43,15 @@ function getMilestoneInfo(score = 0, currentTier = 'Blue') {
       isMax: true
     };
   } else if (t.includes('gold')) {
-    nextTier = 'Platinum';
     targetPts = 500;
     currentTierBase = 200;
   } else if (t.includes('silver')) {
-    nextTier = 'Gold';
     targetPts = 100;
     currentTierBase = 100;
   } else if (t.includes('bronze')) {
-    nextTier = 'Silver';
-    targetPts = 100;
+    targetPts = 50;
     currentTierBase = 50;
   } else {
-    nextTier = 'Bronze';
     targetPts = 50;
     currentTierBase = 0;
   }
@@ -60,10 +59,15 @@ function getMilestoneInfo(score = 0, currentTier = 'Blue') {
   const ptsRemaining = Math.max(0, targetPts - score);
   const range = targetPts - currentTierBase;
   const currentProgress = Math.max(0, score - currentTierBase);
-  const progressPercent = Math.min(100, Math.max(0, Math.round((currentProgress / range) * 100)));
+  const progressPercent = range > 0 ? Math.min(100, Math.max(0, Math.round((currentProgress / range) * 100))) : 100;
+
+  let nextTierName = 'Bronze';
+  if (t.includes('bronze')) nextTierName = 'Silver';
+  else if (t.includes('silver')) nextTierName = 'Gold';
+  else if (t.includes('gold')) nextTierName = 'Platinum';
 
   return {
-    nextTierName: nextTier,
+    nextTierName,
     targetPts,
     ptsRemaining,
     progressPercent,
@@ -76,61 +80,61 @@ function getTierStyles(tierName) {
 
   if (t.includes('platinum')) {
     return {
-      bg: 'rgba(99, 102, 241, 0.12)',
-      border: 'rgba(99, 102, 241, 0.35)',
+      bg: 'rgba(99, 102, 241, 0.15)',
+      border: 'rgba(99, 102, 241, 0.4)',
       badgeBg: 'linear-gradient(135deg, #4F46E5 0%, #6366F1 100%)',
       badgeText: '#FFFFFF',
-      accentColor: '#8468b8',
+      accentColor: '#818CF8',
       progressFill: 'linear-gradient(90deg, #4F46E5 0%, #6366F1 100%)',
-      glow: '0 0 12px rgba(79, 70, 229, 0.3)',
+      glow: '0 0 16px rgba(79, 70, 229, 0.35)',
       icon: Medal
     };
   }
   if (t.includes('gold')) {
     return {
-      bg: 'rgba(217, 119, 6, 0.12)',
-      border: 'rgba(217, 119, 6, 0.35)',
+      bg: 'rgba(217, 119, 6, 0.15)',
+      border: 'rgba(217, 119, 6, 0.4)',
       badgeBg: 'linear-gradient(135deg, #D97706 0%, #F59E0B 100%)',
       badgeText: '#FFFFFF',
-      accentColor: '#D97706',
+      accentColor: '#FBBF24',
       progressFill: 'linear-gradient(90deg, #D97706 0%, #F59E0B 100%)',
-      glow: '0 0 12px rgba(217, 119, 6, 0.3)',
+      glow: '0 0 16px rgba(217, 119, 6, 0.35)',
       icon: Medal
     };
   }
   if (t.includes('silver')) {
     return {
-      bg: 'rgba(100, 116, 139, 0.12)',
-      border: 'rgba(100, 116, 139, 0.35)',
+      bg: 'rgba(148, 163, 184, 0.15)',
+      border: 'rgba(148, 163, 184, 0.4)',
       badgeBg: 'linear-gradient(135deg, #64748B 0%, #94A3B8 100%)',
       badgeText: '#FFFFFF',
-      accentColor: '#555960ad',
+      accentColor: '#CBD5E1',
       progressFill: 'linear-gradient(90deg, #64748B 0%, #94A3B8 100%)',
-      glow: '0 0 12px rgba(100, 116, 139, 0.3)',
+      glow: '0 0 16px rgba(148, 163, 184, 0.35)',
       icon: Medal
     };
   }
   if (t.includes('bronze')) {
     return {
-      bg: 'rgba(194, 65, 12, 0.12)',
-      border: 'rgba(194, 65, 12, 0.35)',
-      badgeBg: 'linear-gradient(135deg, #C2410C 0%, #EA580C 100%)',
+      bg: 'rgba(194, 65, 12, 0.15)',
+      border: 'rgba(194, 65, 12, 0.4)',
+      badgeBg: 'linear-gradient(135deg, #d26033 0%, #b25320 100%)',
       badgeText: '#FFFFFF',
-      accentColor: '#C2410C',
-      progressFill: 'linear-gradient(90deg, #C2410C 0%, #EA580C 100%)',
-      glow: '0 0 12px rgba(194, 65, 12, 0.3)',
+      accentColor: '#FB923C',
+      progressFill: 'linear-gradient(90deg, #d26033 0%, #b25320 100%)',
+      glow: '0 0 16px rgba(194, 65, 12, 0.35)',
       icon: Medal
     };
   }
   
   return {
-    bg: 'rgba(37, 99, 235, 0.12)',
-    border: 'rgba(37, 99, 235, 0.35)',
+    bg: 'rgba(37, 99, 235, 0.15)',
+    border: 'rgba(37, 99, 235, 0.4)',
     badgeBg: 'linear-gradient(135deg, #2563EB 0%, #3B82F6 100%)',
     badgeText: '#FFFFFF',
-    accentColor: '#2563EB',
+    accentColor: '#60A5FA',
     progressFill: 'linear-gradient(90deg, #2563EB 0%, #3B82F6 100%)',
-    glow: '0 0 12px rgba(37, 99, 235, 0.3)',
+    glow: '0 0 16px rgba(37, 99, 235, 0.35)',
     icon: Medal
   };
 }
@@ -206,10 +210,16 @@ async function fetchHistoricalOrders() {
 }
 
 /* ==========================================================================
-   MAIN COMPONENT: AdminCustomerDashboard
+   SUGGESTED ADMIN ENHANCEMENTS INCLUDED:
+   1. Elite Dark Obsidian & Warm Gold Aesthetic (Differentiated Backend Theme)
+   2. Biometric / Face ID Quick Sign-In (Saves session token after initial PIN)
+   3. Quick Stats Overview Bar (Total Revenue, Total Customers, Active Orders)
+   4. Export Customer Directory to CSV functionality
    ========================================================================== */
 export default function AdminCustomerDashboard({ theme = {}, onBack, setView }) {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(() => {
+    return localStorage.getItem('lyte_admin_auth') === 'true';
+  });
   const [pinInput, setPinInput] = useState('');
   const [pinError, setPinError] = useState(false);
 
@@ -220,15 +230,20 @@ export default function AdminCustomerDashboard({ theme = {}, onBack, setView }) 
 
   const [selectedTierFilter, setSelectedTierFilter] = useState('ALL');
   const [sortBy, setSortBy] = useState('orders_desc');
+  const [biometricSupported, setBiometricSupported] = useState(false);
 
   const containerRef = useRef(null);
 
-  const activeTheme = {
-    brand: theme?.brand || '#FF5958',
-    text: theme?.text || '#1A1816',
-    border: theme?.border || '1px solid rgba(197, 160, 89, 0.4)',
-    bg: theme?.bg || '#FFFDF9',
-    radius: 'clamp(16px, 4vw, 22px)'
+  // Elite Obsidian & Gold Admin Color System
+  const adminTheme = {
+    bg: '#121110',
+    cardBg: '#1C1A17',
+    cardBorder: '1px solid rgba(197, 160, 89, 0.25)',
+    textPrimary: '#F9F6EE',
+    textSecondary: '#A8A29E',
+    brandGold: '#C5A059',
+    accentRed: '#FF5958',
+    radius: '18px'
   };
 
   useEffect(() => {
@@ -239,6 +254,15 @@ export default function AdminCustomerDashboard({ theme = {}, onBack, setView }) 
       containerRef.current.scrollIntoView({ behavior: 'auto', block: 'start' });
     }
   }, [selectedCustomer]);
+
+  // Check WebAuthn Biometric Support
+  useEffect(() => {
+    if (window.PublicKeyCredential && typeof window.PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable === 'function') {
+      window.PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable().then(available => {
+        setBiometricSupported(available);
+      }).catch(() => setBiometricSupported(false));
+    }
+  }, []);
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -329,11 +353,62 @@ export default function AdminCustomerDashboard({ theme = {}, onBack, setView }) 
     e.preventDefault();
     if (pinInput === '5983' || pinInput === 'admin') {
       setIsAuthenticated(true);
+      localStorage.setItem('lyte_admin_auth', 'true');
       setPinError(false);
     } else {
       setPinError(true);
       setPinInput('');
     }
+  };
+
+  const handleBiometricLogin = async () => {
+    try {
+      const challenge = new Uint8Array(32);
+      window.crypto.getRandomValues(challenge);
+      
+      const credential = await navigator.credentials.get({
+        publicKey: {
+          challenge: challenge,
+          timeout: 60000,
+          userVerification: "required"
+        }
+      });
+
+      if (credential) {
+        setIsAuthenticated(true);
+        localStorage.setItem('lyte_admin_auth', 'true');
+        setPinError(false);
+      }
+    } catch (err) {
+      console.log("Biometric authentication cancelled or failed:", err);
+    }
+  };
+
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+    localStorage.removeItem('lyte_admin_auth');
+  };
+
+  const exportToCSV = () => {
+    const headers = ["Customer Name", "Phone", "Customer Code", "Tier", "Loyalty Points", "Total Spent (INR)", "Orders Count"];
+    const rows = customersData.map(c => [
+      `"${c.name}"`,
+      c.phone,
+      `"${c.custCode || ''}"`,
+      c.tier,
+      c.loyaltyScore,
+      c.totalSpent,
+      c.ordersCount
+    ]);
+
+    const csvContent = "data:text/csv;charset=utf-8," + [headers.join(","), ...rows.map(e => e.join(","))].join("\n");
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", `lyte_bytes_customers_${new Date().toISOString().split('T')[0]}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   const filteredCustomers = customersData.filter(c => {
@@ -352,29 +427,38 @@ export default function AdminCustomerDashboard({ theme = {}, onBack, setView }) 
     return 0;
   });
 
+  // Calculate high-level summary metrics
+  const totalRevenue = customersData.reduce((acc, c) => acc + c.totalSpent, 0);
+  const totalOrdersCount = customersData.reduce((acc, c) => acc + c.ordersCount, 0);
+
   const handleBack = onBack || (() => setView && setView('home'));
 
   if (!isAuthenticated) {
     return (
       <div style={{ 
         display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', 
-        flex: 1, padding: 'clamp(16px, 4vw, 24px)', backgroundColor: '#FFFDF9', minHeight: '85vh', 
+        flex: 1, padding: '24px', backgroundColor: adminTheme.bg, minHeight: '100dvh', 
         fontFamily: "'Plus Jakarta Sans', sans-serif"
       }}>
         <div style={{ 
-          width: '100%', maxWidth: '380px', backgroundColor: '#FFFFFF', 
-          border: '1px solid rgba(197, 160, 89, 0.4)', borderRadius: activeTheme.radius, 
-          padding: 'clamp(24px, 6vw, 36px) clamp(16px, 5vw, 24px)', textAlign: 'center', boxShadow: '0 12px 32px rgba(44, 34, 30, 0.08)'
+          width: '100%', maxWidth: '400px', backgroundColor: adminTheme.cardBg, 
+          border: adminTheme.cardBorder, borderRadius: adminTheme.radius, 
+          padding: '36px 24px', textAlign: 'center', boxShadow: '0 20px 50px rgba(0, 0, 0, 0.5)'
         }}>
           <div style={{ 
-            width: '60px', height: '60px', borderRadius: '50%', 
-            backgroundColor: 'rgba(197, 160, 89, 0.12)', border: '1px solid rgba(197, 160, 89, 0.3)', 
-            display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 18px auto' 
+            width: '64px', height: '64px', borderRadius: '50%', 
+            backgroundColor: 'rgba(197, 160, 89, 0.1)', border: '1px solid rgba(197, 160, 89, 0.3)', 
+            display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px auto' 
           }}>
-            <Lock size={28} color={activeTheme.brand} />
+            <Lock size={28} color={adminTheme.brandGold} />
           </div>
-          <h3 style={{ margin: '0 0 6px 0', fontSize: 'var(--font-h2)', fontWeight: '700', color: activeTheme.text }}>Admin Portal</h3>
-          <p style={{ margin: '0 0 24px 0', fontSize: 'var(--font-caption)', color: '#78716C', fontWeight: '500' }}>Enter your secure passcode to access elite customer files.</p>
+          <h3 style={{ margin: '0 0 6px 0', fontSize: '22px', fontWeight: '700', color: adminTheme.textPrimary, letterSpacing: '0.5px' }}>
+            Admin Portal
+          </h3>
+          <p style={{ margin: '0 0 24px 0', fontSize: '13px', color: adminTheme.textSecondary, fontWeight: '500' }}>
+            Enter your secure passcode or authenticate via biometrics.
+          </p>
+
           <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
             <input 
               type="password" 
@@ -383,24 +467,41 @@ export default function AdminCustomerDashboard({ theme = {}, onBack, setView }) 
               onChange={(e) => setPinInput(e.target.value)}
               style={{ 
                 width: '100%', padding: '14px', borderRadius: '14px', 
-                border: pinError ? '1.5px solid #FF5958' : '1px solid rgba(197, 160, 89, 0.4)', 
-                backgroundColor: '#FFFFFF', fontSize: '18px', outline: 'none', 
-                textAlign: 'center', letterSpacing: '4px', fontWeight: '700', color: activeTheme.text, boxSizing: 'border-box'
+                border: pinError ? '1.5px solid #FF5958' : '1px solid rgba(197, 160, 89, 0.3)', 
+                backgroundColor: '#121110', fontSize: '20px', outline: 'none', 
+                textAlign: 'center', letterSpacing: '6px', fontWeight: '700', color: '#F9F6EE', boxSizing: 'border-box'
               }}
             />
-            {pinError && <span style={{ fontSize: 'var(--font-caption)', color: '#FF5958', fontWeight: '600' }}>Incorrect PIN. Please try again.</span>}
+            {pinError && <span style={{ fontSize: '12px', color: '#FF5958', fontWeight: '600' }}>Incorrect PIN. Please try again.</span>}
+            
             <button 
               type="submit" 
               style={{ 
-                width: '100%', padding: '15px', backgroundColor: activeTheme.brand, color: '#FFFFFF', 
-                border: 'none', borderRadius: '14px', fontWeight: '700', fontSize: 'var(--font-body)', cursor: 'pointer',
-                boxShadow: '0 6px 20px rgba(255, 89, 88, 0.3)' 
+                width: '100%', padding: '14px', backgroundColor: adminTheme.brandGold, color: '#121110', 
+                border: 'none', borderRadius: '14px', fontWeight: '800', fontSize: '14px', cursor: 'pointer',
+                boxShadow: '0 4px 16px rgba(197, 160, 89, 0.3)' 
               }}
             >
               Unlock Dashboard
             </button>
+
+            {biometricSupported && (
+              <button 
+                type="button"
+                onClick={handleBiometricLogin}
+                style={{ 
+                  width: '100%', padding: '12px', backgroundColor: 'rgba(255, 255, 255, 0.05)', 
+                  color: adminTheme.brandGold, border: '1px solid rgba(197, 160, 89, 0.3)', 
+                  borderRadius: '14px', fontWeight: '700', fontSize: '13px', 
+                  cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px'
+                }}
+              >
+                <Fingerprint size={18} /> Sign in with Face ID / Biometrics
+              </button>
+            )}
           </form>
-          <button onClick={handleBack} style={{ background: 'none', border: 'none', color: '#78716C', fontSize: 'var(--font-caption)', fontWeight: '600', cursor: 'pointer', marginTop: '20px' }}>
+
+          <button onClick={handleBack} style={{ background: 'none', border: 'none', color: adminTheme.textSecondary, fontSize: '12px', fontWeight: '600', cursor: 'pointer', marginTop: '24px' }}>
             ← Return to Storefront
           </button>
         </div>
@@ -409,117 +510,165 @@ export default function AdminCustomerDashboard({ theme = {}, onBack, setView }) 
   }
 
   return (
-    <div 
+<div 
       ref={containerRef}
       style={{ 
         display: 'flex', 
         flexDirection: 'column', 
-        width: '100%', 
-        maxWidth: '1000px', 
-        margin: '0 auto', 
-        padding: 'clamp(12px, 3vw, 16px) clamp(8px, 2vw, 16px) 88px clamp(8px, 2vw, 16px)', 
+        width: '100vw',                 // 💡 Break out to full viewport width
+        marginLeft: 'calc(-50vw + 50%)',// 💡 Centers and forces full bleed across parent paddings
+        padding: '16px 16px 80px 16px',// 💡 16px side padding so content stays aligned nicely
         boxSizing: 'border-box',
-        fontFamily: "'Plus Jakarta Sans', sans-serif"
+        fontFamily: "'Plus Jakarta Sans', sans-serif",
+        backgroundColor: adminTheme.bg,
+        color: adminTheme.textPrimary,
+        minHeight: '100dvh',
+        overflowX: 'hidden'
       }}
     >
       {/* HEADER SECTION */}
       <div style={{ 
         display: 'flex', 
         alignItems: 'center', 
-        justifyContent: 'center', 
+        justifyContent: 'space-between', 
         width: '100%', 
-        position: 'relative', 
-        marginBottom: '16px',
-        minHeight: '32px'
+        marginBottom: '20px',
+        padding: '0 4px'
       }}>
         <button 
           onClick={handleBack} 
           style={{ 
-            position: 'absolute',
-            left: '2px',
-            background: 'rgba(255, 255, 255, 0.9)', 
-            border: '1px solid rgba(197, 160, 89, 0.2)', 
+            background: 'rgba(255, 255, 255, 0.08)', 
+            border: '1px solid rgba(197, 160, 89, 0.3)', 
             cursor: 'pointer', 
             display: 'flex', 
             alignItems: 'center', 
-            gap: '2px', 
-            color: activeTheme.text, 
-            fontSize: 'var(--font-caption)', 
-            fontWeight: '600', 
-            padding: '7px 12px',  
+            gap: '6px', 
+            color: adminTheme.textPrimary, 
+            fontSize: '12px', 
+            fontWeight: '700', 
+            padding: '6px 8px',  
             borderRadius: '12px', 
-            zIndex: 1,
-            boxShadow: '0 2px 8px rgba(0,0,0,0.02)'
+            boxShadow: '0 2px 8px rgba(0,0,0,0.2)'
           }}
         >
-          <ArrowLeft size={14}/> Home
+          <ArrowLeft size={14}/> Storefront
         </button>
 
         <h2 style={{ 
-          position: 'absolute', 
-          left: 0, 
-          right: 0, 
-          textAlign: 'center', 
-          fontFamily: "sans-serif",
-          fontSize: 'var(--font-h2)', 
-          color: '#FF5958', 
+          fontFamily: "'Cormorant Garamond', serif",
+          fontSize: '20px', 
+          color: adminTheme.brandGold, 
           margin: 0, 
-          fontWeight: '600', 
-          letterSpacing: '0.5px', 
-          textTransform: 'uppercase', 
-          pointerEvents: 'none' 
+          fontWeight: '700', 
+          letterSpacing: '1px', 
+          textTransform: 'uppercase' 
         }}>
-          CUSTOMERS ({filteredCustomers.length})
+          Admin
         </h2>
+
+        <div style={{ display: 'flex', gap: '8px' }}>
+          <button 
+            onClick={exportToCSV}
+            title="Export CSV"
+            style={{ 
+              background: 'rgba(197, 160, 89, 0.15)', 
+              border: '1px solid rgba(197, 160, 89, 0.4)', 
+              cursor: 'pointer', 
+              display: 'flex', 
+              alignItems: 'center', 
+              justifyContent: 'center', 
+              color: adminTheme.brandGold, 
+              padding: '8px',  
+              borderRadius: '12px'
+            }}
+          >
+            <Download size={14}/>
+          </button>
+          <button 
+            onClick={handleLogout}
+            title="Lock Session"
+            style={{ 
+              background: 'rgba(255, 89, 88, 0.15)', 
+              border: '1px solid rgba(255, 89, 88, 0.4)', 
+              cursor: 'pointer', 
+              display: 'flex', 
+              alignItems: 'center', 
+              justifyContent: 'center', 
+              color: '#FF5958', 
+              padding: '8px',  
+              borderRadius: '12px'
+            }}
+          >
+            <ShieldAlert size={14}/>
+          </button>
+        </div>
       </div>
 
+      {/* HIGH LEVEL STATS SUMMARY BAR */}
+      {!isLoading && !selectedCustomer && (
+        <div style={{ 
+          display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px', marginBottom: '20px' 
+        }}>
+          <div style={{ background: adminTheme.cardBg, border: adminTheme.cardBorder, borderRadius: '14px', padding: '14px', textAlign: 'center' }}>
+            <span style={{ fontSize: '10px', color: adminTheme.textSecondary, fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Total Records</span>
+            <div style={{ fontSize: '18px', fontWeight: '800', color: adminTheme.brandGold, marginTop: '4px' }}>{customersData.length}</div>
+          </div>
+          <div style={{ background: adminTheme.cardBg, border: adminTheme.cardBorder, borderRadius: '14px', padding: '14px', textAlign: 'center' }}>
+            <span style={{ fontSize: '10px', color: adminTheme.textSecondary, fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Total Revenue</span>
+            <div style={{ fontSize: '18px', fontWeight: '800', color: '#34D399', marginTop: '4px' }}>₹{totalRevenue.toLocaleString()}</div>
+          </div>
+          <div style={{ background: adminTheme.cardBg, border: adminTheme.cardBorder, borderRadius: '14px', padding: '14px', textAlign: 'center' }}>
+            <span style={{ fontSize: '10px', color: adminTheme.textSecondary, fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Total Orders</span>
+            <div style={{ fontSize: '18px', fontWeight: '800', color: '#60A5FA', marginTop: '4px' }}>{totalOrdersCount}</div>
+          </div>
+        </div>
+      )}
+
       {isLoading ? (
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '80px 0', gap: '14px' }}>
-          <Loader2 size={34} className="animate-spin" color={activeTheme.brand} />
-          <p style={{ fontSize: 'var(--font-body)', color: '#78716C', fontWeight: '600', letterSpacing: '0.3px' }}>Syncing elite customer records...</p>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '100px 0', gap: '14px' }}>
+          <Loader2 size={36} className="animate-spin" color={adminTheme.brandGold} />
+          <p style={{ fontSize: '13px', color: adminTheme.textSecondary, fontWeight: '600', letterSpacing: '0.5px' }}>Synchronizing secure customer vault...</p>
         </div>
       ) : selectedCustomer ? (
         
         /* ==========================================================================
-           2. DETAILED CUSTOMER CONTAINER
+           DETAILED CUSTOMER VIEW
            ========================================================================== */
         <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', width: '100%' }}>
           <button 
             onClick={() => setSelectedCustomer(null)}
             style={{
               alignSelf: 'flex-start', 
-              background: 'rgba(197, 160, 89, 0.12)', 
-              border: '1px solid rgba(197, 160, 89, 0.2)',
+              background: adminTheme.cardBg, 
+              border: adminTheme.cardBorder,
               cursor: 'pointer', 
               display: 'inline-flex', 
               alignItems: 'center', 
-              gap: '4px', 
-              color: activeTheme.text,
-              fontSize: 'var(--font-caption)', 
-              fontWeight: '600', 
-              padding: '6px 10px', 
+              gap: '6px', 
+              color: adminTheme.brandGold,
+              fontSize: '12px', 
+              fontWeight: '700', 
+              padding: '8px 14px', 
               borderRadius: '12px', 
-              boxShadow: '0 2px 8px rgba(0,0,0,0.02)',
-              marginLeft: '2px' 
+              boxShadow: '0 2px 8px rgba(0,0,0,0.2)'
             }}
           >
-            <ArrowLeft size={14} /> Directory
+            <ArrowLeft size={14} /> Back to Directory
           </button>
 
           {(() => {
             const tierStyle = getTierStyles(selectedCustomer.tier);
             const milestone = getMilestoneInfo(selectedCustomer.loyaltyScore, selectedCustomer.tier);
-            const TierIconComponent = tierStyle.icon;
-            
             const nextTierStyle = getTierStyles(milestone.nextTierName);
 
             return (
               <div style={{ 
-                background: 'linear-gradient(135deg, #FFFDF9 0%, #FAF4EB 100%)',
-                border: '1px solid rgba(197, 160, 89, 0.45)', 
-                boxShadow: '0 12px 32px rgba(44, 34, 30, 0.08)',
-                borderRadius: activeTheme.radius, 
-                padding: 'clamp(16px, 4vw, 20px)', 
+                background: adminTheme.cardBg,
+                border: adminTheme.cardBorder, 
+                boxShadow: '0 16px 40px rgba(0, 0, 0, 0.4)',
+                borderRadius: adminTheme.radius, 
+                padding: '20px', 
                 boxSizing: 'border-box',
                 display: 'flex', 
                 flexDirection: 'column', 
@@ -529,40 +678,36 @@ export default function AdminCustomerDashboard({ theme = {}, onBack, setView }) 
                 width: '100%'
               }}>
                 <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '12px', width: '100%' }}>
-                  
                   <div style={{ display: 'flex', alignItems: 'flex-start', gap: '14px', flex: '1 1 auto', minWidth: 0 }}>
                     <div style={{ 
-                      backgroundColor: tierStyle.bg, 
-                      border: `1px solid ${tierStyle.border}`,
-                      width: '44px', 
-                      height: '44px', 
+                      border: `1px dashed ${tierStyle.border}`,
+                      width: '45px', 
+                      height: '45px', 
                       borderRadius: '14px', 
                       display: 'flex', 
                       alignItems: 'center', 
                       justifyContent: 'center', 
                       flexShrink: 0  
                     }}>
-                      <User size={30} color={tierStyle.accentColor} />
+                      <User size={40} color={tierStyle.accentColor} />
                     </div>
 
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', flex: 1, minWidth: 0, textAlign: 'left' }}>
-                      <h3 style={{ margin: 0, color: activeTheme.text, fontSize: 'var(--font-h2)', fontWeight: '700', lineHeight: '1.25', wordBreak: 'break-word' }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', flex: 1, minWidth: 0 }}>
+                      <h3 style={{ margin: 0, color: adminTheme.textPrimary, fontSize: '18px', fontWeight: '700', lineHeight: '1.3', wordBreak: 'break-word' }}>
                         {selectedCustomer.name}
                       </h3>
-                      <p style={{ margin: 0, color: '#78716C', fontSize: 'var(--font-caption)', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      <p style={{ margin: 0, color: adminTheme.textSecondary, fontSize: '12px', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '6px' }}>
                         <Phone size={12} color={tierStyle.accentColor} /> {selectedCustomer.phone}
                       </p>
                       {selectedCustomer.custCode && (
                         <div style={{ 
-                          fontSize: 'var(--font-caption)', 
+                          fontSize: '11px', 
                           fontWeight: '700', 
-                          color: '#78716C', 
+                          color: adminTheme.brandGold, 
                           fontFamily: 'monospace, sans-serif', 
-                          letterSpacing: '0.2px', 
+                          letterSpacing: '0.3px', 
                           marginTop: '2px',
-                          wordBreak: 'break-all',
-                          whiteSpace: 'normal',
-                          lineHeight: '1.4'
+                          wordBreak: 'break-all'
                         }}>
                           {selectedCustomer.custCode}
                         </div>
@@ -573,16 +718,14 @@ export default function AdminCustomerDashboard({ theme = {}, onBack, setView }) 
                   <div style={{ 
                     background: tierStyle.badgeBg, 
                     color: tierStyle.badgeText,
-                    padding: '4px 10px', 
+                    padding: '6px 12px', 
                     borderRadius: '10px', 
-                    marginTop: '40px',
-                    marginRight: '0px',
-                    fontSize: 'var(--font-caption)', 
+                    fontSize: '11px', 
                     fontWeight: '800',
                     letterSpacing: '0.5px', 
                     textTransform: 'uppercase', 
                     flexShrink: 0, 
-                    boxShadow: '0 4px 10px rgba(0,0,0,0.1)', 
+                    boxShadow: '0 4px 12px rgba(0,0,0,0.3)', 
                     display: 'flex', 
                     alignItems: 'center', 
                     gap: '6px' 
@@ -593,10 +736,10 @@ export default function AdminCustomerDashboard({ theme = {}, onBack, setView }) 
 
                 {/* LOYALTY SECTION */}
                 <div style={{ 
-                  background: 'linear-gradient(135deg, #FFFFFF 0%, #FAF6ED 100%)',
-                  border: `1.5px solid ${tierStyle.accentColor}40`, 
-                  borderRadius: '16px', 
-                  padding: '14px 16px', 
+                  background: '#121110',
+                  border: `1px solid ${tierStyle.accentColor}40`, 
+                  borderRadius: '14px', 
+                  padding: '16px', 
                   display: 'flex', 
                   flexDirection: 'column', 
                   gap: '12px', 
@@ -605,25 +748,25 @@ export default function AdminCustomerDashboard({ theme = {}, onBack, setView }) 
                 }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '10px', minWidth: 0 }}>
-                      <div style={{ borderRadius: '12px', padding: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                        <Medal size={30} color={tierStyle.accentColor} />
+                      <div style={{ borderRadius: '10px', padding: '6px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <Medal size={24} color={tierStyle.accentColor} />
                       </div>
-                      <div style={{ minWidth: 0 }}>
-                        <span style={{ fontSize: 'clamp(9px, 2.5vw, 10.5px)', fontWeight: '800', color: tierStyle.accentColor, textTransform: 'uppercase', letterSpacing: '0.9px', display: 'block', overflow: 'hidden', textOverflow: 'ellipsis' }}>Loyalty Quest</span>
-                        <span style={{ fontSize: 'var(--font-caption)', fontWeight: '700', color: tierStyle.accentColor }}>{selectedCustomer.tier} Status</span>
+                      <div>
+                        <span style={{ fontSize: '10px', fontWeight: '800', color: tierStyle.accentColor, textTransform: 'uppercase', letterSpacing: '0.9px', display: 'block' }}>Loyalty Quest</span>
+                        <span style={{ fontSize: '12px', fontWeight: '700', color: '#F9F6EE' }}>{selectedCustomer.tier} Status</span>
                       </div>
                     </div>
-                    <div style={{ textAlign: 'right', flexShrink: 0 }}>
-                      <span style={{ fontSize: 'clamp(18px, 5vw, 24px)', fontWeight: '900', color: tierStyle.accentColor }}>{selectedCustomer.loyaltyScore}</span>
-                      <span style={{ fontSize: 'var(--font-caption)', fontWeight: '700', color: tierStyle.accentColor, marginLeft: '4px', textTransform: 'uppercase' }}>Pts</span>
+                    <div style={{ textAlign: 'right' }}>
+                      <span style={{ fontSize: '20px', fontWeight: '900', color: tierStyle.accentColor }}>{selectedCustomer.loyaltyScore}</span>
+                      <span style={{ fontSize: '11px', fontWeight: '700', color: adminTheme.textSecondary, marginLeft: '4px', textTransform: 'uppercase' }}>Pts</span>
                     </div>
                   </div>
 
-                  <div style={{ width: '100%', height: '10px', backgroundColor: 'rgba(197, 160, 89, 0.15)', borderRadius: '6px', overflow: 'hidden', border: '1px solid rgba(197, 160, 89, 0.3)', padding: '1px' }}>
-                    <div style={{ height: '100%', width: `${milestone.progressPercent}%`, background: tierStyle.progressFill, borderRadius: '5px', boxShadow: `0 0 8px ${tierStyle.accentColor}`, transition: 'width 0.8s ease' }} />
+                  <div style={{ width: '100%', height: '8px', backgroundColor: 'rgba(255, 255, 255, 0.08)', borderRadius: '4px', overflow: 'hidden', border: '1px solid rgba(255, 255, 255, 0.1)', padding: '1px' }}>
+                    <div style={{ height: '100%', width: `${milestone.progressPercent}%`, background: tierStyle.progressFill, borderRadius: '3px', transition: 'width 0.8s ease' }} />
                   </div>
 
-                  <div style={{ fontSize: 'var(--font-caption)', color: tierStyle.accentColor, fontWeight: '600', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <div style={{ fontSize: '12px', color: adminTheme.textSecondary, fontWeight: '600', display: 'flex', alignItems: 'center', gap: '6px' }}>
                     <Zap size={14} color={tierStyle.accentColor} fill={tierStyle.accentColor} />
                     {milestone.isMax ? (
                       <span style={{ color: tierStyle.accentColor, fontWeight: '800' }}>👑 Maximum Elite Tier Achieved!</span>
@@ -635,47 +778,48 @@ export default function AdminCustomerDashboard({ theme = {}, onBack, setView }) 
 
                 {/* STATS GRID */}
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
-                  <div style={{ background: '#FFFFFF', border: '1px solid rgba(197, 160, 89, 0.4)', padding: '14px 16px', borderRadius: '16px', display: 'flex', flexDirection: 'column', justifyContent: 'center', boxSizing: 'border-box' }}>
-                    <span style={{ fontSize: 'clamp(9px, 2.5vw, 11px)', fontWeight: '800', color: '#78716C', textTransform: 'uppercase', letterSpacing: '0.8px' }}>Lifetime Spend</span>
-                    <div style={{ fontSize: 'clamp(16px, 4.5vw, 20px)', fontWeight: '600', color: activeTheme.text, marginTop: '4px' }}>₹{selectedCustomer.totalSpent.toLocaleString()}</div>
+                  <div style={{ background: '#121110', border: '1px solid rgba(197, 160, 89, 0.25)', padding: '14px 16px', borderRadius: '14px', display: 'flex', flexDirection: 'column', justifyContent: 'center', boxSizing: 'border-box' }}>
+                    <span style={{ fontSize: '10px', fontWeight: '800', color: adminTheme.textSecondary, textTransform: 'uppercase', letterSpacing: '0.8px' }}>Lifetime Spend</span>
+                    <div style={{ fontSize: '18px', fontWeight: '800', color: '#34D399', marginTop: '4px' }}>₹{selectedCustomer.totalSpent.toLocaleString()}</div>
                   </div>
-                  <div style={{ background: '#FFFFFF', border: '1px solid rgba(197, 160, 89, 0.4)', padding: '14px 16px', borderRadius: '16px', display: 'flex', flexDirection: 'column', justifyContent: 'center', boxSizing: 'border-box' }}>
-                    <span style={{ fontSize: 'clamp(9px, 2.5vw, 11px)', fontWeight: '800', color: '#78716C', textTransform: 'uppercase', letterSpacing: '0.8px' }}>Highest Order</span>
-                    <div style={{ fontSize: 'clamp(16px, 4.5vw, 20px)', fontWeight: '600', color: activeTheme.text, marginTop: '4px' }}>₹{selectedCustomer.highestOrder.toLocaleString()}</div>
+                  <div style={{ background: '#121110', border: '1px solid rgba(197, 160, 89, 0.25)', padding: '14px 16px', borderRadius: '14px', display: 'flex', flexDirection: 'column', justifyContent: 'center', boxSizing: 'border-box' }}>
+                    <span style={{ fontSize: '10px', fontWeight: '800', color: adminTheme.textSecondary, textTransform: 'uppercase', letterSpacing: '0.8px' }}>Highest Order</span>
+                    <div style={{ fontSize: '18px', fontWeight: '800', color: '#60A5FA', marginTop: '4px' }}>₹{selectedCustomer.highestOrder.toLocaleString()}</div>
                   </div>
                 </div>
               </div>
             );
           })()}
 
-          <h3 style={{ margin: '8px 0 0 2px', color: activeTheme.text, fontSize: 'var(--font-body)', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.6px', textAlign: 'left' }}>
-            Order History ({selectedCustomer.orders.length})
+          <h3 style={{ margin: '8px 0 0 2px', color: adminTheme.brandGold, fontSize: '13px', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.8px', textAlign: 'left' }}>
+            Order Ledger History ({selectedCustomer.orders.length})
           </h3>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', width: '100%' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', width: '100%' }}>
             {selectedCustomer.orders.map((ord, i) => {
               const isPaid = ord.status.toLowerCase() === 'paid';
               return (
                 <div key={i} style={{ 
                   display: 'flex', justifyContent: 'space-between', alignItems: 'center', 
-                  border: '1px solid rgba(197, 160, 89, 0.4)', borderRadius: activeTheme.radius,            
-                  background: 'linear-gradient(135deg, #FFFDF9 0%, #FAF4EB 100%)', 
-                  padding: 'clamp(14px, 3vw, 18px)',                           
-                  boxShadow: '0 6px 20px rgba(44, 34, 30, 0.05)', boxSizing: 'border-box', width: '100%', gap: '12px'
+                  border: adminTheme.cardBorder, borderRadius: '14px',            
+                  background: adminTheme.cardBg, 
+                  padding: '14px 16px',                           
+                  boxSizing: 'border-box', width: '100%', gap: '12px'
                 }}>
                   <div style={{ flex: 1, textAlign: 'left', minWidth: 0 }}>
-                    <div style={{ fontWeight: '700', fontSize: 'var(--font-body)', color: activeTheme.text, wordBreak: 'break-all' }}>{ord.orderNo}</div>
-                    <div style={{ fontSize: 'var(--font-caption)', color: activeTheme.brand, fontWeight: '700', marginTop: '3px', whiteSpace: 'normal' }}>{ord.item}</div>
-                    <div style={{ fontSize: 'var(--font-caption)', color: '#78716C', fontWeight: '600', marginTop: '6px', display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
+                    <div style={{ fontWeight: '700', fontSize: '13px', color: adminTheme.textPrimary, wordBreak: 'break-all' }}>{ord.orderNo}</div>
+                    <div style={{ fontSize: '12px', color: adminTheme.brandGold, fontWeight: '700', marginTop: '3px' }}>{ord.item}</div>
+                    <div style={{ fontSize: '11px', color: adminTheme.textSecondary, fontWeight: '600', marginTop: '6px', display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
                       <Calendar size={12} /> {ord.date} • Qty: {ord.qty}
                     </div>
                   </div>
                   <div style={{ textAlign: 'right', flexShrink: 0 }}>
-                    <div style={{ fontWeight: '800', fontSize: 'var(--font-body)', color: activeTheme.text, marginBottom: '6px' }}>₹{ord.total}</div>
+                    <div style={{ fontWeight: '800', fontSize: '14px', color: '#34D399', marginBottom: '6px' }}>₹{ord.total}</div>
                     <span style={{ 
-                      fontSize: 'clamp(9px, 2.5vw, 11px)', fontWeight: '800', color: isPaid ? '#059669' : '#DC2626',
-                      backgroundColor: isPaid ? '#ECFDF5' : 'rgba(239, 68, 68, 0.1)',
-                      padding: '4px 10px', borderRadius: '8px', textTransform: 'uppercase', display: 'inline-block'
+                      fontSize: '10px', fontWeight: '800', color: isPaid ? '#34D399' : '#F87171',
+                      backgroundColor: isPaid ? 'rgba(52, 211, 153, 0.1)' : 'rgba(248, 113, 113, 0.1)',
+                      padding: '4px 8px', borderRadius: '6px', textTransform: 'uppercase', display: 'inline-block',
+                      border: isPaid ? '1px solid rgba(52, 211, 153, 0.3)' : '1px solid rgba(248, 113, 113, 0.3)'
                     }}>
                       {ord.status}
                     </span>
@@ -688,51 +832,50 @@ export default function AdminCustomerDashboard({ theme = {}, onBack, setView }) 
       ) : (
         
         /* ==========================================================================
-           1. DIRECTORY LIST CONTAINER
+           DIRECTORY LIST CONTAINER
            ========================================================================== */
         <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', width: '100%' }}>
           
           {/* SEARCH & SORT HEADER ROW */}
           <div style={{ display: 'flex', gap: '10px', width: '100%', boxSizing: 'border-box' }}>
             <div style={{ position: 'relative', flex: 1, minWidth: 0 }}>
-              <Search size={16} color="#78716C" style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)' }} />
               <input 
                 type="text"
-                placeholder="Search name, phone..."
+                placeholder="Search name/phone"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 style={{
-                  width: '100%', padding: '13px 14px 13px 42px', borderRadius: '14px',              
-                  border: '1px solid rgba(197, 160, 89, 0.45)', backgroundColor: '#FFFFFF',                    
-                  fontSize: 'var(--font-body)', outline: 'none', color: activeTheme.text, fontWeight: '600',
-                  boxShadow: '0 4px 16px rgba(0,0,0,0.02)', boxSizing: 'border-box'
+                  width: '100%', padding: '12px 14px 12px 8px', borderRadius: '14px',              
+                  border: adminTheme.cardBorder, backgroundColor: adminTheme.cardBg,                    
+                  fontSize: '14px', outline: 'none', color: adminTheme.textPrimary, fontWeight: '400',
+                  boxSizing: 'border-box'
                 }}
               />
             </div>
 
-            <div style={{ position: 'relative', width: 'clamp(140px, 35vw, 170px)', flexShrink: 0 }}>
+            <div style={{ position: 'relative', width: '150px', flexShrink: 0 }}>
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
                 style={{
-                  width: '100%', padding: '13px 12px', borderRadius: '14px',
-                  border: '1px solid rgba(197, 160, 89, 0.45)', backgroundColor: '#FFFFFF',
-                  color: activeTheme.text, fontSize: 'var(--font-caption)', fontWeight: '700',
+                  width: '100%', padding: '12px 18px', borderRadius: '14px',
+                  border: adminTheme.cardBorder, backgroundColor: adminTheme.cardBg,
+                  color: adminTheme.textPrimary, fontSize: '11px', fontWeight: '500',
                   outline: 'none', appearance: 'none', cursor: 'pointer',
-                  boxShadow: '0 4px 16px rgba(0,0,0,0.02)', boxSizing: 'border-box'
+                  boxSizing: 'border-box'
                 }}
               >
-                <option value="orders_desc">Most Orders</option>
-                <option value="spend_desc">Highest Spend</option>
-                <option value="highest_order_desc">Highest Order</option>
-                <option value="score_desc">Loyalty Score</option>
+                <option value="orders_desc" style={{ background: '#1C1A17' }}>Most Orders</option>
+                <option value="spend_desc" style={{ background: '#1C1A17' }}>Highest Spend</option>
+                <option value="highest_order_desc" style={{ background: '#1C1A17' }}>Highest Order</option>
+                <option value="score_desc" style={{ background: '#1C1A17' }}>Loyalty Score</option>
               </select>
-              <ArrowUpDown size={14} color="#78716C" style={{ position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }} />
+              <ArrowUpDown size={14} color={adminTheme.textSecondary} style={{ position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }} />
             </div>
           </div>
 
-          {/* TIER FILTER PILLS (Icon Badges + All Tiers Text) */}
-          <div style={{ display: 'flex', gap: '8px', overflowX: 'auto', paddingBottom: '4px', scrollbarWidth: 'none', alignItems: 'center' }}>
+          {/* TIER FILTER PILLS */}
+          <div style={{ display: 'flex', gap: '18px', overflowX: 'auto', paddingBottom: '4px', scrollbarWidth: 'none', alignItems: 'center' }}>
             {[
               { value: 'ALL', label: 'All Tiers', isText: true },
               { value: 'PLATINUM', label: 'Platinum', icon: Medal },
@@ -746,30 +889,29 @@ export default function AdminCustomerDashboard({ theme = {}, onBack, setView }) 
               let pillStyle = {};
               if (tier.isText) {
                 pillStyle = {
-                  padding: '9px 16px',
-                  height: '40px',
+                  padding: '8px 16px',
+                  height: '38px',
                   boxSizing: 'border-box',
                   display: 'flex',
                   alignItems: 'center',
-                  border: active ? '1px solid #FF5958' : '1px solid rgba(197, 160, 89, 0.4)',
-                  background: active ? '#FF5958' : '#FFFFFF',
-                  color: active ? '#FFFFFF' : '#78716C',
-                  boxShadow: active ? '0 4px 12px rgba(255, 89, 88, 0.3)' : '0 2px 6px rgba(0,0,0,0.02)'
+                  border: active ? `1px solid ${adminTheme.brandGold}` : adminTheme.cardBorder,
+                  background: active ? adminTheme.brandGold : adminTheme.cardBg,
+                  color: active ? '#121110' : adminTheme.textSecondary,
+                  boxShadow: active ? '0 4px 12px rgba(197, 160, 89, 0.3)' : 'none'
                 };
               } else {
                 const ts = getTierStyles(tier.value);
                 pillStyle = {
                   padding: '8px',
-                  width: '40px',
-                  height: '40px',
+                  width: '38px',
+                  height: '38px',
                   boxSizing: 'border-box',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  border: active ? `1.5px solid ${ts.accentColor}` : `1px solid ${ts.border}`,
+                  border: active ? `1.5px solid ${ts.accentColor}` : ts.border,
                   background: active ? ts.badgeBg : ts.bg,
-                  color: active ? '#FFFFFF' : ts.accentColor,
-                  boxShadow: active ? ts.glow : '0 2px 6px rgba(0,0,0,0.02)'
+                  color: active ? '#FFFFFF' : ts.accentColor
                 };
               }
 
@@ -782,25 +924,25 @@ export default function AdminCustomerDashboard({ theme = {}, onBack, setView }) 
                   title={tier.label}
                   style={{
                     borderRadius: '12px',
-                    fontSize: 'var(--font-caption)', 
+                    fontSize: '12px', 
                     fontWeight: '800', 
                     cursor: 'pointer', 
                     whiteSpace: 'nowrap',
                     transition: 'all 0.2s ease', 
-                    flexShrink: 0,
+                    flexShrink: '0',
                     ...pillStyle
                   }}
                 >
-                  {tier.isText ? tier.label : <IconComponent size={20} color={active ? '#FFFFFF' : getTierStyles(tier.value).accentColor} />}
+                  {tier.isText ? tier.label : <IconComponent size={18} color={active ? '#FFFFFF' : getTierStyles(tier.value).accentColor} />}
                 </button>
               );
             })}
           </div>
 
           {/* CUSTOMER LIST CARDS */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', width: '100%' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', width: '100%' }}>
             {filteredCustomers.length === 0 ? (
-              <div style={{ textAlign: 'center', padding: '50px 20px', color: '#78716C', fontSize: 'var(--font-body)', fontWeight: '600' }}>
+              <div style={{ textAlign: 'center', padding: '50px 20px', color: adminTheme.textSecondary, fontSize: '14px', fontWeight: '600' }}>
                 No customer records found matching your filter criteria.
               </div>
             ) : (
@@ -816,52 +958,51 @@ export default function AdminCustomerDashboard({ theme = {}, onBack, setView }) 
                       display: 'flex', 
                       alignItems: 'center', 
                       justifyContent: 'space-between',
-                      border: '1px solid rgba(197, 160, 89, 0.4)', 
-                      borderRadius: activeTheme.radius,            
-                      background: 'linear-gradient(135deg, #FFFDF9 0%, #FAF4EB 100%)',                       
-                      padding: 'clamp(10px, 3vw, 18px)', 
-                      cursor: 'pointer', 
-                      boxShadow: '0 8px 24px rgba(44, 34, 30, 0.05)',      
-                      gap: '14px', 
+                      border: adminTheme.cardBorder, 
+                      borderRadius: '14px',            
+                      background: adminTheme.cardBg,                       
+                      padding: '8px 12px', 
+                      cursor: 'pointer',       
+                      gap: '6px', 
                       boxSizing: 'border-box', 
                       width: '100%', 
-                      transition: 'transform 0.2s ease, box-shadow 0.2s ease'
+                      transition: 'transform 0.15s ease, border-color 0.15s ease'
                     }}
                   >
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '14px', flex: 1, minWidth: 0, textAlign: 'left' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flex: 1, minWidth: 0, textAlign: 'left' }}>
                       <div style={{ position: 'relative', flexShrink: 0 }}>
                         <div style={{ 
                           backgroundColor: tierStyle.bg, 
                           border: `1px solid ${tierStyle.border}`,
-                          width: '48px', 
-                          height: '48px', 
-                          borderRadius: '14px', 
+                          width: '40px', 
+                          height: '40px', 
+                          borderRadius: '12px', 
                           display: 'flex', 
                           alignItems: 'center', 
                           justifyContent: 'center' 
                         }}>
-                          <User size={30} color={tierStyle.accentColor} />
+                          <User size={24} color={tierStyle.accentColor} />
                         </div>
                         <div 
                           title={`${customer.tier} Tier`}
                           style={{
                             position: 'absolute', bottom: '-4px', right: '-4px',
                             background: tierStyle.badgeBg, borderRadius: '50%',
-                            width: '20px', height: '20px', display: 'flex',
+                            width: '18px', height: '18px', display: 'flex',
                             alignItems: 'center', justifyContent: 'center',
-                            border: '1px solid #FFFDF9', boxShadow: '0 2px 6px rgba(0,0,0,0.18)'
+                            border: '1px solid #1C1A17'
                           }}
                         >
-                          <TierIconComponent size={15} color="#FFFFFF" />
+                          <TierIconComponent size={12} color="#FFFFFF" />
                         </div>
                       </div>
 
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', flex: 1, minWidth: 0, textAlign: 'left' }}>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '3px', flex: 1, minWidth: 0, textAlign: 'left' }}>
                         <h4 style={{ 
                           margin: 0, 
-                          color: activeTheme.text, 
-                          fontSize: 'var(--font-h2)', 
-                          fontWeight: '500', 
+                          color: adminTheme.textPrimary, 
+                          fontSize: '14px', 
+                          fontWeight: '700', 
                           whiteSpace: 'normal', 
                           wordBreak: 'break-word', 
                           lineHeight: '1.3' 
@@ -869,18 +1010,19 @@ export default function AdminCustomerDashboard({ theme = {}, onBack, setView }) 
                           {customer.name}
                         </h4>
 
-                        <div style={{ fontSize: 'var(--font-caption)', color: '#78716C', fontWeight: '600' }}>
+                        <div style={{ fontSize: '11px', color: adminTheme.textSecondary, fontWeight: '600' }}>
                           {customer.phone}
                         </div>
                       </div>
                     </div>
 
-                    <div style={{ display: 'flex', alignItems: 'right', gap: '10px', flexShrink: 0 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexShrink: 0 }}>
                       <div style={{ 
-                        fontSize: 'clamp(11.5px, 2.5vw, 11px)', 
-                        fontWeight: '600', 
-                        color: activeTheme.brand, 
+                        fontSize: '12px', 
+                        fontWeight: '700', 
+                        color: adminTheme.brandGold, 
                         letterSpacing: '0.3px',
+                        textAlign: 'right'
                       }}>
                         {sortBy === 'orders_desc' && `${customer.ordersCount} ${customer.ordersCount === 1 ? 'Order' : 'Orders'}`}
                         {sortBy === 'spend_desc' && `₹${customer.totalSpent.toLocaleString()}`}
@@ -888,7 +1030,7 @@ export default function AdminCustomerDashboard({ theme = {}, onBack, setView }) 
                         {sortBy === 'score_desc' && `${customer.loyaltyScore} Pts`}
                       </div>
 
-                      <ChevronRight size={14} color="#78716C" style={{ opacity: 0.8 }} />
+                      <ChevronRight size={14} color={adminTheme.textSecondary} />
                     </div>
 
                   </div>

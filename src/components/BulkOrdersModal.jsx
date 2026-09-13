@@ -154,11 +154,10 @@ export default function BulkOrdersModal({ isOpen, onClose }) {
     borderRadius: '10px',
     border: errors.includes(fieldName) ? '1.5px solid #FF5958' : '1px solid rgba(197, 160, 89, 0.5)', 
     backgroundColor: errors.includes(fieldName) ? 'rgba(255, 89, 88, 0.03)' : '#FFF',
-    fontSize: 'var(--font-body)', 
+    fontSize: '14px', 
     boxSizing: 'border-box', 
     outline: 'none', 
     color: '#1A1816',
-    transition: 'all 0.2s ease',
     display: 'flex',
     alignItems: 'center',
     ...extraStyles
@@ -167,7 +166,6 @@ export default function BulkOrdersModal({ isOpen, onClose }) {
   const modalContent = (
     <div 
       onClick={onClose}
-      onTouchMove={(e) => e.preventDefault()}
       style={{
         position: 'fixed',
         inset: 0,
@@ -180,7 +178,7 @@ export default function BulkOrdersModal({ isOpen, onClose }) {
         alignItems: 'flex-end',
         justifyContent: 'center',
         zIndex: 99999, 
-        padding: '20px',
+        padding: '16px',
         boxSizing: 'border-box',
         cursor: 'pointer',
         fontFamily: "'Plus Jakarta Sans', sans-serif"
@@ -202,14 +200,12 @@ export default function BulkOrdersModal({ isOpen, onClose }) {
         onClick={(e) => e.stopPropagation()}
         style={{
           background: 'linear-gradient(135deg, #FFFDF9 0%, #FAF4EB 100%)',
-          borderTopLeftRadius: 'clamp(20px, 5vw, 28px)',
-          borderTopRightRadius: 'clamp(20px, 5vw, 28px)',
-          borderBottomLeftRadius: '0px',
-          borderBottomRightRadius: '0px',
-          padding: 'clamp(16px, 4vw, 22px)',
+          borderTopLeftRadius: '28px',
+          borderTopRightRadius: '28px',
+          padding: '20px 20px 32px 20px',
           maxWidth: '520px',
           width: '100%',
-          maxHeight: '82vh',
+          maxHeight: '88vh',
           boxSizing: 'border-box',
           position: 'relative',
           boxShadow: '0 25px 50px rgba(0,0,0,0.35)',
@@ -225,28 +221,23 @@ export default function BulkOrdersModal({ isOpen, onClose }) {
           display: 'flex', 
           alignItems: 'center', 
           justifyContent: 'space-between',
-          paddingBottom: '16px',
-          marginBottom: '2px',
+          paddingBottom: '14px',
+          marginBottom: '4px',
           flexShrink: 0,
-          gap: '8px',
-          minWidth: 0
+          borderBottom: '1px solid rgba(197, 160, 89, 0.2)'
         }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', minWidth: 0 }}>
-            <Users size={18} color="#C5A059" style={{ flexShrink: 0 }} />
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <Users size={18} color="#C5A059" />
             <h3 style={{ 
               fontFamily: "'Cormorant Garamond', serif", 
-              fontSize: 'clamp(18px, 4.5vw, 22px)', 
+              fontSize: '20px', 
               fontWeight: '700', 
               color: activeTheme.brand, 
               margin: 0,
               textTransform: 'uppercase',
-              letterSpacing: '1px',
-              whiteSpace: 'nowrap',
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-              minWidth: 0
+              letterSpacing: '1px'
             }}>
-              Bulk Orders & Pricing
+              Bulk ordering
             </h3>
           </div>
           <button 
@@ -256,15 +247,13 @@ export default function BulkOrdersModal({ isOpen, onClose }) {
               background: 'rgba(197, 160, 89, 0.15)',
               border: '1px solid rgba(197, 160, 89, 0.3)',
               borderRadius: '50%',
-              width: '28px',
-              height: '28px',
+              width: '32px',
+              height: '32px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               cursor: 'pointer',
-              color: '#1A1816',
-              transition: 'all 0.2s ease',
-              flexShrink: 0
+              color: '#1A1816'
             }}
           >
             <X size={16} />
@@ -278,259 +267,230 @@ export default function BulkOrdersModal({ isOpen, onClose }) {
           gap: '12px',
           boxSizing: 'border-box',
           textAlign: 'left',
-          fontSize: 'clamp(12px, 3.5vw, 14px)',
+          fontSize: '14px',
           color: '#57534E',
           lineHeight: '1.5',
-          paddingRight: '6px',
-          minWidth: 0
+          paddingRight: '4px',
+          flex: 1,
+          minHeight: 0,
+          WebkitOverflowScrolling: 'touch'
         }}>
-          <div 
-            style={{
-              background: 'linear-gradient(135deg, #FFFDF9 0%, #FAF4EB 100%)',
-              borderRadius: '16px',
-              padding: 'clamp(14px, 4vw, 18px) clamp(16px, 4.5vw, 20px)',
-              color: activeTheme.text,
-              boxShadow: '0 8px 24px rgba(44, 34, 30, 0.06)',
-              position: 'relative',
-              overflow: 'hidden',
-              display: 'flex',
-              flexDirection: 'column',
-              boxSizing: 'border-box',
-              border: '1px dashed #C5A059'
-            }}
-          >
-            <div style={{ marginBottom: '14px', textAlign: 'left' }}>
-              <h3 style={{ margin: '0 0 4px 0', fontFamily: "'Cormorant Garamond', serif", fontSize: 'clamp(16px, 4vw, 18px)', color: '#1A1816', fontWeight: '700' }}>
-                ✦ Bespoke Catering ✦
-              </h3>
-              <p style={{ margin: 0, fontSize: 'clamp(11.5px, 3.2vw, 13px)', color: '#78716C', fontWeight: '500', lineHeight: '1.4' }}>
-                Share your event specs to submit or discuss instantly via WhatsApp.
-              </p>
+          <p style={{ margin: '4px 0 0 0', fontSize: '13px', color: '#78716C', fontWeight: '500' }}>
+            Share your event specs to submit or discuss instantly via WhatsApp.
+          </p>
+
+          <form onSubmit={submitBulkWhatsApp} style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+            <input 
+              type="text"
+              placeholder="Your Name *"
+              required
+              value={bulkData.name}
+              onChange={(e) => handleChange('name', e.target.value)}
+              style={getInputStyle('name')}
+            />
+
+            <input 
+              type="tel"
+              placeholder="Phone Number *"
+              required
+              value={bulkData.phone}
+              onChange={(e) => handleChange('phone', e.target.value)}
+              style={getInputStyle('phone')}
+            />
+
+            <div style={{ position: 'relative', width: '100%', boxSizing: 'border-box' }}>
+              <select 
+                value={bulkData.eventType}
+                onChange={(e) => handleChange('eventType', e.target.value)}
+                style={getInputStyle('eventType', { 
+                  cursor: 'pointer', 
+                  appearance: 'none', 
+                  WebkitAppearance: 'none', 
+                  paddingRight: '32px',
+                  color: bulkData.eventType ? '#1A1816' : '#9CA3AF' 
+                })}
+              >
+                <option value="" disabled style={{ color: '#9CA3AF' }}>Select Event Type *</option>
+                {eventTypeOptions.map((opt, idx) => (
+                  <option key={idx} value={opt} style={{ color: '#1A1816' }}>{opt}</option>
+                ))}
+              </select>
+              <ChevronDown size={16} color="#8A6D2B" style={{ position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }} />
             </div>
 
-            <form onSubmit={submitBulkWhatsApp} style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-              
-              {/* Name Field */}
+            {bulkData.eventType === 'Other (Type below)' && (
               <input 
                 type="text"
-                placeholder="Your Name *"
-                required
-                value={bulkData.name}
-                onChange={(e) => handleChange('name', e.target.value)}
-                style={getInputStyle('name')}
+                placeholder="Specify event type... *"
+                value={bulkData.customEventType}
+                onChange={(e) => handleChange('customEventType', e.target.value)}
+                style={getInputStyle('customEventType')}
               />
+            )}
 
-              {/* Phone Field */}
-              <input 
-                type="tel"
-                placeholder="Phone Number *"
-                required
-                value={bulkData.phone}
-                onChange={(e) => handleChange('phone', e.target.value)}
-                style={getInputStyle('phone')}
-              />
-
-              {/* Event Type Dropdown */}
-              <div style={{ position: 'relative', width: '100%', boxSizing: 'border-box' }}>
-                <select 
-                  value={bulkData.eventType}
-                  onChange={(e) => handleChange('eventType', e.target.value)}
-                  style={getInputStyle('eventType', { 
-                    cursor: 'pointer', 
-                    appearance: 'none', 
-                    WebkitAppearance: 'none', 
-                    paddingRight: '32px',
-                    color: bulkData.eventType ? '#1A1816' : '#9CA3AF' 
-                  })}
-                >
-                  <option value="" disabled style={{ color: '#9CA3AF' }}>Select Event Type *</option>
-                  {eventTypeOptions.map((opt, idx) => (
-                    <option key={idx} value={opt} style={{ color: '#1A1816' }}>{opt}</option>
-                  ))}
-                </select>
-                <ChevronDown size={16} color="#8A6D2B" style={{ position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }} />
-              </div>
-
-              {bulkData.eventType === 'Other (Type below)' && (
-                <input 
-                  type="text"
-                  placeholder="Specify event type... *"
-                  value={bulkData.customEventType}
-                  onChange={(e) => handleChange('customEventType', e.target.value)}
-                  style={getInputStyle('customEventType')}
-                />
-              )}
-
-              {/* Meal Slot Selector */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '5px', textAlign: 'left' }}>
-                <label style={{ fontSize: '10px', fontWeight: '700', color: '#8A6D2B', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-                  Meal Slot:
-                </label>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '6px' }}>
-                  {mealTimeOptions.map((slot) => {
-                    const isSelected = bulkData.mealTime === slot;
-                    return (
-                      <button
-                        key={slot}
-                        type="button"
-                        onClick={() => handleChange('mealTime', slot)}
-                        style={{
-                          background: isSelected ? 'linear-gradient(135deg, #C5A059 0%, #A3803F 100%)' : '#FFFFFF',
-                          color: isSelected ? '#FFFFFF' : '#524B47',
-                          border: '1px solid rgba(197, 160, 89, 0.5)',
-                          borderRadius: '8px', height: '38px',
-                          fontSize: '11.5px', fontWeight: '700', cursor: 'pointer',
-                          transition: 'all 0.2s ease',
-                          boxShadow: isSelected ? '0 2px 6px rgba(197, 160, 89, 0.3)' : 'none',
-                          display: 'flex', alignItems: 'center', justifyContent: 'center'
-                        }}
-                      >
-                        {slot}
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-
-              {/* Guests and Date Row */}
-              <div style={{ display: 'flex', gap: '8px', width: '100%', boxSizing: 'border-box' }}>
-                <input 
-                  type="number"
-                  placeholder="Approx. Guests *"
-                  value={bulkData.guests}
-                  onChange={(e) => handleChange('guests', e.target.value)}
-                  style={getInputStyle('guests', { flex: 1, minWidth: 0 })}
-                />
-                
-                <div style={{ flex: 1, minWidth: 0, position: 'relative' }}>
-                  <input 
-                    type={isDateFocused || bulkData.date ? 'date' : 'text'}
-                    min={getTomorrowDateString()}
-                    value={bulkData.date}
-                    onFocus={() => setIsDateFocused(true)}
-                    onBlur={() => { if (!bulkData.date) setIsDateFocused(false); }}
-                    onChange={(e) => handleChange('date', e.target.value)}
-                    style={getInputStyle('date', { 
-                      width: '100%',
-                      cursor: 'pointer',
-                      color: bulkData.date ? '#1A1816' : 'transparent'
-                    })}
-                  />
-                  {!bulkData.date && (
-                    <div 
-                      onClick={(e) => {
-                        const input = e.currentTarget.nextElementSibling;
-                        if (input && typeof input.showPicker === 'function') {
-                          input.showPicker();
-                        }
-                      }}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '5px', textAlign: 'left' }}>
+              <label style={{ fontSize: '10px', fontWeight: '700', color: '#8A6D2B', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                Meal Slot:
+              </label>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '6px' }}>
+                {mealTimeOptions.map((slot) => {
+                  const isSelected = bulkData.mealTime === slot;
+                  return (
+                    <button
+                      key={slot}
+                      type="button"
+                      onClick={() => handleChange('mealTime', slot)}
                       style={{
-                        position: 'absolute',
-                        left: '14px',
-                        top: '50%',
-                        transform: 'translateY(-50%)',
-                        color: '#9CA3AF',
-                        fontSize: 'var(--font-body)',
-                        pointerEvents: 'none',
-                        whiteSpace: 'nowrap'
+                        background: isSelected ? 'linear-gradient(135deg, #C5A059 0%, #A3803F 100%)' : '#FFFFFF',
+                        color: isSelected ? '#FFFFFF' : '#524B47',
+                        border: '1px solid rgba(197, 160, 89, 0.5)',
+                        borderRadius: '8px', height: '38px',
+                        fontSize: '11.5px', fontWeight: '700', cursor: 'pointer',
+                        boxShadow: isSelected ? '0 2px 6px rgba(197, 160, 89, 0.3)' : 'none',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center'
                       }}
                     >
-                      Date *
-                    </div>
-                  )}
-                </div>
+                      {slot}
+                    </button>
+                  );
+                })}
               </div>
+            </div>
 
-              {/* Menu Categories Selection Pills */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', textAlign: 'left', marginTop: '4px' }}>
-                <label style={{ fontSize: 'clamp(10px, 2.5vw, 11px)', fontWeight: '700', color: '#8A6D2B', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-                  Interested Menu Items / Categories:
-                </label>
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
-                  {menuOptions.map((item, idx) => {
-                    const isSelected = bulkData.selectedItems.includes(item);
-                    return (
-                      <button
-                        key={idx} 
-                        type="button" 
-                        onClick={() => toggleMenuItem(item)}
-                        style={{
-                          background: isSelected ? 'linear-gradient(135deg, #C5A059 0%, #A3803F 100%)' : '#FFFFFF',
-                          color: isSelected ? '#FFFFFF' : '#524B47',
-                          border: '1px solid rgba(197, 160, 89, 0.5)',
-                          borderRadius: '8px',
-                          padding: '6px 12px',
-                          fontSize: 'clamp(11px, 3vw, 12px)',
-                          fontWeight: '600',
-                          cursor: 'pointer',
-                          transition: 'all 0.2s ease',
-                          boxShadow: isSelected ? '0 2px 6px rgba(197, 160, 89, 0.3)' : 'none'
-                        }}
-                      >
-                        {isSelected ? '✓ ' : '+ '}{item}
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-
-              {/* Notes Field */}
-              <textarea 
-                placeholder="Any special menu items, dietary preferences or notes..."
-                rows="2"
-                value={bulkData.notes}
-                onChange={(e) => handleChange('notes', e.target.value)}
-                style={{
-                  width: '100%', 
-                  padding: '12px 14px', 
-                  borderRadius: '10px',
-                  border: '1px solid rgba(197, 160, 89, 0.5)', 
-                  backgroundColor: '#FFF',
-                  fontSize: 'clamp(12px, 3.5vw, 14px)', 
-                  boxSizing: 'border-box', 
-                  outline: 'none', 
-                  color: '#1A1816',
-                  resize: 'none', 
-                  marginTop: '4px',
-                  transition: 'all 0.2s ease'
-                }}
+            <div style={{ display: 'flex', gap: '8px', width: '100%', boxSizing: 'border-box' }}>
+              <input 
+                type="number"
+                placeholder="Approx. Guests *"
+                value={bulkData.guests}
+                onChange={(e) => handleChange('guests', e.target.value)}
+                style={getInputStyle('guests', { flex: 1, minWidth: 0 })}
               />
+              
+              <div style={{ flex: 1, minWidth: 0, position: 'relative' }}>
+                <input 
+                  type={isDateFocused || bulkData.date ? 'date' : 'text'}
+                  min={getTomorrowDateString()}
+                  value={bulkData.date}
+                  onFocus={() => setIsDateFocused(true)}
+                  onBlur={() => { if (!bulkData.date) setIsDateFocused(false); }}
+                  onChange={(e) => handleChange('date', e.target.value)}
+                  style={getInputStyle('date', { 
+                    width: '100%',
+                    cursor: 'pointer',
+                    color: bulkData.date ? '#1A1816' : 'transparent'
+                  })}
+                />
+                {!bulkData.date && (
+                  <div 
+                    onClick={(e) => {
+                      const input = e.currentTarget.nextElementSibling;
+                      if (input && typeof input.showPicker === 'function') {
+                        input.showPicker();
+                      }
+                    }}
+                    style={{
+                      position: 'absolute',
+                      left: '14px',
+                      top: '50%',
+                      transform: 'translateY(-50%)',
+                      color: '#9CA3AF',
+                      fontSize: '14px',
+                      pointerEvents: 'none',
+                      whiteSpace: 'nowrap'
+                    }}
+                  >
+                    Date *
+                  </div>
+                )}
+              </div>
+            </div>
 
-              {/* Submit Button */}
-              <button 
-                type="submit"
-                style={{
-                  background: '#25D366',
-                  color: '#FFF', 
-                  border: 'none', 
-                  borderRadius: '12px', 
-                  padding: '12px 16px',
-                  fontSize: 'clamp(13px, 3.8vw, 14.5px)', 
-                  fontWeight: '700', 
-                  cursor: 'pointer', 
-                  display: 'flex',
-                  alignItems: 'center', 
-                  justifyContent: 'center', 
-                  gap: '8px',
-                  boxShadow: '0 6px 14px rgba(37, 211, 102, 0.35)', 
-                  marginTop: '4px'
-                }}
-              >
-                <MessageSquare size={16} /> Send Inquiry via WhatsApp
-              </button>
-            </form>
-          </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', textAlign: 'left', marginTop: '4px' }}>
+              <label style={{ fontSize: '11px', fontWeight: '700', color: '#8A6D2B', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                Interested Menu Items / Categories:
+              </label>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+                {menuOptions.map((item, idx) => {
+                  const isSelected = bulkData.selectedItems.includes(item);
+                  return (
+                    <button
+                      key={idx} 
+                      type="button" 
+                      onClick={() => toggleMenuItem(item)}
+                      style={{
+                        background: isSelected ? 'linear-gradient(135deg, #C5A059 0%, #A3803F 100%)' : '#FFFFFF',
+                        color: isSelected ? '#FFFFFF' : '#524B47',
+                        border: '1px solid rgba(197, 160, 89, 0.5)',
+                        borderRadius: '8px',
+                        padding: '6px 12px',
+                        fontSize: '12px',
+                        fontWeight: '600',
+                        cursor: 'pointer',
+                        boxShadow: isSelected ? '0 2px 6px rgba(197, 160, 89, 0.3)' : 'none'
+                      }}
+                    >
+                      {isSelected ? '✓ ' : '+ '}{item}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            <textarea 
+              placeholder="Any special menu items, dietary preferences or notes..."
+              rows="2"
+              value={bulkData.notes}
+              onChange={(e) => handleChange('notes', e.target.value)}
+              style={{
+                width: '100%', 
+                padding: '12px 14px', 
+                borderRadius: '10px',
+                border: '1px solid rgba(197, 160, 89, 0.5)', 
+                backgroundColor: '#FFF',
+                fontSize: '14px', 
+                boxSizing: 'border-box', 
+                outline: 'none', 
+                color: '#1A1816',
+                resize: 'none', 
+                marginTop: '4px'
+              }}
+            />
+
+            <button 
+              type="submit"
+              style={{
+                background: '#25D366',
+                color: '#FFF', 
+                border: 'none', 
+                borderRadius: '12px', 
+                padding: '12px 16px',
+                fontSize: '14.5px', 
+                fontWeight: '700', 
+                cursor: 'pointer', 
+                display: 'flex',
+                alignItems: 'center', 
+                justifyContent: 'center', 
+                gap: '8px',
+                boxShadow: '0 6px 14px rgba(37, 211, 102, 0.35)', 
+                marginTop: '6px',
+                marginBottom: '10px',
+                width: '100%',
+                boxSizing: 'border-box'
+              }}
+            >
+              <MessageSquare size={16} /> Send Inquiry via WhatsApp
+            </button>
+          </form>
         </div>
 
-        {/* Warning Popup Modal */}
         {showWarningModal && (
           <div 
             onClick={() => setShowWarningModal(false)}
             style={{
               position: 'absolute', inset: 0, backgroundColor: 'rgba(20, 15, 12, 0.65)',
-              backdropFilter: 'blur(4px)', WebkitBackdropFilter: 'blur(0px)',
+              backdropFilter: 'blur(4px)',
               zIndex: 99999, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px',
-              borderRadius: activeTheme.radius
+              borderRadius: '28px'
             }}
           >
             <div 
@@ -539,8 +499,7 @@ export default function BulkOrdersModal({ isOpen, onClose }) {
                 background: 'linear-gradient(135deg, #FFFDF9 0%, #FAF4EB 100%)',
                 border: '1.5px solid #FF5958', borderRadius: '16px', padding: '20px',
                 maxWidth: '320px', width: '100%', boxShadow: '0 15px 35px rgba(0,0,0,0.3)',
-                textAlign: 'center', display: 'flex', flexDirection: 'column', gap: '12px',
-                animation: 'modalScaleIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards'
+                textAlign: 'center', display: 'flex', flexDirection: 'column', gap: '12px'
               }}
             >
               <div style={{ width: '40px', height: '40px', borderRadius: '50%', backgroundColor: 'rgba(255, 89, 88, 0.12)', color: '#FF5958', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto', fontSize: '18px', fontWeight: 'bold' }}>

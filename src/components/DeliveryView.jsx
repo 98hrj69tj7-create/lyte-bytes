@@ -5,7 +5,7 @@ import {
   Bike, Navigation, CheckCircle2, AlertCircle, MessageCircle, Loader2
 } from 'lucide-react';
 import PolicyModal from './PolicyModal';
-import { DeliveryPolicyModalContent, GeneralTermsModalContent, PrivacyPolicyModalContent } from './PolicyContents';
+import { DeliveryPolicyModalContent, PrivacyPolicyModalContent } from './PolicyContents';
 
 const KITCHEN_LAT = 13.0232;
 const KITCHEN_LNG = 77.6492;

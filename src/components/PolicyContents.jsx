@@ -2,7 +2,8 @@ import React from 'react';
 import { 
   Clock, MapPin, Package, UserCheck, CheckCircle, 
   AlertCircle, Database, Eye, Lock, 
-  ShieldCheck, Tag, Percent, Sparkles, FileText, CheckCircle2, DollarSign, ShieldAlert, Calendar, RefreshCw, Shuffle, Utensils
+  ShieldCheck, Tag, Percent, Sparkles, FileText, CheckCircle2, DollarSign, ShieldAlert, Calendar, RefreshCw, Shuffle, Utensils,
+  IndianRupeeIcon
 } from 'lucide-react';
 
 // ============================================================================
@@ -12,7 +13,7 @@ import {
 const cardStyle = {
   border: '1px dashed #C5A059',
   borderRadius: '14px',
-  padding: 'clamp(10px, 3vw, 14px) clamp(12px, 3.5vw, 16px)', // 💡 FLUID PADDING
+  padding: 'clamp(10px, 3vw, 14px) clamp(12px, 3.5vw, 16px)',
   background: 'linear-gradient(135deg, #FFFDF9 0%, #FAF4EB 100%)',
   display: 'flex',
   flexDirection: 'column',
@@ -41,7 +42,7 @@ const iconBoxStyle = {
 
 const titleStyle = {
   fontFamily: "'Cormorant Garamond', serif",
-  fontSize: 'clamp(16px, 4.5vw, 18px)', // 💡 FLUID TYPOGRAPHY
+  fontSize: 'clamp(16px, 4.5vw, 18px)',
   fontWeight: '700',
   letterSpacing: '0.3px',
   color: '#1A1816',
@@ -54,7 +55,7 @@ const titleStyle = {
 
 const textStyle = {
   margin: 0,
-  fontSize: 'clamp(11.5px, 3.2vw, 12.5px)', // 💡 FLUID TYPOGRAPHY
+  fontSize: 'clamp(11.5px, 3.2vw, 12.5px)',
   fontWeight: '500',
   lineHeight: '1.45',
   color: '#78716C',
@@ -80,61 +81,81 @@ export function CartViewPolicyModalContent({ brandColor = '#FF5958' }) {
     <div style={containerStyle}>
       <div style={cardStyle}>
         <div style={headerRowStyle}>
-          <div style={iconBoxStyle}>
-            <Clock size={16} color={brandColor} />
-          </div>
+          <div style={iconBoxStyle}><Clock size={16} color={brandColor} /></div>
           <h4 style={titleStyle}>Advance Ordering & Cut-Off</h4>
         </div>
         <p style={textStyle}>
-          Many of our culinary items and preserves are prepared in small batches using traditional methods. Availability is subject to seasonal produce and daily preparation limits.
+          Many of our culinary items and delicacies are prepared in small batches using traditional methods. Availability is subject to seasonal produce and daily preparation limits.
         </p>
       </div>
 
       <div style={cardStyle}>
         <div style={headerRowStyle}>
-          <div style={iconBoxStyle}>
-            <FileText size={16} color={brandColor} />
-          </div>
+          <div style={iconBoxStyle}><FileText size={16} color={brandColor} /></div>
           <h4 style={titleStyle}>Order Confirmation</h4>
         </div>
         <p style={textStyle}>
-          Once an order is placed, you will receive an acknowledgment or confirmation via SMS, WhatsApp, or email. We reserve the right to accept or decline any order at our discretion due to stock limitations or delivery zone constraints.
+          Once an order is placed, we reserve the right to accept or decline any order at our discretion due to stock limitations or delivery constraints.
         </p>
       </div>
 
       <div style={cardStyle}>
         <div style={headerRowStyle}>
-          <div style={iconBoxStyle}>
-            <DollarSign size={16} color={brandColor} />
-          </div>
+          <div style={iconBoxStyle}><IndianRupeeIcon size={16} color={brandColor} /></div>
           <h4 style={titleStyle}>Payment Terms</h4>
         </div>
         <p style={textStyle}>
-          Full payment is required at checkout. Payments are processed securely through authorized gateways (UPI, credit/debit cards, net banking, and wallets) without storing your complete financial credentials.
+          Full payment is required at checkout through secure authorized payment modes (Gpay, Phonepe, Paytm) without storing any financial credentials.
         </p>
       </div>
 
       <div style={cardStyle}>
         <div style={headerRowStyle}>
-          <div style={iconBoxStyle}>
-            <CheckCircle2 size={16} color={brandColor} />
-          </div>
+          <div style={iconBoxStyle}><CheckCircle2 size={16} color={brandColor} /></div>
           <h4 style={titleStyle}>Cancellations & Modifications</h4>
         </div>
         <p style={textStyle}>
-          Requests for changes or cancellations must be made within a specified window before preparation or dispatch begins. Due to the perishable and fresh nature of our food, orders cannot be cancelled or modified once dispatched.
+          Requests for changes must be made before preparation begins. Due to the perishable and fresh nature of our food, orders cannot be cancelled or modified once dispatched.
         </p>
       </div>
 
       <div style={cardStyle}>
         <div style={headerRowStyle}>
-          <div style={iconBoxStyle}>
-            <AlertCircle size={16} color={brandColor} />
-          </div>
+          <div style={iconBoxStyle}><AlertCircle size={16} color={brandColor} /></div>
           <h4 style={titleStyle}>Fair Usage</h4>
         </div>
         <p style={textStyle}>
           We reserve the right to cancel or block accounts associated with fraudulent, unverified, or repeated fake bookings.
+        </p>
+      </div>
+
+      <div style={cardStyle}>
+        <div style={headerRowStyle}>
+          <div style={iconBoxStyle}><Sparkles size={16} color={brandColor} /></div>
+          <h4 style={titleStyle}>Pricing & Acceptance</h4>
+        </div>
+        <p style={textStyle}>
+          Placing an order implies agreement to our pricing terms. All prices include applicable local taxes. Confirmed orders are unaffected by subsequent price adjustments.
+        </p>
+      </div>
+
+      <div style={cardStyle}>
+        <div style={headerRowStyle}>
+          <div style={iconBoxStyle}><CheckCircle size={16} color={brandColor} /></div>
+          <h4 style={titleStyle}>Quality & Returns</h4>
+        </div>
+        <p style={textStyle}>
+          Perishable food items and opened packages are non-returnable. Damaged or incorrect deliveries must be reported with photographic proof within 24 hours for review.
+        </p>
+      </div>
+
+      <div style={cardStyle}>
+        <div style={headerRowStyle}>
+          <div style={iconBoxStyle}><ShieldCheck size={16} color={brandColor} /></div>
+          <h4 style={titleStyle}>FSSAI & Halal Compliance</h4>
+        </div>
+        <p style={textStyle}>
+          Operates as a certified FSSAI kitchen. <strong>Notice:</strong> Prepared in a home kitchen handling common allergens (nuts, dairy, gluten). Halal-certified ingredients are used in designated products.
         </p>
       </div>
     </div>
@@ -149,37 +170,31 @@ export function OfferPolicyModalContent({ brandColor = '#FF5958' }) {
     <div style={containerStyle}>
       <div style={cardStyle}>
         <div style={headerRowStyle}>
-          <div style={iconBoxStyle}>
-            <Tag size={16} color={brandColor} />
-          </div>
-          <h4 style={titleStyle}>Coupon Stacking & Combination</h4>
+          <div style={iconBoxStyle}><Tag size={16} color={brandColor} /></div>
+          <h4 style={titleStyle}>No Clubbing & Offer Stacking</h4>
         </div>
         <p style={textStyle}>
-          Unless explicitly stated, promotional codes, store credits, and automated discounts cannot be stacked. Only one primary coupon can be applied per order.
+          Promotional codes, discount vouchers, store credits, and executive pass privileges cannot be combined or clubbed. Only one primary coupon or discount mechanism can be applied per order.
         </p>
       </div>
 
       <div style={cardStyle}>
         <div style={headerRowStyle}>
-          <div style={iconBoxStyle}>
-            <Percent size={16} color={brandColor} />
-          </div>
-          <h4 style={titleStyle}>Loyalty Program Discounts</h4>
+          <div style={iconBoxStyle}><Percent size={16} color={brandColor} /></div>
+          <h4 style={titleStyle}>Welcome Offer & Thresholds</h4>
         </div>
         <p style={textStyle}>
-          Tier-based loyalty perks automatically reflect in your cart based on your current account status (e.g., Platinum, Gold, Silver). Loyalty points cannot be exchanged for cash.
+          The 10% Welcome Offer is valid strictly for first-time sign-ins and initial qualifying orders. All coupons are subject to specified minimum order value requirements (excluding delivery fees and taxes).
         </p>
       </div>
 
       <div style={cardStyle}>
         <div style={headerRowStyle}>
-          <div style={iconBoxStyle}>
-            <Sparkles size={16} color={brandColor} />
-          </div>
-          <h4 style={titleStyle}>Usage Limits & Expiry</h4>
+          <div style={iconBoxStyle}><Sparkles size={16} color={brandColor} /></div>
+          <h4 style={titleStyle}>Loyalty Perks, Expiry & Rights</h4>
         </div>
         <p style={textStyle}>
-          Special offers, seasonal coupons, and price adjustments carry strict expiration dates and single-use thresholds. Expired or fully redeemed offers cannot be re-issued or applied retroactively.
+          Tier-based loyalty perks reflect automatically and hold no cash value. Expired offers cannot be applied retroactively. Management reserves the right to modify or terminate offers without prior notice.
         </p>
       </div>
     </div>
@@ -194,61 +209,31 @@ export function DeliveryPolicyModalContent({ brandColor = '#FF5958' }) {
     <div style={containerStyle}>
       <div style={cardStyle}>
         <div style={headerRowStyle}>
-          <div style={iconBoxStyle}>
-            <MapPin size={16} color={brandColor} />
-          </div>
+          <div style={iconBoxStyle}><MapPin size={16} color={brandColor} /></div>
           <h4 style={titleStyle}>Service Radius</h4>
         </div>
         <p style={textStyle}>
-          We currently deliver exclusively within Bengaluru.
+          We currently deliver exclusively within Bengaluru city limits.
         </p>
       </div>
 
       <div style={cardStyle}>
         <div style={headerRowStyle}>
-          <div style={iconBoxStyle}>
-            <Clock size={16} color={brandColor} />
-          </div>
+          <div style={iconBoxStyle}><Clock size={16} color={brandColor} /></div>
           <h4 style={titleStyle}>Delivery Slots & Timelines</h4>
         </div>
         <p style={textStyle}>
-          Standard delivery takes 24–48 hours. Preferred slots (Morning: 8–11 AM, Afternoon: 12–2 PM, Evening: 5–8 PM) can be selected at checkout.
+          Standard delivery takes 24–48 hours. Preferred delivery slots (date/time) can be selected at checkout based on availability.
         </p>
       </div>
 
       <div style={cardStyle}>
         <div style={headerRowStyle}>
-          <div style={iconBoxStyle}>
-            <Package size={16} color={brandColor} />
-          </div>
-          <h4 style={titleStyle}>Fees & Tracking</h4>
+          <div style={iconBoxStyle}><ShieldAlert size={16} color={brandColor} /></div>
+          <h4 style={titleStyle}>Handover Protocol</h4>
         </div>
         <p style={textStyle}>
-          Delivery charges are calculated dynamically at checkout. Real-time status tracking is available in the app.
-        </p>
-      </div>
-
-      <div style={cardStyle}>
-        <div style={headerRowStyle}>
-          <div style={iconBoxStyle}>
-            <ShieldAlert size={16} color={brandColor} />
-          </div>
-          <h4 style={titleStyle}>Address Accuracy & Handover</h4>
-        </div>
-        <p style={textStyle}>
-          Please provide precise address details. Due to product perishability, our delivery partners can wait a maximum of 10 minutes at the drop location; uncontactable orders cannot be refunded.
-        </p>
-      </div>
-
-      <div style={cardStyle}>
-        <div style={headerRowStyle}>
-          <div style={iconBoxStyle}>
-            <AlertCircle size={16} color={brandColor} />
-          </div>
-          <h4 style={titleStyle}>External Delays</h4>
-        </div>
-        <p style={textStyle}>
-          While we prioritize punctuality, unforeseen local conditions (severe weather, heavy traffic blockades) may occasionally impact delivery windows.
+          Due to perishability, delivery partners can wait a maximum of 10 minutes at the drop location. Uncontactable orders at delivery cannot be refunded.
         </p>
       </div>
     </div>
@@ -256,125 +241,38 @@ export function DeliveryPolicyModalContent({ brandColor = '#FF5958' }) {
 }
 
 // ==========================================
-// 📄 4. GENERAL TERMS & CONDITIONS CONTENT
-// ==========================================
-export function GeneralTermsModalContent({ brandColor = '#FF5958' }) {
-  return (
-    <div style={containerStyle}>
-      <div style={cardStyle}>
-        <div style={headerRowStyle}>
-          <div style={iconBoxStyle}>
-            <Sparkles size={16} color={brandColor} />
-          </div>
-          <h4 style={titleStyle}>Introduction & Acceptance</h4>
-        </div>
-        <p style={textStyle}>
-          Welcome to our platform. By placing an order for our handcrafted foods, pickles, or gourmet treats, you agree to comply with and be bound by these terms and conditions.
-        </p>
-      </div>
-
-      <div style={cardStyle}>
-        <div style={headerRowStyle}>
-          <div style={iconBoxStyle}>
-            <DollarSign size={16} color={brandColor} />
-          </div>
-          <h4 style={titleStyle}>Pricing Transparency & Changes</h4>
-        </div>
-        <p style={textStyle}>
-          All prices listed are inclusive of applicable local taxes unless stated otherwise. We reserve the right to adjust product pricing, seasonal offers, or delivery fees at any time without prior notice, though active confirmed orders will not be affected.
-        </p>
-      </div>
-
-      <div style={cardStyle}>
-        <div style={headerRowStyle}>
-          <div style={iconBoxStyle}>
-            <CheckCircle size={16} color={brandColor} />
-          </div>
-          <h4 style={titleStyle}>Quality Assurance & Returns</h4>
-        </div>
-        <p style={textStyle}>
-          We adhere to strict hygiene and quality standards. Because our offerings include food and edible preserves, perishable items and opened packages are generally non-returnable.
-        </p>
-      </div>
-
-      <div style={cardStyle}>
-        <div style={headerRowStyle}>
-          <div style={iconBoxStyle}>
-            <Package size={16} color={brandColor} />
-          </div>
-          <h4 style={titleStyle}>Damaged or Incorrect Deliveries</h4>
-        </div>
-        <p style={textStyle}>
-          If you receive a damaged, leaking, or incorrect item, please notify our support team via WhatsApp or email with photographic proof within 24 hours of delivery for verification and replacement or refund.
-        </p>
-      </div>
-
-      <div style={cardStyle}>
-        <div style={headerRowStyle}>
-          <div style={iconBoxStyle}>
-            <ShieldCheck size={16} color={brandColor} />
-          </div>
-          <h4 style={titleStyle}>Limitation of Liability</h4>
-        </div>
-        <p style={textStyle}>
-          We shall not be held liable for any adverse reactions, allergies, or health issues resulting from consumption, provided standard ingredients and preparation guidelines have been accurately represented. Customers with food allergies should review ingredient lists carefully.
-        </p>
-      </div>
-
-       <div style={cardStyle}>
-        <div style={headerRowStyle}>
-          <div style={iconBoxStyle}>
-            <ShieldCheck size={16} color={brandColor} />
-          </div>
-          <h4 style={titleStyle}>FSSAI & Food Safety</h4>
-        </div>
-        <p style={textStyle}>
-          Lyte Bytes operates as a certified FSSAI-registered kitchen adhering to strict hygiene standards. <strong>Allergy Notice:</strong> Prepared in a home kitchen that handles common allergens including nuts, dairy, and gluten.
-        </p>
-      </div>
-
-       <div style={cardStyle}>
-        <div style={headerRowStyle}>
-          <div style={iconBoxStyle}>
-            <ShieldCheck size={16} color={brandColor} />
-          </div>
-          <h4 style={titleStyle}>Halal Compliance</h4>
-        </div>
-        <p style={textStyle}>
-           <strong>Halal Compliance:</strong> Halal-certified ingredients are used in select products.
-        </p>
-      </div>
-    </div>
-  );
-}
-
-// ==========================================
-// 🔒 5. PRIVACY POLICY & FOOD SAFETY CONTENT
+// 🔒 4. PRIVACY POLICY CONTENT
 // ==========================================
 export function PrivacyPolicyModalContent({ brandColor = '#FF5958' }) {
   return (
     <div style={containerStyle}>
       <div style={cardStyle}>
         <div style={headerRowStyle}>
-          <div style={iconBoxStyle}>
-            <Database size={16} color={brandColor} />
-          </div>
-          <h4 style={titleStyle}>Data Collection</h4>
+          <div style={iconBoxStyle}><Database size={16} color={brandColor} /></div>
+          <h4 style={titleStyle}>Data Collection & Security</h4>
         </div>
         <p style={textStyle}>
-          We collect essential details (name, phone number, address) strictly for order fulfillment, logistics coordination, and customer support.
+          Essential details (name, phone, address) are collected strictly for order fulfillment and customer support. Data is never sold and is shared exclusively with verified local logistics partners.
         </p>
       </div>
 
       <div style={cardStyle}>
         <div style={headerRowStyle}>
-          <div style={iconBoxStyle}>
-            <Eye size={16} color={brandColor} />
-          </div>
-          <h4 style={titleStyle}>Data Sharing & Security</h4>
+          <div style={iconBoxStyle}><Lock size={16} color={brandColor} /></div>
+          <h4 style={titleStyle}>Credentials & Zero Tracking</h4>
         </div>
         <p style={textStyle}>
-          Your information is never sold. Data is shared exclusively with trusted local logistics partners. We do not use tracking cookies.
+          We do not store passwords, unique PINs, or financial credentials on our servers, nor do we utilize tracking pixels, cookies, or third-party performance analytics.
+        </p>
+      </div>
+
+      <div style={cardStyle}>
+        <div style={headerRowStyle}>
+          <div style={iconBoxStyle}><FileText size={16} color={brandColor} /></div>
+          <h4 style={titleStyle}>Data Retention & Deletion</h4>
+        </div>
+        <p style={textStyle}>
+          Order logs are archived securely for operational tracking. You retain the right to request complete deletion of your account and personal records at any time by contacting support.
         </p>
       </div>
     </div>
@@ -382,68 +280,28 @@ export function PrivacyPolicyModalContent({ brandColor = '#FF5958' }) {
 }
 
 // ==========================================
-// 📅 6. SUBSCRIPTION PASS POLICY CONTENT
+// 📅 5. SUBSCRIPTION PASS POLICY CONTENT
 // ==========================================
 export function SubscriptionPolicyModalContent({ brandColor = '#FF5958' }) {
   return (
     <div style={containerStyle}>
       <div style={cardStyle}>
         <div style={headerRowStyle}>
-          <div style={iconBoxStyle}>
-            <Clock size={16} color={brandColor} />
-          </div>
+          <div style={iconBoxStyle}><Clock size={16} color={brandColor} /></div>
           <h4 style={titleStyle}>Flexible Skips & Cut-Offs</h4>
         </div>
         <p style={textStyle}>
-          Pause or skip deliveries via your dashboard at least <strong>10 hours before</strong> the scheduled meal time to retain your credit. Meals missed within this window are forfeited to cover preparation and food loss.
+          Pause or skip deliveries via your dashboard at least <strong>10 hours before</strong> the scheduled meal time to retain your credit. Meals missed within this window are forfeited.
         </p>
       </div>
 
       <div style={cardStyle}>
         <div style={headerRowStyle}>
-          <div style={iconBoxStyle}>
-            <Calendar size={16} color={brandColor} />
-          </div>
-          <h4 style={titleStyle}>Extended Validity</h4>
+          <div style={iconBoxStyle}><Calendar size={16} color={brandColor} /></div>
+          <h4 style={titleStyle}>Extended Validity & Rules</h4>
         </div>
         <p style={textStyle}>
-          Passes include extended validity windows to accommodate pauses: Weekly Passes remain active for up to <strong>14 days</strong>, and Monthly Passes for up to <strong>45 days</strong>.
-        </p>
-      </div>
-
-      <div style={cardStyle}>
-        <div style={headerRowStyle}>
-          <div style={iconBoxStyle}>
-            <RefreshCw size={16} color={brandColor} />
-          </div>
-          <h4 style={titleStyle}>Cancellations & Transfers</h4>
-        </div>
-        <p style={textStyle}>
-          Active subscription passes are non-refundable once the first meal has been dispatched. Transferring remaining meal credits to family or friends requires advance notice, delivery feasibility, and operational approval.
-        </p>
-      </div>
-
-      <div style={cardStyle}>
-        <div style={headerRowStyle}>
-          <div style={iconBoxStyle}>
-            <MapPin size={16} color={brandColor} />
-          </div>
-          <h4 style={titleStyle}>Delivery Location Flexibility</h4>
-        </div>
-        <p style={textStyle}>
-          Passes are tied to your primary delivery address. Permanent mid-subscription address changes may incur distance-based delivery fee adjustments or pass cancellation if outside coverage.
-        </p>
-      </div>
-
-      <div style={cardStyle}>
-        <div style={headerRowStyle}>
-          <div style={iconBoxStyle}>
-            <Utensils size={16} color={brandColor} />
-          </div>
-          <h4 style={titleStyle}>Menu Variations</h4>
-        </div>
-        <p style={textStyle}>
-          Executive meals feature a rotating home-style menu based on raw produce availability. While Veg/Non-Veg preferences are supported within the deadline, specific daily items are set by the kitchen.
+          Weekly Passes remain active for up to <strong>14 days</strong>, and Monthly Passes for up to <strong>45 days</strong>. Passes are non-refundable once the first meal is dispatched.
         </p>
       </div>
     </div>

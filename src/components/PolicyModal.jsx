@@ -83,7 +83,7 @@ export default function PolicyModal({
 
       {/* 2. Luxury Modal Card Container */}
       <div 
-        onClick={(e) => e.stopPropagation()}
+        onClick={() => e.stopPropagation()}
         style={{
           background: 'linear-gradient(135deg, #FFFDF9 0%, #FAF4EB 100%)', 
           borderTopLeftRadius: 'clamp(20px, 5vw, 28px)', // 💡 FLUID RADIUS
@@ -109,11 +109,11 @@ export default function PolicyModal({
         <div style={{
           display: 'flex', 
           alignItems: 'center', 
-          justifyContent: 'space-between',
+          justifyContent: 'center',
           paddingBottom: '16px',
-          marginBottom: '2px',
+          marginBottom: '0px',
           flexShrink: 0,
-          gap: '8px',
+          gap: '0px',
           minWidth: 0
         }}>
           <h3 style={{ 
@@ -131,26 +131,6 @@ export default function PolicyModal({
           }}>
             {title}
           </h3>
-          <button
-            type="button"
-            onClick={onClose}
-            style={{
-              background: 'rgba(197, 160, 89, 0.15)',
-              border: '1px solid rgba(197, 160, 89, 0.3)',
-              borderRadius: '50%',
-              width: '28px',
-              height: '28px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              cursor: 'pointer',
-              color: '#1A1816',
-              transition: 'all 0.2s ease',
-              flexShrink: 0
-            }}
-          >
-            <X size={16} />
-          </button>
         </div>
 
         {/* Clean Editorial Content Body with Fluid Typography */}
@@ -158,12 +138,12 @@ export default function PolicyModal({
           overflowY: 'auto', 
           display: 'flex', 
           flexDirection: 'column', 
-          gap: '10px',
+          gap: '1px',
           boxSizing: 'border-box',
           textAlign: 'left',
           fontSize: 'clamp(12px, 3.5vw, 14px)', // 💡 FLUID TYPOGRAPHY
-          color: '#57534E',
-          lineHeight: '1.5',
+          color: '#2a2827',
+          lineHeight: '1.3',
           paddingRight: '6px',
           minWidth: 0
         }}>

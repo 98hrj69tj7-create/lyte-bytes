@@ -4,21 +4,22 @@ import {
   ArrowLeft, ShoppingBag, X, Tag, Check, Sparkles, ChevronRight, 
   Space,
   Ticket,
-  AlertCircle
+  AlertCircle,
+  Info
 } from 'lucide-react';
 import PolicyModal from './PolicyModal';
-import { CartViewPolicyModalContent } from './PolicyContents';
-import { getAllOffers } from '../utils/offersEngine'; // 💡 Syncs coupons with your active offer engine flags
+import MemberAuthModal from './MemberAuthModal';
+import { CartViewPolicyModalContent, OfferPolicyModalContent } from './PolicyContents';
+import { getAllOffers } from '../utils/offersEngine';
 
-// ============================================================================
-// 🎫 DEFAULT COUPONS DATA STRUCTURE (Fallback)
-// ============================================================================
 const DEFAULT_COUPONS = [];
 
 export default function CartView({
   setView = () => {},
   theme = {},
   cart = [],
+  customer = {},
+  setCustomer = () => {},
   removeFromCart = () => {},
   addToCart = () => {},
   total = 0,
@@ -30,17 +31,14 @@ export default function CartView({
   onApplyCoupon: externalOnApplyCoupon,
   onRemoveCoupon: externalOnRemoveCoupon
 }) {
-  // ============================================================================
-  // 🎛️ LOCAL UI STATE MANAGEMENT
-  // ============================================================================
-  const [isPolicyOpen, setIsPolicyOpen] = useState(false);         
+  const [activePolicy, setActivePolicy] = useState(null); // 'order' | 'offer' | null         
   const [isCouponDrawerOpen, setIsCouponDrawerOpen] = useState(false); 
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [internalAppliedCoupon, setInternalAppliedCoupon] = useState(null);
   const [couponError, setCouponError] = useState(null);
 
   const activeAppliedCoupon = externalAppliedCoupon !== undefined ? externalAppliedCoupon : internalAppliedCoupon;
 
-  // 💡 Robust helper to extract minimum order value from properties, text, or code fallback
   const extractMinOrder = (coupon) => {
     if (!coupon) return 0;
     if (coupon.minOrderValue !== undefined && !isNaN(Number(coupon.minOrderValue))) return Number(coupon.minOrderValue);
@@ -52,14 +50,12 @@ export default function CartView({
       return Number(match[1]);
     }
 
-    // Fallback rule for known promotional codes if no explicit min order is in text
     const codeUpper = (coupon.code || '').toUpperCase();
     if (codeUpper.includes('ANNI')) return 499; 
 
     return 0;
   };
 
-  // 💡 Fetch active store offers dynamically from your engine
   const currentCount = parseInt(localStorage.getItem('store_order_count') || '1', 10);
   const activeStoreOffers = getAllOffers(currentCount).map(offer => ({
     code: offer.code,
@@ -75,7 +71,6 @@ export default function CartView({
     minOrderValue: extractMinOrder(c)
   }));
 
-  // 💡 Validate active coupon against current cart total
   const activeMinOrder = extractMinOrder(activeAppliedCoupon);
   const isCouponValid = !activeAppliedCoupon || activeMinOrder === 0 || Number(total) >= activeMinOrder;
 
@@ -83,7 +78,7 @@ export default function CartView({
     const minReq = extractMinOrder(coupon);
     if (minReq > 0 && Number(total) < minReq) {
       setCouponError(`Minimum order value of ₹${minReq} required for ${coupon.code}`);
-      return; // 💡 Strictly block application
+      return;
     }
 
     setCouponError(null);
@@ -104,23 +99,17 @@ export default function CartView({
     }
   };
 
-  // ============================================================================
-  // 🎨 THEME & STYLING CONFIGURATION
-  // ============================================================================
   const activeTheme = {
     brand: theme?.brand || '#FF5958',                        
     text: theme?.text || '#1A1816',                          
     border: theme?.border || '1px solid rgba(197, 160, 89, 0.4)', 
     bg: theme?.bg || '#FFFDF9',                              
-    radius: 'clamp(16px, 4vw, 20px)', // 💡 FLUID RADIUS                         
+    radius: 'clamp(16px, 4vw, 20px)',                        
     buttonBg: theme?.buttonBg || '#FF5958'
   };
 
   const safeCart = Array.isArray(cart) ? cart : [];
 
-  // ============================================================================
-  // 🧮 DISCOUNT & TOTAL CALCULATIONS (Zeroes out if condition isn't met)
-  // ============================================================================
   const discountAmount = (activeAppliedCoupon && isCouponValid)
     ? Math.round((Number(total) * (Number(activeAppliedCoupon.discountPercent) || 0)) / 100)
     : 0;
@@ -132,6 +121,12 @@ export default function CartView({
       setCouponError(`Cannot proceed: ${activeAppliedCoupon.code} requires a minimum order of ₹${activeMinOrder}`);
       return;
     }
+
+    if (!customer || !customer.phone || customer.phone.length !== 10) {
+      setIsAuthModalOpen(true);
+      return;
+    }
+
     localStorage.setItem('lyte_checkout_summary', JSON.stringify({
       discountAmount: discountAmount,
       couponCode: (activeAppliedCoupon && isCouponValid) ? activeAppliedCoupon.code : null,
@@ -152,9 +147,6 @@ export default function CartView({
       fontFamily: "'Plus Jakarta Sans', sans-serif" 
     }}>
       
-      {/* ================================================================== */}
-      {/* 🧭 UNIFORM HEADER SECTION (Back Button & Title)                    */}
-      {/* ================================================================== */}
       <div style={{ display: 'flex', alignItems: 'center', position: 'relative', marginBottom: '20px', padding: '6px 0' }}>
         <button 
           onClick={() => setView('home')} 
@@ -166,7 +158,7 @@ export default function CartView({
             alignItems: 'center', 
             gap: '6px', 
             color: activeTheme.text, 
-            fontSize: 'var(--font-caption)', // 💡 FLUID TYPOGRAPHY
+            fontSize: 'var(--font-caption)', 
             fontWeight: '600', 
             padding: '6px 10px', 
             borderRadius: '12px', 
@@ -182,7 +174,7 @@ export default function CartView({
           right: 0, 
           textAlign: 'center', 
           fontFamily: "'Cormorant Garamond', serif",
-          fontSize: 'var(--font-h2)', // 💡 FLUID TYPOGRAPHY
+          fontSize: 'var(--font-h2)', 
           color: '#FF5958', 
           margin: 0, 
           fontWeight: '700', 
@@ -194,9 +186,6 @@ export default function CartView({
         </h2>
       </div>
 
-      {/* ================================================================== */}
-      {/* 🛒 CONDITIONAL RENDER: EMPTY VS POPULATED CART STATE              */}
-      {/* ================================================================== */}
       {safeCart.length === 0 ? (
         <div style={{ 
           textAlign: 'center', 
@@ -237,7 +226,6 @@ export default function CartView({
           boxShadow: '0 8px 24px rgba(44, 34, 30, 0.06)'
         }}>
           
-          {/* ================= ITEM ROWS MAPPING ================= */}
           {safeCart.map((item, index) => (
             <div key={`${item.name}-${item.unit || 'default'}`} style={{ 
               display: 'flex', 
@@ -304,32 +292,20 @@ export default function CartView({
             </div>
           ))}
 
-          {/* ============================================================== */}
-          {/* 🏷️ LIVE COUPONS BANNER & CONDITION WARNING SECTION             */}
-          {/* ============================================================== */}
-          <div style={{ marginTop: '16px', marginBottom: '14px' }}>
+          <div style={{ marginTop: '16px', marginBottom: '16px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
             {couponError && (
               <div style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                padding: '10px 12px',
-                borderRadius: '10px',
-                border: '1px solid #DC2626',
-                backgroundColor: '#FEF2F2',
-                marginBottom: '10px',
-                gap: '8px'
+                display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                padding: '10px 14px', borderRadius: '12px', border: '1px solid #DC2626',
+                backgroundColor: '#FEF2F2', gap: '8px'
               }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', textAlign: 'left', minWidth: 0 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', textAlign: 'left', minWidth: 0 }}>
                   <AlertCircle size={16} color="#DC2626" style={{ flexShrink: 0 }} />
-                  <span style={{ fontSize: 'var(--font-caption)', fontWeight: '700', color: '#991B1B', wordBreak: 'break-word' }}>
+                  <span style={{ fontSize: 'var(--font-caption)', fontWeight: '600', color: '#991B1B' }}>
                     {couponError}
                   </span>
                 </div>
-                <button 
-                  onClick={() => setCouponError(null)}
-                  style={{ background: 'none', border: 'none', color: '#991B1B', cursor: 'pointer', padding: '2px', flexShrink: 0 }}
-                >
+                <button onClick={() => setCouponError(null)} style={{ background: 'none', border: 'none', color: '#991B1B', cursor: 'pointer', padding: '2px' }}>
                   <X size={14} />
                 </button>
               </div>
@@ -339,116 +315,116 @@ export default function CartView({
               <button 
                 onClick={() => setIsCouponDrawerOpen(true)}
                 style={{
-                  width: '100%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  padding: 'clamp(10px, 3vw, 12px) clamp(12px, 3.5vw, 16px)', 
-                  borderRadius: '12px',
-                  border: '1.5px dashed rgba(255, 89, 88, 0.6)',
-                  backgroundColor: 'rgba(255, 89, 88, 0.04)',
-                  cursor: 'pointer',
-                  boxSizing: 'border-box',
-                  transition: 'all 0.2s ease'
+                  width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                  padding: '14px 16px', borderRadius: '14px', border: '1px solid rgba(197, 160, 89, 0.3)',
+                  backgroundColor: '#FFFFFF', cursor: 'pointer', boxSizing: 'border-box',
+                  boxShadow: '0 2px 8px rgba(44, 34, 30, 0.03)', transition: 'all 0.2s ease'
                 }}
               >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', minWidth: 0 }}>
-                  <Tag size={16} color={activeTheme.brand} style={{ flexShrink: 0 }} />
-                  <span style={{ fontSize: 'var(--font-body)', fontWeight: '700', color: activeTheme.text, whiteSpace: 'nowrap' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', minWidth: 0 }}>
+                  <Tag size={18} color={activeTheme.brand} style={{ flexShrink: 0 }} />
+                  <span style={{ fontSize: 'var(--font-body)', fontWeight: '700', color: activeTheme.text }}>
                     Apply Coupon
                   </span>
+                  <span 
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setActivePolicy('offer');
+                    }}
+                    style={{ 
+                      display: 'inline-flex', 
+                      alignItems: 'center', 
+                      marginLeft: '4px', 
+                      cursor: 'pointer',
+                      verticalAlign: 'middle',
+                      color: '#8A6D2B'
+                    }}
+                    title="Offer Conditions"
+                  >
+                    <Info size={15} />
+                  </span>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
                   <span style={{
-                    fontSize: 'clamp(9px, 2.5vw, 10px)', 
-                    fontWeight: '800',
-                    color: '#8A6D2B',
-                    backgroundColor: 'rgba(197, 160, 89, 0.15)',
-                    padding: '2px 8px',
-                    borderRadius: '10px',
-                    border: '1px solid rgba(197, 160, 89, 0.3)',
-                    flexShrink: 0
+                    fontSize: '11px', fontWeight: '700', color: '#8A6D2B',
+                    backgroundColor: 'rgba(197, 160, 89, 0.12)', padding: '4px 10px', borderRadius: '12px'
                   }}>
                     {displayCoupons.length} Available
                   </span>
+                  <ChevronRight size={18} color="#A8A29E" />
                 </div>
-                <ChevronRight size={18} color={activeTheme.brand} style={{ flexShrink: 0 }} />
               </button>
             ) : isCouponValid ? (
               <div style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                padding: 'clamp(8px, 2.5vw, 10px) clamp(10px, 3vw, 14px)',
-                borderRadius: '12px',
-                border: '1px solid #059669',
-                backgroundColor: '#ECFDF5',
-                gap: '8px'
+                display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                padding: '14px 16px', borderRadius: '14px', border: '1px solid #059669',
+                backgroundColor: '#ECFDF5', gap: '8px'
               }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', textAlign: 'left', minWidth: 0 }}>
-                  <div style={{
-                    backgroundColor: '#059669', borderRadius: '50%', width: '22px', height: '22px',
-                    display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: '0'
-                  }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', textAlign: 'left', minWidth: 0 }}>
+                  <div style={{ backgroundColor: '#059669', borderRadius: '50%', width: '22px', height: '22px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: '0' }}>
                     <Check size={13} color="#FFFFFF" />
                   </div>
                   <div style={{ minWidth: 0 }}>
-                    <div style={{ fontSize: 'var(--font-body)', fontWeight: '800', color: '#065F46', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                      '{activeAppliedCoupon.code}' Applied!
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      <span style={{ fontSize: 'var(--font-body)', fontWeight: '700', color: '#065F46', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                        '{activeAppliedCoupon.code}' Applied!
+                      </span>
+                      <span 
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setActivePolicy('offer');
+                        }}
+                        style={{ display: 'inline-flex', alignItems: 'center', cursor: 'pointer', color: '#047857' }}
+                        title="Offer Conditions"
+                      >
+                        <Info size={14} />
+                      </span>
                     </div>
-                    <div style={{ fontSize: 'var(--font-caption)', color: '#047857', fontWeight: '500' }}>
-                      You saved ₹{discountAmount} on this order
+                    <div style={{ fontSize: '11px', color: '#047857', fontWeight: '500', marginTop: '2px' }}>
+                      Saved ₹{discountAmount} on this order
                     </div>
                   </div>
                 </div>
-
-                <button 
-                  onClick={handleRemove}
-                  style={{
-                    background: 'none', border: 'none', color: '#DC2626', fontSize: 'var(--font-caption)',
-                    fontWeight: '700', cursor: 'pointer', padding: '4px', flexShrink: 0
-                  }}
-                >
+                <button onClick={handleRemove} style={{ background: 'none', border: 'none', color: '#DC2626', fontSize: '12px', fontWeight: '700', cursor: 'pointer', padding: '4px', flexShrink: 0 }}>
                   Remove
                 </button>
               </div>
             ) : (
               <div style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                padding: 'clamp(10px, 3vw, 12px) clamp(12px, 3.5vw, 16px)',
-                borderRadius: '12px',
-                border: '1.5px solid #DC2626',
-                backgroundColor: '#FEF2F2',
-                gap: '10px'
+                display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                padding: '14px 16px', borderRadius: '14px', border: '1px solid #DC2626',
+                backgroundColor: '#FEF2F2', gap: '10px'
               }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', textAlign: 'left', minWidth: 0 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', textAlign: 'left', minWidth: 0 }}>
                   <AlertCircle size={18} color="#DC2626" style={{ flexShrink: 0 }} />
                   <div style={{ minWidth: 0 }}>
-                    <div style={{ fontSize: 'var(--font-body)', fontWeight: '800', color: '#991B1B', wordBreak: 'break-word' }}>
-                      '{activeAppliedCoupon.code}' requires min. ₹{activeMinOrder}!
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      <span style={{ fontSize: 'var(--font-body)', fontWeight: '700', color: '#991B1B' }}>
+                        '{activeAppliedCoupon.code}' needs min. ₹{activeMinOrder}
+                      </span>
+                      <span 
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setActivePolicy('offer');
+                        }}
+                        style={{ display: 'inline-flex', alignItems: 'center', cursor: 'pointer', color: '#B91C1C' }}
+                        title="Offer Conditions"
+                      >
+                        <Info size={14} />
+                      </span>
                     </div>
-                    <div style={{ fontSize: 'var(--font-caption)', color: '#B91C1C', fontWeight: '500' }}>
-                      Add ₹{activeMinOrder - Number(total)} more to unlock this offer.
+                    <div style={{ fontSize: '11px', color: '#B91C1C', fontWeight: '500', marginTop: '2px' }}>
+                      Add ₹{activeMinOrder - Number(total)} more to unlock.
                     </div>
                   </div>
                 </div>
-
-                <button 
-                  onClick={handleRemove}
-                  style={{
-                    background: '#DC2626', border: 'none', color: '#FFFFFF', fontSize: 'var(--font-caption)',
-                    fontWeight: '700', cursor: 'pointer', padding: '6px 10px', borderRadius: '8px', flexShrink: 0
-                  }}
-                >
+                <button onClick={handleRemove} style={{ background: '#DC2626', border: 'none', color: '#FFFFFF', fontSize: '11px', fontWeight: '700', cursor: 'pointer', padding: '6px 10px', borderRadius: '8px', flexShrink: 0 }}>
                   Remove
                 </button>
               </div>
             )}
           </div>
 
-          {/* ============================================================== */}
-          {/* 🧾 BILL SUMMARY BREAKDOWN SUB-SECTION                          */}
-          {/* ============================================================== */}
           <div style={{ borderTop: '1px dashed #FF5958', paddingTop: '10px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 'var(--font-body)', color: '#78716C', fontWeight: '500', marginBottom: '8px' }}>
               <span>Item Total</span>
@@ -476,7 +452,7 @@ export default function CartView({
               <span style={{ fontSize: 'var(--font-caption)', color: '#78716C' }}>
                 By proceeding, you agree to our{' '}
                 <span 
-                  onClick={() => setIsPolicyOpen(true)}
+                  onClick={() => setActivePolicy('order')}
                   style={{ color: activeTheme.brand, cursor: 'pointer', fontWeight: '600', textDecoration: 'underline' }}
                 >
                   Order Conditions
@@ -485,9 +461,6 @@ export default function CartView({
             </div>
           </div>
 
-          {/* ============================================================== */}
-          {/* 🚀 ACTION BUTTONS                                              */}
-          {/* ============================================================== */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
             <button 
               onClick={handleProceedClick} 
@@ -525,9 +498,6 @@ export default function CartView({
         </div>
       )}
 
-      {/* ================================================================== */}
-      {/* 📋 AVAILABLE COUPONS PORTAL MODAL                                  */}
-      {/* ================================================================== */}
       {isCouponDrawerOpen && ReactDOM.createPortal(
         <div 
           onClick={() => setIsCouponDrawerOpen(false)}
@@ -703,16 +673,36 @@ export default function CartView({
         document.body
       )}
 
-      {/* ================================================================== */}
-      {/* 📜 POLICY / ORDER CONDITIONS MODAL                                 */}
-      {/* ================================================================== */}
+      <MemberAuthModal 
+        isOpen={isAuthModalOpen} 
+        onClose={() => setIsAuthModalOpen(false)} 
+        initialPhone={customer?.phone || ''}
+        webAppUrl="https://script.google.com/macros/s/AKfycbwjR5KBDf8iB9e5Dh4ye5TxmIsbcirJsevDjMWma6B_Ine3HCYwC1ImeXgmr0XdVI9FZg/exec"
+        onLoginSuccess={(userData) => {
+          setIsAuthModalOpen(false);
+          if (setCustomer) {
+            setCustomer(prev => ({ ...prev, phone: userData.phone }));
+          }
+          localStorage.setItem('lyte_checkout_summary', JSON.stringify({
+            discountAmount: discountAmount,
+            couponCode: (activeAppliedCoupon && isCouponValid) ? activeAppliedCoupon.code : null,
+            couponPercent: (activeAppliedCoupon && isCouponValid) ? activeAppliedCoupon.discountPercent : 0
+          }));
+          handleProceedToDelivery();
+        }}
+      />
+
       <PolicyModal 
-        isOpen={isPolicyOpen} 
-        onClose={() => setIsPolicyOpen(false)} 
-        title="Order Conditions" 
+        isOpen={activePolicy !== null} 
+        onClose={() => setActivePolicy(null)} 
+        title={activePolicy === 'offer' ? 'Offer Conditions' : 'Order Conditions'} 
         theme={activeTheme}
       >
-        <CartViewPolicyModalContent brandColor={activeTheme.brand} />
+        {activePolicy === 'offer' ? (
+          <OfferPolicyModalContent brandColor={activeTheme.brand} />
+        ) : (
+          <CartViewPolicyModalContent brandColor={activeTheme.brand} />
+        )}
       </PolicyModal>
     </div>
   );

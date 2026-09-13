@@ -6,7 +6,6 @@ import SubscriptionDashboardView from './components/SubscriptionDashboardView';
 import ItemModal from './components/ItemModal';
 import MultiVariantDrawer from './components/MultiVariantDrawer';
 import StickyCartBar from './components/StickyCartBar';
-import OffersTab from './components/OffersTab';
 import ItemsView from './components/ItemsView';
 import CartView from './components/CartView';
 import DeliveryView from './components/DeliveryView';
@@ -17,10 +16,10 @@ import TrackView from './components/TrackView';
 import SupportInfoView from './components/SupportInfoView';
 import WallOfLoveView from './components/WallOfLoveView';
 import CustomerView from './components/CustomerView';
+import FloatingOffersBalloon from './components/FloatingOffersBalloon';
 import AdminCustomerDashboard from './components/AdminCustomerDashboard';
 import Header from './components/Header';
 import Footer from './components/Footer';
-import LimitedOfferModal from './components/LimitedOfferModal';
 import InstallPrompt from './components/InstallPrompt';
 import { trackAbandonedLead } from './components/leadTracker';
 import Papa from 'papaparse';
@@ -78,7 +77,7 @@ const backButtonStyle = {
   background: 'rgba(255, 255, 255, 0.6)', 
   border: '1px solid rgba(197, 160, 89, 0.3)', 
   outline: 'none', 
-  boxShadow: 'none', 
+  BoxShadow: 'none', 
   padding: 'clamp(5px, 1.5vw, 6px) clamp(10px, 3vw, 12px)', 
   borderRadius: '12px', 
   cursor: 'pointer', 
@@ -185,6 +184,8 @@ export default function App() {
   const [view, setView] = useState('home');
   const mainContainerRef = useRef(null);
 
+  const hideFloatingOfferViews = ['account', 'profile', 'admin-customers', 'track', 'verifying', 'payment', 'wall_of_love', 'info', 'concierge', 'delivery', 'cart', 'chatbot'];
+
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
     if (mainContainerRef.current) {
@@ -230,7 +231,6 @@ export default function App() {
   const [cart, setCart] = useLocalStorage('app_cart', []);
   const [customer, setCustomer] = useLocalStorage('app_customer', { name: '', phone: '', email: '', address: '' });
   
-  // 🔥 Dynamic Beef Order History State
   const [currentUserHasOrderedBeef, setCurrentUserHasOrderedBeef] = useLocalStorage('lytebytes_has_ordered_beef', false);
 
   useEffect(() => {
@@ -411,30 +411,28 @@ export default function App() {
     const timestamp = new Date().getTime();
     const CSV_URL = `https://docs.google.com/spreadsheets/d/e/2PACX-1vR35Ed3Gcjjj3SLQvZWaLEahaM9QYPmdVvnGoFOefqmA544Jtcr3xR2QVj8Yy1tk-mjh4DVQarYB7Yh/pub?output=csv&t=${timestamp}`;
 
-  Papa.parse(CSV_URL, {
-  download: true,
-  header: true,
-  complete: (results) => {
-    const transformed = {};
+    Papa.parse(CSV_URL, {
+      download: true,
+      header: true,
+      complete: (results) => {
+        const transformed = {};
 
-    results.data.forEach((row) => {
-      // ✅ Fixed: Only process rows where Availability is TRUE
-      if (row.Availability?.toString().trim().toUpperCase() !== 'TRUE') return;
-      if (!row.Category) return;
+        results.data.forEach((row) => {
+          if (row.Availability?.toString().trim().toUpperCase() !== 'TRUE') return;
+          if (!row.Category) return;
 
-      // 🛑 SKIP SUBSCRIPTION ITEMS FROM SHOWING IN STANDARD MENUS
-      const catLower = row.Category.trim().toLowerCase();
-      const subLower = row.Sub_Category ? row.Sub_Category.trim().toLowerCase() : '';
-      if (catLower === 'subscription' || subLower === 'executive meal pass' || (row.SKU && row.SKU.startsWith('LB-SUB-'))) {
-        return;
-      }
+          const catLower = row.Category.trim().toLowerCase();
+          const subLower = row.Sub_Category ? row.Sub_Category.trim().toLowerCase() : '';
+          if (catLower === 'subscription' || subLower === 'executive meal pass' || (row.SKU && row.SKU.startsWith('LB-SUB-'))) {
+            return;
+          }
 
-      if (!transformed[row.Category]) {
-        transformed[row.Category] = {
-          imageUrl: categoryImages[row.Category] || "/catering.jpg",
-          subcategories: {}
-        };
-      }
+          if (!transformed[row.Category]) {
+            transformed[row.Category] = {
+              imageUrl: categoryImages[row.Category] || "/catering.jpg",
+              subcategories: {}
+            };
+          }
           if (!transformed[row.Category].subcategories[row.Sub_Category]) {
             transformed[row.Category].subcategories[row.Sub_Category] = [];
           }
@@ -544,83 +542,79 @@ export default function App() {
     const upiLink = "upi://pay?pa=rosemarycloney-3@okicici&pn=LyteBytes&cu=INR";
     window.location.href = upiLink;
   };
-//SPLASH SCREEN
-if (!menuData) return (
-  <div style={{
-    position: 'fixed', inset: 0,
-    background: '#FFFDF9',
-    display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-    gap: 'clamp(16px, 4vw, 24px)', fontFamily: "'Plus Jakarta Sans', sans-serif", zIndex: 99999,
-    padding: '20px', boxSizing: 'border-box',
-    animation: 'fadeOutSplash 0.5s ease 1.2s forwards'
-  }}>
-    {/* Expanded Fluid Responsive Logo Wrapper */}
+
+  if (!menuData) return (
     <div style={{
-      width: 'clamp(150px, 45vw, 210px)', 
-      height: 'clamp(150px, 45vw, 210px)', 
-      borderRadius: '50%',
-      background: '#FFFFFF',
-      boxShadow: '0 14px 40px rgba(255, 89, 88, 0.2), 0 6px 18px rgba(0,0,0,0.06)',
-      border: '1.5px solid rgba(255, 89, 88, 0.25)',
-      animation: 'zoomInLogo 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards',
-      display: 'flex', alignItems: 'center', justifyContent: 'center', boxSizing: 'border-box',
-      padding: '6px'
+      position: 'fixed', inset: 0,
+      background: '#FFFDF9',
+      display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+      gap: 'clamp(16px, 4vw, 24px)', fontFamily: "'Plus Jakarta Sans', sans-serif", zIndex: 99999,
+      padding: '20px', boxSizing: 'border-box',
+      animation: 'fadeOutSplash 0.5s ease 1.2s forwards'
     }}>
-      <img 
-        src="/splash.png" 
-        alt="Lyte Bytes Logo" 
-        style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'contain' }} 
-      />
-    </div>
-
-    {/* Fluid Responsive Typography */}
-    <div style={{ 
-      textAlign: 'center', display: 'flex', flexDirection: 'column', gap: '6px',
-      animation: 'fadeInText 0.8s ease 0.3s forwards', opacity: 0
-    }}>
-      <div style={{ 
-        fontFamily: "'Cormorant Garamond', serif", 
-        fontSize: 'clamp(26px, 6.5vw, 36px)', 
-        color: '#FF5958', fontWeight: '700', letterSpacing: '2.5px', textTransform: 'uppercase' 
+      <div style={{
+        width: 'clamp(150px, 45vw, 210px)', 
+        height: 'clamp(150px, 45vw, 210px)', 
+        borderRadius: '50%',
+        background: '#FFFFFF',
+        boxShadow: '0 14px 40px rgba(255, 89, 88, 0.2), 0 6px 18px rgba(0,0,0,0.06)',
+        border: '1.5px solid rgba(255, 89, 88, 0.25)',
+        animation: 'zoomInLogo 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+        display: 'flex', alignItems: 'center', justifyContent: 'center', boxSizing: 'border-box',
+        padding: '6px'
       }}>
-        Lyte Bytes
+        <img 
+          src="/splash.png" 
+          alt="Lyte Bytes Logo" 
+          style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'contain' }} 
+        />
       </div>
-      <div style={{ 
-        fontSize: 'clamp(10px, 2.8vw, 12.5px)', 
-        color: '#78716C', fontWeight: '700', 
-        letterSpacing: '3px', textTransform: 'uppercase' 
-      }}>
-        Freshly Crafted For You
-      </div>
-    </div>
 
-    <style>{`
-      @keyframes zoomInLogo {
-        0% { transform: scale(0.6); opacity: 0; filter: blur(6px); }
-        100% { transform: scale(1); opacity: 1; filter: blur(0); }
-      }
-      @keyframes fadeInText {
-        0% { transform: translateY(10px); opacity: 0; }
-        100% { transform: translateY(0); opacity: 1; }
-      }
-      @keyframes fadeOutSplash {
-        to { opacity: 0; visibility: hidden; }
-      }
-    `}</style>
-  </div>
-);
+      <div style={{ 
+        textAlign: 'center', display: 'flex', flexDirection: 'column', gap: '6px',
+        animation: 'fadeInText 0.8s ease 0.3s forwards', opacity: 0
+      }}>
+        <div style={{ 
+          fontSize: 'clamp(18px, 2.8vw, 36px)', 
+          color: '#78716C', fontWeight: '700', 
+          letterSpacing: '3px', textTransform: 'uppercase' 
+        }}>
+          Something's Cooking..
+        </div>
+      </div>
+
+      <style>{`
+        @keyframes zoomInLogo {
+          0% { transform: scale(0.6); opacity: 0; filter: blur(6px); }
+          100% { transform: scale(1); opacity: 1; filter: blur(0); }
+        }
+        @keyframes fadeInText {
+          0% { transform: translateY(10px); opacity: 0; }
+          100% { transform: translateY(0); opacity: 1; }
+        }
+        @keyframes fadeOutSplash {
+          to { opacity: 0; visibility: hidden; }
+        }
+      `}</style>
+    </div>
+  );
 
   const total = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
 
   return (
     <div style={{ height: '100dvh', display: 'flex', flexDirection: 'column', position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: theme.bg, color: theme.text, fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
-      <LimitedOfferModal theme={theme} setView={setView} />
       <Header theme={theme} setView={setView} />
       
       <main ref={mainContainerRef} style={{ flex: 1, paddingTop: '5px', paddingLeft: '20px', paddingRight: '20px', paddingBottom: '80px', overflowY: 'auto', display: 'flex', flexDirection: 'column' }}>
         {view === 'offers' && (
           <PageTransition viewKey="offers">
-            <OffersTab theme={theme} />
+            <SubscriptionPassView 
+              theme={theme} 
+              customer={customer} 
+              setCustomer={setCustomer} 
+              setView={setView} 
+              setCart={setCart} 
+            />
           </PageTransition>
         )}
 
@@ -649,13 +643,13 @@ if (!menuData) return (
 
         {view === 'subscription-pass' && (
           <SubscriptionPassView 
-          theme={theme} 
-          customer={customer} 
-          setCustomer={setCustomer} 
-          setView={setView} 
-          setCart={setCart} 
+            theme={theme} 
+            customer={customer} 
+            setCustomer={setCustomer} 
+            setView={setView} 
+            setCart={setCart} 
           />
-    )}
+        )}
 
         {view === 'subscription-dashboard' && (
           <SubscriptionDashboardView 
@@ -828,7 +822,6 @@ if (!menuData) return (
               customer={customer}
               setCustomer={setCustomer}
               setCurrentUserHasOrderedBeef={setCurrentUserHasOrderedBeef}
-
               setView={setView}
             />
           </PageTransition>
@@ -845,13 +838,14 @@ if (!menuData) return (
         )}
       </main>
 
-{['home', 'subcat', 'items', 'offers', 'track'].includes(view) && !isStoryExpanded && (
-  <StickyCartBar
-    cart={cart}
-    view={view}
-    onViewCart={() => setView('cart')}
-  />
-)}
+      {['home', 'subcat', 'items', 'offers', 'track'].includes(view) && !isStoryExpanded && (
+        <StickyCartBar
+          cart={cart}
+          view={view}
+          onViewCart={() => setView('cart')}
+        />
+      )}
+      {!hideFloatingOfferViews.includes(view) && <FloatingOffersBalloon />}
 
       <InstallPrompt theme={theme} />
 
@@ -928,6 +922,7 @@ if (!menuData) return (
           </div>
         </div>
       )}
+      
 
       {isBackModalOpen && (
         <div 
@@ -990,7 +985,7 @@ if (!menuData) return (
               fontWeight: '500',
               padding: '0 8px'
             }}>
-              We’d hate for you to lose your handcrafted picks or order progress. Would you like to stay a while longer?
+              Don't lose your handcrafted order progress.
             </p>
 
             <div style={{ display: 'flex', gap: '12px', marginTop: '8px' }}>
@@ -998,14 +993,16 @@ if (!menuData) return (
                 onClick={() => setIsBackModalOpen(false)}
                 style={{
                   flex: 1,
-                  backgroundColor: 'rgba(197, 160, 89, 0.12)',
+                  backgroundColor: '#00C4A3',
                   color: '#1A1816',
                   border: '1px solid rgba(197, 160, 89, 0.35)',
                   padding: '13px',
                   fontSize: '14px',
                   fontWeight: '700',
                   borderRadius: '14px',
-                  cursor: 'pointer'
+                  cursor: 'pointer',
+                  boxShadow: '0 8px 24px rgba(0, 196, 163, 0.35)',
+                  transform: 'translateY(-2px)'
                 }}
               >
                 Stay & Continue
@@ -1025,7 +1022,7 @@ if (!menuData) return (
                   fontWeight: '700',
                   borderRadius: '14px',
                   cursor: 'pointer',
-                  boxShadow: '0 4px 14px rgba(255, 89, 88, 0.3)'
+                  boxShadow: 'none'
                 }}
               >
                 Yes, Leave

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Download, X, Share2 } from 'lucide-react';
+import { Download, X, Share2, Sparkles, Tag, Bookmark } from 'lucide-react';
 import { createPortal } from 'react-dom';
 
 export default function InstallPrompt({ theme = {} }) {
@@ -11,11 +11,12 @@ export default function InstallPrompt({ theme = {} }) {
     const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
     if (isStandalone) return;
 
+    // 🔥 Reduced cooldown to 30 minutes so users see it more frequently
     const dismissedTime = localStorage.getItem('lyte_bytes_pwa_dismissed_time');
     const now = new Date().getTime();
-    const twoHoursInMs = 2 * 60 * 60 * 1000;
+    const thirtyMinutesInMs = 30 * 60 * 1000;
     
-    if (dismissedTime && (now - parseInt(dismissedTime, 10)) < twoHoursInMs) {
+    if (dismissedTime && (now - parseInt(dismissedTime, 10)) < thirtyMinutesInMs) {
       return;
     }
 
@@ -24,18 +25,12 @@ export default function InstallPrompt({ theme = {} }) {
     setIsIos(iosDevice);
 
     const checkAndShowPrompt = () => {
-      const offerClosed = localStorage.getItem('lyte_offer_closed');
-      
-      if (!offerClosed) {
-        setTimeout(checkAndShowPrompt, 1000);
-        return;
-      }
-
+      // Trigger shortly after app load or when browsing
       setShowBanner(true);
     };
 
     if (iosDevice) {
-      const timer = setTimeout(checkAndShowPrompt, 2000);
+      const timer = setTimeout(checkAndShowPrompt, 4000);
       return () => clearTimeout(timer);
     } else {
       const handler = (e) => {
@@ -44,7 +39,14 @@ export default function InstallPrompt({ theme = {} }) {
         checkAndShowPrompt();
       };
       window.addEventListener('beforeinstallprompt', handler);
-      return () => window.removeEventListener('beforeinstallprompt', handler);
+      
+      // Fallback timer for browsers that don't immediately fire beforeinstallprompt
+      const fallbackTimer = setTimeout(checkAndShowPrompt, 4000);
+      
+      return () => {
+        window.removeEventListener('beforeinstallprompt', handler);
+        clearTimeout(fallbackTimer);
+      };
     }
   }, []);
 
@@ -54,13 +56,19 @@ export default function InstallPrompt({ theme = {} }) {
   };
 
   const handleInstallClick = async () => {
-    if (!deferredPrompt) return;
-    deferredPrompt.prompt();
-    const { outcome } = await deferredPrompt.userChoice;
-    if (outcome === 'accepted') {
-      console.log('User accepted the install prompt');
+    if (isIos) {
+      // On iOS, keep the modal open so they can read the instructions
+      return;
     }
-    setDeferredPrompt(null);
+
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      if (outcome === 'accepted') {
+        console.log('User accepted the install prompt');
+      }
+      setDeferredPrompt(null);
+    }
     handleDismiss();
   };
 
@@ -74,7 +82,7 @@ export default function InstallPrompt({ theme = {} }) {
         inset: 0,
         width: '100vw',
         height: '100dvh',
-        backgroundColor: 'rgba(20, 15, 12, 0.8)', 
+        backgroundColor: 'rgba(20, 15, 12, 0.82)', 
         backdropFilter: 'blur(8px)', 
         WebkitBackdropFilter: 'blur(8px)',
         display: 'flex', 
@@ -95,10 +103,10 @@ export default function InstallPrompt({ theme = {} }) {
           borderTopRightRadius: 'clamp(20px, 5vw, 28px)',
           borderBottomLeftRadius: '0px',
           borderBottomRightRadius: '0px',
-          padding: 'clamp(16px, 4vw, 22px)', 
+          padding: 'clamp(18px, 4.5vw, 24px)', 
           maxWidth: '520px', 
           width: '100%', 
-          maxHeight: '82vh',
+          maxHeight: '85vh',
           boxSizing: 'border-box',
           position: 'relative', 
           boxShadow: '0 25px 50px rgba(0,0,0,0.35)',
@@ -110,67 +118,58 @@ export default function InstallPrompt({ theme = {} }) {
           cursor: 'default'
         }}
       >
+        {/* Header */}
         <div style={{
           display: 'flex', 
           alignItems: 'center', 
           justifyContent: 'space-between',
-          paddingBottom: '16px',
-          marginBottom: '2px',
+          paddingBottom: '14px',
           flexShrink: 0,
           gap: '8px',
           minWidth: 0
         }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', minWidth: 0 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', minWidth: 0 }}>
             <div style={{
-              backgroundColor: 'rgba(197, 160, 89, 0.15)',
-              border: '1px solid rgba(197, 160, 89, 0.35)',
               borderRadius: '12px',
-              width: '36px',
-              height: '36px',
+              width: '45px',
+              height: '45px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              flexShrink: 0
+              flexShrink: '0'
             }}>
-              {isIos ? <Share2 size={18} color="#FF5958" /> : <Download size={18} color="#FF5958" />}
+              <Bookmark size={30} color="#FF5958" fill="#FF5958" />
             </div>
-            <h3 style={{ 
-              fontFamily: "'Cormorant Garamond', serif", 
-              fontSize: 'clamp(18px, 4.5vw, 22px)', 
-              fontWeight: '700', 
-              color: '#FF5958', 
-              margin: 0,
-              textTransform: 'uppercase',
-              letterSpacing: '1px',
-              whiteSpace: 'nowrap',
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-              minWidth: 0
-            }}>
-              Install Lyte Bytes
-            </h3>
+            <div>
+              <span style={{ 
+                background: 'rgba(197, 160, 89, 0.15)', 
+                border: '1px solid rgba(197, 160, 89, 0.3)', 
+                padding: '2px 8px', 
+                borderRadius: '8px', 
+                fontSize: '9.5px', 
+                fontWeight: '700', 
+                letterSpacing: '1px', 
+                textTransform: 'uppercase', 
+                color: '#8A6D2B' 
+              }}>
+                App Exclusive
+              </span>
+              <h3 style={{ 
+                fontFamily: "'sans-serif", 
+                fontSize: 'clamp(14px, 4.5vw, 18px)', 
+                fontWeight: '600', 
+                color: '#1A1816', 
+                margin: '1px 0 0 0',
+                textTransform: 'uppercase',
+                letterSpacing: '0.5px'
+              }}>
+                10% OFF on First Order
+              </h3>
+            </div>
           </div>
-          <button 
-            onClick={handleDismiss}
-            style={{
-              background: 'rgba(197, 160, 89, 0.15)',
-              border: '1px solid rgba(197, 160, 89, 0.3)',
-              borderRadius: '50%',
-              width: '28px',
-              height: '28px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              cursor: 'pointer',
-              color: '#1A1816',
-              transition: 'all 0.2s ease',
-              flexShrink: 0
-            }}
-          >
-            <X size={16} />
-          </button>
         </div>
 
+        {/* Content Body */}
         <div style={{ 
           overflowY: 'auto', 
           display: 'flex', 
@@ -181,22 +180,36 @@ export default function InstallPrompt({ theme = {} }) {
           fontSize: 'clamp(12px, 3.5vw, 14px)',
           color: '#57534E',
           lineHeight: '1.5',
-          paddingRight: '6px',
-          minWidth: 0
+          paddingTop: '4px'
         }}>
           <p style={{ 
             fontSize: 'clamp(12px, 3.5vw, 14px)', 
             color: '#78716C', 
             margin: 0, 
-            lineHeight: '1.5',
             fontWeight: '500' 
           }}>
             {isIos 
-              ? "To install our app on your device, tap the Share button (⎋) below and select 'Add to Home Screen' (➕)."
-              : "Add Lyte Bytes to your home screen for quick ordering, instant access, and an app-like experience."}
+              ? "Unlock your welcome perk and enjoy a seamless ordering experience. Tap the Share button (⎋) below and select 'Add to Home Screen' (➕)."
+              : "Add Lyte Bytes to your device home screen to unlock instant rewards, smooth app navigation, and your welcome savings."}
           </p>
 
-          <div style={{ display: 'flex', gap: '10px', width: '100%', boxSizing: 'border-box', marginTop: '4px' }}>
+          <div style={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            gap: '8px', 
+            background: 'rgba(197, 160, 89, 0.08)', 
+            padding: '10px 14px', 
+            borderRadius: '10px',
+            border: '1px dashed rgba(197, 160, 89, 0.4)',
+            fontSize: '13px',
+            fontWeight: '600',
+            color: '#8A6D2B'
+          }}>
+            <Tag size={15} color="#FF5958" style={{ flexShrink: 0 }} />
+            <span>Use code <strong style={{ color: '#1A1816' }}>APPFIRST</strong> at checkout</span>
+          </div>
+
+          <div style={{ display: 'flex', gap: '10px', width: '100%', boxSizing: 'border-box', marginTop: '6px' }}>
             <button 
               onClick={handleDismiss}
               style={{
@@ -215,26 +228,29 @@ export default function InstallPrompt({ theme = {} }) {
               Maybe Later
             </button>
             
-            {!isIos && (
-              <button 
-                onClick={handleInstallClick}
-                style={{
-                  flex: 1,
-                  minWidth: 0,
-                  border: '1px solid rgba(255, 255, 255, 0.2)',
-                  background: 'linear-gradient(135deg, #FF5958 0%, #E11D48 100%)',
-                  color: '#FFFFFF',
-                  padding: '12px',
-                  fontSize: 'clamp(13px, 3.8vw, 14.5px)',
-                  fontWeight: '600',
-                  borderRadius: '12px',
-                  cursor: 'pointer',
-                  boxShadow: '0 4px 14px rgba(255, 89, 88, 0.3)'
-                }}
-              >
-                Install Now
-              </button>
-            )}
+            <button 
+              onClick={handleInstallClick}
+              style={{
+                flex: 1,
+                minWidth: 0,
+                border: '1px solid rgba(255, 255, 255, 0.2)',
+                background: 'linear-gradient(135deg, #FF5958 0%, #E11D48 100%)',
+                color: '#FFFFFF',
+                padding: '12px',
+                fontSize: 'clamp(13px, 3.8vw, 14.5px)',
+                fontWeight: '600',
+                borderRadius: '12px',
+                cursor: 'pointer',
+                boxShadow: '0 4px 14px rgba(255, 89, 88, 0.3)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '6px'
+              }}
+            >
+              <Download size={16} />
+              <span>{isIos ? 'Install Now' : 'Install & Save 10%'}</span>
+            </button>
           </div>
         </div>
       </div>
