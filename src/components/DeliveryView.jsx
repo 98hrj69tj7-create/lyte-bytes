@@ -68,6 +68,31 @@ function getField(row, possibleKeys) {
   return '';
 }
 
+// ==========================================
+// HELPER: Validate Operating Hours & Days
+// ==========================================
+const validateDeliverySlot = (dateString, timeString) => {
+  if (!dateString || !timeString) {
+    return { valid: false, message: 'Please select both date and time.' };
+  }
+
+  const date = new Date(dateString);
+  const dayOfWeek = date.getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
+
+  // Rule 1: Monday is closed
+  if (dayOfWeek === 1) {
+    return { valid: false, message: 'We are closed on Mondays. Please choose another day.' };
+  }
+
+  // Rule 2: Operating hours are 10:00 to 19:00 (10:00 AM - 7:00 PM)
+  const [hours] = timeString.split(':').map(Number);
+  if (isNaN(hours) || hours < 10 || hours >= 19) {
+    return { valid: false, message: 'Selected time is outside operating hours (10:00 AM - 7:00 PM).' };
+  }
+
+  return { valid: true };
+};
+
 const calculateDeliveryFare = (distKm) => {
   if (distKm <= 5) return 50;
   const extraKm = distKm - 5;
@@ -213,12 +238,12 @@ export default function DeliveryView({
   setDeliveryTime = () => {},
   handleProceedToPayment = () => {},
   actionButtonStyle = {},
-  secondaryButtonStyle = {},
-  backButtonStyle = {}
+  secondaryButtonStyle = {}
 }) {
   const [isDeliveryPolicyOpen, setIsDeliveryPolicyOpen] = useState(false);
   const [isPrivacyPolicyOpen, setIsPrivacyPolicyOpen] = useState(false);
   const [isLookingUp, setIsLookingUp] = useState(false);
+  const [deliveryAlert, setDeliveryAlert] = useState(null);
   
   const [isMapModalOpen, setIsMapModalOpen] = useState(false);
   const [mapLoaded, setMapLoaded] = useState(false);
@@ -231,14 +256,17 @@ export default function DeliveryView({
   const mapInstanceRef = useRef(null);
   const markerRef = useRef(null);
   const searchInputRef = useRef(null);
+  const lastCheckedPhoneRef = useRef('');
 
   const currentMode = customer.fulfillmentType || 'DELIVERY';
   const whatsappNumber = "9108286886";
 
+  // Smart Lookup guard to prevent annoying re-fetches on every keystroke
   useEffect(() => {
     const phoneTrimmed = (customer.phone || '').trim();
-    if (phoneTrimmed.length === 10) {
+    if (phoneTrimmed.length === 10 && phoneTrimmed !== lastCheckedPhoneRef.current) {
       async function lookupCustomer() {
+        lastCheckedPhoneRef.current = phoneTrimmed;
         setIsLookingUp(true);
         try {
           const response = await fetch(CSV_URL);
@@ -303,7 +331,7 @@ export default function DeliveryView({
     text: theme?.text || '#1A1816',
     border: theme?.border || '1px solid rgba(197, 160, 89, 0.4)',
     bg: theme?.bg || '#FFFDF9',
-    radius: 'clamp(16px, 4vw, 20px)', // 💡 FLUID RADIUS
+    radius: 'clamp(16px, 4vw, 20px)',
     buttonBg: theme?.buttonBg || '#FF5958'
   };
 
@@ -432,7 +460,7 @@ export default function DeliveryView({
           }
           updateLocationData(lat, lng);
         },
-        () => alert("Unable to retrieve your GPS location. Please drop the pin manually.")
+        () => setDeliveryAlert("Unable to retrieve your GPS location. Please drop the pin manually.")
       );
     }
   };
@@ -457,6 +485,29 @@ export default function DeliveryView({
     }));
   };
 
+  // 🔥 VALIDATION CHECK: Mandatory for Pickup, Optional for Delivery
+  const handleProceedClick = () => {
+    if (currentMode === 'PICKUP') {
+      const validation = validateDeliverySlot(deliveryDate, deliveryTime);
+      if (!validation.valid) {
+        setDeliveryAlert(validation.message);
+        return;
+      }
+    } else if (deliveryDate || deliveryTime) {
+      const validation = validateDeliverySlot(deliveryDate, deliveryTime);
+      if (!validation.valid) {
+        setDeliveryAlert(validation.message);
+        return;
+      }
+    }
+
+    if (!isFormValid) {
+      setDeliveryAlert(distanceInfo.invalid ? "Delivery is only available within Bengaluru. Please switch to Self Pickup or contact via WhatsApp." : "Please complete contact details and address.");
+      return;
+    }
+    handleProceedToPayment();
+  };
+
   const isPhoneValid = customer.phone && customer.phone.length === 10;
   const isNameValid = customer.name && customer.name.trim().length > 0;
   const isAddressValid = currentMode === 'PICKUP' || (customer.address && customer.address.trim().length > 0 && !distanceInfo.invalid);
@@ -464,12 +515,12 @@ export default function DeliveryView({
 
   const sleekInput = {
     width: '100%',
-    padding: 'clamp(10px, 3vw, 12px) clamp(12px, 3.5vw, 14px)', // 💡 FLUID PADDING
+    padding: 'clamp(10px, 3vw, 12px) clamp(12px, 3.5vw, 14px)',
     borderRadius: '12px',
     border: '1px solid rgba(197, 160, 89, 0.4)',
     background: '#FFFFFF',
     color: activeTheme.text,
-    fontSize: 'var(--font-body)', // 💡 FLUID TYPOGRAPHY
+    fontSize: 'var(--font-body)',
     fontWeight: '500',
     outline: 'none',
     boxSizing: 'border-box',
@@ -487,7 +538,7 @@ export default function DeliveryView({
       boxSizing: 'border-box',
       fontFamily: "'Plus Jakarta Sans', sans-serif" 
     }}>
-      {/* ================= UNIFORM HEADER SECTION ================= */}
+      {/* Header */}
       <div style={{ display: 'flex', alignItems: 'center', position: 'relative', marginBottom: '20px', padding: '6px 0' }}>
         <button 
           onClick={() => setView('cart')} 
@@ -499,7 +550,7 @@ export default function DeliveryView({
             alignItems: 'center', 
             gap: '6px', 
             color: activeTheme.text, 
-            fontSize: 'var(--font-caption)', // 💡 FLUID TYPOGRAPHY
+            fontSize: 'var(--font-caption)', 
             fontWeight: '600', 
             padding: '6px 8px', 
             borderRadius: '12px', 
@@ -515,7 +566,7 @@ export default function DeliveryView({
           right: 0, 
           textAlign: 'center', 
           fontFamily: "'Cormorant Garamond', serif",
-          fontSize: 'var(--font-h2)', // 💡 FLUID TYPOGRAPHY
+          fontSize: 'var(--font-h2)', 
           color: '#FF5958', 
           margin: 0, 
           fontWeight: '700', 
@@ -527,12 +578,12 @@ export default function DeliveryView({
         </h2>
       </div>
 
-      {/* ================= MAIN CONTAINER CARD ================= */}
+      {/* Main Container Card */}
       <div style={{ 
         border: '1px solid rgba(197, 160, 89, 0.4)', 
         borderRadius: activeTheme.radius, 
         background: 'linear-gradient(135deg, #FFFDF9 0%, #FAF4EB 100%)', 
-        padding: 'clamp(14px, 4vw, 18px)', // 💡 FLUID PADDING
+        padding: 'clamp(14px, 4vw, 18px)', 
         boxShadow: '0 8px 24px rgba(44, 34, 30, 0.06)',
         display: 'flex',
         flexDirection: 'column',
@@ -608,7 +659,7 @@ export default function DeliveryView({
                 background: currentMode === 'DELIVERY' ? '#FFFFFF' : 'transparent',
                 color: currentMode === 'DELIVERY' ? activeTheme.brand : '#78716C',
                 fontWeight: '800',
-                fontSize: 'var(--font-caption)', // 💡 FLUID TYPOGRAPHY
+                fontSize: 'var(--font-caption)', 
                 cursor: 'pointer',
                 display: 'flex',
                 flexDirection: 'column',
@@ -640,7 +691,7 @@ export default function DeliveryView({
                 background: currentMode === 'PICKUP' ? '#FFFFFF' : 'transparent',
                 color: currentMode === 'PICKUP' ? activeTheme.brand : '#78716C',
                 fontWeight: '800',
-                fontSize: 'var(--font-caption)', // 💡 FLUID TYPOGRAPHY
+                fontSize: 'var(--font-caption)', 
                 cursor: 'pointer',
                 display: 'flex',
                 flexDirection: 'column',
@@ -731,7 +782,6 @@ export default function DeliveryView({
                 <div style={{ fontSize: 'var(--font-caption)', color: '#DC2626', fontWeight: '500', lineHeight: '1.4' }}>
                   This location is outside our delivery zone. You can switch to **Self Pickup** or reach out to us directly via WhatsApp to coordinate special arrangements.
                 </div>
-                {/* 💡 BULLETPROOF FLEX: minWidth: 0 ensures buttons wrap or scale nicely */}
                 <div style={{ display: 'flex', gap: '8px', marginTop: '2px', width: '100%', boxSizing: 'border-box' }}>
                   <button
                     type="button"
@@ -774,10 +824,10 @@ export default function DeliveryView({
           </div>
         )}
 
-        {/* Schedule Container */}
+        {/* Schedule Container (Dynamic Optional vs Required Label) */}
         <div style={{ borderTop: '1px solid rgba(197, 160, 89, 0.35)', paddingTop: '14px', width: '100%', boxSizing: 'border-box' }}>
           <div style={{ fontSize: 'clamp(9.5px, 2.5vw, 11px)', fontWeight: '700', color: '#78716C', letterSpacing: '0.8px', textTransform: 'uppercase', marginBottom: '8px', textAlign: 'center' }}>
-            {currentMode === 'DELIVERY' ? 'Preferred Delivery Time (Optional)' : 'Preferred Pickup Time (Optional)'}
+            {currentMode === 'DELIVERY' ? 'Preferred Delivery Time (Optional)' : 'Preferred Pickup Time (Required)'}
           </div>
 
           <div style={{ border: '1px solid rgba(197, 160, 89, 0.4)', borderRadius: '12px', background: '#FFFFFF', padding: '10px 14px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', width: '100%', alignItems: 'center', boxSizing: 'border-box' }}>
@@ -801,7 +851,7 @@ export default function DeliveryView({
         <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', width: '100%', marginTop: '4px' }}>
           <button 
             type="button"
-            onClick={isFormValid ? handleProceedToPayment : () => alert(distanceInfo.invalid ? "Delivery is only available within Bengaluru. Please switch to Self Pickup or contact via WhatsApp." : "Please complete contact details and address.")} 
+            onClick={handleProceedClick} 
             disabled={!isFormValid}
             style={{ 
               ...actionButtonStyle, 
@@ -813,7 +863,7 @@ export default function DeliveryView({
               fontWeight: '600',
               borderRadius: '14px', 
               width: '100%', 
-              marginBottom:10,
+              marginBottom: 10,
               opacity: isFormValid ? 1 : 0.5,
               cursor: isFormValid ? 'pointer' : 'not-allowed',
               boxSizing: 'border-box',
@@ -973,6 +1023,39 @@ export default function DeliveryView({
                 </button>
               )}
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* SIGNATURE THEMED ALERT MODAL */}
+      {deliveryAlert && (
+        <div style={{
+          position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+          backgroundColor: 'rgba(20, 15, 12, 0.82)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)',
+          zIndex: 10000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px', boxSizing: 'border-box'
+        }}>
+          <div style={{
+            background: 'linear-gradient(135deg, #FFFDF9 0%, #FAF4EB 100%)', width: '100%', maxWidth: '360px',
+            borderRadius: '24px', border: '1px solid rgba(197, 160, 89, 0.4)', padding: '24px',
+            display: 'flex', flexDirection: 'column', gap: '16px', boxShadow: '0 20px 40px rgba(0,0,0,0.3)', textAlign: 'center'
+          }}>
+            <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '22px', fontWeight: '700', color: '#FF5958', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+              Notice
+            </div>
+            <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: '14px', color: '#78716C', margin: 0, lineHeight: '1.5', fontWeight: '500' }}>
+              {deliveryAlert}
+            </p>
+            <button 
+              type="button"
+              onClick={() => setDeliveryAlert(null)}
+              style={{
+                width: '100%', padding: '12px', background: 'linear-gradient(135deg, #FF5958 0%, #E11D48 100%)', color: '#FFFFFF',
+                border: 'none', borderRadius: '12px', fontWeight: '700', fontSize: '14px', cursor: 'pointer',
+                boxShadow: '0 4px 14px rgba(255, 89, 88, 0.3)', marginTop: '4px'
+              }}
+            >
+              Okay
+            </button>
           </div>
         </div>
       )}

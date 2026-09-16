@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { createPortal } from 'react-dom';
 import BulkOrdersModal from './BulkOrdersModal';
+import StorageGuidelineModal from '../utils/storageGuidelines';
 
 /* ==========================================================================
    TAG STYLES CONFIGURATION (SORTED ALPHABETICALLY A-Z)
@@ -92,7 +92,6 @@ export default function ItemCard({ item, openModal, addToCart, resolveImagePath,
     return () => { if (timerRef.current) clearTimeout(timerRef.current); };
   }, []);
 
-  // Check if item is a catering meal (Veg Meal / Non-Veg Meal)
   const itemName = (item?.name || '').trim().toLowerCase();
   const isCateringMeal = itemName === 'veg meal' || itemName === 'non-veg meal' || itemName === 'non veg meal';
 
@@ -153,13 +152,13 @@ export default function ItemCard({ item, openModal, addToCart, resolveImagePath,
             style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', transform: isImgHovered ? 'scale(1.08)' : 'scale(1)', transition: 'transform 0.35s ease' }} 
           />
           {variationString && (
-            <div style={{ position: 'absolute', top: '5px', left: '5px', backgroundColor: 'rgba(0, 0, 0, 0.75)', backdropFilter: 'blur(6px)', WebkitBackdropFilter: 'blur(6px)', borderRadius: '5px', padding: '0px 0px', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid rgba(255, 255, 255, 0.15)', boxShadow: '0 2px 6px rgba(0, 0, 0, 0.5)', zIndex: 1 }}>
-              <img src={`/menu-items/${variationString === 'non-veg' ? 'non-veg' : variationString}.png`} alt={item.variation} style={{ width: '12px', height: '12px', display: 'block' }} />
+            <div style={{ position: 'absolute', bottom: '6px', left: '6px', backgroundColor: 'rgba(0, 0, 0, 0.75)', backdropFilter: 'blur(6px)', WebkitBackdropFilter: 'blur(6px)', borderRadius: '6px', padding: '4px 6px', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid rgba(255, 255, 255, 0.15)', boxShadow: '0 2px 6px rgba(0, 0, 0, 0.5)', zIndex: 2 }}>
+              <img src={`/menu-items/${variationString === 'non-veg' ? 'non-veg' : variationString}.png`} alt={item.variation} style={{ width: '14px', height: '14px', display: 'block' }} />
             </div>
           )}
-          <button onClick={(e) => { e.stopPropagation(); setShowStorageModal(true); }} aria-label="Storage & Care Guidelines" style={{ position: 'absolute', top: '3px', right: '5px', backgroundColor: 'rgba(18, 15, 13, 0.85)', border: '1px solid rgba(197, 160, 89, 0.6)', color: '#FFD700', borderRadius: '50%', width: '15px', height: '15px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px', fontWeight: '700', cursor: 'pointer', boxShadow: '0 2px 6px rgba(0, 0, 0, 0.6)', padding: 0, zIndex: 2, transition: 'transform 0.2s ease, border-color 0.2s ease', flexShrink: 0 }}>i</button>
+          <button onClick={(e) => { e.stopPropagation(); setShowStorageModal(true); }} aria-label="Storage & Care Guidelines" style={{ position: 'absolute', bottom: '6px', right: '6px', backgroundColor: 'rgba(18, 15, 13, 0.85)', border: '1px solid rgba(197, 160, 89, 0.6)', color: '#FFD700', borderRadius: '50%', width: '22px', height: '22px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '11px', fontWeight: '700', cursor: 'pointer', boxShadow: '0 2px 6px rgba(0, 0, 0, 0.6)', padding: 0, zIndex: 2, transition: 'transform 0.2s ease, border-color 0.2s ease', flexShrink: 0 }}>i</button>
           {showGoogleRating && (
-            <div style={{ position: 'absolute', bottom: '5px', left: '5px', backgroundColor: 'rgba(18, 15, 13, 0.85)', backdropFilter: 'blur(6px)', WebkitBackdropFilter: 'blur(6px)', borderRadius: '10px', padding: '3px 6px', display: 'flex', alignItems: 'center', gap: '4px', border: '1px solid rgba(255, 215, 0, 0.35)', boxShadow: '0 2px 6px rgba(0, 0, 0, 0.6)' }}>
+            <div style={{ position: 'absolute', top: '5px', left: '5px', backgroundColor: 'rgba(18, 15, 13, 0.85)', backdropFilter: 'blur(6px)', WebkitBackdropFilter: 'blur(6px)', borderRadius: '10px', padding: '3px 6px', display: 'flex', alignItems: 'center', gap: '4px', border: '1px solid rgba(255, 215, 0, 0.35)', boxShadow: '0 2px 6px rgba(0, 0, 0, 0.6)' }}>
               <svg width="10" height="10" viewBox="0 0 24 24" style={{ display: 'block', flexShrink: 0 }}>
                 <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
                 <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
@@ -177,7 +176,6 @@ export default function ItemCard({ item, openModal, addToCart, resolveImagePath,
               {item.name}
             </div>
             
-            {/* Unit / Portion & Customisable Label */}
             {(displayUnit || (isGridView && (hasVariants || isCateringMeal))) && (
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: 'var(--font-caption)', lineHeight: '1.3', letterSpacing: '0.1px', textAlign: 'left', width: '100%', flexWrap: 'wrap', minWidth: 0 }}>
                 {displayUnit && <span style={{ color: '#C5A059', fontStyle: 'italic', fontWeight: '400', fontFamily: "sans-serif", whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{displayUnit}</span>}
@@ -194,7 +192,6 @@ export default function ItemCard({ item, openModal, addToCart, resolveImagePath,
           
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', marginTop: isGridView ? '8px' : '4px', minWidth: '0', gap: '8px' }}>
             
-            {/* Customisable Label (List View) */}
             <div style={{ minWidth: 0 }}>
               {(hasVariants || isCateringMeal) && !isGridView && (
                 <span style={{ fontSize: '9.5px', color: '#A1A1AA', fontWeight: '500', whiteSpace: 'nowrap' }}>
@@ -204,15 +201,12 @@ export default function ItemCard({ item, openModal, addToCart, resolveImagePath,
             </div>
 
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginLeft: 'auto', flexShrink: 0 }}>
-              
-              {/* Only render price if it is NOT a catering meal */}
               {!isCateringMeal && (
                 <div style={{ color: '#FF5958', fontWeight: '600', fontSize: 'var(--font-body)', letterSpacing: '-0.2px', lineHeight: '1', textShadow: '0 0 10px rgba(255, 89, 88, 0.25)', whiteSpace: 'nowrap' }}>
                   ₹{displayPrice}
                 </div>
               )}
 
-              {/* Action Button */}
               <button 
                 onClick={handleAddClick}
                 onMouseDown={() => setIsPressed(true)} onMouseUp={() => setIsPressed(false)}
@@ -242,26 +236,13 @@ export default function ItemCard({ item, openModal, addToCart, resolveImagePath,
         </div>
       </div>
 
-      {showStorageModal && guideline && createPortal(
-        <div onClick={(e) => { e.stopPropagation(); setShowStorageModal(false); }} style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0, 0, 0, 0.78)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '12px', boxSizing: 'border-box' }}>
-          <div onClick={(e) => e.stopPropagation()} style={{ background: 'linear-gradient(135deg, rgba(32, 27, 24, 0.98) 0%, rgba(18, 15, 13, 0.98) 100%)', border: '1px solid rgba(197, 160, 89, 0.4)', borderRadius: '20px', padding: 'clamp(16px, 4vw, 22px)', maxWidth: '380px', width: '100%', boxShadow: '0 20px 40px rgba(0, 0, 0, 0.8), 0 0 20px rgba(255, 215, 0, 0.12)', color: '#FFFFFF', textAlign: 'left', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', fontFamily: "'Plus Jakarta Sans', sans-serif", boxSizing: 'border-box' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', width: '100%', marginBottom: '10px', gap: '8px', minWidth: 0 }}>
-              <h4 style={{ margin: 0, fontSize: 'clamp(16px, 4.5vw, 17px)', fontWeight: '700', color: '#FFD700', lineHeight: '1.3', textAlign: 'left', paddingRight: '4px', fontFamily: "'Cormorant Garamond', serif", minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis' }}>{guideline.title}</h4>
-              <button onClick={() => setShowStorageModal(false)} style={{ background: 'rgba(255, 255, 255, 0.08)', border: '1px solid rgba(255, 255, 255, 0.15)', color: '#A1A1AA', borderRadius: '50%', width: '26px', height: '26px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '13px', cursor: 'pointer', padding: 0, flexShrink: 0 }}>✕</button>
-            </div>
-            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontSize: 'var(--font-caption)', color: '#FF7372', marginBottom: '16px', backgroundColor: 'rgba(255, 89, 88, 0.12)', padding: '4px 10px', borderRadius: '8px', border: '1px solid rgba(255, 89, 88, 0.25)', textAlign: 'left', alignSelf: 'flex-start', maxWidth: '100%', boxSizing: 'border-box' }}>
-              <span style={{ fontSize: '12px', flexShrink: 0 }}>⏳</span> <span style={{ minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis' }}><strong>Shelf Life:</strong> {guideline.shelfLife}</span>
-            </div>
-            <ol style={{ paddingLeft: '20px', margin: '0 0 18px 0', display: 'flex', flexDirection: 'column', gap: '10px', fontSize: 'var(--font-caption)', lineHeight: '1.5', color: '#E4E4E7', textAlign: 'left', width: '100%', boxSizing: 'border-box' }}>
-              {guideline.steps.map((step, idx) => (<li key={idx} style={{ textAlign: 'left', paddingLeft: '2px' }}>{step}</li>))}
-            </ol>
-            <button onClick={() => setShowStorageModal(false)} style={{ width: '100%', padding: '11px', background: 'linear-gradient(135deg, #FF5958 0%, #E11D48 100%)', color: '#FFFFFF', border: '1px solid rgba(255, 255, 255, 0.2)', borderRadius: '12px', fontWeight: '600', fontSize: 'var(--font-body)', cursor: 'pointer', boxShadow: '0 4px 14px rgba(255, 89, 88, 0.3)', textAlign: 'center', boxSizing: 'border-box' }}>Got it</button>
-          </div>
-        </div>,
-        document.body
-      )}
+      {/* Storage Guideline Modal Component */}
+      <StorageGuidelineModal 
+        isOpen={showStorageModal} 
+        onClose={() => setShowStorageModal(false)} 
+        guideline={guideline} 
+      />
 
-      {/* 4. BULK ORDERS MODAL */}
       <BulkOrdersModal isOpen={isBulkModalOpen} onClose={() => setIsBulkModalOpen(false)} />
     </>
   );

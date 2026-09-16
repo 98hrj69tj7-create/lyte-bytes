@@ -5,6 +5,16 @@ export default function Footer({ view, setView, theme }) {
   const [isVisible, setIsVisible] = useState(true);
   const lastScrollTopRef = useRef(0);
 
+  // Check if user is logged in via localStorage
+  const isUserLoggedIn = () => {
+    try {
+      return !!localStorage.getItem('lytebytes_user');
+    } catch (e) {
+      return false;
+    }
+  };
+  const loggedIn = isUserLoggedIn();
+
   // Time check helper: Active between 09:00 AM (540 mins) and 10:00 PM (1320 mins)
   const checkIsLive = () => {
     const now = new Date();
@@ -30,7 +40,6 @@ export default function Footer({ view, setView, theme }) {
     return () => window.removeEventListener('scroll', handleScroll, true);
   }, []);
 
-  // 💡 Moved after all hooks to comply with React hook rules
   if (['admin-customers', 'concierge', 'chatbot', 'chat', 'info'].includes(view)) {
     return null;
   }
@@ -79,11 +88,19 @@ export default function Footer({ view, setView, theme }) {
           70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(239, 68, 68, 0); }
           100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
         }
+        @keyframes pulseGold {
+          0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(197, 160, 89, 0.7); }
+          70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(197, 160, 89, 0); }
+          100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(197, 160, 89, 0); }
+        }
       `}</style>
 
       {navItems.map((item) => {
         const IconComponent = item.icon;
-        const isActive = view === item.id || (item.id === 'home' && (view === 'subcat' || view === 'items'));
+        
+        const isActive = view === item.id || 
+          (item.id === 'home' && (view === 'subcat' || view === 'items')) ||
+          (item.id === 'account' && (view === 'account' || view === 'profile'));
 
         return (
           <button
@@ -128,10 +145,11 @@ export default function Footer({ view, setView, theme }) {
                   filter: isActive ? 'drop-shadow(0 2px 8px rgba(197, 160, 89, 0.4))' : 'none',
                 }}
               />
+              {/* Support Badge Dot */}
               {item.badge && (
                 <span style={{
                   position: 'absolute',
-                  top: '-2px',
+                  top: '-3px',
                   right: '-4px',
                   width: '7px',
                   height: '7px',
@@ -139,6 +157,23 @@ export default function Footer({ view, setView, theme }) {
                   borderRadius: '50%',
                   boxShadow: isLive ? '0 0 6px #22c55e' : '0 0 6px #ef4444',
                   animation: isLive ? 'pulseLive 2s infinite' : 'pulseOffline 2s infinite',
+                  border: '1px solid #1A1714',
+                  flexShrink: 0
+                }} />
+              )}
+
+              {/* Glowing Gold Signed-In Indicator Dot for Account Tab */}
+              {item.id === 'account' && loggedIn && (
+                <span style={{
+                  position: 'absolute',
+                  top: '-3px',
+                  right: '-4px',
+                  width: '7px',
+                  height: '7px',
+                  backgroundColor: '#C5A059',
+                  borderRadius: '50%',
+                  boxShadow: '0 0 6px #C5A059',
+                  animation: 'pulseGold 2s infinite',
                   border: '1px solid #1A1714',
                   flexShrink: 0
                 }} />

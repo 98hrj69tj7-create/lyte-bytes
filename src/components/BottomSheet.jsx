@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import ReactDOM from 'react-dom';
 import { X } from 'lucide-react';
 
 export default function BottomSheet({ 
@@ -8,18 +9,36 @@ export default function BottomSheet({
   children, 
   maxWidth = '480px' 
 }) {
+  // Lock body scroll when open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isOpen]);
+
   if (!isOpen) return null;
 
-  return (
+  const modalContent = (
     <div style={{
-      position: 'fixed', inset: 0,
+      position: 'fixed', 
+      inset: 0,
+      width: '100vw',
+      height: '100dvh',
       backgroundColor: 'rgba(20, 15, 12, 0.78)', 
       backdropFilter: 'blur(8px)', 
       WebkitBackdropFilter: 'blur(8px)',
-      zIndex: 99999, display: 'flex', 
-      alignItems: 'flex-end', // 💡 Always anchors to bottom
+      zIndex: 99999, 
+      display: 'flex', 
+      alignItems: 'flex-end', // 💡 Forces bottom anchor on viewport root
       justifyContent: 'center', 
       boxSizing: 'border-box',
+      margin: 0,
+      padding: 0,
       animation: 'fadeInOverlay 0.2s ease forwards'
     }} onClick={onClose}>
       
@@ -27,11 +46,19 @@ export default function BottomSheet({
         onClick={(e) => e.stopPropagation()}
         style={{
           background: 'linear-gradient(135deg, #FFFDF9 0%, #FAF4EB 100%)',
-          width: '100%', maxWidth: maxWidth, maxHeight: '88vh',
-          borderTopLeftRadius: '28px', borderTopRightRadius: '28px',
+          width: '100%', 
+          maxWidth: maxWidth, 
+          maxHeight: '88vh',
+          borderTopLeftRadius: '28px', 
+          borderTopRightRadius: '28px',
+          borderBottomLeftRadius: '0px',
+          borderBottomRightRadius: '0px',
           border: '1.5px solid rgba(197, 160, 89, 0.4)', 
+          borderBottom: 'none',
           padding: '20px 20px 36px 20px',
-          display: 'flex', flexDirection: 'column', boxSizing: 'border-box',
+          display: 'flex', 
+          flexDirection: 'column', 
+          boxSizing: 'border-box',
           boxShadow: '0 -15px 40px rgba(0,0,0,0.3)',
           animation: 'slideUpSheet 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards'
         }}
@@ -45,7 +72,8 @@ export default function BottomSheet({
         {title && (
           <div style={{ 
             display: 'flex', alignItems: 'center', justifyContent: 'space-between', 
-            marginBottom: '16px', paddingBottom: '10px', borderBottom: '1px solid rgba(197, 160, 89, 0.2)' 
+            marginBottom: '16px', paddingBottom: '10px', borderBottom: '1px solid rgba(197, 160, 89, 0.2)',
+            flexShrink: 0 
           }}>
             <h3 style={{ 
               fontFamily: "'Cormorant Garamond', serif", fontSize: '22px', 
@@ -82,4 +110,6 @@ export default function BottomSheet({
       `}</style>
     </div>
   );
+
+  return ReactDOM.createPortal(modalContent, document.body);
 }

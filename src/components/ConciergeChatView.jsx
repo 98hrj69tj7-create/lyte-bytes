@@ -1,162 +1,118 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { ArrowLeft, Send, Bot, MessageCircle, User } from 'lucide-react';
+import { getBotResponse } from '../utils/chatbotLogic.jsx'; 
 
-const FAQ_DATA = [
-  // --- LUNCH & CATERING ---
-  { 
-    question: "What is included in the lunch combo?", 
-    answer: "Each combo includes Roti, Rice, Dal, Subzi or Curry (veg or chicken), and a complimentary item like raita, papad, salad or sweet. You can view the detailed breakdown directly on the Catering menu page!" 
-  },
-  { 
-    question: "Is the menu fixed or does it change daily?", 
-    answer: "Our rotating menu ensures variety and keeps your meals exciting, perfect for daily orders and subscription plans alike. Contact us on WhatsApp to know more about the menu." 
-  },
-  { 
-    question: "Can I choose between veg & non-veg daily?", 
-    answer: "Yes! You can select your preference in advance right when browsing items or adding them to your bag. Check order conditions to know more." 
-  },
-
-  // --- NUTRITION & MACROS ---
-  { 
-    question: "Where can I find calories and macros?", 
-    answer: "Calories and nutritional breakdowns (macros) are available instantly in the item details view—just tap or click on any item image across the app to open its nutrition chart!" 
-  },
-
-  // --- SUBSCRIPTIONS & MEALS ---
-  { 
-    question: "Do you offer meal subscriptions?", 
-    answer: "Enjoy our weekly and monthly meal plans at special discounted rates. You can inquire about plans via WhatsApp in Client Care." 
-  },
-  { 
-    question: "Can I pause or skip days in my subscription?", 
-    answer: "Of course! Just inform us at least a day in advance by messaging our kitchen through the WhatsApp support link in Client Care." 
-  },
-  { 
-    question: "Do I need to pay in advance for subscriptions?", 
-    answer: "Yes, we request payment securely at the start of your plan via our integrated UPI payment gateway at checkout." 
-  },
-
-  // --- DELIVERY & TRACKING ---
-  { 
-    question: "Do you offer delivery services & what time is lunch delivered?", 
-    answer: "Yes, we deliver across selected areas in Bengaluru. Lunch deliveries are typically made between 11:30 AM and 12:30 PM. You can track your order live anytime using the 'Track' icon on the bottom navigation bar!" 
-  },
-
-  // --- PAYMENTS & ORDERS ---
-  { 
-    question: "What payment modes do you accept?", 
-    answer: "We accept secure digital payments via UPI, Google Pay, PhonePe, and Paytm, accessible seamlessly on the Payment screen during checkout." 
-  },
-  { 
-    question: "Do you take orders for parties and events?", 
-    answer: "Yes! We specialise in bulk catering for all occasions. Tap the 'Bulk Ordering & Pricing' or 'WhatsApp Support' card under the Catering Meals Menu to discuss custom tailoring for your event." 
-  },
-
-  // --- GENERAL MENU & PRODUCT INFO ---
-  { 
-    question: "Are your products preservative-free?", 
-    answer: "Yes! Everything at Lyte Bytes is 100% handcrafted with zero preservatives, made strictly to order." 
-  },
-  { 
-    question: "How do Ammi's Achar and Jams stay fresh?", 
-    answer: "Our pickles and artisanal jams use traditional methods with zero chemical additives. Check individual item descriptions for specific shelf-life details." 
-  }
-];
-
-// 4 Main Featured Quick Questions
-const MAIN_FAQS = [
-  "What is included in the lunch combo?",
-  "Do you offer meal subscriptions?",
-  "Do you offer delivery services & what time is lunch delivered?",
-  "Are your products preservative-free?"
+const QUICK_SUGGESTIONS = [
+  "What's in the lunch combo?",
+  "Tell me about Ammi's Achars",
+  "Do you have biryanis?",
+  "Where can I see calories?"
 ];
 
 export default function ConciergeChatView({ theme = {}, onBack }) {
   const [messages, setMessages] = useState([
-    { sender: 'bot', text: "Hello! Welcome to Lyte Bytes Concierge. I'm Chef Lyte, your digital guide, how can I help you discover our handcrafted gourmet delights today?" }
+    { sender: 'bot', text: "Hello! Welcome to Lyte Bytes Support. I'm Chef Lyte, your digital menu guide. What items or details can I help you find today?" }
   ]);
   const [inputText, setInputText] = useState('');
+  const chatFeedRef = useRef(null);
+
+  // Smooth internal scroll that won't bounce the parent window
+  const scrollToBottom = () => {
+    if (chatFeedRef.current) {
+      chatFeedRef.current.scrollTo({
+        top: chatFeedRef.current.scrollHeight,
+        behavior: 'smooth'
+      });
+    }
+  };
+
+  useEffect(() => {
+    const timeout = setTimeout(scrollToBottom, 50);
+    return () => clearTimeout(timeout);
+  }, [messages]);
 
   const handleSend = (textToSend) => {
     const text = textToSend || inputText;
     if (!text.trim()) return;
 
-    const newMessages = [...messages, { sender: 'user', text }];
-    setMessages(newMessages);
+    const userMessage = { sender: 'user', text };
+    setMessages(prev => [...prev, userMessage]);
     setInputText('');
 
     setTimeout(() => {
-      const userTextLower = text.toLowerCase();
-      const matchedFaq = FAQ_DATA.find(faq => {
-        const qLower = faq.question.toLowerCase();
-        return qLower.includes(userTextLower) || userTextLower.includes(qLower.split(' ')[0]) || userTextLower.includes(qLower.split(' ')[1]);
-      });
+      const matchedAnswer = getBotResponse(text);
 
-      if (matchedFaq) {
-        setMessages(prev => [...prev, { sender: 'bot', text: matchedFaq.answer }]);
+      if (matchedAnswer) {
+        setMessages(prev => [...prev, { sender: 'bot', text: matchedAnswer }]);
       } else {
         setMessages(prev => [
           ...prev, 
           { 
             sender: 'bot', 
-            text: "I want to make sure you get the exact details you need! For custom requests or specific inquiries not covered here, please connect directly with our kitchen on WhatsApp:",
+            text: "I want to make sure you get the exact answer for that! Let me connect you directly with our kitchen so you can chat with Team Lyte Bytes right away:",
             showWhatsAppButton: true 
           }
         ]);
       }
-    }, 600);
+    }, 500);
   };
 
   const activeTheme = {
     text: theme?.text || '#1A1816',
-    radius: 'clamp(16px, 4vw, 20px)' // 💡 FLUID RADIUS
+    brand: '#FF5958',
+    gold: '#8A6D2B'
   };
 
   return (
     <div style={{ 
+      position: 'fixed',
+      top: 0, left: 0, right: 0, 
+      /* Removed bottom: 0 so it doesn't fight the height */
+      height: '90dvh', /* 💡 Change this to 75dvh, 80dvh, or 82dvh to test! */
+      zIndex: 99999, 
       display: 'flex', 
       flexDirection: 'column', 
-      overflowY: 'auto',
-      overflowX: 'hidden', 
-      flex: 1, 
-      paddingBottom: '140px', 
-      paddingTop: '6px',
-      boxSizing: 'border-box',
-      width: '100%',
-      fontFamily: "'Plus Jakarta Sans', sans-serif"
+      backgroundColor: '#FFFDF9',
+      fontFamily: "'Plus Jakarta Sans', sans-serif",
     }}>
       
-      {/* Header Navigation */}
-      <div style={{ display: 'flex', alignItems: 'center', position: 'relative', marginBottom: '20px', padding: '6px 0' }}>
+      {/* Header Navigation: Respects the iPhone Dynamic Island */}
+      <div style={{ 
+        display: 'flex', 
+        alignItems: 'center', 
+        justifyContent: 'center',
+        position: 'relative', 
+        padding: 'max(8px, env(safe-area-inset-top)) clamp(12px, 4vw, 18px) 8px clamp(12px, 4vw, 18px)', 
+        backgroundColor: 'rgba(255, 253, 249, 0.95)',
+        backdropFilter: 'blur(12px)',
+        WebkitBackdropFilter: 'blur(12px)',
+        flexShrink: 0,
+        zIndex: 10
+      }}>
         <button 
           onClick={onBack} 
           style={{ 
-            background: 'rgba(255, 255, 255, 0.7)', 
-            border: '1px solid rgba(197, 160, 89, 0.35)', 
+            position: 'absolute',
+            left: 'clamp(16px, 4vw, 20px)',
+            background: '#FFFFFF', 
             cursor: 'pointer', 
             display: 'flex', 
             alignItems: 'center', 
             gap: '6px', 
             color: activeTheme.text, 
-            fontSize: 'var(--font-caption)', // 💡 FLUID TYPOGRAPHY
+            fontSize: 'var(--font-caption)', 
             fontWeight: '600', 
-            padding: '6px 10px', 
+            padding: 'clamp(2px, 2vw, 4px) clamp(6px, 3vw, 10px)', 
             borderRadius: '12px', 
-            zIndex: 1,
-            boxShadow: '0 2px 8px rgba(0,0,0,0.03)',
-            transition: 'all 0.2s ease'
+            boxShadow: '0 2px 8px rgba(0,0,0,0.04)'
           }}
         >
-          <ArrowLeft size={15}/> Back
+          <ArrowLeft size={15} style={{ flexShrink: 0 }}/> Back
         </button>
         <h2 style={{ 
-          position: 'absolute', 
-          left: 0, 
-          right: 0, 
-          textAlign: 'center', 
           fontFamily: "'Cormorant Garamond', serif",
-          fontSize: 'var(--font-h2)', // 💡 FLUID TYPOGRAPHY
-          color: '#FF5958', 
+          fontSize: 'var(--font-h2)', 
+          color: activeTheme.brand, 
           margin: 0, 
           fontWeight: '700', 
           letterSpacing: '0.8px', 
@@ -167,128 +123,137 @@ export default function ConciergeChatView({ theme = {}, onBack }) {
         </h2>
       </div>
 
-      {/* Main Wrapper Card */}
-      <div style={{ 
-        border: '1.5px solid rgba(197, 160, 89, 0.45)', 
-        borderRadius: activeTheme.radius,
-        background: 'linear-gradient(135deg, #FFFDF9 0%, #FAF5EC 100%)', 
-        padding: 'clamp(12px, 3.5vw, 16px)', // 💡 FLUID PADDING
-        boxShadow: '0 12px 32px rgba(44, 34, 30, 0.07)',
+      {/* Message Feed Container: Fluid internal scroll */}
+      <div ref={chatFeedRef} style={{ 
+        flex: 1, 
+        overflowY: 'auto', 
+        padding: 'clamp(16px, 5vw, 24px) clamp(16px, 4vw, 20px)', 
         display: 'flex', 
         flexDirection: 'column', 
-        gap: '12px', 
-        boxSizing: 'border-box', 
-        width: '100%',
-        minHeight: '420px'
+        gap: 'clamp(12px, 3.5vw, 16px)',
+        WebkitOverflowScrolling: 'touch', 
+        backgroundColor: '#FFFDF9'
       }}>
-        
-        {/* Messages Feed */}
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '10px', overflowY: 'auto', maxHeight: '340px', paddingBottom: '10px' }}>
-          {messages.map((msg, idx) => (
-            <div key={idx} style={{ display: 'flex', justifyContent: msg.sender === 'user' ? 'flex-end' : 'flex-start', alignItems: 'flex-start', gap: '8px' }}>
-              {/* Bot Avatar */}
-              {msg.sender === 'bot' && (
-                <div style={{ width: '28px', height: '28px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                  <Bot size={28} color="#8A6D2B" />
-                </div>
-              )}
+        {messages.map((msg, idx) => (
+          <div key={idx} style={{ display: 'flex', justifyContent: msg.sender === 'user' ? 'flex-end' : 'flex-start', alignItems: 'flex-start', gap: '8px' }}>
+            
+            {msg.sender === 'bot' && (
+              <div style={{ width: 'clamp(28px, 7vw, 32px)', height: 'clamp(28px, 7vw, 32px)', borderRadius: '50%', backgroundColor: 'rgba(197, 160, 89, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, border: '1px solid rgba(197, 160, 89, 0.2)' }}>
+                <Bot size={18} color={activeTheme.gold} />
+              </div>
+            )}
 
-              {/* Message Bubble Container */}
-              <div style={{ maxWidth: '82%', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                <div style={{ 
-                  padding: 'clamp(10px, 3vw, 14px) clamp(12px, 3.5vw, 16px)', // 💡 FLUID PADDING
-                  borderRadius: '14px', 
-                  fontSize: 'var(--font-body)', // 💡 FLUID TYPOGRAPHY
-                  lineHeight: '1.5', 
-                  backgroundColor: msg.sender === 'user' ? '#FF5958' : '#FFFFFF', 
-                  color: msg.sender === 'user' ? '#FFFFFF' : activeTheme.text, 
-                  border: msg.sender === 'bot' ? '1px solid rgba(197, 160, 89, 0.3)' : 'none', 
-                  boxShadow: '0 2px 8px rgba(0,0,0,0.03)', 
-                  textAlign: 'left' 
-                }}>
-                  {msg.text}
-                </div>
-
-                {/* Optional WhatsApp Redirect Button in Bot Message */}
-                {msg.showWhatsAppButton && (
-                  <a 
-                    href="https://wa.me/?text=Hi%20Lyte%20Bytes,%20I%20have%20a%20custom%20inquiry%20regarding%20your%20menu." 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    style={{
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      gap: '6px',
-                      background: '#25D366',
-                      color: '#FFFFFF',
-                      padding: '8px 14px',
-                      borderRadius: '12px',
-                      fontSize: 'var(--font-caption)', // 💡 FLUID TYPOGRAPHY
-                      fontWeight: '700',
-                      textDecoration: 'none',
-                      boxShadow: '0 4px 12px rgba(37, 211, 102, 0.25)',
-                      alignSelf: 'flex-start'
-                    }}
-                  >
-                    <MessageCircle size={15} /> Chat with Kitchen on WhatsApp
-                  </a>
-                )}
+            <div style={{ maxWidth: '85%', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              <div style={{ 
+                padding: 'clamp(10px, 3vw, 14px) clamp(14px, 4vw, 18px)', 
+                borderRadius: msg.sender === 'user' ? '18px 18px 6px 18px' : '18px 18px 18px 6px', 
+                fontSize: 'clamp(14px, 3.8vw, 15px)', 
+                lineHeight: '1.5', 
+                backgroundColor: msg.sender === 'user' ? activeTheme.brand : '#FFFFFF', 
+                color: msg.sender === 'user' ? '#FFFFFF' : activeTheme.text, 
+                border: msg.sender === 'bot' ? '1px solid rgba(197, 160, 89, 0.25)' : '1px solid transparent', 
+                boxShadow: msg.sender === 'bot' ? '0 4px 14px rgba(0,0,0,0.03)' : '0 4px 14px rgba(255, 89, 88, 0.25)', 
+                textAlign: 'left',
+                fontWeight: '500'
+              }}>
+                {msg.text}
               </div>
 
-              {/* User Avatar */}
-              {msg.sender === 'user' && (
-                <div style={{ width: '28px', height: '28px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                  <User size={28} color="#FF5958" />
-                </div>
+              {msg.showWhatsAppButton && (
+                <a 
+                  href="https://wa.me/9122500802806?text=Hi%20Lyte%20Bytes%20Team,%20I%20have%20a%20specific%20question%20about%20your%20menu." 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    background: '#25D366',
+                    color: '#FFFFFF',
+                    padding: 'clamp(10px, 2.5vw, 12px) clamp(16px, 4vw, 18px)',
+                    borderRadius: '12px',
+                    fontSize: 'clamp(13px, 3.5vw, 14px)',
+                    fontWeight: '700',
+                    textDecoration: 'none',
+                    boxShadow: '0 6px 16px rgba(37, 211, 102, 0.25)',
+                    alignSelf: 'flex-start'
+                  }}
+                >
+                  <MessageCircle size={16} /> Chat with Team Lyte Bytes
+                </a>
               )}
             </div>
-          ))}
-        </div>
 
-        {/* 4 Main Quick FAQ Tap Chips */}
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', paddingBottom: '4px' }}>
-          {MAIN_FAQS.map((question, idx) => (
+            {msg.sender === 'user' && (
+              <div style={{ width: 'clamp(28px, 7vw, 32px)', height: 'clamp(28px, 7vw, 32px)', borderRadius: '50%', backgroundColor: 'rgba(255, 89, 88, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, border: '1px solid rgba(255, 89, 88, 0.2)' }}>
+                <User size={18} color={activeTheme.brand} />
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+
+      {/* FOOTER OVERRIDE: Balances the home indicator without floating off the edge */}
+      <div style={{ 
+        paddingTop: 'clamp(10px, 2.5vw, 14px)',
+        paddingLeft: 'clamp(16px, 4vw, 20px)',
+        paddingRight: 'clamp(16px, 4vw, 20px)',
+        paddingBottom: 'calc(12px + env(safe-area-inset-bottom, 0px))', 
+        backgroundColor: '#FFFDF9',
+        borderTop: '1px solid rgba(197, 160, 89, 0.2)',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 'clamp(10px, 2.5vw, 14px)',
+        flexShrink: 0,
+        boxShadow: '0 -4px 20px rgba(0,0,0,0.02)',
+        zIndex: 10
+      }}>
+        {/* Quick Suggestion Chips */}
+        <div style={{ display: 'flex', gap: '8px', overflowX: 'auto', paddingBottom: '2px', scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch' }}>
+          {QUICK_SUGGESTIONS.map((suggestion, idx) => (
             <button 
               key={idx} 
               type="button" 
-              onClick={() => handleSend(question)} 
+              onClick={() => handleSend(suggestion)} 
               style={{ 
                 background: '#FFFFFF', 
-                border: '1px solid rgba(197, 160, 89, 0.4)', 
-                borderRadius: '12px', 
-                padding: 'clamp(6px, 2vw, 8px) clamp(10px, 2.5vw, 12px)', // 💡 FLUID PADDING
-                fontSize: 'var(--font-caption)', // 💡 FLUID TYPOGRAPHY
+                border: '1px solid rgba(197, 160, 89, 0.35)', 
+                borderRadius: '16px', 
+                padding: 'clamp(6px, 2vw, 8px) clamp(12px, 3.5vw, 16px)', 
+                fontSize: 'clamp(12px, 3.2vw, 13px)', 
                 fontWeight: '600', 
-                color: '#8A6D2B', 
+                color: activeTheme.gold, 
                 cursor: 'pointer',
-                textAlign: 'left'
+                whiteSpace: 'nowrap',
+                flexShrink: 0,
+                boxShadow: '0 2px 6px rgba(0,0,0,0.02)'
               }}
             >
-              {question}
+              {suggestion}
             </button>
           ))}
         </div>
 
-        {/* Input Bar */}
-        {/* 💡 BULLETPROOF FLEX: minWidth: 0 prevents input from crowding send button */}
-        <div style={{ display: 'flex', gap: '8px', marginTop: '4px', width: '100%', boxSizing: 'border-box' }}>
+        {/* Input Form */}
+        <div style={{ display: 'flex', gap: '8px', width: '100%', boxSizing: 'border-box' }}>
           <input 
             type="text"
-            placeholder="Ask Chef Lyte a question..."
+            placeholder="Message Chef Lyte..."
             value={inputText}
             onChange={(e) => setInputText(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && handleSend()}
             style={{ 
               flex: 1, 
               minWidth: 0, 
-              padding: 'clamp(10px, 3vw, 12px) clamp(12px, 3vw, 14px)', // 💡 FLUID PADDING
-              borderRadius: '12px', 
+              padding: 'clamp(14px, 3.5vw, 16px)', 
+              borderRadius: '16px', 
               border: '1px solid rgba(197, 160, 89, 0.4)', 
               backgroundColor: '#FFFFFF', 
-              fontSize: 'var(--font-body)', // 💡 FLUID TYPOGRAPHY
+              fontSize: 'clamp(14.5px, 4vw, 15px)', 
               outline: 'none', 
               color: activeTheme.text,
-              boxSizing: 'border-box'
+              boxSizing: 'border-box',
+              boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.01)'
             }}
           />
           <button 
@@ -298,21 +263,22 @@ export default function ConciergeChatView({ theme = {}, onBack }) {
               background: 'linear-gradient(135deg, #FF5958 0%, #E11D48 100%)', 
               color: '#FFFFFF', 
               border: 'none', 
-              borderRadius: '12px', 
-              width: 'clamp(42px, 10vw, 48px)', // 💡 FLUID BUTTON WIDTH
+              borderRadius: '16px', 
+              width: 'clamp(50px, 12vw, 54px)', 
+              height: 'clamp(50px, 12vw, 54px)',
               display: 'flex', 
               alignItems: 'center', 
               justifyContent: 'center', 
               cursor: 'pointer', 
-              boxShadow: '0 4px 12px rgba(255, 89, 88, 0.3)',
+              boxShadow: '0 4px 14px rgba(255, 89, 88, 0.35)',
               flexShrink: 0
             }}
           >
-            <Send size={16} />
+            <Send size={18} />
           </button>
         </div>
-
       </div>
+
     </div>
   );
 }

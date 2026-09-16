@@ -605,7 +605,7 @@ export default function App() {
     <div style={{ height: '100dvh', display: 'flex', flexDirection: 'column', position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: theme.bg, color: theme.text, fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
       <Header theme={theme} setView={setView} />
       
-      <main ref={mainContainerRef} style={{ flex: 1, paddingTop: '5px', paddingLeft: '20px', paddingRight: '20px', paddingBottom: '80px', overflowY: 'auto', display: 'flex', flexDirection: 'column' }}>
+      <main ref={mainContainerRef} style={{ flex: 1, paddingTop: '5px', paddingLeft: '20px', paddingRight: '20px', paddingBottom: '90dvh', overflowY: 'auto', display: 'flex', flexDirection: 'column' }}>
         {view === 'offers' && (
           <PageTransition viewKey="offers">
             <SubscriptionPassView 

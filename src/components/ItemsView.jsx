@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowLeft, List as ListIcon, Grid } from 'lucide-react';
+import { ArrowLeft, List as ListIcon, Grid, Sparkles } from 'lucide-react';
 import ItemCard from './ItemCard';
 
 export default function ItemsView({
@@ -20,6 +20,28 @@ export default function ItemsView({
   resolveImagePath,
   currentUserHasOrderedBeef
 }) {
+  // Calculate filtered items count with egg items now classified under Non-Veg
+  const filteredItemsList = (searchQuery 
+    ? Object.values(menuData).flatMap(cat => Object.values(cat.subcategories).flat())
+    : (activeCat && activeSub && menuData[activeCat]?.subcategories[activeSub] ? menuData[activeCat].subcategories[activeSub] : [])
+  )
+  .filter(item => {
+    const matchesSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase());
+    
+    // Dynamic check: hide beef if unauthorized
+    const isBeef = item.name.toLowerCase().includes('beef');
+    if (isBeef && !currentUserHasOrderedBeef) return false;
+
+    if (isNonVeg === null) return matchesSearch;
+    const v = item.variation ? item.variation.trim().toLowerCase() : '';
+    
+    // Veg filter shows strictly pure veg items (excluding egg)
+    if (!isNonVeg) return matchesSearch && v === 'veg';
+    
+    // Non-Veg filter now includes both non-veg and egg items
+    return matchesSearch && (v === 'non-veg' || v === 'egg');
+  });
+
   return (
     <div style={{ paddingBottom: '140px', fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
       <div style={{ display: 'flex', alignItems: 'center', position: 'relative', marginBottom: '20px', padding: '6px 0', gap: '8px' }}>
@@ -69,7 +91,7 @@ export default function ItemsView({
       </div>
 
       {/* Uniform Glowing Coral-Red Search Bar */}
-      <div style={{ marginBottom: '20px' }}>
+      <div style={{ marginBottom: '16px' }}>
         <input 
           type="text"
           placeholder="Search all items..."
@@ -82,7 +104,7 @@ export default function ItemsView({
             borderRadius: '16px',
             backgroundColor: '#FFFFFF',
             color: theme.text,
-            fontSize: 'var(--font-body)', // 💡 FLUID TYPOGRAPHY
+            fontSize: 'var(--font-body)', 
             fontWeight: '500',
             outline: 'none',
             boxSizing: 'border-box',
@@ -92,6 +114,7 @@ export default function ItemsView({
         />
       </div>
 
+      {/* Filter and Layout Toolbar */}
       <div style={{ 
         display: 'flex', 
         alignItems: 'center', 
@@ -176,6 +199,50 @@ export default function ItemsView({
         </div>
       </div>
 
+      {/* Animated Active Filter Badge & Item Counter */}
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        marginBottom: '14px',
+        padding: '0 2px',
+        minHeight: '24px'
+      }}>
+        {/* Active Filter Badge */}
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '5px',
+          fontSize: 'clamp(9px, 2.5vw, 10.5px)',
+          fontWeight: '700',
+          textTransform: 'uppercase',
+          letterSpacing: '0.6px',
+          color: isNonVeg === null ? '#78716C' : (isNonVeg ? '#D32F2F' : '#2D8A56'),
+          background: isNonVeg === null ? 'rgba(120, 113, 108, 0.08)' : (isNonVeg ? 'rgba(211, 47, 47, 0.08)' : 'rgba(45, 138, 86, 0.08)'),
+          border: `1px solid ${isNonVeg === null ? 'rgba(120, 113, 108, 0.2)' : (isNonVeg ? 'rgba(211, 47, 47, 0.3)' : 'rgba(45, 138, 86, 0.3)')}`,
+          padding: '3px 8px',
+          borderRadius: '8px',
+          transition: 'all 0.3s ease'
+        }}>
+          <Sparkles size={11} style={{ flexShrink: 0 }} />
+          <span>{isNonVeg === null ? 'All Items Displayed' : (isNonVeg ? 'Showing Non-Veg & Egg Only' : 'Showing Veg Only')}</span>
+        </div>
+
+        {/* Live Item Counter Badge */}
+        <div style={{
+          fontSize: 'clamp(9px, 2.5vw, 10.5px)',
+          fontWeight: '700',
+          color: '#78716C',
+          background: 'rgba(197, 160, 89, 0.12)',
+          border: '1px solid rgba(197, 160, 89, 0.3)',
+          padding: '3px 8px',
+          borderRadius: '8px',
+          letterSpacing: '0.4px'
+        }}>
+          {filteredItemsList.length} {filteredItemsList.length === 1 ? 'Item' : 'Items'} Found
+        </div>
+      </div>
+
       {/* Filtered Item List */}
       <div style={{ 
         display: layout === 'grid' ? 'grid' : 'flex', 
@@ -185,23 +252,7 @@ export default function ItemsView({
         width: '100%',
         boxSizing: 'border-box'
       }}>
-        {(searchQuery 
-          ? Object.values(menuData).flatMap(cat => Object.values(cat.subcategories).flat())
-          : (activeCat && activeSub && menuData[activeCat]?.subcategories[activeSub] ? menuData[activeCat].subcategories[activeSub] : [])
-        )
-        .filter(item => {
-          const matchesSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase());
-          
-          // 🔥 Dynamic check: hide beef if unauthorized
-          const isBeef = item.name.toLowerCase().includes('beef');
-          if (isBeef && !currentUserHasOrderedBeef) return false;
-
-          if (isNonVeg === null) return matchesSearch;
-          const v = item.variation ? item.variation.trim().toLowerCase() : '';
-          if (!isNonVeg) return matchesSearch && (v === 'veg' || v === 'egg');
-          return matchesSearch && (v === 'non-veg' || v === 'egg');
-        })
-        .map((item, i) => (
+        {filteredItemsList.map((item, i) => (
           <ItemCard 
             key={i}
             item={item} 
