@@ -90,7 +90,8 @@ export default function MemberAuthModal({ isOpen, onClose, initialPhone = '', cs
     return targetPhone.length >= 4 ? targetPhone.slice(-4) : '1234';
   };
 
-  const handlePhoneSubmit = (e) => {
+  // --- ENHANCED: Check if user exists on the sheet ---
+  const handlePhoneSubmit = async (e) => {
     e.preventDefault();
     if (!mobile || mobile.length < 10) {
       alert('Please enter a valid 10-digit mobile number.');
@@ -102,18 +103,33 @@ export default function MemberAuthModal({ isOpen, onClose, initialPhone = '', cs
     }
 
     setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-      const savedUser = localStorage.getItem(`lytebytes_user_${mobile}`);
+    try {
+      const payload = new URLSearchParams();
+      payload.append('action', 'check_user');
+      payload.append('phone', mobile);
+
+      const response = await fetch(webAppUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: payload.toString()
+      });
       
-      if (savedUser) {
+      const data = await response.json();
+      setLoading(false);
+
+      if (data.exists && data.password_set) {
         setStep('enter_password');
       } else {
+        // User exists but no password, or brand new user
         const extractedPin = findGeneratedPinForPhone(mobile);
         setDynamicExpectedCode(extractedPin);
         setStep('temp_code');
       }
-    }, 400);
+    } catch (err) {
+      console.error("Error checking user:", err);
+      setLoading(false);
+      alert("Network error checking account status.");
+    }
   };
 
   const handleAutomatedEmailRequest = async (e) => {
@@ -162,7 +178,8 @@ export default function MemberAuthModal({ isOpen, onClose, initialPhone = '', cs
     }, 400);
   };
 
-  const handleSavePassword = (e) => {
+  // --- ENHANCED: Save password securely to the sheet ---
+  const handleSavePassword = async (e) => {
     e.preventDefault();
     if (!password || password.length < 4) {
       alert('Password must be at least 4 characters long.');
@@ -174,28 +191,74 @@ export default function MemberAuthModal({ isOpen, onClose, initialPhone = '', cs
     }
 
     setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-      const userData = { phone: mobile, email: userEmail, isVerified: true };
-      localStorage.setItem(`lytebytes_user_${mobile}`, JSON.stringify({ password, email: userEmail }));
-      localStorage.setItem('lytebytes_user', JSON.stringify(userData));
+    try {
+      console.log("Sending registration request to:", webAppUrl);
       
-      onLoginSuccess(userData);
-      onClose();
-    }, 500);
+      const payload = new URLSearchParams();
+      payload.append('action', 'register');
+      payload.append('phone', mobile);
+      payload.append('password', password);
+      payload.append('email', userEmail);
+
+      const response = await fetch(webAppUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: payload.toString()
+      });
+      
+      const data = await response.json();
+      console.log("Response received from backend:", data);
+      
+      setLoading(false);
+
+      if (data.status === "success") {
+        const userData = { phone: mobile, email: userEmail, isVerified: true };
+        localStorage.setItem('lytebytes_user', JSON.stringify(userData));
+        
+        onLoginSuccess(userData);
+        onClose();
+      } else {
+        alert(data.error || "Failed to register.");
+      }
+    } catch (err) {
+      console.error("Registration fetch error:", err);
+      setLoading(false);
+      alert("Network error during registration. Check console.");
+    }
   };
 
-  const handleLoginWithPassword = (e) => {
+  // --- ENHANCED: Verify login against the sheet ---
+  const handleLoginWithPassword = async (e) => {
     e.preventDefault();
-    const storedData = JSON.parse(localStorage.getItem(`lytebytes_user_${mobile}`) || '{}');
+    setLoading(true);
     
-    if (storedData.password && storedData.password === password) {
-      const userData = { phone: mobile, email: storedData.email || '', isVerified: true };
-      localStorage.setItem('lytebytes_user', JSON.stringify(userData));
-      onLoginSuccess(userData);
-      onClose();
-    } else {
-      alert('Incorrect password. Click "Forgot Password" to receive your PIN.');
+    try {
+      const payload = new URLSearchParams();
+      payload.append('action', 'login');
+      payload.append('phone', mobile);
+      payload.append('password', password);
+
+      const response = await fetch(webAppUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: payload.toString()
+      });
+      
+      const data = await response.json();
+      setLoading(false);
+
+      if (data.status === "success") {
+        const userData = { phone: mobile, name: data.name, isVerified: true };
+        localStorage.setItem('lytebytes_user', JSON.stringify(userData));
+        onLoginSuccess(userData);
+        onClose();
+      } else {
+        alert(data.error || 'Incorrect password. Click "Forgot Password" to receive your PIN.');
+      }
+    } catch (err) {
+      console.error("Login error:", err);
+      setLoading(false);
+      alert("Network error during login.");
     }
   };
 

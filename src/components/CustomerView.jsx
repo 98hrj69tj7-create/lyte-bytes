@@ -597,7 +597,7 @@ export default function CustomerView({
         </div>
       )}
 
-      <MemberAuthModal 
+<MemberAuthModal 
         isOpen={isAuthModalOpen} 
         onClose={() => setIsAuthModalOpen(false)} 
         initialPhone={liveCustomerData.phone}
@@ -605,7 +605,13 @@ export default function CustomerView({
         webAppUrl={WEB_APP_URL}
         onLoginSuccess={(userData) => {
           if (setCustomer) {
-            setCustomer(prev => ({ ...prev, phone: userData.phone }));
+            setCustomer(prev => ({ 
+              ...prev, 
+              phone: userData.phone,
+              name: userData.name || prev.name,
+              email: userData.email || prev.email,
+              isRegistered: true
+            }));
           }
           performLookup(userData.phone);
         }}

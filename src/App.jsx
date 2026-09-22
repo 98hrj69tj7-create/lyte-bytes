@@ -229,7 +229,14 @@ export default function App() {
   const [isNonVeg, setIsNonVeg] = useState(null);
   const [layout, setLayout] = useState('list');
   const [cart, setCart] = useLocalStorage('app_cart', []);
-  const [customer, setCustomer] = useLocalStorage('app_customer', { name: '', phone: '', email: '', address: '' });
+  const [customer, setCustomer] = useLocalStorage('app_customer', { 
+    name: '', 
+    phone: '', 
+    email: '', 
+    address: '',
+    isRegistered: false,
+    passwordSet: false
+  });
   
   const [currentUserHasOrderedBeef, setCurrentUserHasOrderedBeef] = useLocalStorage('lytebytes_has_ordered_beef', false);
 
@@ -286,13 +293,19 @@ export default function App() {
   useEffect(() => {
     const fetchFreshReviews = async () => {
       try {
-        const SHEET_API_URL = 'https://script.google.com/macros/s/AKfycbxdXpaz1SsK_mPTIfYAWK_yXQnHNiAUDtQS8g6ZrgqgP0bR6cPbr-bnuS2whC-lG8T_/exec';
-        if (SHEET_API_URL.includes('YOUR_GOOGLE_')) return;
+        const SHEET_API_URL = 'https://script.google.com/macros/s/AKfycbwjR5KBDf8iB9e5Dh4ye5TxmIsbcirJsevDjMWma6B_Ine3HCYwC1ImeXgmr0XdVI9FZg/exec';
         
         const response = await fetch(SHEET_API_URL);
-        const data = await response.json();
+        const text = await response.text();
         
-        if (data && data.length > 0) {
+        // Ensure response is valid JSON before parsing
+        if (!text || text.startsWith('<!DOCTYPE html>')) {
+          return; // Skip if it returned HTML error page
+        }
+        
+        const data = JSON.parse(text);
+        
+        if (Array.isArray(data) && data.length > 0) {
           const normalizedReviews = data
             .map(item => {
               const parseRatingVal = (val) => {
@@ -325,7 +338,7 @@ export default function App() {
           }
         }
       } catch (error) {
-        console.error('Background sync failed:', error);
+        // Silent catch for background review sync failure so app doesn't break
       }
     };
     fetchFreshReviews();

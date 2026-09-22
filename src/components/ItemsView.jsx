@@ -20,7 +20,7 @@ export default function ItemsView({
   resolveImagePath,
   currentUserHasOrderedBeef
 }) {
-  // Calculate filtered items count with egg items now classified under Non-Veg
+  // Calculate filtered and alphabetically sorted items list
   const filteredItemsList = (searchQuery 
     ? Object.values(menuData).flatMap(cat => Object.values(cat.subcategories).flat())
     : (activeCat && activeSub && menuData[activeCat]?.subcategories[activeSub] ? menuData[activeCat].subcategories[activeSub] : [])
@@ -40,7 +40,8 @@ export default function ItemsView({
     
     // Non-Veg filter now includes both non-veg and egg items
     return matchesSearch && (v === 'non-veg' || v === 'egg');
-  });
+  })
+  .sort((a, b) => (a.name || '').localeCompare(b.name || '')); // 🔤 Alphabetical Sort (A-Z)
 
   return (
     <div style={{ paddingBottom: '140px', fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
@@ -243,7 +244,7 @@ export default function ItemsView({
         </div>
       </div>
 
-      {/* Filtered Item List */}
+      {/* Filtered & Sorted Item List */}
       <div style={{ 
         display: layout === 'grid' ? 'grid' : 'flex', 
         gridTemplateColumns: layout === 'grid' ? 'repeat(2, 1fr)' : 'none', 

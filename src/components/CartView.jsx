@@ -673,7 +673,7 @@ export default function CartView({
         document.body
       )}
 
-      <MemberAuthModal 
+<MemberAuthModal 
         isOpen={isAuthModalOpen} 
         onClose={() => setIsAuthModalOpen(false)} 
         initialPhone={customer?.phone || ''}
@@ -681,7 +681,13 @@ export default function CartView({
         onLoginSuccess={(userData) => {
           setIsAuthModalOpen(false);
           if (setCustomer) {
-            setCustomer(prev => ({ ...prev, phone: userData.phone }));
+            setCustomer(prev => ({ 
+              ...prev, 
+              phone: userData.phone,
+              name: userData.name || prev.name,
+              email: userData.email || prev.email,
+              isRegistered: true
+            }));
           }
           localStorage.setItem('lyte_checkout_summary', JSON.stringify({
             discountAmount: discountAmount,

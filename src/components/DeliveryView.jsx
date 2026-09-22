@@ -261,7 +261,7 @@ export default function DeliveryView({
   const currentMode = customer.fulfillmentType || 'DELIVERY';
   const whatsappNumber = "9108286886";
 
-  // Smart Lookup guard to prevent annoying re-fetches on every keystroke
+  // 🔥 ENHANCED AUTO-LOOKUP: Pulls Name, Email, and Address from Customer_Master on 10-digit phone entry
   useEffect(() => {
     const phoneTrimmed = (customer.phone || '').trim();
     if (phoneTrimmed.length === 10 && phoneTrimmed !== lastCheckedPhoneRef.current) {
@@ -274,6 +274,9 @@ export default function DeliveryView({
           const rows = parseCSV(csvText);
 
           let foundName = '';
+          let foundEmail = '';
+          let foundAddress = '';
+
           rows.forEach(row => {
             const p = getField(row, ['Cust_Mobile', 'Customer_Mobile', 'Mobile', 'Phone', 'Cust Mobile']);
             if (p === phoneTrimmed) {
@@ -281,15 +284,20 @@ export default function DeliveryView({
               if (n && n !== 'Unknown' && n !== 'Valued Customer') {
                 foundName = n;
               }
+              const e = getField(row, ['Cust_Email', 'Customer_Email', 'Email', 'Cust Email']);
+              if (e) foundEmail = e;
+
+              const a = getField(row, ['Delivery_Address', 'Address', 'Customer_Address', 'Cust Address']);
+              if (a) foundAddress = a;
             }
           });
 
-          if (foundName) {
-            setCustomer(prev => ({
-              ...prev,
-              name: foundName
-            }));
-          }
+          setCustomer(prev => ({
+            ...prev,
+            name: foundName || prev.name,
+            email: foundEmail || prev.email,
+            address: foundAddress || prev.address
+          }));
         } catch (err) {
           console.error("Auto-lookup error:", err);
         } finally {
@@ -485,7 +493,6 @@ export default function DeliveryView({
     }));
   };
 
-  // 🔥 VALIDATION CHECK: Mandatory for Pickup, Optional for Delivery
   const handleProceedClick = () => {
     if (currentMode === 'PICKUP') {
       const validation = validateDeliverySlot(deliveryDate, deliveryTime);
@@ -824,7 +831,7 @@ export default function DeliveryView({
           </div>
         )}
 
-        {/* Schedule Container (Dynamic Optional vs Required Label) */}
+        {/* Schedule Container */}
         <div style={{ borderTop: '1px solid rgba(197, 160, 89, 0.35)', paddingTop: '14px', width: '100%', boxSizing: 'border-box' }}>
           <div style={{ fontSize: 'clamp(9.5px, 2.5vw, 11px)', fontWeight: '700', color: '#78716C', letterSpacing: '0.8px', textTransform: 'uppercase', marginBottom: '8px', textAlign: 'center' }}>
             {currentMode === 'DELIVERY' ? 'Preferred Delivery Time (Optional)' : 'Preferred Pickup Time (Required)'}
